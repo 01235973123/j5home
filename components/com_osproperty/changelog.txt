@@ -1,0 +1,1531 @@
+07th October 2024 - New version 3.21.5
+===============================
+- Fix issue in XML import/export function
+- Add update available notice in dashboard
+- Improve agents list layout
+
+09th July 2024 - New version 3.21.4
+===============================
+- Fix issue when installing package on PHP 8.2 
+- Fix issue in locator search function
+- Fix issue in price group option creating
+
+07th June  2024 - New version 3.21.3
+===============================
+- Add various improvements in core functions and layouts
+- Fix issues in previous versions
+
+26th February 2024 - New version 3.21.2
+===============================
+- Add ordering option for properties
+- Add more market statuses for properties
+- Improve CSV Import and Export functions
+- Improve Backend layout in Darkmode - Joomla 5
+- Improve layouts of component
+- Fix Joomla 5 compatible issues
+- Removing Grab images function
+
+04th December 2023 - New version 3.21.1
+===============================
+- Terminate using of Mootools in component
+- Improve XML Import tool
+- Removing Backup and Restore functions
+- Improve Photo Ajax Upload
+- Fix some Joomla 5 compatible issues
+- Fix issues on Agent and Company registration
+- Fix issue on Payment functions
+
+18th September 2023 - New version 3.21.0
+===============================
+- Fully compatible with Joomla 5
+- Adding two system plugins
+- Improve source code
+- Fix issues in previous versions
+
+01th May 2023 - New version 3.20.9
+===============================
+- Add captcha in agent/company contact form
+- Support all JPEG, WEBP image format
+- Fix issue in agent registration
+- Improve management pages at Backend side
+- Improve Random Properties module
+- Improve Search plugin (Joomla 3)
+
+01th March 2023 - New version 3.20.8
+===============================
+- Improve layouts of themes
+- Improve core functions
+- Improve Random Properties and Map modules
+- Fix PHP8 and Joomla4 compatible issues
+- Fix issues in previous versions
+
+14th October 2022 - New version 3.20.7
+===============================
+- Improve Agents and Companies registration pages
+- Integrate Joomla registration features
+- Add new email notification emails
+- Add option to solve issue with page navigation
+- Fix issue in Configuration page - PHP8 and Joomla4
+- Fix other minor issues 
+- Improve categories module
+
+17th August 2022 - New version 3.20.6
+===============================
+- Improve Property Neighborhood - adding distance
+- Add Dropdown select list Categories in Quick Search module
+- Show User types in Agents list and Agent details
+- Fix Street view in Default theme
+- Fix Gallery issue in Theme2
+- Fix issue in Properties comparison
+- Fix issue in Location (States, Cities) retrieving
+- Other minor issues fixed
+
+19th May 2022 - New version 3.20.5
+===============================
+- Improve Theme2, Theme3
+- Improve layouts on mobile screens
+- Improve Filter Form in Properties listing page
+- Improve Quick icons module (Backend side)
+- Fix minor issues
+
+12th March 2022 - New version 3.20.4
+===============================
+- Improve Backend layouts 
+- Fix Stripe payment gateway issue
+
+12th January 2022 - New version 3.20.3
+===============================
+- Fix issues in previous versions
+
+01st November 2021 - New version 3.20.2
+===============================
+- Fix issues in Joomla 4
+
+04th October 2021 - New version 3.20.1
+===============================
+- Fix issues in previous versions
+
+01st September 2021 - New version 3.20.0
+===============================
+- Fully compatible with Joomla 4
+- Improve Panorama viewing function
+- Add Social Backlinks OS Property plugin
+
+12th July 2021 - New version 3.19.1
+===============================
+- Fix issues in previous versions
+
+12th June 2021 - New version 3.19.0
+===============================
+- Compatible with PHP8
+- Add page navigation in Random Properties module
+- Add min/max price parameters in layout: Property Listing layout
+- Add multilingual with field: Region
+- Add Hour/min options in Opening Hour feature
+- Improve + Fix issue on Properties management pages
+
+01th April 2021 - New version 3.18.2
+===============================
+- Add Default agent option
+- Add Property Preview function (frontend side)
+- Improve JSitemap plugin - support multiple languages
+- Fix Stripe payment method issue
+- Fix issue on loading Location data (multiple language mode)
+- Fix issue on OSP Slideshow module
+- Fix issue on Featured Agent module
+- Fix issue on Start/end publishing dates
+- Fix issue on Square feet/meter showing in Random Properties module
+- Fix issue on Custom extra fields
+
+25th December 2020 - New version 3.18.1
+===============================
+- Add City ID parameter into Property Listing layout
+- Add option to store Request More details
+- Support HTML code in Price text
+- Fix Properties filtering issue at Backend 
+- Fix Sef issue in OS Property States and Cities module
+
+09th September 2020 - New version 3.18.0
+===============================
+Compatible Joomla 4 Alpha
+
+25th June 2020 - New version 3.17.4
+===============================
+- Add icons configure options for Amenity Categories
+- Add icons for Amenities
+- Update language constants for OS Property Configuration function 
+- Fix issue on Showing Custom extra fields: Radio boxes, Checkboxes
+- Fix issue on Selecting Market Status in module Random Properties 
+
+14th May 2020 - New version 3.17.3
+===============================
+Add notification email to administrator when the payment is made
+Improve Payment completed layout
+Improve Offline payment
+Fixing issue on payment processing function
+Fix SQL issue relating to Market Status
+
+29th March 2020 - New version 3.17.2
+===============================
+- Fix issue on Search result page on Theme3
+
+19th March 2020 - New version 3.17.1
+===============================
+- Fix database issue in version 3.17.0
+
+17th March 2020 - New version 3.17.0
+===============================
+- Add Bath Information
+- Add extra fields in PDF and Property Print pages
+- Add Location filter in Properties management (Frontend side)
+- Improve CSS of Theme 3
+- Minor bugs fixed
+
+5th February 2020 - New version 3.16.2
+===============================
+- Fix Payment method issues on Property Activation form
+- Fix issue on Filter form of layout Property Listing by city
+- Fix Cookie issue
+- Update Wider theme
+- Improve CSV Import tool
+
+25th October 2019 - New version 3.16.1
+===============================
+- Fix issues on Property Modification form
+- Fix issues on Property Activation form
+- Fix issues on Configuration page
+
+18th September 2019 - New version 3.16.0
+===============================
+- Improve OS Property to make extension compatible with Joomla4 Alpha
+- Remove Joomla deprecated functions
+- Change some DB columns attributes
+
+19th July 2019 - New version 3.15.0
+===============================
+- Improve Categories listing layout
+- Improve Default theme
+- Improve Backup and Restore database, make it to work with MySQLi
+- Add option to exclude property IDs in OS Content Slider and Random Properties module
+- Add Price sorting option in Manage Properties page
+- Fix issue on properties approval when the cost is zero
+
+14th May 2019 - New version 3.14.9
+===============================
+- Improve Theme3 and Theme Blue
+- Improve Companies and Agents management tool at Backend side
+- Improve Mortgage module
+- Improve Filter Form
+- Improve Bootstrap 3 stylesheet
+
+1st April 2019 - New version 3.14.8
+===============================
+- Improve Companies, Agent listing and details layout
+- Add option to add Joomla modules into property page (Theme2 and Wider)
+- Improve Loan Calculator module
+- Add option to select number properties per page in properties list (Backend side)
+- Fix issue on CSV import function
+- Fix issue on showing Heading in "Properties City" page
+- Fix issue on showing Satellite map type in property details page
+- Fix issue on formating "checkbox" extra field value showing
+
+19th February 2019 - New version 3.14.7
+===============================
+- Add Countries options in States/Cities module
+- Improve Advanced search layout
+- Add option to choose Agents will be shown at frontend of module Featured Agency
+- Add option to show only agents who already uploaded properties in agents listing layout
+- Move Square feet to Core fields and move Living Areas to Land Information
+- Neighborhood in XML import/ export
+- Show DPE values beside class names (DPE graph)
+- Show published currencies when adding new properties
+- Fix OS Map Search module for OSP Real Homes template
+
+
+7th January 2019 - New version 3.14.6
+===============================
+- Improve Agent Profile page
+- Improve OS Content Slider
+- Improve SEO
+- Fix issue on Membership Pro integration
+- Fix issue on downloading property's document
+- Fix issue on saving property's documents and panorama pictures
+
+
+1st December 2018 - New version 3.14.5
+===============================
+- Add Openstreetmap
+- Improve Agents layout
+- Fix minor bugs
+
+
+12nd November 2018 - New version 3.14.4
+===============================
+- Add Wide theme
+- Move documents to media folder
+
+
+22nd October 2018 - New version 3.14.3
+===============================
+- Moving Javascript, CSS files to Media folders
+- Adding Defer attribute into Javascript loading
+- Add Horizontal layout for search module
+- Apply Joomla global variable into management pages (front-end and back-end sides)
+- Other bugs fixed
+
+
+11th September 2018 - New version 3.14.2
+===============================
+- Improve Membership Pro integration feature
+- Improve themes: Default and Theme 3
+- Add Google reCaptcha in Request more details form
+- Add feature to pass Security step with logged user in Request More Details and Tell a friend forms
+- Improve Currency convert feature
+- Improve Random Properties module
+- Fix route and cron task issues
+- Other minor issues fixed
+
+
+15th August 2018 - New version 3.14.1
+===============================
+- Able to sort photos by drag & drop
+- Add Cities filtering in properties list
+- Fix Currencies convert function
+- Other minor css fixed
+
+
+10th July 2018 - New version 3.14.0
+===============================
+- Instroduce new payment process to activate and upgrade listing workflow
+- Improve Membership Pro integration
+- Add payment library
+- Fix Currency convert issue
+- Update Random Properties module
+
+
+28th May 2018 - New version 3.13.3
+===============================
+Implement GDPR Privacy checkbox for forms in OS Property
+- Request More Details form
+- Tell a friend form
+- Property Review form
+
+25th May 2018 - New version 3.13.2
+===============================
+GDPR Implement
+
+7th May 2018 - New version 3.13.1
+===============================
+- Bootstrap 4 compatible
+- Add multiple languages with field: Price text
+- Improve Property Print layout to make property details to be shown in one A4 paper
+- Improve Address format
+
+28th March 2018 - New version 3.13.0
+===============================
+- Add Market status
+- Improve: Properties listing, property details, search functions, property print, pdf export, XML and CSV import/export, Random properties and Search module
+- Add Google Map Zoom level limitation
+- Add Postcode field in XML Import/export
+- Fix Advanced search issue
+- Fix Properties comparison issue
+
+27th Febnuary 2018 - New version 3.12.8
+===============================
+- Fix security issue on Advanced Search
+
+16th January 2018 - New version 3.12.7
+===============================
+- Improve Theme3's photo gallery
+- Redirect links after Agent and Company registration
+- Offline payment email
+- Add Featured agent icon
+- Some configure options added
+- Auto populating Name, Email when adding Company and Agent at back-end side
+- Other improvements and bugs fixed
+
+
+19th November 2017 - New version 3.12.6
+===============================
+- Add Iproperty migration tool
+- Improve DPE Graph function
+- Fix issue on Currency converting function
+- Add function select/deselect all pictures when edit property
+- Fix issue on Category module (Version 3.12.5)
+- Fix CSS issue on Categories listing layout
+- Fix issue on Calendar field of Request More Details form
+- Fix CSS loading issue on Search module
+
+
+4th October 2017 - New version 3.12.5
+===============================
+- Remove inline styles
+- Improve Property Request More details form
+- Advanced search from overridden
+- Add Saudi Arabia location data
+- Fix issue on OSP Navigation plugin
+- Fix issue on OSP Slideshow module
+
+
+15th September 2017 - New version 3.12.4
+===============================
+- Improve Review & Rating function
+- Improve Company & Agent registration form (Allow to turn on/off Login form)
+- Fix Page Navigation issue on Cities listing page
+- Fix issue on IP Address getting on Comment function
+
+
+3rd September 2017 - New version 3.12.3
+Fix security issue on Photo Drag & Drop function
+
+
+4th August 2017 - New version 3.12.2
+===============================
+- Add Grab Images tool
+- Improve Theme3 layout
+- Improve SEO 
+- Fully compatible with Joomla 3.7.4
+- Show "Install sample data" suggestion at first time installation
+
+
+6th July 2017 - New version 3.12.1
+===============================
+- Add Google Map image to PDF layout
+- Improve Map search layout
+- Fix issue with Currency convert
+- Fix issue with Map module
+- Add new configure options
+
+1st June 2017 - New version 3.12.0
+===============================
+- Bootstrap 3 compatible
+- Social sharing improvement
+
+5th May 2017 - New version 3.11.2
+===============================
+Fix issues of OS Property on PHP 7.x
+- Google Map 
+- Search module
+
+28th April 2017 - New version 3.11.1
+===============================
+1. Fix issue on Currency loading function (PHP 7.x)
+2. Fix Advanced search layout issue 
+3. Fix Random properties module issue
+4. Watermark issue
+
+14th April 2017 - New version 3.11.0
+===============================
+1. Add Watermark to all pictures
+2. Ajax upload
+3. My Place searching
+4. Advanced search layout improvement
+5. "Clicked" extra fields added
+6. Adjust Configuration page > Tab: Search
+7. Add Joomla trigger event when saving property data (for developer)
+8. Add Report Abuse information in Properties listing (Back-end side)
+9. Meta description is included in CSV form
+10. Other minor issues fixed
+
+13th March 2017 - New version 3.10.0
+===============================
+SQL Injection issue fixed in Advanced search and Locator search functions
+
+20th Febrarury 2017 - New version 3.0.9
+===============================
+SQL Injection issue fixed - root > components > com_osproperty > router.php
+
+
+10th February 2017 - New version 3.0.8
+===============================
+1. Fix Sef Url error in Multilingual site
+2. Fix Duplication on Default Theme
+3. Option to turn on Required field: Address/ Short description
+4. Option to show/hide ref field at front-end
+5. Google map issue (gray when zooming in/out)
+6. Improve Add/edit property form at Back-end side (split tabs)
+7. Add Price text
+
+
+12th January 2017 - New version 3.0.7
+===============================
+CSV Import through Cron task
+Locator search form improvement
+Company and Agent register improvement
+Sef improvement
+Various bugs fixed
+
+
+27th December 2016 - New version 3.0.6
+===============================
+Fix SQL injection issue on Property Listing layout. 
+
+
+30th November 2016 - New version 3.0.5
+================================
+New Theme2 layouts
+Language files migration
+Joomla Search plugin
+New Agent profile fields
+Theme Default improvement
+New bug fixed
+
+
+5th November 2016 - New version 3.0.4
+=================  Add  ===================
+Add panorama picture for properties
+===============   Improved  ================
+CSV import improvement
+DPE graph improvement
+PDF export layout improvement
+Issues fixed
+
+
+8th October 2016 - New version 3.0.3
+
+Gather information of the same coordinates properties on Google Map
+OSP Search Real Homes
+Google Map key for first time installation
+Some minor issues fixed
+
+
+28th September 2016 - New version 3.0.2
+
+Allow to edit Created and Modified date of properties at Back-end side
+Prevent instances one Joomla user is assigned to more than one OS Property agent
+Prevent instances one Joomla user is company admin of 2 companies
+Company admin can't be registered to become agent anymore at Back-end side
+Agent can't be registered to become company admin anymore at Back-end side
+Fix issue on Payment plugin installation
+Fix issue on  Bulk photo upload at Back-end side
+Fix issue on Transaction details at Back-end side
+
+
+30th August 2016 - New version 3.0.1
+===============   Add  ================
+Acymailing plugin
+Auto update OS Property
+Ezrealty to OS Property migration
+
+Bug fixed: 
+- Price slider disappeared after changing Property type
+- Sef error when submitting Search module (in case site doesn't have menu to Advanced search layout)
+- Company listing layout
+- Company details layout
+
+15th August 2016 - New version 3.0.0
+===============   Add  ================
+Add OSP Slideshow
+Add Property Statistic view
+Add function to manage all properties at front-end
+Add Back button in Property Direction page
+Responsive in Properties Comparison layout
+Mouse scroll option in Google Map at Property details page
+Add Lazy Load library to improve the loading speed 
+===============   Improvement   ================
+Remove Yahoo messenger field in Agent profile
+OSP Themes
+===============   Bug fixed  ================
+Ajax upload at front-end
+White blank in Companies listing at front-end
+
+
+5th July 2016 - New version 2.9.9
+===============   Improvement   ================
+Configure option to allow/ not allow user to edit their comment at front-end. 
+Agent details: Change MSN to Line Messages
+Add Created date and Sold status in CSV form
+===============   Issue Fixed  ===================
+Google Map API key
+
+
+25th May 2016 - New version 2.9.8
+===============   Add  ================
+Edit comment at front-end
+===============   Improvement   ================
+Map Search function
+===============   Issue Fixed  ===================
+Map Cluster issue fixed
+Other minor issues
+
+
+18th April 2016 - New version 2.9.7
+===============   Add  ================
+Remove Orphan Properties
+Add rating to properties listing (Theme1 and Theme3)
+Multiple languages with country names
+
+===============   Improvement   ================
+Improve Random Properties layout
+
+===============   Issue Fixed  ===================
+Issue when uploading/upgrading properties at front-end with/without payment
+
+
+25th March 2016 - New version 2.9.6
+===============   Improvement   ================
+Compatible with Joomla 3.5.0 and PHP 7
+===============   Issue Fixed  ===================
+Restrict address auto suggestion in Locator search when using just one country in OS Property system
+Fix issue of OS Property on Joomla 3.5.0 when selecting Joomla user for agent or company administrator
+Fix issue of wrong properties counting in Category details page
+
+7th March 2016 - New version 2.9.5
+===============   Add   ================
+Malta location
+Multiple language for field Address
+Add Postcode and Region fields into XML import/export
+Configure option to show unchecked amenities in Property details
+===============   Issue Fixed  ================
+Card Number - Change from Varchar 20 to varchar 100 characters
+Fix issue when removing categories at Back-end of component
+
+
+20th January 2016 - New version 2.9.4
+===============   Add   ================
+Browse page title for properties
+Wales, Scotland and Nothern Ireland location
+===============   Improvement  ================
+Rating & Review: User can leave more than one comment
+Amenities showing
+CSV import: Add Pro_pdf and Youtube Embed code 
+Theme1 and Theme Blue
+===============   Issue Fixed ================
+Cron job - Disable Featured properties
+Property details route issue
+Dropdown Property type in Add/edit properties page (Front-end)
+
+
+24th November 2015 - New version 2.9.3
+===================================
+1. Drop support for Joomla 2.5.x
+2. New core fields added
+3. Drag & Drop ordering
+4. Add Ukraine location data
+5. Add Save & New button in Manage Properties, Categories, Property types, Extra fields, Extra field groups, Convenience, Companies, Agents
+6. Add Duplicate Field button in Manage Extra fields page
+
+
+11th October 2015 - New version 2.9.2
+===============   Add   ================
+1. Payment management
+2. Add Egypt location
+===============   Improvement  ================
+1. Transaction management
+2. Payment functionality when user add new property at front-end
+3. Property listing layout
+4. Page navigation 
+5. Company & User registration
+
+
+8th September 2015 - New version 2.9.1
+===============   Add   ================
+1. New User types added
+2. Themes combination
+3. Flexible Max, Min, Step values on Price Slider
+4. Loading speed improvement
+5. Add Term and Condition on Company, OS Property user registration pages and Request more details forms.
+6. Add location data of: Trinidad & Tobago, Dominica and Kenya
+7. Load Property's tags into meta head in Property details page.
+==============   Bug Fixed  ===============
+1. Fix bugs on Filter form after changing Pagination method in Listing pages
+
+
+20th August 2015 - New version 2.9.0
+===============   Add   ================
+1. New more image type allowed (*.png, *.gif)
+2. Joomla ACL with for functions at Back-end side of OS Property
+3. Add new Property layout - Property details
+4. Featured Agents module
+
+============== Improvement ===============
+1. Properties Comparison page
+2. Property modification layout at Front-end side
+3. Page Navigation in Properties Listing page - Good for SEO
+
+==============   Bug Fixed  ===============
+1. Company, Agent registration 
+2. JS, CSS files included in SSL mode
+
+
+29th July 2015 - New version 2.8.4	
+===============   Add   ================
+1. All Joomla access level for Properties, Categories, Extra field groups and Extra fields
+2. Captcha in Report form
+3. Default Access level for property
+
+============== Improvement ===============
+1. Joomla User registration integration in Agent, Company register functionality
+2. Restructure layout Company and Agent Details
+3. Amenity names in multiple languages at front-end
+4. Back to advanced search - OSP Navigation Plugin
+5. Spam preventing functionality
+6. Facebook auto posting (Work with Facebook API 2.4)
+
+==============   Bug Fixed ===============
+1. Sorting columns in Manage Cities page
+2. Gray background on picture in Property details page (theme3)
+3. Facebook auto posting (Front-end, Back-end)
+
+
+
+6th July 2015 - New version 2.8.3	
+===============   Add   ================
+1. Facebook Auto Posting
+2. Twitter Auto Posting
+3. Improve Search module
+4. Improve Properties listing layout
+5. Ability to work with Membership Pro 2.x
+==============   Bug Fixed ===============
+1. Compare Properties and Add To Favorites icons changing after clicking
+2. Company and Agent registration
+
+
+12th June 2015 - New version 2.8.2
+===============   Add   ================
+1. MLS Search with many criterias layout
+==============   Bug Fixed ===============
+1. Option to Show/Hide More Option in Advanced search layout
+2. CSV expot without pictures
+3. Ref field automatically
+4. Fix Alert Email feature
+5. Option to add/remove Categories, Property type into Breadcrumbs
+
+
+12th May 2015 - New version 2.8.1
+===============   Add   ================
+1. Picture resizing & cropping
+==============   Bug Fixed ===============
+1. SQL Injection solved
+
+15th April 2015 - New version 2.8.0
+===============   Add   ================
+1. XML Import/ Export
+
+10th March 2015 - New version 2.7.5
+===============   Add   ================
+1. Alert Email feature
+2. More functionalities for company's admin
+3. Default locator for Map search
+4. Fractional Baths
+5. Send copy version of "Request more details" to administrator
+6. Amenity group categories
+7. Add Field "Reply to" into "Request more details" email
+8. More Configure options
+==============   Improve  ===============
+1. Configuration page
+2. CSV Import
+3. Default layout
+4. Related properties layout
+5. Locator search layout
+
+8th January 2015 - New version 2.7.4
+===============   Add   ================
+1. Google Plus, Pinterest buttons
+2. Layouts overrides
+3. Drag upload pictures when modifying propety at front-end
+4. Add parameters in layout "Agents listing"
+5. Agents/ Owners can unfeatured their properties
+==============   Improve  ===============
+1. Theme 2
+2. Property modification layout
+3. Sweden location
+==============   Bug Fixed ===============
+1. Properties disappeared in Compare layout when changing languages (front-end)
+2. Some other minor bugs fixed
+
+15th October 2014 - New version 2.7.3
+===============   Add   ================
+1. Navigation plugin on Property details page
+==============   Improve  ===============
+1. Dashboard layout
+2. Changing Textearea extra field to Texteditor field
+3. Theme 1
+==============   Bug fixed   ===============
+1. Show Meta desc and Meta Keyword in layouts of OS Property
+2. Some other bugs fixed
+
+18th September 2014 - New version 2.7.2
+===============   Add   ================
+1. Multiple languages with States and Cities
+2. Multiple languages with Tags
+==============   Improve  ===============
+1. Improve Default theme (Grid view and Property Details view)
+2. Security issues fixed
+3. Translation tool
+==============   Bug fixed   ===============
+1. Bugs at Filter Form of properties list pages
+2. Favorites properties
+
+10th August 2014 - New version 2.7.1
+============    Add   =============
+1. Add relation between one property and more than one categories
+2. Change field Bathroom from Integer to Decimal
+3. Add Lot size field
+4. Add ordering for Property types
+5. Update/Add new features to modules: Random properties, Search, Slideshow
+
+15th July 2014 - New version 2.6.6
+============    Add   =============
+1. Disable State dropdown select list when OS Property has only one published state
+2. Add Sold status option
+3. Add Property history and tax
+4. Ability to assign custom fields for property types
+5. Add Open time for inspector
+6. Ordering for Amenity Options
+============   Improve  =============
+1. OS Property's themes
+============ Bug fixed ==============
+#1. JQuery conflict between Map view of default theme and Search module
+#2. CSV import with non-UTF8 characters
+#3. Issue when searching "keyword" in Translation tool at Back-end
+#4. Cities list, States list, Custom fields list - at Back-end
+#5. Google Map doesn't show in SSL mode (https://)
+
+11th June 2014 - New version 2.6.5
+============    Add   =============
+Configure option to show states and cities that have available properties at the search form
+============ Improve =============
+All OS Property's themes
+Sef urls with layout: Property listing layout
+============ Bug fixed =============
+OS Calendar integration
+
+20th May 2014 - New version 2.6.4
+============    Add   =============
+1. Theme 3
+2. Priting layout
+3. Education tab in Property details page
+
+17th April 2014 - New version 2.6.3
+============ Improve =============
+1. Add Price filter slide UI
+2. Add Multiple dropdown Chosen on Category filter at Advanced search
+3. Add Min, Max Square Feet (Meter)
+
+17th March 2014 - New version 2.6.2
+============ Improve =============
+1. Improve OS Calendar integration
+2. Property details slideshow (theme1, theme2, blue, theme_black)
+3. Map layout (in theme default)
+4. Currency symbol position configuration
+5. Add new location data for Morroco and New Zealand
+
+
+20th January 2014 - New version 2.6.1
+============= Add ===============
+1. Tag system - Allow administrator or Agent/ Owner to setup the tags for properties
+2. Assign company admin or Agent / Owner to specific Joomla user group. 
+3. Square feet or Square meter configuration
+============ Improve =============
+1. Report system
+
+
+1 st January 2014 - New version 2.6
+============= Add ===============
+1 Owner object
+2 Report property, agent and company
+
+============ Improve =============
+1 Watermark feature
+2 OS Membership pro integration
+3 Extra fields
+4. Advanced search/ Search module function
+
+=========== Bugs fixed ============
+1 Xss security fixed
+2 Multiple languages synchronous issue
+
+
+10th December 2013 - New version 2.5
+Add
++ Mulilingual feature
++ CSV export 
+Improve
++ OSP Themes
++ Map view of Default OSP Theme
++ Sef Urls
+Bugs fixed
++ Photo Gallery at property details page (Joomla 3.2)
++ List view, grid view, map view at Default and Blue themes. 
+
+11th October 2013 - New version 2.4
+Add
++ New OSP theme: Blue. This theme supports to use OS Calendar
++ Rss feed at the category listing page
++ Configure option: Allows administrator to select the background color of pictures of properties
++ SEF Urls optimization in Dashboard at Back-end side of OS Property
+Improve 
++ Comment & Rating form at property details page
+Bugs fixed
++ Icons by Glyphicons conflict between OS Property and different Joomla templates
++ Pictures of properties are removed after one time period
++ Map zoom level when there is only one property on Google Map
+
+5th Sep 2013 - New version 2.3
+Add 
+ + Greek language package
+Improve 
+ + Rating & Review functions
+ + Default OS Property theme
+ + Sh404sef plugin for OS Property
+ + JomSocial plugin
+ + Image processing function
+ + Add alias, lattitude and longtitude at CSV form
+Bugs fixed
+ + Route issues
+ + Show page heading at OS Property's layouts
+ + Show pictures of properties at compare properties layout
+ + Fix php error at cron task function
+ + Fix value of "Rent time" inmultiple languages
+ + Fix error when remove Category's photo at backend
+ + Fix error at quick search form at Default layout.
+ + Agent information layout
+ + Configuration > Properties > Property details setting > Related properties : Field related categories 
+ + Restore database function
+ + CSV Import
+ + Duplicate Properties sef URLs
+
+Before upgrade notice: 
+ + Please backup your changes at OS Property before installing the update
+Upgrade requirement: 
+ + Re-select the "Rent time" values for properties in your OS Property system
+ + Re-install plugin :plug_js_agentproperties.j2.5.5_j3.x.zip, plg_sh404sef_osproperty.zip
+
+18th Aug 2013 - New version 2.2
+Add
++ New locator search layout
+Bugs fixed
++ Required fields at the add/edit property form
++ Route issue
++ Categories layout
+
+10th Aug 2013 - New version 2.1.2
+Add
++ Multiple languages for Email function
++ Add configure parameter for theme1, theme2, theme_black. Allow administrator to decide to show Google map at the list properties and advanced search results page.
+Bugs fixed
++ Google Maps: Zoom Level, Center from properties on map - Listing view
++ Hide company dropdown select list at the registration when there are no published company at the system
++ Correct Skype field configuration
++ Agent can add properties at frontend, but in the backend, administrator can't see those properties at the list
++ Property duplicate at backend
++ Manual generate thumbnail and medium photos at frontend
++ Resize the original photos to max width/height size - configure at backend
++ Toolbar menu at add/edit properies page - frontend
+
+26th July 2013 - New version 2.1.0
+Add
++ SEF system: Add alias to agent details, company, category and property type to avoid the duplicate sef urls. 
++ Spam detection function: Feature to integrate OS Property with StopSpamForum to prevent Spam attack. (Contact agent form, contact company form, Request more details about property form, Tell a friend form)
++ Company registration layout: In this version, registered user is available to create company profile.
+Improvement
+# Company profile modification
+# Agent profile modification
+# Add/edit property at frontend of OS Property
+# Properties compare
+# Default layout of OS Property 
+# Configuration page
+
+15th July 2013 - New version 2.0.9.1
+Improvement
++ SEF system: Add property alias to solve the duplicate sef urls case
+
+4th July 2013 - New version 2.0.9 
+New features 
++ Separated Sef system. From this version, you don't need to use Sh404sef to have SEF URLs in OS Property
++ New responsive listing themes (theme2 and black_theme)
++ Improve layouts (Agents, companies, categories)
++ Submenus in Back-end administrator side
++ Improve : Energy Measurement and CO2 emissions to make this feature to work with different standards
++ Add new language items for both frontend and backend. Please notice it in case you use OS Property in different languages.
++ From new version, pictures of properties will be saved in different directories depend on ID of properties.
+
+Remember to always make a backup of your site files and database prior to doing an upgrade - in case something goes wrong. If you do run into problems with the upgrade - please submit ticket on Joomdonation.com
+
+1st June 2013 - New version 2.0.8 - New OS Property responsive theme (Bootstrap)
+New version 2.0.8 for Joomla 2.5.x and Joomla 3.x has a responsive design based on the Twitter Bootstrap system, to enable your listings to look great on all browsers and mobile devices. In version 2.0.8 uses Twitter Bootstrap 2.3.2, it can display correctly if you're using a Joomla template which isn't a responsive design.
+Note: There are some layouts in frontend that we haven't applied the responsive template (but supports modile devices) are : Compare properties, Agent Edit profile, Map direction.
+To upgrade OS Property 2.0.8 on your Joomla site - simply use the com_osproperty.zip file in "component" folder of the installation package - and install it via the Joomla extension installer.  This will install the new version over the top of the old one - so please be aware that any modifications to the OS Property files, modules or language files will be overwritten.
+Remember to always make a backup of your site files and database prior to doing an upgrade - in case something goes wrong. If you do run into problems with the upgrade - please submit ticket on Joomdonation.com
+
+12th May 2013: New version 2.0.7.1 - Bug fixed
+
+Bugs fixed
+# Do not show Google map and address in property details with properties have value of field "Show address" is NO
+# Categories listing layout
+Improvement
+# Ajax search module - Change layout
+# Companies listing page - Change layout
+# Property listing layout : Add maximum properties that can be show and option to turn off the filter form at the top of this layout.
+
+Version - 2nd May 2013 (2.0.7) OS Property templates management & Mobile layout integration
+New features
+# Theme management
+# Responsive layout
+# Templates overrides
+Bug fixed
+# Radius searching in locator search view (page)
+# Logical bug when upgrade normal listing to featured. Happen when you integrate OS Property with OS Membership. From version 2.0.7, agents can use their subscription plans (purchased) to upgrade their normal properties.
+# Falang: Bug when you translate values of text field in Falang component
+# JomSocial Plugin
+# Xmap plugin
+
+More info: http://osproperty.ext4joomla.com/index.php/Latest-Updates/
+
+Version - 12th April 2013 (2.0.6.3) OS Calendar improvement
+Improvement
+1. Improve OS Calendar 
+2. Improve image resize function
+Bug fixed
+#  Agent profile
+#  Locator search with property type tabs
+#  Default currency
+
+Update Manually
+components >com_osproperty > osproperty.php
+components >com_osproperty > classes >agent.php
+components >com_osproperty > classes >agent.html.php
+components >com_osproperty > classes >locator.php
+components >com_osproperty > classes >locator.html.php
+components >com_osproperty > classes >listing.php
+components >com_osproperty > classes >listing.html.php
+components >com_osproperty > helpers  >common.php
+components >com_osproperty > helpers  >helper.php
+
+administrator > components >com_osproperty > classes > property.php
+administrator > components >com_osproperty > helpers  > classimage.php
+administrator > components >com_osproperty > helpers  > extrafields.php
+
+administrator > language  > en-GB > en-GB.com_osproperty.ini (Please update for other languages)
+language  > en-GB > en-GB.com_osproperty.ini  (Please update for other languages)
+
+If you already purchased Os Calendar component, please download the update
+
+Version - 2nd April 2013 (2.0.6.2) OS Calendar integration improvement
+Improvement
+1. Improve OS Calendar (New version can be used on Joomla 3.0.x)
+2. Add date range search feature (In case you are integrating OS Property and OS Calendar)
+3. Email function
+Bugs fixed
+# Email function
+# Compare properties function
+# php notice in plg_cronjobs_osproperty
+# Property full description
+
+Upgrade Manually
+Database:
+Table 
+#__osrs_csv_configururation: Add records
+
+
+Files: 
+components >com_osproperty > osproperty.php
+components >com_osproperty > classes >email.php
+components >com_osproperty > classes >listing.php
+components >com_osproperty > classes >listing.html.php
+components >com_osproperty > helpers  >common.php
+
+components >com_osproperty > templates > default >listing.html.tpl.php
+components >com_osproperty > templates > default >results.html.tpl.php
+
+components >com_osproperty >changelog.txt
+components >com_osproperty >version.txt
+
+administrator > components >com_osproperty > classes >configuration.php
+administrator > components >com_osproperty > classes >email.html.php
+administrator > components >com_osproperty > classes >translation.php
+
+administrator > language  > en-GB > en-GB.com_osproperty.ini (Please update for other languages)
+language  > en-GB > en-GB.com_osproperty.ini  (Please update for other languages)
+
+modules : 
+mod_ospropertyavailabilitysearch (In case you are integrating OS Property and OS Calendar)
+plg_cronjobs_osproperty.j2.5.5_j3.x.zip
+
+Version - 28th March 2013 (2.0.6.1)
+Improvement
+1. Relate properties part
+2. Request more details in property details
+Bugs fixed
+# Control Panel Icon
+# Control Panel Location slide
+# Saving company information in the frontend
+
+
+Version - 23rd March 2013 (2.0.6)
+Improvement
+1.CSV import function
+2.Membership integration
+3.Map view
+4.Frontend Pagination
+5.Random properties module
+6.Ajax search module
+7.Correct backend toolbar
+
+Bugs fixed
+# Modal box in Property details page on Joomlart template (Frontend) (J 3.0.x)
+# Manage agents in Company page (Frontend)
+# List properties of one Company (Frontend)
+# Feature property in default view (Frontend)
+# Property type link in Property details page.
+
+Upgrade Manually
+Database:
+Table 
+#__osrs_csv_forms : Change table structure
+
+Files:
+components >com_osproperty > classes >locator.php
+components >com_osproperty > classes >listing.php
+components >com_osproperty > classes >company.php
+components >com_osproperty > classes >company.html.php
+components >com_osproperty > classes >listing.html.php
+components >com_osproperty > classes >default.html.php
+components >com_osproperty > classes >agent.html.php
+components >com_osproperty > classes >agent..php
+components >com_osproperty > classes >locator.html.php
+components >com_osproperty > classes >category.php
+components >com_osproperty > templates > default >listing.html.tpl.php
+components >com_osproperty > templates > default >grid.html.tpl.php
+components >com_osproperty > templates > default >map.html.tpl.php
+components >com_osproperty > templates > default >results.map.html.tpl.php
+components >com_osproperty > templates > default >results.html.tpl.php
+components >com_osproperty > templates > default >results.grid.html.tpl.php
+components >com_osproperty > templates > default >style > style.css
+components >com_osproperty > helpers >common.php
+components >com_osproperty > helpers >helper.php
+components >com_osproperty > helpers >googlemap.lib.php
+components >com_osproperty > helpers >pagination.php
+
+components >com_osproperty > images > assets > fields.png
+components >com_osproperty > images > assets > translate.png
+components >com_osproperty > images > assets > export.png
+components >com_osproperty > images > assets > categories.png
+components >com_osproperty > images > assets > city.png
+components >com_osproperty > images > assets > setting.png
+components >com_osproperty > images > assets > price.png
+components >com_osproperty > images > assets > property.png
+
+components >com_osproperty > images > style > frontend_style.css
+
+components >com_osproperty > js > ajax.js
+components >com_osproperty > js > bootstrap > css >  bootstrap.css
+components >com_osproperty >changelog.txt
+components >com_osproperty >version.txt
+
+administrator > components >com_osproperty > classes >translation.html.php
+administrator > components >com_osproperty > classes >transaction.html.php
+administrator > components >com_osproperty > classes >agent.html.php
+administrator > components >com_osproperty > classes >state.php
+administrator > components >com_osproperty > classes >state.html.php
+administrator > components >com_osproperty > classes >category.html.php
+administrator > components >com_osproperty > classes >email.html.php
+administrator > components >com_osproperty > classes >companies.html.php
+administrator > components >com_osproperty > classes >csvform.php
+administrator > components >com_osproperty > classes >csvform.html.php
+administrator > components >com_osproperty > classes >pricegroup.html.php
+administrator > components >com_osproperty > classes >fieldgroup.html.php
+administrator > components >com_osproperty > classes >comment.html.php
+administrator > components >com_osproperty > classes >city.html.php
+administrator > components >com_osproperty > classes >city.php
+administrator > components >com_osproperty > classes >configuration.html.php
+administrator > components >com_osproperty > classes >cpanel.html.php
+administrator > components >com_osproperty > classes >cpanel.php
+administrator > components >com_osproperty > classes >property.php
+administrator > components >com_osproperty > classes >property.html.php
+administrator > components >com_osproperty > classes >extrafields.html.php
+administrator > components >com_osproperty > classes >type.html.php
+administrator > components >com_osproperty > helpers >common.php
+
+administrator > components >com_osproperty > tables > csvform.php
+administrator > components >com_osproperty > tables > property.php
+
+
+administrator > language  > en-GB > en-GB.com_osproperty.ini
+language  > en-GB > en-GB.com_osproperty.ini
+
+modules : 
+mod_ospropertyrandom
+mod_ospropertyajaxsearch
+
+
+Version - 12nd March 2013 (2.0.5)
+New feature added
+1. Export properties Google Earth KML format
+Export properties to Google Earth KML
+
+2. Address format
+Address format
+
+3. Photo gallery
+Slimbox photo gallery
+
+4.  Reference ID
+Customers told us, they want to have Property ID or Reference ID number for each property. Even they can use feature "extra fields" for their purpose, but almost of them don't like that way. Because, in extra field "property ID" isn't be shown in main position in property modification page, the field "property ID" can't be searched through input field "keyword" in search pages like advance search, locator search v.v. and the the extra field "property ID" can't be shown in the "random properties" module, properties list v.v. unless we modify source code.
+In this version, we add one field into OS Property's attributes. It is called "ref"
+
+5.  Price groups
+In old version, OS Property only supports one type of price groups for all property types of OS Property system. It's really not good, because in fact, the price lists for properties of Sale type are different with the price lists for properties of Rent type v.v.
+From this version, we modify the pricegroups feature. Remove display price, add price from, price to and property type fields for each price list item.
+
+6. More power search function
+As we mentioned in point 5, from version 2.0.5, we add property type into price list. With this feature, administrator can split the advance search form and locator search form by property types
+To split the Advance and Locator search form by property types, administrator must configure it in Configuration > Search tab
+If you select option All property types, the dropdown Property type will be appeared in the Advance/ Locator search page.
+The same with search module
+
+ 7  Map overlay
+Administrator can select default overlay for Google Maps in OS Property by go to Configuration > Tab General > Google maps
+
+8. New modules layouts
+We add bootstrap css to modules of OS Property like Random properties, Calculator, Mortgate modules.
+
+9. Add change log into Control Panel of OS Property in backend side
+
+10.  Issues fixed
+# Search function in Advance search and locator search
+# Expiration calculator
+# Sef extension for Sh404sef
+# Showing double yahoo icon in Agent details layout
+# Remove slashes "\" in property details content of properties
+# Adjust css of several layouts
+# Search module and advance search are the same page
+# Saving search list
+# Manage companies's agents
+# Change State's status in backend
+
+Manually update
+
+Database:
+Table 
+#__osrs_configuation : Add records
+#__osrs_properties : Add ref colum
+#__osrs_pricegroups : Change table structure
+
+Files:
+components >com_osproperty > classes >ajax.php
+components >com_osproperty > classes >compare.php
+components >com_osproperty > classes >company.php
+components >com_osproperty > classes >company.html.php
+components >com_osproperty > classes >listing.html.php
+components >com_osproperty > classes >default.html.php
+components >com_osproperty > classes >agent.html.php
+components >com_osproperty > classes >locator.html.php
+components >com_osproperty > classes >listing.php
+components >com_osproperty > classes >locator.php
+components >com_osproperty > templates > default >details.html.tpl.php
+components >com_osproperty > templates > default >small.details.html.tpl.php
+components >com_osproperty > templates > default >listing.html.tpl.php
+components >com_osproperty > templates > default >grid.html.tpl.php
+components >com_osproperty > templates > default >map.html.tpl.php
+components >com_osproperty > templates > default >results.map.html.tpl.php
+components >com_osproperty > templates > default >results.html.tpl.php
+components >com_osproperty > templates > default >results.grid.html.tpl.php
+components >com_osproperty > templates > default >style > style.css
+components >com_osproperty > views > ltype >tmple> default.xml
+components >com_osproperty > helpers >common.php
+components >com_osproperty > helpers >helper.php
+components >com_osproperty > helpers >googlemap.lib.php
+components >com_osproperty > helpers >pane.php
+components >com_osproperty > images > assets > kml.png
+components >com_osproperty > images > assets > room.gif
+components >com_osproperty > images > assets > bathroom.gif
+components >com_osproperty > images > assets > bedroom.gif
+components >com_osproperty > images > style > frontend_style.css
+components >com_osproperty > js > slimbox
+components >com_osproperty > js > ajax.js
+components >com_osproperty >changelog.txt
+components >com_osproperty >version.txt
+administrator > components >com_osproperty > classes >state.php
+administrator > components >com_osproperty > classes >state.html.php
+administrator > components >com_osproperty > classes >companies.php
+administrator > components >com_osproperty > classes >csvform.php
+administrator > components >com_osproperty > classes >configuration.php
+administrator > components >com_osproperty > classes >pricegroup.html.php
+administrator > components >com_osproperty > classes >pricegroup.php
+administrator > components >com_osproperty > classes >configuration.html.php
+administrator > components >com_osproperty > classes >cpanel.html.php
+administrator > components >com_osproperty > classes >cpanel.php
+administrator > components >com_osproperty > classes >property.php
+administrator > components >com_osproperty > classes >property.html.php
+administrator > components >com_osproperty > classes >configuration > google_maps > google_map.php
+administrator > components >com_osproperty > classes >configuration > locator >locator.php
+administrator > components >com_osproperty > helpers > extrafields.php
+administrator > components >com_osproperty > access.xml
+administrator > components >com_osproperty > config.xml
+administrator > language  > en-GB > en-GB.com_osproperty.ini
+language  > en-GB > en-GB.com_osproperty.ini
+
+
+Version - 25th February  2013 (2.0.4.6)
+New bugs fixed
+In old versions, administrator can't put the search module in the same page with the advance search page, because there are the conflict issues with the country, state and citi select lists in search module and advance search page. In this version (2.0.4.6), we have solved that bug. 
+In this version, we also change the button class in OS Property form with bootstrap css.
+Manual upgrade:
+components > com_osproperty > classes > listing.php
+components > com_osproperty > classes > listing.html.php
+components > com_osproperty > classes > ajax.php
+components > com_osproperty > js > ajax.js
+You need to re-install the module mod_ospropertysearch to apply new changes for that module in your site.
+
+Version - 21st February  2013 (2.0.4.5)
+Fix issues watermark 
+components > com_osproperty > helpers  > helper.php
+Fix issues with pagination
+components > com_osproperty > helpers  > pagination.php 
+Correct css style for "list" tables in backend
+administrator > components > com_osproperty > classes > property.html.php
+administrator > components > com_osproperty > classes > state.html.php
+administrator > components > com_osproperty > classes > fieldgroup.html.php
+administrator > components > com_osproperty > classes > agent.html.php
+administrator > components > com_osproperty > classes > pricegroup.html.php
+administrator > components > com_osproperty > classes > extrafield.html.php
+administrator > components > com_osproperty > classes > companies.html.php
+administrator > components > com_osproperty > classes > city.html.php
+administrator > components > com_osproperty > classes > category.html.php
+administrator > components > com_osproperty > classes > transaction.html.php
+administrator > components > com_osproperty > classes > email.html.php
+
+Version - 18th February  2013 (2.0.4.4)
+Add new function for watermark feature. 
+In old versions, when you select to use watermark function for properties's photos, the pattern text (property type name) can be appeared in first photo of every properties. 
+But in new version (2.0.4.4), you have more choice in Watermark feature.
+In Configuration > Tab Image 
+1. You can select to add watermark onto all photos of properties's photos
+2. You can select position in the properties's photos that the watermark image or pattern will appear
+3. You can select watermark type : Text pattern or Image
+4. If you select watermark type is Text pattern, you can select the text is category name, property type name, business name (in Configuration panel) or Custom text (You can setup it)
+5. If you select watermark type is Text pattern, you need  to select font size and color of the text pattern
+6. If you select watermark type is Image,  you need to upload the watermark image.
+
+7. Some customers ask us to remove the step "Customize thumbnail and medium photos" after click 'Save' or 'Apply' button at the toolbar. We think that's good idea, and we added it into this version. 
+In the configuration, tab Image,  you can turn it off by uncheck the option "Making thumbnail and medium photos by manually"
+8. We receive quite a lot requests from customers who ask us to let them know how to change the default view of the properties list. In this version, we add the option in the Configuration > Tab Properties > List view setting > Select default view, it allows administrator to select the default list view in the frontend of OS Property.
+
+All above features are applied to both frontend and backend. 
+
+Manually Update
+
+Databases
+Table  : #__osrs_configuration, #__osrs_watermark
+
+Source files: 
+administrator > components > com_osproperty > osproperty.php
+administrator > components > com_osproperty > classes > configuration > images > image.php
+administrator > components > com_osproperty > classes > configuration > properties > property.php
+administrator > components > com_osproperty > classes > property.php
+administrator > components > com_osproperty > classes > property.html.php
+administrator > components > com_osproperty > classes > configuration.php
+administrator > components > com_osproperty > classes > configuration.html.php
+administrator > components > com_osproperty > helpers  > common.php
+administrator > components > com_osproperty > fields     > city.php
+
+administrator > language > en-GB  > en-GB.com_osproperty.ini  (You need to update language files incase you are using other languages)
+
+components > com_osproperty > osproperty.php
+components > com_osproperty > classes > listing.php
+components > com_osproperty > classes > listing.html.php
+components > com_osproperty > classes > agent.php
+components > com_osproperty > classes > agent.html.php
+components > com_osproperty > helpers  > common.php
+components > com_osproperty > helpers  > helper.php
+
+components > com_osproperty > templates > default > listing.html.tpl.php
+components > com_osproperty > templates > default > details.html.tpl.php
+components > com_osproperty > templates > default > small.details.html.tpl.php
+
+components > com_osproperty > style > backend_style.css
+
+language > en-GB  > en-GB.com_osproperty.ini  (You need to update language files incase you are using other languages)
+
+Version - 24th January 2013
+Fix problem with com_osproperty.j2.5.5_j3.x.zip, load bootstrap library to solve the issue with tabs. 
+Add folder:
+components > com_osproperty >  js > bootstrap
+
+Version - 2 nd January 2013
+
+Add new feature
+In new version of the search module, you have the new filter parameters
+1.  Show custom field filter, if you want to show the custom fields filter, please select Yes
+2.  Show search form in next page,  After submitting the search form, OS Property will redirect you to advance search form. 
+If the search module is shown in this page, you will have 2 search form, one in the module and the other in the top of the advance search page. Use this option, you can hide the search form in the top of Advance page. 
+3.  Show search result in current page, some customers complain with us about when they submit the search form, the results are shown in current page. But the problem is in the current page, there are a lot modules and other content. 
+So the customers should scroll down the mouse to the bottom of page to see the results. In new version, you can select to show the results in the current page or in the another page. 
+Tip: In case you want to show the results in another page and you want the search module is also shown in that page, you should select to show the search module in all pages. 
+
+Version - 10th Octocber 2012
+Integrate with OS Calendar
+
+Version - 13th September 2012
+
+Fix issues
+
+The WalkScores is not show in the small property details layout
+Getdirection is shown in the (not show address) property. If you select not to show address in the property details, the Get Direction icon shouldn't be shown
+Show  search form in the listing page. If you don't want to show the filter form in the listing page, please go to Configuration, Tab Properties and Uncheck the option. Show Search form. 
+
+Version -  13th September 2012
+
+Fix issues
+
+Ordering header in the manage item (categories, property types, properties, agents, companies) pages 
+Extra fields : Multiple select field saving
+
+Version - 6th September 2012
+Fix issues
+
+Photos slideshow in the property details
+Access level in the properties listing and property search results page. 
+Remove properties in agent profile
+Remove photo files
+Extra field options saving
+
+Version - 22th August 2012
+Adding photo croping in the frontend
+Add new options face for the extra fields
+Fix some issues in the backend
+
+Version - 12th Auguest 2012
+Adding photo croping in the backend (for properties)
+Fix issues with falang integration
+Add maximum relate properties configuration
+
+Version - 1st August 2012
+Fix the issue sending email subject and content in the agent register
+Fix the issue when upload/remove document file when edit/add new property
+Add the config to allow admin to select to show or not the request more details. Adjust the request more details email also. 
+Add tcpdf library.
+Edit the search module file
+Edit the falang content elements
+
+Version - 27th July 2012
+Add DPE chart
+Add Walked score tab
+
+Version - 25th July 2012
+Fix the issue on agent registration without uploading photo
+Add map view in the property listing view
+Add mortgate and loan calculator modules
+
+Version 2.0.3.1 - 22th July 2012
+We fixed the security issue on IE browser
+
+Version - 16th July 2012
+
+Fix securiry issue : Unrestricted uploads
+
+Version - 14th July 2012
+
+Fix issues
+Property list (Frontend, Backend)
+Random property in the default layout
+Access level in the advance search page
+
+Version - 12th July 2012
+New features 
+1 Grid layout in the list properties pages.
+2.Captcha in agent registration page
+3. Adjust sh404sef ext for sub-category details links
+4. Add noimage image for the OS property ajax search results.
+
+Fix issues
+In the agent registration and agent edit details pages
+In the translator labels task in administrator side
+
+Version - 10th July 2012
+Fix issues on the configuration, count properties in the category listing page
+
+Version - 4th July 2012
+Fix issues on the category details page. 
+Add breadcrumb in the property details, category details and agent details page.
+Add new parameters on the view property listing layout
+
+Version - 4th July 2012
+Fix issues on install and uninstall com_osproperty
+Improve the advance search function
+Fix issues on backup and restore database
+
+Version - 3rd July 2012
+Fix advance search issue
+New feature: Allow administrator to select one or more countries that will be used for OS Property system. 
+In old version: Administrator can only select one country or all countries for OS Property system. 
+
+Version - 2nd July 2012
+Fix agent layout
+Fix language error
+Fix Compare and Favourite empty listing layout.
+
+Version - 27th June 2012
+Update the Agent search layout
+
+Version - 14th June 2012
+Allow administrator to select to show the feature fields group, amenity fields group and neighborhood fields group. 
+Allow administrator to select to show fields: bedrooms, bathrooms, rooms, parking, square feet and number of floors. 
+
+Ver - 6th June 2012
+  Fix the issues and clean the code 
+  
+Version - 30th May 2012
+Description:
+  Fix the issue in Frontend of OS Property component and clean the code. 
+
+Version - 29th May 2012 
+Description:
+  1. Multiple currencies
+  2. New slideshow photos
+  3. Add Small property details layout
+  
+Version - 24th May 2012
+Description:
+  1. Relate properties
+  2. Slide show photos in the property details page
+  3. Membership integration
+
+Version - 16th May 2012 
+Description:
+  1. Improve the backup and restore function
+  2. Router.php of OS Property for Joomla 2.5
+  3. Sh404 sef plugin
+  4. Jom Social plugin
+  5. ACL for field groups and fields
+
+Version - 10th May 2012
+Description:
+  1. CSV Import. Beta version
+  2. New listing layout (Frontend)
+
+Version - 7th May 2012:
+Description:
+  1. Add ACL control for field groups and custom fields.
+  2. Add Approval and Unapproval button in the toolbar of List properties page in Backend of component.
+  
+OS Property version 2.0
+
+   1. User can register to become an agent for uploading property.
+   2. Admin can create many companies, each company will have one company admin. Company admin can change the information of company and edit the agent lists from frontend.
+   3. Manage properties from backend by administrator, from frontend by owner (agents)
+   4. Manage agents from backend by administrator.
+   5. Add property from backend by administrator, from frontend by agents
+   6. List propertys in the frontend by property types, categories, cities, states, countries v.v.
+   7. Two property levels, normal listing and feature listing.
+   8. Upgrade listing to feature
+   9. Paypal payment gateway
+  10. Unlimited custom property types, categories/sub-categories, properties, amenities, custom field groups and custom fields
+  11. Locator search (Using goole map)
+  12. Advance search with basic and much more options.
+  13. Allow customers save the search criteria for next time. There are a part to manage their search lists.
+  14. Advance search with basic options and all custom fields
+  15. Google map V3, google map street view, and driving directions per property
+  16. Backup and restore feature
+  17. Admin notifications and optional approval of new listings, new agents
+  18. Send expired notification and alert approximates expired.
+  19. Emails form management
+  20. Export PDF
+  21. Print property details
+  22. Compare properties
+  23. Add property to favorite list
+  24. Send to friend and request more details form.
+  25. Location data for United States, Canada, United Kingdom, Spain, France, Brazil, India, Italy, Netherlands, Portugal, Turkey, Australia, Russia, Singapore, Sweden, Germany. Default is United States.
+  26. ACL with categories, properties, field groups and custom fields.

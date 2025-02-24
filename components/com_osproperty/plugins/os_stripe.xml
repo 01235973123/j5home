@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<install version="1.0" type="ospplugin" group="payment">
+	<name>os_stripe</name>
+	<title>Stripe</title>	
+	<author>Dang Thuc Dam</author>
+	<creationDate>10-02-2015</creationDate>
+	<copyright>Copyright 2010-2015 Ossolution Team</copyright>
+	<license>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU/GPL version 2</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>1.0</version>
+	<description>Stripe Payment Plugin For OS Property Extension</description>	
+	<config>
+		<fields name="params">
+			<fieldset name="basic" addfieldpath="/administrator/components/com_osproperty/elements">
+				<field name="stripe_public_key" type="text" size="60" label="Public API Key" description="API Key" default=""></field>
+				<field name="stripe_api_key" type="text" size="60" label="Secret API Key" description="API Key" default=""></field>		
+			</fieldset>	
+		</fields>
+	</config>
+	<files>
+		<filename>os_stripe.php</filename>
+		<logo>os_stripe.png</logo>
+		<folder>stripe</folder>				
+	</files>	
+</install>

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Layout: List all agents">
+		<message>
+			<![CDATA[This layout will list agents/ owners/ broker/ builder ..etc in OS Property system]]>
+		</message>
+	</layout>
+	<state>
+		<fields name="request">
+			<fieldset name="request">
+				<field name="usertype" type="list" default="" label="List Agent/Owner" description="What are types of user that you want to show at the list" class="input-medium">
+					<option value="">All</option>
+					<option value="0">Agent</option>
+					<option value="1">Owner</option>
+					<option value="2">Reator</option>
+					<option value="3">Broker</option>
+					<option value="4">Builder</option>
+					<option value="5">Landlord</option>
+					<option value="6">Seller</option>
+				</field>
+				<field name="default_sortby" type="list" default="" label="Default Sort By" description="Please select Default sorting by">
+					<option value="rand()">Random</option>
+					<option value="a.name">Name</option>
+					<option value="a.ordering">Ordering</option>
+					<option value="a.featured">Featured</option>
+				</field>
+				<field name="default_orderby" type="list" default="" label="Default Order By" description="Please select Default order by">
+					<option value="asc">Ascending</option>
+					<option value="desc">Descending</option>
+				</field>
+			</fieldset>
+		</fields>
+		<fields name="params">
+			<!-- Basic options. -->
+			
+		</fields>
+	</state>
+</metadata>

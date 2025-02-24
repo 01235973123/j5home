@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Layout: MLS Search">
+		<message>
+			<![CDATA[MLS Search.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Layout: MLS Search</name>
+		<description>Show MLS Search Iframe layout.</description>
+	</state>
+</metadata>

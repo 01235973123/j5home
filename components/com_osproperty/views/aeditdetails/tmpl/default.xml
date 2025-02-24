@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="User: Edit profile">
+		<message>
+			<![CDATA[Agents/ Owners/ Brokers/ Seller ..etc can manage their properties or other information through this layout]]>
+		</message>
+	</layout>
+	<state>
+		<name>User: Edit User profile</name>
+		<description>Edit User information layout.</description>
+	</state>
+</metadata>

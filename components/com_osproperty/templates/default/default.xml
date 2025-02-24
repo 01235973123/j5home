@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<install version="1.0" type="osptheme" group="osproperty">
+	<name>default</name>
+	<title>Default template</title>	
+	<author>Dang Thuc Dam</author>
+	<creationDate>15-03-2013</creationDate>
+	<copyright>Copyright 2007-2013 Ossolution Team</copyright>
+	<license>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU/GPL version 2</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>1.0</version>
+	<description>Default theme for OS Property component</description>
+	<mobiledevice>1</mobiledevice>
+	<addproperty>0</addproperty>
+	<agentregister>1</agentregister>
+	<agentedit>1</agentedit>
+	<companydetails>1</companydetails>
+	<advsearch>1</advsearch>
+	<listagents>1</listagents>
+	<listcompanies>1</listcompanies>
+	<defaultlayout>1</defaultlayout>
+	<locatorsearch>1</locatorsearch>
+	<listproperties>1</listproperties>
+	<compareproperties>0</compareproperties>
+	<favoritesproperties>1</favoritesproperties>
+	<config>	
+		<fields name="params">
+			<fieldset name="basic">
+				<field type="spacer" default="Listing" />
+				<field name="default_layout" class="input-medium" type="list" default="1" label="Select default view" description="You can select Default view of this theme">
+					<option value="1">List view</option>
+					<option value="2">Grid view</option>
+					<option value="3">Map view</option>
+				</field>
+				<field name="max_properties_map" class="input-mini" type="text" default="50" label="Max Properties on Map view" description="Please enter maximum properties that will be shown on the map view"/>
+				<field name="grid_view_columns" class="input-mini" type="list" default="2" label="Select columns in Grid view" description="Please select number columns in Grid View">
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+				</field>
+				<field name="show_kml_export" class="input-mini" type="list" default="1" label="Show KML export"
+					description="Do you want to show KML export icon">
+					<option value="1">Yes</option>
+					<option value="0">No</option>	
+				</field>
+				<field name="extrafieldncolumns" class="input-mini" type="list" default="3" label="Number columns of extra fields"
+					description="Please select number columns of extra fields in property details page.">
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</field>
+			</fieldset>			
+		</fields>
+	</config>
+</install>

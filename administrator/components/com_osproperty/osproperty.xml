@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.21.5" method="upgrade">
+	<name>Osproperty</name>
+	<author>Dang Thuc Dam</author>
+	<creationDate>2.7.2012</creationDate>
+	<copyright>(C) 2012-2024 Ossolution.</copyright>
+	<license>Commons GNU GPL</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>3.21.5</version>
+  <description><![CDATA[
+	<br />
+	<table>
+		<tr>
+			<td class="sectionname" valign="top" align="center"><h3>OS Property: The best Real Estate extension for Joomla!</h3></td>
+		</tr>
+		<tr>
+			<td style="align:center;" align="center">
+				<a href="http://osproperty.ext4joomla.com" target="_blank" title="Demo of OS Property extension">Demo</a> &nbsp;|&nbsp;
+				<a href="http://osproperty.ext4joomla.com/documentation" target="_blank" title="Documentation of OS Property extension">Documentation</a>&nbsp;|&nbsp;
+				<a href="https://www.joomdonation.com/forum/os-property.html" target="_blank" title="OS Property Forum Discusstion">Forum</a>&nbsp;|&nbsp;
+				<a href="https://www.joomdonation.com/joomla-templates/os-property-joomla-templates.html" target="_blank" title="Templates support OS Property extension">OSP Templates</a>
+			</td>
+		</tr>
+		<tr>
+			<td><br />
+			Now that installation is completed. Please setup configuration, manage categories, manage companies, agents and  define the 
+			property types, states, countries, bedroom numbers, bathrooms number and price increments for the search/select lists, and enter 
+			your property listing details. Specially, Osproperty has the extra fields function that you can define the extra fields and apply them into the properties in case you need. <br /><br /><strong>Sincerely, <BR /> Ossolution</strong></td>
+		</tr>
+		</table>
+  ]]></description>
+  <scriptfile>install.osproperty.php</scriptfile>
+  <install>
+    <sql>
+      <file driver="mysql" charset="utf8">sql/install.osproperty.sql</file>
+    </sql>
+  </install>  
+  <uninstall>
+    <sql>
+      <file driver="mysql" charset="utf8">sql/uninstall.osproperty.sql</file>
+    </sql>
+  </uninstall>
+  <media destination="com_osproperty" folder="component/media">
+	  <filename>index.html</filename>
+	  <folder>assets</folder>
+	  <folder>flags</folder>
+	  <folder>document</folder>
+  </media>
+  <languages folder="component/languages">
+      <language tag="en-GB">en-GB/en-GB.com_osproperty.ini</language>
+	  <language tag="de-DE">de-DE/de-DE.com_osproperty.ini</language>
+	  <language tag="el-GR">el-GR/el-GR.com_osproperty.ini</language>
+	  <language tag="es-ES">es-ES/es-ES.com_osproperty.ini</language>
+	  <language tag="fr-FR">fr-FR/fr-FR.com_osproperty.ini</language>
+	  <language tag="it-IT">it-IT/it-IT.com_osproperty.ini</language>
+	  <language tag="nl-NL">nl-NL/nl-NL.com_osproperty.ini</language>
+	  <language tag="pt-PT">pt-PT/pt-PT.com_osproperty.ini</language>
+	  <language tag="ru-RU">ru-RU/ru-RU.com_osproperty.ini</language>
+	  <language tag="tr-TR">tr-TR/tr-TR.com_osproperty.ini</language>
+  </languages>
+  <files folder="component">
+    <folder>backup</folder>  
+    <folder>captcha</folder>
+    <folder>classes</folder>
+    <folder>views</folder>
+    <folder>document</folder>
+    <folder>helpers</folder>
+	<folder>plugins</folder>
+    <folder>templates</folder>
+    <filename>index.html</filename>
+    <filename>osproperty.php</filename>
+	<filename>importcsv.php</filename>
+	<filename>version.txt</filename>
+	<filename>changelog.txt</filename>
+	<filename>router.php</filename>
+	<filename>cron.php</filename>
+  </files>
+
+  <administration>
+    <menu img="components/com_osproperty/images/home.png">OSSOLUTION_PROPERTY</menu>
+	<submenu>
+		<menu img="components/com_osproperty/images/assets/home.png" link="option=com_osproperty">CONTROL_PANEL</menu>
+		<menu img="components/com_osproperty/images/assets/home.png" link="option=com_osproperty&amp;task=configuration_list">CONFIGURATION</menu>
+		<menu img="components/com_osproperty/images/assets/category.png" link="option=com_osproperty&amp;task=categories_list">MANAGE_CATEGORIES</menu>
+		<menu img="components/com_osproperty/images/assets/home.png" link="option=com_osproperty&amp;task=properties_list">MANAGE_PROPERTIES</menu>
+		<menu img="components/com_osproperty/images/assets/company.png" link="option=com_osproperty&amp;task=companies_list">MANAGE_COMPANIES</menu>
+		<menu img="components/com_osproperty/images/assets/agent.png" link="option=com_osproperty&amp;task=agent_list">MANAGE_AGENTS</menu>
+		<menu img="components/com_osproperty/images/assets/type.png" link="option=com_osproperty&amp;task=type_list">MANAGE_PROPERTY_TYPES</menu>
+		<menu img="components/com_osproperty/images/assets/convenience.png" link="option=com_osproperty&amp;task=amenities_list">MANAGE_CONVENIENCE</menu>
+		<menu img="components/com_osproperty/images/assets/price.png" link="option=com_osproperty&amp;task=pricegroup_list">MANAGE_PRICE_LIST</menu>
+		<menu img="components/com_osproperty/images/assets/group.png" link="option=com_osproperty&amp;task=fieldgroup_list">MANAGE_EXTRA_FIELD_GROUPS</menu>
+		<menu img="components/com_osproperty/images/assets/extrafield.png" link="option=com_osproperty&amp;task=extrafield_list">MANAGE_EXTRA_FIELDS</menu>
+		<menu img="components/com_osproperty/images/assets/email.png" link="option=com_osproperty&amp;task=email_list">MANAGE_EMAIL_FORMS</menu>
+		<menu img="components/com_osproperty/images/assets/comment.png" link="option=com_osproperty&amp;task=comment_list">MANAGE_COMMENTS</menu>
+		<menu img="components/com_osproperty/images/assets/theme.png" link="option=com_osproperty&amp;task=theme_list">MANAGE_THEMES</menu>
+		<menu img="components/com_osproperty/images/assets/state.png" link="option=com_osproperty&amp;task=state_list">MANAGE_STATES</menu>
+		<menu img="components/com_osproperty/images/assets/city.png" link="option=com_osproperty&amp;task=city_list">MANAGE_CITIES</menu>
+	</submenu>
+	<languages folder="admin/languages">
+      <language tag="en-GB">en-GB/en-GB.com_osproperty.ini</language>
+	  <language tag="en-GB">en-GB/en-GB.com_osproperty.sys.ini</language>
+	  <language tag="de-DE">de-DE/de-DE.com_osproperty.ini</language>
+	  <language tag="de-DE">de-DE/de-DE.com_osproperty.sys.ini</language>
+	  <language tag="el-GR">el-GR/el-GR.com_osproperty.ini</language>
+	  <language tag="el-GR">el-GR/el-GR.com_osproperty.sys.ini</language>
+	  <language tag="es-ES">es-ES/es-ES.com_osproperty.ini</language>
+	  <language tag="es-ES">es-ES/es-ES.com_osproperty.sys.ini</language>
+	  <language tag="fr-FR">fr-FR/fr-FR.com_osproperty.ini</language>
+	  <language tag="fr-FR">fr-FR/fr-FR.com_osproperty.sys.ini</language>
+	  <language tag="it-IT">it-IT/it-IT.com_osproperty.ini</language>
+	  <language tag="it-IT">it-IT/it-IT.com_osproperty.sys.ini</language>
+	  <language tag="nl-NL">nl-NL/nl-NL.com_osproperty.ini</language>
+	  <language tag="nl-NL">nl-NL/nl-NL.com_osproperty.sys.ini</language>
+	  <language tag="pt-PT">pt-PT/pt-PT.com_osproperty.ini</language>
+	  <language tag="pt-PT">pt-PT/pt-PT.com_osproperty.sys.ini</language>
+	  <language tag="ru-RU">ru-RU/ru-RU.com_osproperty.ini</language>
+	  <language tag="ru-RU">ru-RU/ru-RU.com_osproperty.sys.ini</language>
+	  <language tag="tr-TR">tr-TR/tr-TR.com_osproperty.ini</language>
+	  <language tag="tr-TR">tr-TR/tr-TR.com_osproperty.sys.ini</language>
+    </languages>
+    <files folder="admin">    
+        <folder>classes</folder>  
+        <folder>tables</folder>
+        <folder>helpers</folder>
+		<folder>images</folder>
+		<folder>elements</folder>
+		<folder>sql</folder>
+		<folder>fields</folder>
+        <filename>index.html</filename> 
+		<filename>install.osproperty.sql</filename>
+		<filename>uninstall.osproperty.sql</filename>
+        <filename>osproperty.php</filename>
+		<filename>access.xml</filename>
+		<filename>config.xml</filename>
+    </files>
+	<files folder="admin/sql">
+    <!-- database script -->
+      <filename>install.osproperty.sql</filename>
+      <filename>uninstall.osproperty.sql</filename>
+    </files>
+  </administration>
+</extension >

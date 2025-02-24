@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Layout: Property Details">
+		<message>
+			<![CDATA[This layout provide Property Details page. You can select the Real Estate property to be shown in Menu parameters form]]>
+		</message>
+	</layout>
+	<state>
+		<name>Layout: Property Details</name>
+		<description>Property Details layout.</description>
+	</state>
+	<fields name="request">
+		<fieldset name="request"
+			addfieldpath="/administrator/components/com_osproperty/fields/modal">
+
+			<field name="id" type="modal_property"
+				label="OS_SELECT_AN_PROPERTY"
+				required="true"
+				edit="true"
+				clear="false"
+				description="Please select Property that you want to show"
+			/>
+		</fieldset>
+	</fields>
+</metadata>

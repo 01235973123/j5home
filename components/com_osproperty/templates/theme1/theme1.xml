@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<install version="1.0" type="osptheme" group="osproperty">
+	<name>theme1</name>
+	<title>OSP Responsive theme - Bootstrap twitter supported</title>	
+	<author>Dang Thuc Dam</author>
+	<creationDate>26-05-2013</creationDate>
+	<copyright>Copyright 2007-2013 Ossolution Team</copyright>
+	<license>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU/GPL version 2</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>1.0</version>
+	<description>OSP Responsive theme - Bootstrap twitter supported. This theme uses Twitter Bootstrap 2.3.2, it can display correctly if you're using a Joomla template which isn't a responsive design.</description>
+	<mobiledevice>1</mobiledevice>
+	<addproperty>0</addproperty>
+	<agentregister>1</agentregister>
+	<agentedit>1</agentedit>
+	<companydetails>1</companydetails>
+	<advsearch>1</advsearch>
+	<listagents>1</listagents>
+	<listcompanies>1</listcompanies>
+	<defaultlayout>1</defaultlayout>
+	<locatorsearch>1</locatorsearch>
+	<listproperties>1</listproperties>
+	<compareproperties>0</compareproperties>
+	<favoritesproperties>1</favoritesproperties>
+	<config>	
+		<fields name="params">
+			<fieldset name="basic">
+				<field type="spacer" default="Listing" />
+				<field name="show_map" class="input-mini" type="list" default="1" label="Show Google map at list properties page"
+					description="Do you want to show the Google map at the list properties page">
+					<option value="1">Yes</option>
+					<option value="0">No</option>	
+				</field>
+				<field type="spacer" default="Details" />
+				<field name="titleColor" class="" type="color" default="#03b4ea" label="Title color" description="Choose the title color for static label. If left blank the Default (#03b4ea) is used" />
+				<field type="spacer" default="Details" />
+				<field name="show_location" class="input-mini" type="list" default="1" label="Show location search items above Google Map"
+					description="Do you want to show location search items above Google Map">
+					<option value="1">Yes</option>
+					<option value="0">No</option>	
+				</field>
+				<field name="show_createddate" class="input-mini" type="list" default="1" label="Show Created Date"
+					description="Do you want to show Created date of property in Details page">
+					<option value="1">Yes</option>
+					<option value="0">No</option>	
+				</field>
+			</fieldset>			
+		</fields>
+	</config>
+</install>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<view title="Administrator: Manage All Properties">
+		<message><![CDATA[This layout allows user to manage all properties at front-end. But this feature will only be accessed with certain users in specific Joomla User group]]></message>
+	</view>
+</metadata>

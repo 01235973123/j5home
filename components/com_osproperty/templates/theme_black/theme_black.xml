@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<install version="1.0" type="osptheme" group="osproperty">
+	<name>theme_black</name>
+	<title>OSP Responsive Black Transparent theme</title>	
+	<author>Dang Thuc Dam</author>
+	<creationDate>26-05-2013</creationDate>
+	<copyright>Copyright 2007-2013 Ossolution Team</copyright>
+	<license>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU/GPL version 2</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>1.0</version>
+	<description>OSP Responsive Black Transparent theme - Bootstrap twitter supported. This theme uses Twitter Bootstrap 2.3.2, it can display correctly if you're using a Joomla template which isn't a responsive design.</description>
+	<mobiledevice>1</mobiledevice>
+	<addproperty>0</addproperty>
+	<agentregister>1</agentregister>
+	<agentedit>1</agentedit>
+	<companydetails>1</companydetails>
+	<advsearch>1</advsearch>
+	<listagents>1</listagents>
+	<listcompanies>1</listcompanies>
+	<defaultlayout>1</defaultlayout>
+	<locatorsearch>1</locatorsearch>
+	<listproperties>1</listproperties>
+	<compareproperties>0</compareproperties>
+	<favoritesproperties>1</favoritesproperties>
+	<config>	
+		<fields name="params">
+			<fieldset name="basic">
+				<field type="spacer" default="Listing" />
+				<field name="show_map" class="input-mini" type="list" default="1" label="Show Google map at list properties page"
+					description="Do you want to show the Google map at the list properties page">
+					<option value="1">Yes</option>
+					<option value="0">No</option>	
+				</field>
+				<field type="spacer" default="Details" />
+				<field name="show_request_more_details" class="input-small" type="list" default="1" label="Show Request More details form at"
+					description="You can select to show the Request More details form at the top of bottom (in the tabs) of property details page">
+					<option value="top">Top</option>
+					<option value="bottom">Bottom</option>	
+				</field>
+				<field name="show_location" class="input-mini" type="list" default="1" label="Show location search items above Google Map"
+					description="Do you want to show location search items above Google Map">
+					<option value="1">Yes</option>
+					<option value="0">No</option>	
+				</field>
+				<field name="extrafieldncolumns" class="input-mini" type="list" default="3" label="Number columns of extra fields"
+					description="Please select number columns of extra fields in property details page.">
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</field>
+			</fieldset>			
+		</fields>
+	</config>
+</install>

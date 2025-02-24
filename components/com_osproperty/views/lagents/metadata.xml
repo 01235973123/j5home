@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<view title="Layout: List all agents">
+		<message>
+			<![CDATA[List all agents.]]>
+		</message>
+	</view>
+	<state>
+		<name>Layout: List all agents</name>
+		<description>List all agents layout.</description>
+	</state>
+</metadata>

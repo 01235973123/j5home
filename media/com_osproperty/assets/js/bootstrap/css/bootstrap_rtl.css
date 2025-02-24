@@ -1,0 +1,76 @@
+/**
+CSS RTL
+**/
+.form-horizontal .control-label {
+    float:right !important;
+    padding-right:20px !important;
+}
+
+.form-horizontal .controls {
+    margin-left: 0px !important;
+}
+
+.nav-tabs > li, .nav-pills > li {
+    float: right !important;
+}
+
+.row-fluid [class*="span"] {
+    float: right !important;
+}
+
+.toprightpart2{
+    padding-right:20px !important;
+}
+
+.boldtext{
+    padding-right:20px !important;
+}
+
+.checkout_details_div strong{
+    padding-right:20px !important;
+}
+
+.checkout_details_div .span12{
+    float:right !important;
+}
+
+.oscalendar_table td{
+    text-align:right !important;
+}
+
+.latestproperties ul.display li .content {
+    clear: left !important;
+    float: left !important;
+}
+
+.gridelement{
+    margin-left:0px !important;
+}
+
+.os-leftpad{
+    margin-left:0px !important;
+    margin-right:20px !important;
+}
+
+div.ospitem-leftpad, span.ospitem-leftpad, .descriptionWrap{
+    margin-left:0px !important;
+    padding-right:5px !important;
+}
+
+.os_property-meta li
+{
+    float:right !important;
+}
+
+.row-fluid [class*="span"] {
+    box-sizing: border-box;
+    display: block;
+    float: left;
+    margin-right: 2.12766%;
+    margin-left: 0 !important;
+}
+
+.row-fluid [class*="span"]:first-child {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}

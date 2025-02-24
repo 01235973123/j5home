@@ -1,0 +1,209 @@
+.chosen-container-single .chosen-single
+{
+	height:35px;
+	font-size:15px;
+	padding:4px 0 0 8px;
+}
+
+.chosen-container-single .chosen-single div b {
+    background: url("../../../../media/vendor/chosen/css/chosen-sprite.png") no-repeat 0px 7px;
+}
+
+
+fieldset legend
+{
+	font-weight:bold;
+}
+
+.smallSizeBox
+{
+	width:90px !important;
+	display:inline;
+}
+
+.joomla4 select
+{
+	max-width:250px;
+}
+
+.searchTypeDropdownNumber, .searchTypeDropdownString, .radius_search_dropdown
+{
+	display:inline;
+}
+
+.loancal input
+{
+	display:inline;
+	width:90px !important;
+}
+
+.loancal .add-on, .mortgage .add-on
+{
+	padding:5px;
+}
+
+table.adminlist tr td
+{
+	padding:7px;
+}
+
+.oscpanel .accordion-body
+{
+	padding: 10px 5px;
+}
+
+#controlPanelContent
+{
+	padding:0px;
+}
+
+
+.transaction .field-calendar
+{
+	display:inline-block;
+}
+
+.transaction select
+{
+	display:inline;
+	width:220px;
+}
+
+#propertiesListTab .icon-publish, #agentList .icon-publish
+{
+	color:white;
+}
+
+
+#propertyModification li.nav-item a.nav-link, #adminForm li.nav-item a.nav-link
+{
+	display:block !important;
+}
+
+#propertyModification #price
+{
+	width:120px;
+}
+
+#propertyModification #curr_chosen
+{
+	width:180px !important;
+}
+
+div.ospitem-leftpad, span.ospitem-leftpad {
+    margin-left: 0px;
+}
+
+a, .table tbody a:not(.badge)
+{
+	text-decoration:none;
+}
+
+#osp-configuration .tab-content #configTabTabs li a
+{
+	font-size:15px;
+}
+
+#osp-configuration .tab-content label
+{
+	font-size:15px;
+}
+
+.ilarge
+{
+	width:280px !important;
+}
+
+#city
+{
+	min-width:280px !important;
+}
+
+.imedium
+{
+	width:200px !important;
+}
+
+.ishort
+{
+	width:150px !important;
+}
+
+.imini
+{
+	width:100px !important;
+}
+.field_explanation
+{
+	font-size:12px;
+}
+
+a[target="_blank"]::before {
+	content:none;
+}
+
+
+#cpanel .icon span 
+{
+	font-size:14px;
+}
+
+.agentdetailslink
+{
+	margin:0px 10px;
+}
+
+#agentslisting .agentphotobox .agentdetailslink .agentdetailsbtn
+{
+	width:90%;
+}
+
+#agentslisting ul.social
+{
+	padding:0px;
+}
+
+.agentdetails ul.social
+{
+	padding:0px;
+}
+
+.agentdetails a
+{
+	text-decoration:none;
+}
+
+#contactForm input, #contactForm textarea
+{
+	max-width:100%;
+}
+
+.property-details-main-div .nav.nav-tabs .nav-link
+{
+	padding-top:0px;
+}
+
+.locatorpage .osnavbar .osnavbar-inner ul li
+{
+	display:inline;
+}
+
+.locatorpage .osnavbar .osnavbar-inner ul li.moreoption
+{
+	padding-top:10px;
+}
+
+#propertiesListTab img
+{
+	border-radius:3px;
+}
+
+#agentprofilepage .form-group .input-large
+{
+	width:100% !important;
+}
+
+.inlinedisplaye
+{
+	display:inline;
+}

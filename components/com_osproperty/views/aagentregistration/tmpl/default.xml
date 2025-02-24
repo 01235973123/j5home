@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="User: Registration">
+		<message>
+			<![CDATA[This is Agent/ Owner/ Seller/ Broker ..etc registration form. This layout can be accessed with both Joomla registered user or non-registered user]]>
+		</message>
+	</layout>
+	<state>
+		<name>User: Registration</name>
+		<description>User registration layout.</description>
+	</state>
+</metadata>

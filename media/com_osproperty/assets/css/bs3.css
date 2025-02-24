@@ -1,0 +1,60 @@
+#listPropertiesDiv{box-shadow:-2px -1px 5px 0 rgba(0,0,0,0.4);margin-left:0!important;}
+
+#ftForm .col-md-12, #agentlisting .col-md-12{
+	padding-left:0px !important;
+}
+
+#properties_comparing .col-md-12,#propertydetails .col-md-12,#propertydetails .col-md-8, #propertydetails .col-md-6{
+	
+}
+
+.detailsView .col-md-7{
+	padding-left:0px !important;
+}
+
+#editprofile .col-md-12, #listcategories .col-md-12,.latestproperties_right .col-md-12,#companydetails .col-md-12, #agentdetails .col-md-12{
+	
+}
+
+.latestproperties_right .col-md-2{
+	margin-left:0px !important;
+	padding-left:0px !important;
+}
+
+.mainframe_search .col-md-12{
+	padding-left:0px !important;
+}
+
+#agentlisting .col-md-3{
+	padding-left:0px !important;
+}
+
+.property-image{
+	padding:0px !important;
+}
+
+.input-mini{width:60px !important}
+.input-small{width:90px !important}
+.input-medium{width:150px !important}
+.input-large{width:210px}
+.input-xlarge{width:270px}
+.input-xxlarge{width:530px}
+
+#routeStyle, #address, #keyword,#postcode,#radius_search, .input-mini{display:inline-block !important;}
+
+#locatormoredetails{
+	padding-top:10px; 
+	padding-bottom:10px;
+}
+
+.property-list ul{
+	padding:0px;
+}
+
+.locatorpage .navbar .nav > li {
+    vertical-align: middle;
+}
+
+.propinfo ul{
+	padding-left:0px !important;
+}

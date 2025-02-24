@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Registered: Search list">
+		<message>
+			<![CDATA[List all user's advance search list]]>
+		</message>
+	</layout>
+	<state>
+		<name>Registered: Search List</name>
+		<description>List all user's advance search list.</description>
+	</state>
+</metadata>

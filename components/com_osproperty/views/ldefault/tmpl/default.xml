@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Layout: Front page">
+		<message>
+			<![CDATA[This is default layout of OS Property component.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Layout: Front page</name>
+		<description>Front page layout.</description>
+	</state>
+</metadata>

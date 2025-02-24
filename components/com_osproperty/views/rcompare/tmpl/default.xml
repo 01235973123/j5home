@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Compare properties">
+		<message>
+			<![CDATA[List all properties in Comparison list of current user.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Compare properties</name>
+		<description>Compare properties layout.</description>
+	</state>
+</metadata>

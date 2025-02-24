@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Layout: Advanced Search">
+		<message>
+			<![CDATA[This is Advanced search layout of OS Property.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Layout: Advanced Search</name>
+		<description>Advanced Search layout.</description>
+	</state>
+</metadata>

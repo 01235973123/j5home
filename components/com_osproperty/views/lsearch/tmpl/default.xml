@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Layout: Locator Search">
+		<message>
+			<![CDATA[This is Google Map Search layout.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Layout: Locator Search</name>
+		<description>Locator Search layout.</description>
+	</state>
+	<fields name="params">
+			<!-- Basic options. -->
+			<fieldset name="basic" label="Style Setting" addfieldpath="/administrator/components/com_osproperty/elements">
+				<field name="locator_style" class="btn-group" type="radio" default="style1" label="Select Locator style" description="OS Property provides 2 styles for Locator search layout. You can select one of 2 style for this menu">
+					<option value="style1">Style1</option>
+					<option value="style2">Style2</option>
+				</field>
+			</fieldset>
+	</fields>
+</metadata>

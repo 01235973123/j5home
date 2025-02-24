@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" group="task" method="upgrade">
+	<name>plg_task_mpofflinepaymentreminder</name>
+	<author>Tuan Pham Ngoc</author>
+	<creationDate>2024-10</creationDate>
+	<authorEmail>tuanpn@joomdonation.com</authorEmail>
+    <authorUrl>https://joomdonation.com</authorUrl>
+    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <license>GNU General Public License version 3, or later</license>
+	<version>4.0.1</version>
+	<description>PLG_TASK_MPOFFLINEPAYMENTREMINDER_XML_DESCRIPTION</description>
+	<namespace path="src">Joomla\Plugin\Task\MPOfflinePaymentReminder</namespace>
+	<files>
+		<folder plugin="mpofflinepaymentreminder">services</folder>
+		<folder>src</folder>
+		<folder>forms</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">language/en-GB/plg_task_mpofflinepaymentreminder.ini</language>
+		<language tag="en-GB">language/en-GB/plg_task_mpofflinepaymentreminder.sys.ini</language>
+	</languages>
+</extension>

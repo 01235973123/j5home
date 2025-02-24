@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Registered: Favorite properties">
+		<message>
+			<![CDATA[List all Favorite properties of current logged user]]>
+		</message>
+	</layout>
+	<fields name="params">
+		<fieldset name="basic" addfieldpath="/administrator/components/com_osproperty/elements">
+			<field name="theme_id" type="theme" default="" label="Select Theme" description="Choose the theme which you want to display properties. If you leave this field empty, OS Property will use the Published theme." />
+		</fieldset>
+	</fields>
+	<state>
+		<name>Registered: Favorite properties</name>
+		<description>Favorite properties layout.</description>
+	</state>
+</metadata>

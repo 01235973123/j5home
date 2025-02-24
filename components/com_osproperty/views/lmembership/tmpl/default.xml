@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Layout: Purchasing subscription">
+		<message>
+			<![CDATA[This is Layout: Purchasing subscription layout of OS Property.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Layout: Purchasing subscription</name>
+		<description>This layout is used to show OS Propety's subscription plans from Membership pro</description>
+
+		<fields name="request">			
+			<fieldset name="request" addfieldpath="/administrator/components/com_osproperty/elements">
+				<field name="usertype" class="input-medium" type="list" default="" label="List plans of user type" description="Select User type (Agent/Company administrator) that the plans will be shown">
+					<option value="">List all plans</option>
+					<option value="0">Agent</option>
+					<option value="2">Company</option>
+				</field>
+				<field name="proType" class="input-medium" type="list" default="" label="Property type" description="Select Property type that plans will be shown">
+					<option value="">List all plans</option>
+					<option value="0">Standard</option>
+					<option value="1">Featured</option>
+				</field>
+			</fieldset>	
+		</fields>
+	</state>
+</metadata>

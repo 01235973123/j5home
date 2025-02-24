@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<access component="com_osproperty">
+	<section name="component">
+		<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+		<action name="configuration" title="OS_CONFIGURATION_ACCESS" description="OS_CONFIGURATION_ACCESS_DESC" />
+		<action name="properties" title="OS_MANAGE_PROPERTIES" description="OS_MANAGE_PROPERTIES_DESC" />
+		<action name="categories" title="OS_MANAGE_CATEGORIES" description="OS_MANAGE_CATEGORIES_DESC" />
+		<action name="propertytypes" title="OS_MANAGE_PROPERTY_TYPES" description="OS_MANAGE_PROPERTY_TYPES_DESC" />
+		<action name="convenience" title="OS_MANAGE_CONVENIENCE" description="OS_MANAGE_CONVENIENCE_DESC" />
+		<action name="extrafieldgroups" title="OS_MANAGE_EXTRA_FIELD_GROUPS" description="OS_MANAGE_EXTRA_FIELD_GROUPS_DESC" />
+		<action name="extrafields" title="OS_MANAGAE_EXTRA_FIELDS" description="OS_MANAGE_EXTRAFIEDS_DESC" />
+		<action name="pricelists" title="OS_MANAGE_PRICELIST" description="OS_MANAGE_PRICELIST_DESC" />
+		<action name="agents" title="OS_MANAGE_AGENTS" description="OS_MANAGE_AGENTS_DESC" />
+		<action name="companies" title="OS_MANAGE_COMPANIES" description="OS_MANAGE_COMPANIES_DESC" />
+		<action name="location" title="OS_MANAGE_LOCATION" description="OS_MANAGE_LOCATION_DESC" />
+		<action name="email" title="OS_MANAGE_EMAIL_FORMS" description="OS_MANAGE_EMAIL_FORMS_DESC" />
+		<action name="comments" title="OS_MANAGE_COMMENTS" description="OS_MANAGE_COMMENTS_DESC" />
+		<action name="backup" title="OS_BACKUP" description="OS_BACKUP_DATABASE_DESC" />
+		<action name="restore" title="OS_RESTORE" description="OS_RESTORE_DATABASE_DESC" />
+		<action name="themes" title="OS_MANAGE_THEMES" description="OS_MANAGE_THEMES_DESC" />
+		<action name="translation" title="OS_TRANSLATION_LIST" description="OS_TRANSLATION_LIST_DESC" />
+		<action name="csv" title="OS_MANAGE_CSV" description="OS_MANAGE_CSV_DESC" />
+		<action name="xml" title="OS_MANAGE_XML" description="OS_MANAGE_XML_DESC" />
+		<action name="tags" title="OS_MANAGE_TAGS" description="OS_MANAGE_TAGS_DESC" />
+		<action name="report" title="OS_REPORT" description="OS_MANAGE_REPORTS_DESC" />
+		<action name="transactions" title="OS_MANAGE_TRANSACTION" description="OS_MANAGE_TRANSACTION_DESC" />
+		<action name="sef" title="OS_OPTIMIZE_SEF_URLS" description="OS_SEF_OPTIMIZE_DESC" />
+		<action name="picture" title="OS_RE_GENERATE_PICTURES_OF_PROPERTIES" description="OS_REGENERATE_PICTURES_DESC" />
+		<action name="frontendmanage" title="Manage all properties at front-end" description="Assign permission to manage all properties at front-end" />
+	</section>	
+</access>

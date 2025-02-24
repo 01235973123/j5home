@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<install version="1.0" type="osptheme" group="osproperty">
+	<name>theme3</name>
+	<title>Theme 3 - CSS 3 theme</title>	
+	<author>Dang Thuc Dam</author>
+	<creationDate>15-05-2014</creationDate>
+	<copyright>Copyright 2007-2014 Ossolution Team</copyright>
+	<license>http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU/GPL version 2</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>1.0</version>
+	<description>Theme 3 - CSS 3 theme.</description>
+	<mobiledevice>1</mobiledevice>
+	<addproperty>0</addproperty>
+	<agentregister>1</agentregister>
+	<agentedit>1</agentedit>
+	<companydetails>1</companydetails>
+	<advsearch>1</advsearch>
+	<listagents>1</listagents>
+	<listcompanies>1</listcompanies>
+	<defaultlayout>1</defaultlayout>
+	<locatorsearch>1</locatorsearch>
+	<listproperties>1</listproperties>
+	<compareproperties>0</compareproperties>
+	<favoritesproperties>1</favoritesproperties>
+	<config>	
+		<fields name="params">
+			<fieldset name="basic">
+				<field type="spacer" default="Listing" />
+				<field name="ncolumns" class="input-mini" type="list" default="1" label="Number Columns in the list of properties page"
+					description="Please select number columns in the list of properties page.">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</field>
+				<field name="extrafieldncolumns" class="input-mini" type="list" default="3" label="Number columns of extra fields"
+					description="Please select number columns of extra fields in property details page.">
+					<option value="2">2</option>
+					<option value="3">3</option>
+				</field>
+				<field name="themeBackgroundColor" class="" type="color" default="#88C354" label="Label background color" description="Choose the background color for static label. If left blank the Default (#88C354) is used" />
+				<field type="spacer" default="Details" />
+				<field name="showcategoryprice" class="input-mini" type="list" default="1" label="Show Category and Price on Mobile"
+					description="Do you want to show Category and Price of properties on listing page (Mobile screen)">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+			</fieldset>			
+		</fields>
+	</config>
+</install>

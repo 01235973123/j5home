@@ -1,0 +1,177 @@
+@import url("http://fonts.googleapis.com/css?family=Ubuntu:300,400,700,300italic,400italic,700italic");
+:focus {
+  outline: medium none !important;
+}
+
+
+figure {
+  margin: 0;
+  padding: 0;
+}
+
+
+.slides li {
+  display: none;
+}
+
+.location-finder {
+  -webkit-border-radius: 4px;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 4px;
+  -moz-background-clip: padding;
+  border-radius: 4px;
+  background-clip: padding-box;
+  border: solid 1px #c3c5c9;
+  background-color: white;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  float: left;
+  overflow: hidden;
+  position: relative;
+}
+.location-finder .button-slider {
+  position: absolute;
+  visibility: visible;
+  top: 48%;
+  left: 0%;
+  background-image: url('../img/button-slider.png');
+  width: 7px;
+  height: 17px;
+  padding: 5px 3px;
+  -webkit-border-radius: 0 4px 4px 0;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 0 4px 4px 0;
+  -moz-background-clip: padding;
+  border-radius: 0 4px 4px 0;
+  background-clip: padding-box;
+  border: solid 1px #c3c5c9;
+  border-left: none;
+  background-position: center center;
+  background-repeat: no-repeat;
+  z-index: 2000;
+  background-color: #ffffff;
+}
+.location-finder #map_canvas {
+  width: 100%;
+  height: 750px;
+}
+.location-finder .left-side {
+  -webkit-border-radius: 4px 0 4px 0;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 4px 0 4px 0;
+  -moz-background-clip: padding;
+  border-radius: 4px 0 4px 0;
+  background-clip: padding-box;
+  float: left;
+  width: 40%;
+  height: 750px;
+  overflow-y: auto;
+  position: relative;
+  z-index: 200;
+  top: 0px;
+  left: 0px;
+  background-color: white;
+}
+.location-finder .left-side .mCSB_container {
+  margin-right: 7px;
+}
+.location-finder .left-side .mCustomScrollBox > .mCSB_scrollTools {
+  width: 8px;
+}
+.location-finder .left-side .mCS-dark-thick > .mCSB_scrollTools .mCSB_draggerRail {
+  width: 6px;
+  background-color: white;
+  border-right: solid 1px #c3c5c9;
+}
+.location-finder .left-side .mCS-dark-thick > .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar {
+  -webkit-border-radius: 0;
+  -webkit-background-clip: padding-box;
+  -moz-border-radius: 0;
+  -moz-background-clip: padding;
+  border-radius: 0;
+  background-clip: padding-box;
+  background-color: black;
+}
+.location-finder article {
+  width: 100%;
+  padding: 10px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border-top: solid 1px #c3c5c9;
+  border-right: solid 1px #c3c5c9;
+  float: left;
+  cursor: pointer;
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  -ms-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out;
+}
+.location-finder article:hover {
+  background-color: #edeeef;
+}
+.location-finder article:first-child {
+  border-top: none;
+}
+.location-finder article figure {
+  float: left;
+  width: 40%;
+  height: auto;
+  margin-left: -1px;
+  border: solid 1px #c3c5c9;
+  overflow: hidden;
+  -webkit-box-shadow: inset 0px 0px 10px #d0d2d5;
+  -moz-box-shadow: inset 0px 0px 10px #d0d2d5;
+  box-shadow: inset 0px 0px 10px #d0d2d5;
+  color: inset 0px 0px 10px #d0d2d5;
+  position: relative;
+  background-color: white;
+}
+.location-finder article figure img {
+  width: 100%;
+  height: auto;
+}
+.location-finder article .text {
+  float: left;
+  width: 45%;
+  margin-left: 5%;
+}
+.location-finder article h3 {
+  font-size: 14px;
+  line-height: 15px;
+  color: black;
+  margin: 0;
+  text-transform: uppercase;
+}
+.location-finder article p {
+  color: #747575;
+  font-size: 13px;
+  font-weight: 300;
+  margin-bottom: 5px;
+}
+.location-finder article .price {
+  font-size: 18px;
+  font-weight: bold;
+  color: #414141;
+}
+.location-finder .right-side {
+  float: left;
+  width: 60%;
+  position: relative;
+}
+#clearFilters {
+  font-size: 12px;
+  color: #a5a5a5;
+  font-weight: 300;
+  width: 100%;
+  text-align: center;
+  padding: 3px 0;
+  float: left;
+  margin-top: -20px;
+  text-transform: uppercase;
+}
+
+

@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<!-- $Id: category.xml 21329 2011-05-11 04:15:59Z eddieajau $ -->
+<form>
+	<field
+		name="id"
+		type="text"
+		default="0"
+		label="JGLOBAL_FIELD_ID_LABEL"
+		description ="JGLOBAL_FIELD_ID_DESC"
+		class="readonly"
+		readonly="true"/>
+			<field
+		   name="send_email_document"
+		   type="radio"
+		   label="EDOCMAN_SEND_EMAIL_DOCUMENT"
+		   description="EDOCMAN_SEND_EMAIL_DOCUMENT"
+		   class="btn-group"
+		   size="1"
+		   default="0">
+		   <option value="0">JNO</option>
+		    <option value="1">JYES</option>
+	</field> 
+	<field
+		name="parent_id"
+		type="edocmancategory"
+		label="EDOCMAN_FIELD_PARENT_LABEL"
+		description="EDOCMAN_FIELD_PARENT_DESC"
+		action="true"
+		class="ilarge chosen input-large form-select"/>
+
+	<field
+		name="auto_approval"
+		type="list"
+		class="inputbox input-large form-control form-select"
+		default="0"
+		size="1"
+		label="EDOCMAN_AUTO_APPROVAL"
+		description="EDOCMAN_AUTO_APPROVAL_DESC">
+		<option value="0">EDOCMAN_INHERIT_GLOBAL_CONFIGURATION</option>
+		<option value="1">JYES</option>
+		<option value="2">JNO</option>
+	</field>
+
+	<field
+		name="hide_download"
+		type="list"
+		class="inputbox input-large form-control form-select"
+		default="0"
+		size="1"
+		label="EDOCMAN_HIDE_DOWNLOAD_BUTTON"
+		description="EDOCMAN_HIDE_DOWNLOAD_DESC">
+		<option value="0">EDOCMAN_INHERIT_GLOBAL_CONFIGURATION</option>
+		<option value="1">JYES</option>
+		<option value="2">JNO</option>
+	</field>
+
+	<field
+		name="show_view"
+		type="list"
+		class="inputbox input-large form-control form-select"
+		default="0"
+		size="1"
+		label="EDOCMAN_SHOW_VIEW_BUTTON"
+		description="EDOCMAN_SHOW_VIEW_DESC">
+		<option value="0">EDOCMAN_INHERIT_GLOBAL_CONFIGURATION</option>
+		<option value="1">JYES</option>
+		<option value="2">JNO</option>
+	</field>
+
+	<field
+		name="title"
+		type="text"
+		label="JGLOBAL_TITLE"
+		description="JFIELD_TITLE_DESC"
+		class="inputbox"
+		size="40"
+		required="true"/>
+			
+	<field
+		name="alias"
+		type="text"
+		label="JFIELD_ALIAS_LABEL"
+		description="JFIELD_ALIAS_DESC"
+		class="inputbox"
+		size="40"/>
+	<field
+		name="path"
+		type="text"
+		label="EDOCMAN_PATH"
+		description="EDOCMAN_PATH_DESC"
+		class="inputbox form-control input-medium"
+		size="40"
+		required="false"/>							
+	<field
+		name="description"
+		type="editor"
+		label="JGLOBAL_DESCRIPTION"
+		description="COM_CATEGORIES_DESCRIPTION_DESC"
+		class="inputbox"
+		filter="JComponentHelper::filterText"
+		buttons="true"
+		hide="readmore,pagebreak"/>
+	
+	<field
+		name="image"
+		type="file"
+		label="EDOCMAN_CATEGORY_IMAGE"
+		description="Category Image"
+		class="inputbox"
+		size="50"
+		accept="image/*"
+		/>
+				
+	<field
+		   name="published"
+		   type="radio"
+		   label="JSTATUS"
+		   description="JFIELD_PUBLISHED_DESC"
+		   class="btn-group"
+		   size="1"
+		   default="1">
+		   <option value="1">JPUBLISHED</option>
+		   <option value="0">JUNPUBLISHED</option>
+	</field>
+
+	<field
+		   name="searchable"
+		   type="radio"
+		   label="EDOCMAN_SEARCHABLE"
+		   description="EDOCMAN_SEARCHABLE_DESC"
+		   class="btn-group"
+		   size="1"
+		   default="1">
+		   <option value="1">JYES</option>
+		   <option value="0">JNO</option>
+	</field> 
+
+	<field
+		name="exclude_indexing"
+		type="list"
+		class="inputbox input-small form-control form-select"
+		default="0"
+		size="1"
+		label="EDOCMAN_EXCLUDE_INDEXING"
+		description="EDOCMAN_EXCLUDE_INDEXING_EXPLAIN">
+		<option
+			value="1">
+			JYES</option>
+		<option
+			value="0">
+			JNO</option>		
+	</field>
+
+	<field name="number_documents_in_grid" type="list" class="inputbox input-small form-control form-select" default="0" size="1" label="EDOCMAN_NCOLUMNS_IN_GRID_VIEW"
+		description="EDOCMAN_NCOLUMNS_IN_GRID_VIEW_EXPLAIN">
+		<option value="0">EDOCMAN_INHERIT_GLOBAL_CONFIGURATION</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+	</field>
+
+	<field name="number_columns" type="list" class="inputbox input-small form-control form-select" default="0" size="1" label="EDOCMAN_NCOLUMNS_IN_COLUMN_LAYOUT"
+		description="EDOCMAN_NCOLUMNS_IN_COLUMN_LAYOUT_EXPLAIN">
+		<option value="0">EDOCMAN_INHERIT_GLOBAL_CONFIGURATION</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+	</field>
+
+	<field name="documents_layout" type="list" class="inputbox input-small form-control form-select" default="0" size="1" label="EDOCMAN_DOCUMENTS_LAYOUT"
+		description="EDOCMAN_DOCUMENTS_LAYOUT_EXPLAIN">
+		<option value="2">EDOCMAN_INHERIT_GLOBAL_CONFIGURATION</option>
+		<option value="1">Grid</option>
+		<option value="0">List</option>
+	</field>
+
+	<field
+			name="language"
+			type="contentlanguage"
+			label="JFIELD_LANGUAGE_LABEL"
+			description="COM_EDOCMAN_FIELD_LANGUAGE_DESC"
+			class="inputbox">
+			<option value="*">JALL</option>
+		</field>
+	<field
+		name="buttonspacer"
+		label="JGLOBAL_ACTION_PERMISSIONS_LABEL"
+		description="JGLOBAL_ACTION_PERMISSIONS_DESCRIPTION"
+		type="spacer" />
+	
+	<field
+		name="accesspicker"
+		type="list"
+		class="inputbox accesspicker"
+		label="JFIELD_ACCESS_LABEL"
+		default="0"
+		description="">
+		<option value="0">Presets</option>
+		<option value="1">Groups</option>
+	</field>
+				
+	<field
+		name="access"
+		type="accesslevel"
+		label="JFIELD_ACCESS_LABEL"
+		description="JFIELD_ACCESS_DESC"
+		class="inputbox"/>
+
+	<field
+		name="groups"
+		type="usergroup"
+		multiple="true"
+		label="EDOCMAN_THIS_ITEM_CAN_BE_VIEW_BY"
+		description=""
+		class="chosen"/>
+		
+	<field
+		name="user_ids"
+		type="text"
+		label="EDOCMAN_USER_IDS"
+		description="EDOCMAN_USER_IDS_EXPLAIN"
+		class="input-large"
+		size="32"/>
+	
+	<field name="group_ids" type="usergroup" label="EDOCMAN_GROUP_IDS" description="EDOCMAN_GROUP_IDS_DOCUMENT_DESC"  multiple="true" />
+
+	<field
+		name="css_class"
+		type="text"
+		label="EDOCMAN_CSS_CLASS"
+		description="EDOCMAN_CSS_CLASS_EXPLAIN"
+		class="input-large" />
+
+    <field
+            name="notification_emails"
+            type="text"
+            label="EDOCMAN_CAT_NOTIFICATION_EMAILS"
+            description="EDOCMAN_CAT_NOTIFICATION_EMAILS_EXPLAIN"
+            class="input-large"
+            size="50"/>
+
+    <field name="notify_group_ids" type="EDocmanUsergroups"
+           label="EDOCMAN_GROUPS_TO_NOTIFY"
+           description="EDOCMAN_GROUPS_TO_NOTIFY_EXPLAIN"
+           multiple="true"/>
+
+	<field
+		name="category_layout"
+		type="filelist"
+		label="EDOCMAN_CATEGORY_LAYOUT"
+		description="EDOCMAN_CATEGORY_LAYOUT_DESC"
+		directory=""
+		filter=".php"
+		fileFilter=".php"
+		hide_none="true"
+		hide_default="true"
+		stripext="true"
+		value="default"			
+		exclude="default_subcategories"	
+		class = "input-large form-control form-select"
+		 />	
+
+	<field
+		name="metadesc"
+		type="textarea"
+		label="JFIELD_META_DESCRIPTION_LABEL"
+		description="JFIELD_META_DESCRIPTION_DESC"
+		rows="3"
+		cols="40"/>
+
+	<field
+		name="metakey"
+		type="textarea"
+		label="JFIELD_META_KEYWORDS_LABEL"
+		description="JFIELD_META_KEYWORDS_DESC"
+		rows="3"
+		cols="40"/>
+		
+	<field
+		name="asset_id"
+		type="hidden"
+		filter="unset"/>
+
+	<field
+		name="created_user_id"
+		type="user"
+		label="JGLOBAL_FIELD_CREATED_BY_LABEL"
+		desc="JGLOBAL_FIELD_CREATED_BY_DESC"
+		/>
+
+	<field
+		name="created_time"
+		type="calendar"
+		label="JGLOBAL_CREATED_DATE"
+		class="readonly"
+		format="%Y-%m-%d" filter="user_utc"
+		readonly="true" />
+
+	<field
+		name="modified_user_id"
+		type="user"
+		label="JGLOBAL_FIELD_MODIFIED_BY_LABEL"		
+		readonly="true"
+		filter="unset"/>
+
+	<field
+		name="modified_time"
+		type="calendar"
+		label="JGLOBAL_FIELD_MODIFIED_LABEL"		
+		format="%Y-%m-%d" filter="user_utc"
+		readonly="true" />
+	<field
+		name="checked_out"
+		type="hidden"
+		filter="unset"/>
+
+	<field
+		name="checked_out_time"
+		type="hidden"
+		filter="unset"/>
+							
+	<field
+		id="rules"
+		name="rules"
+		type="rules"
+		label="JFIELD_RULES_LABEL"
+		translate_label="false"
+		filter="rules"
+		validate="rules"
+		class="inputbox"
+		component="com_edocman"
+		section="category"/>	
+<field
+		name="new_document_email_subject"
+		type="text"
+		label="EDOCMAN_NEW_DOCUMENT_EMAIL_SUBJECT"
+		description="EDOCMAN_NEW_DOCUMENT_EMAIL_SUBJECT"
+		class="inputbox"
+		size="40"
+		required="true"/>
+
+		<field
+		name="new_document_email_body"
+		type="editor"
+		label="EDOCMAN_NEW_DOCUMENT_EMAIL_BODY"
+		description="EDOCMAN_NEW_DOCUMENT_EMAIL_BODY"
+		class="inputbox"
+		filter="JComponentHelper::filterText"
+		buttons="true"
+		hide="readmore,pagebreak"/>
+
+		<field
+		name="update_document_email_subject"
+		type="text"
+		label="EDOCMAN_UPDATE_DOCUMENT_EMAIL_SUBJECT"
+		description="EDOCMAN_UPDATE_DOCUMENT_EMAIL_SUBJECT"
+		class="inputbox"
+		size="40"
+		required="true"/>
+
+		<field
+		name="update_document_email_body"
+		type="editor"
+		label="EDOCMAN_UPDATE_DOCUMENT_EMAIL_BODY"
+		description="EDOCMAN_UPDATE_DOCUMENT_EMAIL_BODY"
+		class="inputbox"
+		filter="JComponentHelper::filterText"
+		buttons="true"
+		hide="readmore,pagebreak"/>
+	<field
+		name="sort_option"
+		type="list"
+		class="inputbox input-large form-control form-select"
+		default=""
+		size="1"
+		label="EDOCMAN_SORT_OPTION"
+		description="EDOCMAN_SORT_OPTION_DESC">
+		<option value="">EDOCMAN_INHERIT_GLOBAL_CONFIGURATION</option>
+		<option value="tbl.title">EDOCMAN_TITLE</option>
+		<option value="tbl.created_time">JGLOBAL_CREATED_DATE</option>
+		<option value="tbl.modified_time">JGLOBAL_FIELD_MODIFIED_LABEL</option>
+		<option value="tbl.ordering">EDOCMAN_ORDERING</option>
+		<option value="tbl.file_size">EDOCMAN_FILESIZE</option>
+	</field>
+
+	<field
+		name="sort_direction"
+		type="list"
+		class="inputbox input-large form-control form-select"
+		default=""
+		size="1"
+		label="EDOCMAN_SORT_DIRECTION"
+		description="EDOCMAN_SORT_DIRECTION_DESC">
+		<option value="">EDOCMAN_INHERIT_GLOBAL_CONFIGURATION</option>
+		<option value="asc">EDOCMAN_ASC</option>
+		<option value="desc">EDOCMAN_DESC</option>
+	</field>
+</form>

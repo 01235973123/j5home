@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Company: Registration">
+		<message>
+			<![CDATA[This layout provide Company Registration form.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Company: Registration</name>
+		<description>Company registration layout.</description>
+	</state>
+</metadata>

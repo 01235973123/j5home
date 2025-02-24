@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<view title="User: Registration">
+		<message>
+			<![CDATA[Agent register.]]>
+		</message>
+	</view>
+	<state>
+		<name>User: Registtration</name>
+		<description>User registration layout.</description>
+	</state>
+</metadata>

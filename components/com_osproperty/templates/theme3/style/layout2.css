@@ -1,0 +1,167 @@
+
+.property-info, .property-list-page .property-info-agent { background:#F2F2F2;  margin-bottom:15px; padding:6px ; }
+.property-info span, .property-info-agent span { margin-right:15px; font-size:11px;padding:0;vertical-align: top; }
+
+.property-info i, .property-info-agent i { margin-right:10px; font-size:14px; }
+.property-mask { position:relative; }
+
+.property-mask h4, .feat-thumb h4 { 
+	position:absolute; bottom:0; left:0; font-size:14px; font-weight:500; text-transform:uppercase; color:#FFF; background:#445064; padding:6px 10px; margin-bottom:0; 
+}
+.property-mask h4.os-featured , .feat-thumb h4.os-featured { 
+	position:absolute; bottom:28px; left:0; font-size:14px; font-weight:500; text-transform:uppercase; color:#FFF; 
+	background:#FF0000; padding:6px 10px; margin-bottom:0; 
+}
+.property-mask h4.os-sold , .feat-thumb h4.os-sold { 
+	position:absolute; bottom:56px; left:0; font-size:14px; font-weight:500; text-transform:uppercase; color:#FFF; 
+	background:#208bda; padding:6px 10px; margin-bottom:0; 
+}
+.property-mask h4 a:link, .property-mask h4 a:visited, 
+.feat-thumb h4 a:link, .feat-thumb h4 a:visited,
+.property-page-status span a:link, .property-page-status span a:visited { color:#FFF; text-decoration:none; }
+.property-price { position:absolute; top:0; right:-1px; background:#445064; }
+
+.property-price span.picon {
+    background: none repeat scroll 0 0 #445064;
+    float: left;
+    font-size: 18px;
+    padding: 6px 17px;
+}
+.property-price span { display:block; text-align:center; color:#FFF;  }
+.property-price span.price {
+    font-size: 13px;
+    font-weight: 500;
+    padding: 0 15px 8px;
+    display:inline;
+}
+.property-price span.picon i {
+    margin-top: 15px;
+}
+.property-price span.pcategory a { font-size:16px; color:#FFF; display:block; padding:0; text-decoration:none;}
+.cat-price { float:left;  padding:5px; }
+.grid li .property-info {  color:#000; } 
+.grid li:hover .property-info {  color:#FFF; } 
+.pimage figcaption i, .feat-thumb figcaption i, .feat-medium figcaption i {  padding:15px 12px 12px; border-radius:2px; -webkit-border-radius:2px; -moz-border-radius:2px; }
+.property-page-price a { color:#FFF; }
+.agent-property-desc {
+    border-bottom: 1px solid #E1E1E1;
+    float: left;
+    padding-bottom: 15px;
+    width: 410px;
+}
+.property-desc h4, .property-desc h4 a:link, .property-desc h4 a:visited {
+    font-size: 18px;
+	text-decoration:none;
+	margin:0;
+}
+.property-info i, .property-info-agent i {
+    font-size: 14px;
+    margin-right: 10px;
+}
+.agent-info {
+    margin-top: 30px;
+}
+.agent-info img.avatar {
+    margin-right: 10px;
+}
+a.view-profile {
+    background: none repeat scroll 0 0 #FFFFFF;
+    border: 3px solid #AAAAAA;
+    bottom: -15px;
+    color: #777777;
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 25px;
+    position: absolute;
+    right: 0;
+}
+a.view-profile:hover {
+	background:#aaa;
+	color:#fff;
+}
+.agent-info label {
+    color: #88C354;
+}
+.agent-info span {
+    color: #777777;
+    font-weight: 500;
+}
+/****************************
+LAYOUT Two
+****************************/
+.cs-style-3 li:nth-child(3n +3) {
+	margin:0;
+}
+.grid-two-cols li {
+	width:50%;
+	float:left;
+}
+.grid-two-cols .property-image {
+	float:none;
+}
+.property-two-cols .property-image ,.property-two-cols .property-info , .property-two-cols .property-desc {
+	margin-right: 30px;
+    width: 320px;
+}
+
+
+.WebRupee{
+	display:inline !important;
+}
+.property-info .ospico-square, .property-info .ospico-bed, .property-info .ospico-bath, .property-info .ospico-parking{
+	background:url(../img/osp_icon.svg) no-repeat;
+    display: inline-block;
+    height: 16px;
+    line-height: 16px;
+    margin-right: 5px;
+    width: 16px;
+}
+.property-info .ospico-bed {
+    background-position: 0 -32px;
+}
+.property-info .ospico-bath {
+    
+    background-position: 0 -16px;
+}
+.property-info .ospico-parking {
+    background-position: 0 -48px;
+}
+.grid li:hover .property-info .ospico-square {
+    background-position: 0 -64px;
+}
+.grid li:hover .property-info .ospico-bed {
+    
+    background-position: 0 -96px;
+}
+.grid li:hover .property-info .ospico-bath {
+    background-position: 0 -80px;
+}
+.grid li:hover .property-info .ospico-parking {
+    background-position: 0 -112px;
+}
+.grid li {
+}
+.grid li li {
+	float:left;
+	text-align:center;
+}
+.grid li .property-info .property-icon-square , .grid li .property-info .property-icon-parking{ 
+	width:30%;
+	
+}
+.grid li .property-info .property-icon-bed , .grid li .property-info .property-icon-bath{ 
+	width:20%;
+	
+}
+.grid li .property-info {
+	overflow:hidden;
+}
+.grid li .property-info .property-icon-parking span {
+	margin:0;
+}
+@media (min-width: 320px) and (max-width:980px) {
+.grid li .property-info .property-icon-square, .grid li .property-info .property-icon-parking , .grid li .property-info .property-icon-bed , .grid li .property-info .property-icon-bath {
+		width:auto;
+	}
+}

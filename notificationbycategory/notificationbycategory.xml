@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.9.12" type="plugin" group="edocman" method="upgrade">
+    <name>EDocman Notification By Category Plugin</name>
+    <author>Tuan Pham Ngoc</author>
+    <creationDate>Apirl 2015</creationDate>
+    <copyright>Ossolution Team</copyright>
+    <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <authorEmail>contact@joomdonation.com</authorEmail>
+    <authorUrl>www.joomdonation.com</authorUrl>
+    <version>1.9.12</version>
+    <description>
+    </description>
+    <files>
+        <filename plugin="notificationbycategory">notificationbycategory.php</filename>
+    </files>
+    <config>
+        <fields name="params">
+            <fieldset name="basic" addfieldpath="/administrator/components/com_edocman/model/fields">
+                <field name="new_document_notification" type="radio" class="btn-group btn-group-yesno" default="1" description="Set to Yes if you want to send notification when a new document is uploaded" label="New Document Notification">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="update_document_notification" type="radio" class="btn-group btn-group-yesno" default="1" description="Set to Yes if you want to send notification when a document is updated" label="Update Document Notification">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="disable_sending" type="radio" class="btn-group btn-group-yesno" default="1" description="Do you want to disable sending notification emails with documents that already assigned to users" label="Disable sending with assigned document">
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+
+                <field name="item_id" type="text" label="Menu Item ID" description="The Item ID will be appended into the document links" class="input-mini" size="10" required="false"/>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

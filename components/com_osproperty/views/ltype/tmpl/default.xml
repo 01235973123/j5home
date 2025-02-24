@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Layout: Property listing layout">
+		<message>
+			This layout will list Real Estate properties in your OS Property system with many different parameters like Category, Property types, Country, State ..etc
+		</message>
+	</layout>
+	
+	<fields name="request">			
+		<fieldset name="request" addfieldpath="/administrator/components/com_osproperty/elements">
+			<field name="type_id" type="type" size="3" default="" label="Select Property type" description="Choose the property type which you want to display properties" />
+			<field name="catIds" type="oscategory" size="3" default="" label="Select category" description="Choose the category which you want to display properties" />
+			<field name="country_id" type="country" size="3" default="" label="Select Country" description="Choose the country which you want to display properties" />
+			<field name="company_id" type="company" size="3" default="" label="Select Company" description="Choose the company which you want to display properties" />
+			<field name="min_price" type="text"  default="" label="Min Price" description="Enter min price which you want to display properties with higher price" />
+			<field name="max_price" type="text" default="" label="Max Price" description="Enter max price which you want to display properties with lower price" />
+		</fieldset>	
+	</fields>
+	<fields name="params">
+		<fieldset name="basic" label="Other setting" addfieldpath="/administrator/components/com_osproperty/elements">
+			<field name="theme_id" type="theme" default="" label="Select Theme" description="Choose the theme which you want to display properties. If you leave this field empty, OS Property will use the Published theme." />
+			<field name="isFeatured" class="btn-group" type="radio" default="0" label="Show featured properties" description="Do you want to show only featured properties">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</field>
+			<field name="isSold" type="marketstatus" size="3" default="" label="Select Market status" description="Please select Market status of properties you want to show" />
+			<field name="orderby" type="list" default="a.id" label="Sort properties by" description="Please select sort properties by">
+				<option value="a.id">ID</option>
+				<option value="a.created">Created</option>
+				<option value="a.modified">Modified</option>
+				<option value="a.pro_name">Title</option>
+				<option value="a.ref">Ref</option>
+				<option value="a.price">Price</option>
+				<option value="a.isFeatured">Featured status</option>
+				<option value="a.solOn">Sold On</option>
+				<option value="a.ordering">Ordering</option>
+				<option value="rand()">Random</option>
+			</field>
+			<field name="ordertype" type="list" default="desc" label="Order properties by" description="Please select order properties by">
+				<option value="asc">Ascending</option>
+				<option value="desc">Descending</option>
+			</field>
+			<field name="state_id" type="text" default="" label="State ID" description="Please enter state id" size="2"/>
+			<field name="city_id" type="text" default="" label="City ID" description="Please enter city id" size="2"/>
+			<field name="max_properties" type="text" size="3" default="" label="Max properties" description="Please enter maximum number of properties that will be shown. Leave it empty if you want to show all properties" />
+			<field name="show_filterform" class="btn-group" type="radio" default="0" label="Show filter form" description="Do you want to show filter form at the top">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</field>
+			<field name="show_categoryfilter" class="btn-group" type="radio" default="0" label="Show Category dropdown filter" description="Do you want to show Category dropdown filter at Filter Form">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</field>
+			<field name="show_propertytypefilter" class="btn-group" type="radio" default="0" label="Show Type dropdown filter" description="Do you want to show Property type dropdown filter at Filter Form">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</field>
+			<field name="show_marketstatusfilter" class="btn-group" type="radio" default="0" label="Show Market status filter" description="Do you want to show Market status filter at Filter Form">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</field>
+			<field name="show_locationfilter" class="btn-group" type="radio" default="0" label="Show Location filter" description="Do you want to show Location filter dropdown lists (country, state and city) at Filter Form">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</field>
+			<field name="show_keywordfilter" class="btn-group" type="radio" default="0" label="Show Keyword filter" description="Do you want to show Keyword inputbox at Filter Form">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</field>
+			<field name="show_pricefilter" class="btn-group" type="radio" default="0" label="Show Price filter" description="Do you want to show Price filter at Filter Form">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</field>
+			<field name="show_agenttypefilter" class="btn-group" type="radio" default="0" label="Show Agent/Owner Type filter" description="Do you want to show Agent/Owner filter at Filter Form">
+				<option value="1">Yes</option>
+				<option value="0">No</option>
+			</field>
+			<field name="agenttype" type="list" default="-1" label="Properties posted by" description="Do you want to select specific user type (Agent/Owner) that properties were posted by" class="input-medium">
+				<option value="-1">All</option>
+				<option value="0">Agent</option>
+				<option value="1">Owner</option>
+				<option value="2">Reator</option>
+				<option value="3">Broker</option>
+				<option value="4">Builder</option>
+				<option value="5">Landlord</option>
+				<option value="6">Seller</option>
+			</field>
+		</fieldset>
+	</fields>
+</metadata>

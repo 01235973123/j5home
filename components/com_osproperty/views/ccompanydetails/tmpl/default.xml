@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="Company: Edit company information">
+		<message>
+			<![CDATA[Company Administrator can manage their agents, properties or other information through this layout.]]>
+		</message>
+	</layout>
+	<state>
+		<name>Company: Edit company information</name>
+		<description>Edit company information layout.</description>
+	</state>
+</metadata>
