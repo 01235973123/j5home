@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="text" name="ApiKey" size="75" label="COM_ARIQUIZ_LABEL_CFGAPIKEY" description="COM_ARIQUIZ_DESCR_CFGAPIKEy" default="" />
+		<param type="editors" name="Editor" label="COM_ARIQUIZ_LABEL_CFGEDITOR" description="COM_ARIQUIZ_DESCR_CFGEDITOR" />
+		<param type="questiontype" name="DefaultQuestionType" label="COM_ARIQUIZ_LABEL_CFGDEFAULTQUESTIONTYPE" description="COM_ARIQUIZ_DESCR_CFGDEFAULTQUESTIONTYPE" />
+		<param type="text" name="ReturnUrl" size="75" label="COM_ARIQUIZ_LABEL_CFGRETURNURL" description="COM_ARIQUIZ_DESCR_CFGRETURNURL" default="index.php?option=com_ariquiz&amp;view=quizzes" />
+		<param type="quiztheme" name="Theme" label="COM_ARIQUIZ_LABEL_CFGTHEME" description="COM_ARIQUIZ_DESCR_CFGTHEME" default="default" />
+		<param type="list" name="FixBaseUrl" default="auto" label="COM_ARIQUIZ_LABEL_CFGFIXBASEURL" description="COM_ARIQUIZ_DESCR_CFGFIXBASEURL">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+			<option value="auto">COM_ARIQUIZ_LABEL_AUTO</option>
+		</param>
+		<param type="switcher" name="EnableACL" default="0" label="COM_ARIQUIZ_LABEL_CFGENABLEACL" description="COM_ARIQUIZ_DESCR_CFGENABLEACL">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>	
+		<param type="switcher" name="CleanUninstall" default="0" label="COM_ARIQUIZ_LABEL_CFGCLEANUNINSTALL" description="COM_ARIQUIZ_DESCR_CFGCLEANUNINSTALL">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="switcher" name="AutoScroll" default="1" label="COM_ARIQUIZ_LABEL_CFGAUTOSCROLL" description="COM_ARIQUIZ_DESCR_CFGAUTOSCROLL">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+        <param type="list" name="PageSize" label="COM_ARIQUIZ_LABEL_CFGPAGESIZE" description="COM_ARIQUIZ_DESCR_CFGPAGESIZE" default="10">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+        </param>
+		<param type="hidden" name="FilesPath" label="" description="" default="administrator/components/com_ariquiz/files" />
+		<param type="hidden" name="HelpPath" label="" description="" default="http://www.ari-soft.com/docs/ariquiz/html/ARI_Quiz_UserGuide.html?" />
+		<param type="hidden" name="Version" label="" description="" default="3.0.0" />
+        <param type="hidden" name="PrevVersion" label="" description="" default="" />
+		<param type="hidden" name="DefaultCategoryId" label="" description="" default="" />
+		<param type="hidden" name="DefaultBankCategoryId" label="" description="" default="" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+	</validators>
+    <params addpath="/administrator/components/com_ariquiz/elements" group="social">
+        <param type="texttemplate" editor="none" width="98%" height="200" name="social_message" label="COM_ARIQUIZ_LABEL_CFGSOCIALMESSAGE" description="COM_ARIQUIZ_DESCR_CFGSOCIALMESSAGE">
+            <template_params>
+                <template_param id="UserName" description="COM_ARIQUIZ_PARAM_USERNAME" />
+                <template_param id="SpentTime" description="COM_ARIQUIZ_PARAM_SPENTIME" />
+                <template_param id="QuizName" description="COM_ARIQUIZ_PARAM_QUIZNAME" />
+                <template_param id="StartDate" description="COM_ARIQUIZ_PARAM_STARTDATE" />
+                <template_param id="EndDate" description="COM_ARIQUIZ_PARAM_ENDDATE" />
+                <template_param id="MaxScore" description="COM_ARIQUIZ_PARAM_MAXSCORE" />
+                <template_param id="UserScore" description="COM_ARIQUIZ_PARAM_USERSCORE" />
+                <template_param id="PercentScore" description="COM_ARIQUIZ_PARAM_PERCENTSCORE" />
+                <template_param id="PassedScore" description="COM_ARIQUIZ_PARAM_PASSEDSCORE" />
+                <template_param id="Passed" description="COM_ARIQUIZ_PARAM_PASSED" />
+            </template_params>
+        </param>
+    </params>
+</form>

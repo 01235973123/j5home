@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -263,8 +263,9 @@ class EventbookingViewCategoryHtml extends RADViewList
 	{
 		$active = Factory::getApplication()->getMenu()->getActive();
 
-		if ($active && $this->isDirectMenuLink($active))
+		if ($active && $this->isDirectMenuLink($active) && !$this->category)
 		{
+			// Use menu item metadata if no category is selected for direct menu item link
 		}
 		elseif ($this->category)
 		{
@@ -282,6 +283,11 @@ class EventbookingViewCategoryHtml extends RADViewList
 			if ($this->category->page_title)
 			{
 				$this->params->set('page_title', $this->category->page_title);
+			}
+
+			if ($this->category->robots)
+			{
+				$this->params->set('robots', $this->category->robots);
 			}
 		}
 
@@ -382,7 +388,10 @@ class EventbookingViewCategoryHtml extends RADViewList
 			EventbookingHelperModal::iframeModal('a.eb-colorbox-map', 'eb-map-modal');
 		}
 
-		Factory::getApplication()->getDocument()->addScriptDeclaration(
+		Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager()
+			->addInlineScript(
 			'
 	        function cancelRegistration(registrantId)
 	        {

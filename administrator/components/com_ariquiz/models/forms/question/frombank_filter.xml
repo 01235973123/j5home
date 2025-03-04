@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="bankcategory" name="CategoryId" default="0" label="COM_ARIQUIZ_LABEL_BANKCATEGORY" description="" none_label="COM_ARIQUIZ_LABEL_ALLCATEGORIES" class="dfm-filter" />
+		<param type="list" name="LoadUsedQuestion" default="0" label="COM_ARIQUIZ_LABEL_LOADUSEDQUESTION" description="" class="dfm-filter form-select">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+	</validators>
+</form>

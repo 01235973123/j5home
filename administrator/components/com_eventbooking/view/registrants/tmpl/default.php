@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -89,7 +89,7 @@ $this->includeTemplate('script');
 			</div>
 		</div>
 		<div class="clearfix"></div>
-		<table class="adminlist table table-striped">
+		<table class="table itemList table-striped">
 			<thead>
 			<tr>
 				<th width="2%" class="text_center">
@@ -365,7 +365,7 @@ $this->includeTemplate('script');
 					<td>
 						<a href="<?php echo $link; ?>">
 							<?php
-								echo $row->first_name;
+								echo $row->first_name ?: Text::_('EB_DETAILS');
 
 								if ($row->username)
 								{

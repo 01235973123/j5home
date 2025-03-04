@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -133,7 +133,7 @@ if ($this->config->get('fes_show_thumb_image', 1))
 						$largeImageUri = $baseUri . '/media/com_eventbooking/images/thumbs/' . $this->item->thumb;
 					}
 					?>
-					<a href="<?php echo $largeImageUri; ?>" class="modal"><img src="<?php echo $baseUri . '/media/com_eventbooking/images/thumbs/' . $this->item->thumb; ?>" class="img_preview" /></a>
+					<a href="<?php echo $largeImageUri; ?>" class="eb-event-image-modal"><img src="<?php echo $baseUri . '/media/com_eventbooking/images/thumbs/' . $this->item->thumb; ?>" class="img_preview" /></a>
 					<input type="checkbox" name="del_thumb" value="1" /><?php echo Text::_('EB_DELETE_CURRENT_THUMB'); ?>
 					<?php
 				}

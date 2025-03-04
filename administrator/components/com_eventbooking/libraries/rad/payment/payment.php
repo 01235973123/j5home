@@ -8,7 +8,6 @@
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 /**
@@ -186,10 +185,14 @@ abstract class RADPayment
 
 		if (file_exists($customCssFile) && filesize($customCssFile) > 0)
 		{
-			Factory::getApplication()->getDocument()->addStyleSheet(
-				Uri::root(true) . '/media/com_eventbooking/assets/css/custom.css',
-				['version' => filemtime($customCssFile)]
-			);
+			Factory::getApplication()
+				->getDocument()
+				->getWebAssetManager()
+				->registerAndUseStyle(
+					'com_eventbooking.style.custom',
+					'media/com_eventbooking/assets/css/custom.css',
+					['version' => filemtime($customCssFile)]
+				);;
 		}
 		?>
 		<div class="payment-heading"><?php
@@ -236,7 +239,7 @@ abstract class RADPayment
 
 		$text .= $extraData;
 
-		$ipnLogFile = JPATH_COMPONENT . '/ipn_' . $this->getName() . '.txt';
+		$ipnLogFile = JPATH_ROOT . '/components/com_eventbooking/ipn_' . $this->getName() . '.txt';
 		$fp         = fopen($ipnLogFile, 'a');
 		fwrite($fp, $text . "\n\n");
 		fclose($fp);

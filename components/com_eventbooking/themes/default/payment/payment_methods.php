@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -240,4 +240,13 @@ if ($hasSquareCard)
     <input type="hidden" name="square_card_token" value="" />
     <input type="hidden" name="square_card_verification_token" value="" />
 	<?php
+}
+
+// Allow payment plugin to render it own fields to collect payment information
+foreach ($this->methods as $paymentMethodObj)
+{
+	if (is_callable([$paymentMethodObj, 'renderCollectPaymentInformation']))
+	{
+		$paymentMethodObj->renderCollectPaymentInformation($method);
+	}
 }

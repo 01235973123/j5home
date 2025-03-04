@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="label" size="6" name="MailTemplateId" default="" label="COM_ARIQUIZ_LABEL_ID" description="COM_ARIQUIZ_DESCR_ID" />
+		<param type="text" size="50" name="Subject" label="COM_ARIQUIZ_LABEL_SUBJECT" description="COM_ARIQUIZ_DESCR_SUBJECT" />
+		<param type="text" size="50" name="From" label="COM_ARIQUIZ_LABEL_MAILFROM" description="COM_ARIQUIZ_DESCR_MAILFROM" />
+		<param type="text" size="50" name="FromName" label="COM_ARIQUIZ_LABEL_MAILFROMNAME" description="COM_ARIQUIZ_DESCR_MAILFROMNAME" />
+		<param type="hidden" name="AllowHtml" default="1" label="COM_ARIQUIZ_LABEL_ALLOWHTML" description="COM_ARIQUIZ_DESCR_ALLOWHTML" />
+		<param type="hidden" name="TextTemplateId" label="" description="" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="email" multiple="0" error_message="COM_ARIQUIZ_ERROR_EMAIL" validate="From" />
+	</validators>
+
+	<params group="texttemplate" addpath="/administrator/components/com_ariquiz/elements">
+		<param type="text" size="50" name="TemplateName" label="COM_ARIQUIZ_LABEL_NAME" description="" />
+		<param type="texttemplate" size="50" name="Value" label="COM_ARIQUIZ_LABEL_TEMPLATE" description="COM_ARIQUIZ_DESCR_RESULTTEMPLATE">
+			<template_params>
+				<template_param id="UserName" description="COM_ARIQUIZ_PARAM_USERNAME" />
+				<template_param id="SpentTime" description="COM_ARIQUIZ_PARAM_SPENTIME" />
+				<template_param id="QuizName" description="COM_ARIQUIZ_PARAM_QUIZNAME" />
+				<template_param id="StartDate" description="COM_ARIQUIZ_PARAM_STARTDATE" />
+				<template_param id="EndDate" description="COM_ARIQUIZ_PARAM_ENDDATE" />
+				<template_param id="MaxScore" description="COM_ARIQUIZ_PARAM_MAXSCORE" />
+				<template_param id="UserScore" description="COM_ARIQUIZ_PARAM_USERSCORE" />
+				<template_param id="PercentScore" description="COM_ARIQUIZ_PARAM_PERCENTSCORE" />
+				<template_param id="PassedScore" description="COM_ARIQUIZ_PARAM_PASSEDSCORE" />
+				<template_param id="Passed" description="COM_ARIQUIZ_PARAM_PASSED" />
+				<template_param id="Email" description="COM_ARIQUIZ_PARAM_EMAIL" />
+				<template_param id="ResultsLink" description="COM_ARIQUIZ_PARAM_RESULTSLINK" />
+				<template_param id="AdminResultsLink" description="COM_ARIQUIZ_PARAM_ADMINRESULTSLINK" />
+				<template_param id="SummaryByCategories" description="COM_ARIQUIZ_PARAM_SUMMARYBYCATEGORIES" />
+				<template_param id="Attachment:Certificate" description="COM_ARIQUIZ_PARAM_CERTIFICATE" />
+			</template_params>
+		</param>
+		<param type="hidden" name="TemplateId" label="" description="" />
+	</params>
+	<validators group="texttemplate" addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_NAMEREQUIRE" validate="TemplateName" />
+		<validator type="texttemplatename" error_message="COM_ARIQUIZ_ERROR_NAMEUNIQUE" validate="TemplateName" group="QuizMailResult" related_element="TemplateId" />
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_TEMPLATEREQUIRE" validate="Value" />
+	</validators>
+</form>

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -429,7 +429,12 @@ class com_eventbookingInstallerScript
 			$deleteFiles[] = JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/rad/ui/bootstrap2.php';
 			$deleteFiles[] = JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/rad/ui/bootstrap3.php';
 		}
-		
+
+		if (version_compare($this->installedVersion, '5.0.0', '<='))
+		{
+			$deleteFolders[] = JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/imageresize';
+		}
+
 		// If there are more files need to be deleted on new versions, it will need to be added to $deleteFiles and $deleteFolders array
 
 		foreach ($deleteFiles as $file)
@@ -605,6 +610,7 @@ class com_eventbookingInstallerScript
 			'third_reminder_email_subject',
 			'user_email_subject',
 			'category_detail_url',
+			'robots',
 		];
 
 		foreach ($varcharFields as $varcharField)
@@ -628,6 +634,7 @@ class com_eventbookingInstallerScript
 			'reminder_email_body',
 			'second_reminder_email_body',
 			'third_reminder_email_body',
+			'fields',
 		];
 
 		foreach ($textFields as $textField)
@@ -1322,6 +1329,30 @@ class com_eventbookingInstallerScript
 			// Remove the hidden folders from omnipay3 library
 			self::removeHiddenFolders();
 		}
+
+		if (version_compare($installedVersion, '5.0.4', '<='))
+		{
+			$sql = "ALTER TABLE  `#__eb_fields` MODIFY  `min` decimal(10,2) DEFAULT NULL;";
+			$db->setQuery($sql)
+				->execute();
+
+			$sql = "ALTER TABLE  `#__eb_fields` MODIFY  `max` decimal(10,2) DEFAULT NULL;";
+			$db->setQuery($sql)
+				->execute();
+
+			$sql = "ALTER TABLE  `#__eb_fields` MODIFY  `step` decimal(10,2) DEFAULT 0.00;";
+			$db->setQuery($sql)
+				->execute();
+
+			$query = $db->getQuery(true)
+				->update('#__eb_fields')
+				->set($db->quoteName('min') . ' = NULL')
+				->set($db->quoteName('max') . ' = NULL')
+				->where($db->quoteName('min') . ' = 0')
+				->where($db->quoteName('max') . ' = 0');
+			$db->setQuery($query)
+				->execute();
+		}
 	}
 
 	/**
@@ -1404,7 +1435,6 @@ class com_eventbookingInstallerScript
 			EventbookingHelper::executeSqlFile($sqlFile);
 		}
 
-
 		$message             = EventbookingHelper::getMessages();
 		$possibleNewMessages = require JPATH_ADMINISTRATOR . '/components/com_eventbooking/updates/messages.php';
 		$query               = $db->getQuery(true);
@@ -1473,6 +1503,23 @@ class com_eventbookingInstallerScript
 			$customItems = require JPATH_ADMINISTRATOR . '/components/com_eventbooking/updates/custom.mitems.php';
 
 			self::insertMessageItems($customItems);
+		}
+
+		// Insert data into action logs
+		$query->clear()
+			->select('COUNT(*)')
+			->from('#__action_logs_extensions')
+			->where($db->quoteName('extension') . '=' . $db->quote('com_eventbooking'));
+		$db->setQuery($query);
+
+		if (!$db->loadResult())
+		{
+			$query->clear()
+				->insert('#__action_logs_extensions')
+				->columns($db->quoteName('extension'))
+				->values($db->quote('com_eventbooking'));
+			$db->setQuery($query)
+				->execute();
 		}
 	}
 

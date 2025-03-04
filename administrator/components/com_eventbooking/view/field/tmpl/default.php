@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -17,11 +17,11 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-
 Factory::getApplication()
 	->getDocument()
-	->getWebAssetManager()->useScript('showon');
+	->getWebAssetManager()
+	->useScript('core')
+	->useScript('showon');
 
 $rootUri = Uri::root(true);
 
@@ -30,10 +30,11 @@ HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' =>
 $editor = Editor::getInstance(Factory::getApplication()->get('editor'));
 
 Factory::getApplication()->getDocument()
-	->addStyleDeclaration('.hasTip{display:block !important}')
-	->addScript($rootUri . '/media/com_eventbooking/js/admin-field-default.min.js')
 	->addScriptOptions('validateRules', EventbookingHelper::validateRules())
-	->addScriptOptions('siteUrl', Uri::base(true));
+	->addScriptOptions('siteUrl', Uri::base(true))
+	->getWebAssetManager()
+	->registerAndUseScript('com_eventbooking.admin-field-default', 'media/com_eventbooking/js/admin-field-default.min.js')
+	->addInlineStyle('.hasTip{display:block !important}');
 
 $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 $rowFluid        = $bootstrapHelper->getClassMapping('row-fluid');
@@ -306,7 +307,7 @@ if ($useTab)
 					<?php echo $this->lists['fieldtype']; ?>
 				</div>
 			</div>
-            <div class="control-group" data-showon='<?php echo EventbookingHelperHtml::renderShowon(['fieldtype' => ['List']]); ?>'>
+            <div class="control-group" data-showon='<?php echo EventbookingHelperHtml::renderShowon(['fieldtype' => ['List', 'SQL']]); ?>'>
                 <div class="control-label">
 	                <?php echo EventbookingHelperHtml::getFieldLabel('prompt_text', Text::_('EB_PROMPT_TEXT'), Text::_('EB_PROMPT_TEXT_EXPLAIN')); ?>
                 </div>
@@ -351,7 +352,7 @@ if ($useTab)
 					<?php echo EventbookingHelperHtml::getFieldLabel('values', Text::_('EB_VALUES'), Text::_('EB_EACH_ITEM_LINE')); ?>
 				</div>
 				<div class="controls">
-					<textarea rows="5" cols="50" name="values" class="input-xlarge form-control"><?php echo $this->item->values; ?></textarea>
+					<textarea rows="5" cols="50" name="values" class="form-control"><?php echo $this->item->values; ?></textarea>
 				</div>
 			</div>
 			<div class="control-group">
@@ -359,7 +360,7 @@ if ($useTab)
 					<?php echo EventbookingHelperHtml::getFieldLabel('default_values', Text::_('EB_DEFAULT_VALUES'), Text::_('EB_EACH_ITEM_LINE')); ?>
 				</div>
 				<div class="controls">
-					<textarea rows="5" cols="50" name="default_values" class="input-xlarge form-control"><?php echo $this->item->default_values; ?></textarea>
+					<textarea rows="5" cols="50" name="default_values" class="form-control"><?php echo $this->item->default_values; ?></textarea>
 				</div>
 			</div>
 			<div class="control-group">
@@ -381,7 +382,7 @@ if ($useTab)
 					<?php echo EventbookingHelperHtml::getFieldLabel('fee_values', Text::_('EB_FEE_VALUES'), Text::_('EB_EACH_ITEM_LINE')); ?>
 				</div>
 				<div class="controls">
-					<textarea rows="5" cols="50" name="fee_values" class="input-xlarge form-control"><?php echo $this->item->fee_values; ?></textarea>
+					<textarea rows="5" cols="50" name="fee_values" class="form-control"><?php echo $this->item->fee_values; ?></textarea>
 				</div>
 			</div>
 			<?php
@@ -426,7 +427,7 @@ if ($useTab)
 					<?php echo EventbookingHelperHtml::getFieldLabel('quantity_values', Text::_('EB_QUANTITY_VALUES')); ?>
 				</div>
 				<div class="controls">
-					<textarea rows="5" cols="50" name="quantity_values" class="input-xlarge form-control"><?php echo $this->item->quantity_values; ?></textarea>
+					<textarea rows="5" cols="50" name="quantity_values" class="form-control"><?php echo $this->item->quantity_values; ?></textarea>
 				</div>
 			</div>
 			<?php
@@ -513,7 +514,12 @@ if ($useTab)
 					<input class="form-control" type="text" name="css_class" id="css_class" size="10" maxlength="250" value="<?php echo $this->item->css_class;?>" />
 				</div>
 			</div>
-			<div class="control-group" data-showon='<?php echo EventbookingHelperHtml::renderShowon(['fieldtype' => ['Text', 'Textarea']]); ?>'>
+			<?php
+			$showOnData = [
+				'fieldtype' => ['Text', 'Url', 'Email', 'Number', 'Tel', 'Time'],
+			];
+			?>
+			<div class="control-group" data-showon='<?php echo EventbookingHelperHtml::renderShowon($showOnData); ?>'>
 				<div class="control-label">
 					<?php echo  Text::_('EB_PLACE_HOLDER'); ?>
 				</div>
@@ -577,7 +583,7 @@ if ($useTab)
 					<?php echo  Text::_('EB_EXTRA'); ?>
 				</div>
 				<div class="controls">
-					<input class="form-control" type="text" name="extra_attributes" id="extra" size="40" maxlength="250" value="<?php echo $this->item->extra_attributes;?>" />
+					<input class="form-control" type="text" name="extra_attributes" id="extra" size="40" maxlength="250" value="<?php echo $this->escape($this->item->extra_attributes);?>" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -612,7 +618,7 @@ if ($useTab)
 					<?php echo EventbookingHelperHtml::getFieldLabel('validation_rules', Text::_('EB_VALIDATION_RULES'), Text::_('EB_VALIDATION_RULES_EXPLAIN')); ?>
 				</div>
 				<div class="controls">
-					<input type="text" class="form-control input-xlarge" size="50" name="validation_rules" value="<?php echo $this->item->validation_rules ; ?>" />
+					<input type="text" class="form-control" name="validation_rules" value="<?php echo $this->item->validation_rules ; ?>" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -620,7 +626,7 @@ if ($useTab)
 					<?php echo  Text::_('EB_SERVER_VALIDATION_RULES'); ?>
 				</div>
 				<div class="controls">
-					<input class="input-xlarge form-control" type="text" name="server_validation_rules" id="server_validation_rules" size="10" maxlength="250" value="<?php echo $this->item->server_validation_rules;?>" />
+					<input class="form-control" type="text" name="server_validation_rules" id="server_validation_rules" size="10" maxlength="250" value="<?php echo $this->item->server_validation_rules;?>" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -628,7 +634,7 @@ if ($useTab)
 					<?php echo  Text::_('EB_VALIDATION_ERROR_MESSAGE'); ?>
 				</div>
 				<div class="controls">
-					<input class="input-xlarge form-control" type="text" name="validation_error_message" id="validation_error_message" size="10" maxlength="250" value="<?php echo $this->item->validation_error_message;?>" />
+					<input class="form-control" type="text" name="validation_error_message" id="validation_error_message" size="10" maxlength="250" value="<?php echo $this->item->validation_error_message;?>" />
 				</div>
 			</div>
 		</fieldset>
@@ -675,7 +681,7 @@ if ($translatable)
 				<?php echo  Text::_('EB_TITLE'); ?>
 			</div>
 			<div class="controls">
-				<input class="input-xlarge form-control" type="text" name="title_<?php echo $sef; ?>" id="title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'title_' . $sef}; ?>" />
+				<input class="form-control" type="text" name="title_<?php echo $sef; ?>" id="title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'title_' . $sef}; ?>" />
 			</div>
 		</div>
 		<div class="control-group">
@@ -683,7 +689,7 @@ if ($translatable)
 				<?php echo Text::_('EB_DESCRIPTION'); ?>
 			</div>
 			<div class="controls">
-				<textarea class="input-xlarge form-control" rows="5" cols="50" name="description_<?php echo $sef; ?>"><?php echo $this->item->{'description_' . $sef};?></textarea>
+				<textarea class="form-control" rows="5" cols="50" name="description_<?php echo $sef; ?>"><?php echo $this->item->{'description_' . $sef};?></textarea>
 			</div>
 		</div>
 		<div class="control-group">
@@ -691,7 +697,7 @@ if ($translatable)
 				<?php echo Text::_('EB_VALUES'); ?>
 			</div>
 			<div class="controls">
-				<textarea class="input-xlarge form-control" rows="5" cols="50" name="values_<?php echo $sef; ?>"><?php echo $this->item->{'values_' . $sef}; ?></textarea>
+				<textarea class="form-control" rows="5" cols="50" name="values_<?php echo $sef; ?>"><?php echo $this->item->{'values_' . $sef}; ?></textarea>
 			</div>
 		</div>
 		<div class="control-group">
@@ -699,7 +705,7 @@ if ($translatable)
 				<?php echo Text::_('EB_DEFAULT_VALUES'); ?>
 			</div>
 			<div class="controls">
-				<textarea class="input-xlarge form-control" rows="5" cols="50" name="default_values_<?php echo $sef; ?>"><?php echo $this->item->{'default_values_' . $sef}; ?></textarea>
+				<textarea class="form-control" rows="5" cols="50" name="default_values_<?php echo $sef; ?>"><?php echo $this->item->{'default_values_' . $sef}; ?></textarea>
 			</div>
 		</div>
 		<div class="control-group">
@@ -707,7 +713,7 @@ if ($translatable)
 				<?php echo  Text::_('EB_PLACE_HOLDER'); ?>
 			</div>
 			<div class="controls">
-				<input class="input-xlarge form-control" type="text" name="place_holder_<?php echo $sef; ?>" id="place_holder_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'place_holder_' . $sef}; ?>" />
+				<input class="form-control" type="text" name="place_holder_<?php echo $sef; ?>" id="place_holder_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'place_holder_' . $sef}; ?>" />
 			</div>
 		</div>
 		<?php

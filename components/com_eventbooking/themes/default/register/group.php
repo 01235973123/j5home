@@ -3,7 +3,7 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
@@ -15,7 +15,10 @@ use Joomla\CMS\Language\Text;
 
 HTMLHelper::_('calendar', '', 'id', 'name');
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
-Factory::getApplication()->getDocument()->addStyleDeclaration('.hasTip{display:block !important}');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->addInlineStyle('.hasTip{display:block !important}');
 
 EventbookingHelperJquery::validateForm();
 

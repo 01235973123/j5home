@@ -3,19 +3,29 @@
  * @package        Joomla
  * @subpackage     Event Booking
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2010 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 
+$config          = EventbookingHelper::getConfig();
 $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 $btnPrimary      = $bootstrapHelper->getClassMapping('btn btn-primary');
 $locationIds     = $this->params->get('location_ids', []);
 $locationIds     = array_filter(ArrayHelper::toInteger($locationIds));
+
+if ($config->show_filter_reset_button)
+{
+	Factory::getApplication()
+		->getDocument()
+		->getWebAssetManager()
+		->registerAndUseScript('com_eventbooking.site-search-filters', 'media/com_eventbooking/js/site-search-filters.min.js');
+}
 ?>
 <form name="eb-event-search" method="post" id="eb-event-search">
 	<div class="filters btn-toolbar eb-search-bar-container clearfix">
@@ -71,6 +81,15 @@ $locationIds     = array_filter(ArrayHelper::toInteger($locationIds));
 		</div>
 		<div class="btn-group pull-left">
 			<input type="submit" class="<?php echo $btnPrimary; ?> eb-btn-search" value="<?php echo Text::_('EB_SEARCH'); ?>"/>
+
+			<?php
+				if ($config->show_filter_reset_button)
+				{
+				?>
+					<input type="button" id="eb-search-filters-reset-button" class="<?php echo $btnPrimary; ?> eb-btn-reset" value="<?php echo Text::_('EB_RESET'); ?>"/>
+				<?php
+				}
+			?>
 		</div>
 	</div>
 </form>

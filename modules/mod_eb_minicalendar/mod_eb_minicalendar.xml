@@ -5,9 +5,9 @@
 	<author>Tuan Pham Ngoc</author>
 	<authorEmail>tuanpn@joomdonation.com</authorEmail>
 	<authorUrl>https://joomdonation.com</authorUrl>
-	<copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
+	<copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
 	<license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<version>5.0.0</version>
+	<version>5.0.4</version>
 	<description>Shows event in one monthly calendar for Ebooking component</description>
 	<files>
 		<filename module="mod_eb_minicalendar">mod_eb_minicalendar.php</filename>		

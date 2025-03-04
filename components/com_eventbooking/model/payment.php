@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -51,7 +51,7 @@ class EventbookingModelPayment extends RADModel
 
 		if ($row->deposit_amount > 0)
 		{
-			require_once JPATH_COMPONENT . '/payments/' . $paymentMethod . '.php';
+			require_once JPATH_ROOT . '/components/com_eventbooking/payments/' . $paymentMethod . '.php';
 
 			$fees = EventbookingHelper::callOverridableHelperMethod('Registration', 'calculateRemainderFees', [$row, $paymentMethod]);
 
@@ -152,18 +152,16 @@ class EventbookingModelPayment extends RADModel
 
 		if ($row->amount > 0)
 		{
-			require_once JPATH_COMPONENT . '/payments/' . $paymentMethod . '.php';
+			require_once JPATH_ROOT . '/components/com_eventbooking/payments/' . $paymentMethod . '.php';
+
+			$fees = EventbookingHelper::callOverridableHelperMethod('Registration', 'calculateRegistrationFees', [$row, $paymentMethod]);
 
 			// Make the record as processing registration payment
 			$params = new Registry($row->params);
 			$params->set('process_registration_payment', 1);
+			$params->set('registration_payment_payment_processing_fee', $fees['payment_processing_fee']);
+			$params->set('registration_payment_gross_amount', $fees['gross_amount']);
 			$row->params = $params->toString();
-
-			$fees = EventbookingHelper::callOverridableHelperMethod('Registration', 'calculateRegistrationFees', [$row, $paymentMethod]);
-
-			$row->payment_processing_fee = $fees['payment_processing_fee'];
-			$row->amount                 = $fees['gross_amount'];
-			$row->store();
 
 			$data['amount'] = $fees['gross_amount'];
 

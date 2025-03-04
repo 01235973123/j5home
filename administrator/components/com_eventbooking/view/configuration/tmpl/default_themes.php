@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -255,6 +255,14 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 				</div>
 				<div class="controls">
 					<?php echo EventbookingHelperHtml::getBooleanInput('show_category_filter', $config->show_category_filter); ?>
+				</div>
+			</div>
+			<div class="control-group" data-showon='<?php echo EventbookingHelperHtml::renderShowOn(['show_search_bar' => '1']); ?>'>
+				<div class="control-label">
+					<?php echo EventbookingHelperHtml::getFieldLabel('show_filter_reset_button', Text::_('EB_SHOW_RESET_BUTTON')); ?>
+				</div>
+				<div class="controls">
+					<?php echo EventbookingHelperHtml::getBooleanInput('show_filter_reset_button', $config->show_filter_reset_button); ?>
 				</div>
 			</div>
 			<div class="control-group">
@@ -528,6 +536,14 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 				</div>
 				<div class="controls">
 					<?php echo EventbookingHelperHtml::getBooleanInput('show_registered', $config->show_registered); ?>
+				</div>
+			</div>
+			<div class="control-group" data-showon='<?php echo EventbookingHelperHtml::renderShowOn(['show_registered' => '1']); ?>'>
+				<div class="control-label">
+					<?php echo EventbookingHelperHtml::getFieldLabel('show_registered_if_greater_than_or_equal', Text::_('EB_SHOW_NUMBER_REGISTERED_USERS_IF_GREATER_THAN_OF_EQUAL')); ?>
+				</div>
+				<div class="controls">
+					<input type="number" name="show_registered_if_greater_than_or_equal" value="<?php echo $this->config->show_registered_if_greater_than_or_equal; ?>" class="form-control" step="1" min="0" />
 				</div>
 			</div>
 			<div class="control-group">

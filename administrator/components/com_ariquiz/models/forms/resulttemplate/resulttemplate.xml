@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="label" size="6" name="TemplateId" default="" label="COM_ARIQUIZ_LABEL_ID" description="COM_ARIQUIZ_DESCR_ID" />
+		<param type="text" size="50" name="TemplateName" label="COM_ARIQUIZ_LABEL_NAME" description="COM_ARIQUIZ_DESCR_TEMPLATENAME" />
+		<param type="texttemplate" size="50" name="Value" label="COM_ARIQUIZ_LABEL_TEMPLATE" description="COM_ARIQUIZ_DESCR_RESULTTEMPLATE">
+			<template_params>
+				<template_param id="UserName" description="COM_ARIQUIZ_PARAM_USERNAME" />
+				<template_param id="SpentTime" description="COM_ARIQUIZ_PARAM_SPENTIME" />
+				<template_param id="QuizName" description="COM_ARIQUIZ_PARAM_QUIZNAME" />
+				<template_param id="StartDate" description="COM_ARIQUIZ_PARAM_STARTDATE" />
+				<template_param id="EndDate" description="COM_ARIQUIZ_PARAM_ENDDATE" />
+				<template_param id="MaxScore" description="COM_ARIQUIZ_PARAM_MAXSCORE" />
+				<template_param id="UserScore" description="COM_ARIQUIZ_PARAM_USERSCORE" />
+				<template_param id="PercentScore" description="COM_ARIQUIZ_PARAM_PERCENTSCORE" />
+				<template_param id="PassedScore" description="COM_ARIQUIZ_PARAM_PASSEDSCORE" />
+				<template_param id="Passed" description="COM_ARIQUIZ_PARAM_PASSED" />
+				<template_param id="Email" description="COM_ARIQUIZ_PARAM_EMAIL" />
+				<template_param id="ResultsLink" description="COM_ARIQUIZ_PARAM_RESULTSLINK" />
+				<template_param id="SummaryByCategories" description="COM_ARIQUIZ_PARAM_SUMMARYBYCATEGORIES" />
+			</template_params>
+		</param>
+	</params>
+	<validators section="params" addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_NAMEREQUIRE" validate="TemplateName" />
+		<validator type="texttemplatename" error_message="COM_ARIQUIZ_ERROR_NAMEUNIQUE" validate="TemplateName" group="QuizResult" />
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_TEMPLATEREQUIRE" validate="Value" />
+	</validators>
+</form>

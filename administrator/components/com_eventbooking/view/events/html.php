@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -107,6 +107,33 @@ class EventbookingViewEventsHtml extends RADViewList
 		$this->config = EventbookingHelper::getConfig();
 
 		$this->datePickerFormat = $this->config->get('date_field_format', '%Y-%m-%d');
+
+		$dateFormat = str_replace('%', '', $this->datePickerFormat);
+
+		// Convert the selected date to Y-m-d format
+		foreach (['filter_from_date', 'filter_to_date'] as $dateField)
+		{
+			if ((int) $this->state->{$dateField} === 0)
+			{
+				$this->state->{$dateField} = '';
+			}
+			elseif ((int) $this->state->{$dateField})
+			{
+				try
+				{
+					$date = DateTime::createFromFormat($dateFormat, $this->state->{$dateField});
+
+					if ($date !== false)
+					{
+						$this->state->{$dateField} = $date->format('Y-m-d');
+					}
+				}
+				catch (Exception $e)
+				{
+
+				}
+			}
+		}
 
 		EventbookingHelper::displayPHPVersionWarning();
 	}

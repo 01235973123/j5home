@@ -3,7 +3,7 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
@@ -16,10 +16,10 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
 use OSSolution\EventBooking\Admin\Event\Events\DisplayEvents;
 
-$app      = Factory::getApplication();
-$document = $app->getDocument();
+$app = Factory::getApplication();
+$wa  = $app->getDocument()->getWebAssetManager();
 
-$document->addScript(Uri::root(true) . '/media/com_eventbooking/assets/js/responsive-auto-height.min.js', [], ['defer' => true]);
+$wa->registerAndUseScript('com_eventbooking.responsive-auto-height', 'media/com_eventbooking/assets/js/responsive-auto-height.min.js', [], ['defer' => true]);
 
 /* @var EventbookingHelperBootstrap $bootstrapHelper */
 $bootstrapHelper = $this->bootstrapHelper;
@@ -29,7 +29,7 @@ $timeFormat    = $this->config->event_time_format ?: 'g:i a';
 $dateFormat    = $this->config->date_format;
 $numberColumns = $this->params->get('number_columns') ?: $this->config->get('number_events_per_row', 2);
 
-if ($this->params->get('image_lazy_loading', 'lazy'))
+if ($this->params->get('image_lazy_loading', '0'))
 {
 	$imgLoadingAttr = ' loading="lazy"';
 }
@@ -209,4 +209,4 @@ for ($i = 1; $i <= $rowCount; $i++)
 
 $equalHeightScript[] = '});';
 
-$document->addScriptDeclaration(implode("\r\n", $equalHeightScript));
+$wa->addInlineScript(implode("\r\n", $equalHeightScript));

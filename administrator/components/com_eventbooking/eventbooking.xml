@@ -5,9 +5,9 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2010 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2010 - 2025 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>5.0.0</version>
+    <version>5.0.4</version>
     <description>Events Booking is a simple, secure, extendable, intuitive event registration extension for Joomla! 4.x and Joomla 5.x
     </description>
     <scriptfile>install.eventbooking.php</scriptfile>
@@ -34,6 +34,7 @@
         <language tag="en-GB">site/languages/en-GB/en-GB.com_eventbooking.ini</language>
     </languages>
     <files folder="site">
+        <filename>category_fields.xml.dist</filename>
         <filename>eventbooking.php</filename>
         <filename>router.php</filename>
         <filename>fields.xml</filename>
@@ -58,6 +59,7 @@
             <menu link="option=com_eventbooking&amp;view=locations">EB_LOCATIONS</menu>
             <menu link="option=com_eventbooking&amp;view=taxes">EB_TAX_RULES</menu>
             <menu link="option=com_eventbooking&amp;view=coupons">EB_COUPONS</menu>
+            <menu link="option=com_eventbooking&amp;view=discounts">EB_DISCOUNT_BUNDLES</menu>
             <menu link="option=com_eventbooking&amp;view=plugins">EB_PAYMENTS_PLUGIN</menu>
             <menu link="option=com_eventbooking&amp;view=themes">EB_THEMES</menu>
             <menu link="option=com_eventbooking&amp;view=mitems">EB_EMAIL_MESSAGES</menu>

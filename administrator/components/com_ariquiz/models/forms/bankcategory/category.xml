@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="label" size="6" name="CategoryId" default="" label="COM_ARIQUIZ_LABEL_ID" description="COM_ARIQUIZ_DESCR_CATID" />
+		<param type="text" size="50" name="CategoryName" label="COM_ARIQUIZ_LABEL_NAME" description="COM_ARIQUIZ_DESCR_CATNAME" />
+		<param type="quizeditor" size="50" name="Description" label="COM_ARIQUIZ_LABEL_DESCRIPTION" description="COM_ARIQUIZ_DESCR_BANKCATDESCRIPTION" />
+	</params>
+	<validators section="params" addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_NAMEREQUIRE" validate="CategoryName" />
+		<validator type="bankcategoryname" error_message="COM_ARIQUIZ_ERROR_NAMEUNIQUE" validate="CategoryName" />
+	</validators>
+	<params group="rules" addpath="/administrator/components/com_ariquiz/elements">
+		<param type="rules" name="rules" label=" " translate_label="false" class="inputbox" filter="rules" component="com_ariquiz" section="bankcategory" validate="rules" />
+		<param type="hidden" name="asset_id" label="" description="" />
+	</params>
+</form>

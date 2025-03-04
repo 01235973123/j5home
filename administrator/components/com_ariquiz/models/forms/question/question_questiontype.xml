@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="questiontype" name="QuestionTypeId" default="0" label="COM_ARIQUIZ_LABEL_QUESTIONTYPE" description="" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+	</validators>
+</form>

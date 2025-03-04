@@ -65,6 +65,8 @@ abstract class RADView
 	 * @param   array   $config  Configuration array for view
 	 *
 	 * @return RADView A view object
+	 *
+	 * @throws RuntimeException
 	 */
 	public static function getInstance($name, $type, $prefix, array $config = [])
 	{
@@ -78,14 +80,12 @@ abstract class RADView
 
 		if (!class_exists($class))
 		{
-			if (isset($config['default_view_class']))
+			if ($type != 'html')
 			{
-				$class = $config['default_view_class'];
+				throw new RuntimeException(sprintf('Class %s not found', $class));
 			}
-			else
-			{
-				$class = 'RADView' . ucfirst($type);
-			}
+
+			$class = $config['default_view_class'] ?? 'RADView' . ucfirst($type);
 		}
 
 		return new $class($config);
@@ -143,15 +143,9 @@ abstract class RADView
 
 		$component = substr($this->option, 4);
 
-		if (empty($config['language_prefix']))
-		{
-			$config['language_prefix'] = strtoupper($component);
-		}
+		$config['language_prefix'] ??= strtoupper($component);
 
-		if (empty($config['class_prefix']))
-		{
-			$config['class_prefix'] = ucfirst($component);
-		}
+		$config['class_prefix'] ??= ucfirst($component);
 
 		$this->viewConfig = $config;
 	}

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -16,10 +16,12 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/js/admin-massmail-default.min.js')
-	->addScriptOptions('siteUrl', Uri::base(true));
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('siteUrl', Uri::base(true))
+	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('com_eventbooking.admin-massmail-default', 'media/com_eventbooking/js/admin-massmail-default.min.js');
 
 ToolbarHelper::title(Text::_('EB_MASS_MAIL'), 'massemail.png');
 ToolbarHelper::custom('send', 'envelope', 'envelope', Text::_('EB_SEND_MAILS'), false);

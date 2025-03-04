@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="QUIZ_LAYOUT">
+		<message>QUIZ_LAYOUT_DESC</message>
+	</layout>
+	<state>
+		<name>Quiz Layout</name>
+		<description>QUIZ_LAYOUT_DESC</description>
+		<url addpath="/administrator/components/com_ariquiz/elements">
+			<param name="quizId" type="quiz" default="0" multiple="0" label="QUIZ_CATEGORY_LAYOUT_SELECT_QUIZ" description="QUIZ_CATEGORY_LAYOUT_SELECT_QUIZ_DESCR" status="ARIQUIZ_QUIZ_STATUS_ACTIVE" />
+		</url>
+	</state>
+	<fields name="request">
+		<fieldset name="request" addfieldpath="/administrator/components/com_ariquiz/fields">
+			<field name="quizId" type="quiz" default="0" label="QUIZ_CATEGORY_LAYOUT_SELECT_QUIZ" description="QUIZ_CATEGORY_LAYOUT_SELECT_QUIZ_DESCR" status="ARIQUIZ_QUIZ_STATUS_ACTIVE" />
+		</fieldset>
+	</fields>
+</metadata>

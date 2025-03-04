@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -65,13 +65,24 @@ class EventbookingModelRegistrantlist extends EventbookingModelCommonRegistrants
 			$query->where(' tbl.group_id = 0 ');
 		}
 
-		if ($this->state->registrant_type == 3)
+		if ($this->params->get('registration_status', '') === '0')
 		{
-			$query->where('tbl.published = 3');
+			$query->where('tbl.published = 0');
+		}
+		elseif ($this->params->get('registration_status', '') === '1')
+		{
+			$query->where('tbl.published = 1');
 		}
 		else
 		{
-			$query->where('(tbl.published = 1 OR (tbl.published = 0 AND tbl.payment_method LIKE "os_offline%"))');
+			if ($this->state->registrant_type == 3)
+			{
+				$query->where('tbl.published = 3');
+			}
+			else
+			{
+				$query->where('(tbl.published = 1 OR (tbl.published = 0 AND tbl.payment_method LIKE "os_offline%"))');
+			}
 		}
 
 		return parent::buildQueryWhere($query);

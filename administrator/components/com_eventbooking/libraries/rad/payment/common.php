@@ -156,6 +156,17 @@ trait RADPaymentCommon
 			{
 				$row->payment_method = get_class($this);
 				$params->set('process_registration_payment', 0);
+
+				if ($params->exists('registration_payment_payment_processing_fee'))
+				{
+					$row->payment_processing_fee = $params->get('registration_payment_payment_processing_fee');
+				}
+
+				if ($params->exists('registration_payment_gross_amount'))
+				{
+					$row->amount = $params->get('registration_payment_gross_amount');
+				}
+
 				$row->params = $params->toString();
 			}
 

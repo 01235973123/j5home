@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -37,12 +37,21 @@ else
 }
 
 $inputClass = 'form-control';
+
+if ($this->config->use_email_as_username && ($emailField = $this->form->getField('email')))
+{
+	$fieldLabel = $emailField->title;
+}
+else
+{
+	$fieldLabel = Text::_('EB_USERNAME');
+}
 ?>
 <h3 class="eb-heading"><?php echo Text::_('EB_EXISTING_USER_LOGIN'); ?></h3>
 <form method="post" action="<?php echo Route::_('index.php?option=com_users&task=user.login'); ?>" name="eb-login-form" id="eb-login-form" autocomplete="off" class="<?php echo $formClass; ?>">
 	<div class="<?php echo $controlGroupClass;  ?>">
 		<div class="<?php echo $controlLabelClass; ?>">
-			<?php echo  Text::_('EB_USERNAME') ?><span class="required">*</span>
+			<?php echo $fieldLabel; ?><span class="required">*</span>
 		</div>
 		<div class="<?php echo $controlsClass; ?>">
 			<input type="text" name="username" id="username" class="<?php echo $inputClass; ?> validate[required]<?php echo $bootstrapHelper->getFrameworkClass('uk-input', 1); ?>" value=""/>

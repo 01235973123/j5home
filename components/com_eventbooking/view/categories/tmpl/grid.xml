@@ -15,7 +15,7 @@
 		<fieldset name="basic">
 			<field name="category_ids" type="ebcategory" multiple="true" label="Categories" description="If you select some categories here, only these selected categories will be displayed" />
 			<field name="exclude_category_ids" type="ebcategory" multiple="true" label="Exclude Categories" description="If you don't want certain categories being displayed on this menu item, select these categories here" />
-			<field name="image_lazy_loading" type="list" default="lazy" label="Image Lazy Loading">
+			<field name="image_lazy_loading" type="list" default="0" label="Image Lazy Loading">
 				<option value="0">Disable</option>
 				<option value="lazy">Lazy</option>
 			</field>
@@ -49,7 +49,7 @@
 				<option value="1">Yes</option>
 				<option value="0">No</option>
 			</field>
-			<field name="category_description_limit" default="0" label="Description Length Limit" showon="category_item_layout!:overlay[AND]show_description:1"/>
+			<field name="category_description_limit" default="0" label="Category Description Characters Limit" showon="category_item_layout!:overlay[AND]show_description:1"/>
 			<field name="enable_hover_effect" type="list" label="Enable Hover Effect" default="0" description="Set to Yes will apply a nice effect when users hover over a category." showon="category_item_layout!:overlay">
 				<option value="1">Yes</option>
 				<option value="0">No</option>

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -92,7 +92,7 @@ class JFormFieldEBEventModal extends FormField
 			/* @var \Joomla\Database\DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
 			$query = $db->getQuery(true)
-				->select($db->quoteName('title'))
+				->select($db->quoteName(['title', 'event_date']))
 				->from($db->quoteName('#__eb_events'))
 				->where($db->quoteName('id') . ' = :id')
 				->bind(':id', $value, ParameterType::INTEGER);
@@ -100,7 +100,15 @@ class JFormFieldEBEventModal extends FormField
 
 			try
 			{
-				$title = $db->loadResult();
+				$event = $db->loadObject();
+
+				if ($event)
+				{
+					JLoader::register('EventbookingHelper', JPATH_ROOT . '/components/com_eventbooking/helper/helper.php');
+
+					$config = EventbookingHelper::getConfig();
+					$title  = $event->title . ' - ' . HTMLHelper::_('date', $event->event_date, $config->date_format . ' H:i', null);
+				}
 			}
 			catch (\RuntimeException $e)
 			{
@@ -157,7 +165,11 @@ class JFormFieldEBEventModal extends FormField
 		// Note: class='required' for client side validation.
 		$class = $this->required ? ' class="required modal-value"' : '';
 		$html  .= '<input type="hidden" id="' . $this->id . '_id" ' . $class . ' data-required="' . (int) $this->required . '" name="' . $this->name
-			. '" data-text="' . htmlspecialchars(Text::_('EB_SELECT_EVENT', true), ENT_COMPAT, 'UTF-8') . '" value="' . $value . '"' . $onChange . ' />';
+			. '" data-text="' . htmlspecialchars(
+				Text::_('EB_SELECT_EVENT', true),
+				ENT_COMPAT,
+				'UTF-8'
+			) . '" value="' . $value . '"' . $onChange . ' />';
 
 		return $html;
 	}

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Mail\Mail;
@@ -66,6 +65,23 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 		parent::initData();
 
 		$this->data->event_id = $this->state->filter_event_id;
+	}
+
+	/**
+	 * Override loadData method to have coupon data available
+	 *
+	 * @return void
+	 */
+	protected function loadData()
+	{
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true)
+			->select('a.*, c.code AS coupon_code')
+			->from('#__eb_registrants AS a')
+			->leftJoin('#__eb_coupons AS c ON a.coupon_id = c.id')
+			->where('a.id = ' . $this->state->id);
+		$db->setQuery($query);
+		$this->data = $db->loadObject();
 	}
 
 	/**
@@ -170,18 +186,19 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 
 		$row->register_date = Factory::getDate()->toSql();
 
-		$event = EventbookingHelperDatabase::getEvent($row->event_id);
+		$user  = User::getInstance($row->user_id ?: 0);
+		$event = EventbookingHelperDatabase::getEvent($row->event_id, null, null, false, $user);
 
 		// In case total amount is not entered, calculate it automatically
 		if ($row->total_amount == 0)
 		{
-			$data['__registrant_user'] = User::getInstance($row->user_id ?: 0);
-			
+			$data['__registrant_user'] = $user;
+
 			// Group registration
 			if ($row->number_registrants > 1 && !$event->has_multiple_ticket_types)
 			{
 				// Group registration
-				$data['re_calculate_fee']   = true;
+				$data['re_calculate_fee'] = true;
 
 				$fees = EventbookingHelper::callOverridableHelperMethod(
 					'Registration',
@@ -315,7 +332,6 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 		$app                  = Factory::getApplication();
 		$user                 = Factory::getApplication()->getIdentity();
 		$config               = EventbookingHelper::getConfig();
-		$event                = EventbookingHelperDatabase::getEvent($row->event_id);
 		$db                   = $this->getDbo();
 		$query                = $db->getQuery(true);
 		$published            = $row->published;
@@ -323,9 +339,13 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 		$recalculateFee       = false;
 		$activeEventTriggered = false;
 
-		$currentEventId = $row->event_id;
-		$newEventId     = $input->getInt('event_id', 0);
-		$eventChanged   = $newEventId > 0 && ($currentEventId != $newEventId);
+		$currentEventId   = $row->event_id;
+		$newEventId       = $input->getInt('event_id', 0);
+		$registrantUserId = $input->getInt('user_id', 0);
+		$registrantUser   = User::getInstance($registrantUserId ?: 0);
+		$event            = EventbookingHelperDatabase::getEvent($row->event_id, null, null, false, $registrantUser);
+
+		$eventChanged = $newEventId > 0 && ($currentEventId != $newEventId);
 
 		if ($eventChanged)
 		{
@@ -435,6 +455,12 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 			$row->registration_cancel_date = Factory::getDate()->toSql();
 		}
 
+		// If the registration record set to Pending, payment_method should be set to Offline Payment to avoid it is being disappeared
+		if ($row->published == 0 && !str_contains($row->payment_method ?? '', 'os_offline'))
+		{
+			$row->payment_method = 'os_offline';
+		}
+
 		// Store registration ata
 		$row->store();
 
@@ -485,7 +511,7 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 				$needToStore       = true;
 			}
 
-			if ($row->published == 3)
+			if ($published == 3)
 			{
 				$row->register_date = Factory::getDate()->toSql();
 				$needToStore        = true;
@@ -583,6 +609,30 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 
 			$app->triggerEvent('onAfterRegistrantStatusChanged', $eventObj);
 		}
+
+		if ($published == 3 && $row->published == 0 && $row->amount > 0 && str_contains($row->payment_method ?? '', 'os_offline'))
+		{
+			$this->sendOfflinePaymentEmailToRegistrant($row, $config);
+		}
+	}
+
+	/**
+	 * Method to send email to registrant to inform them when they are being moved from waiting list to
+	 * registrants
+	 *
+	 * @param   EventbookingTableRegistrant  $row
+	 * @param   RADConfig                    $config
+	 *
+	 * @return void
+	 */
+	protected function sendOfflinePaymentEmailToRegistrant($row, $config): void
+	{
+		/**
+		 * Send offline payment email in case user is changed from waiting list to Pending and payment method set to os_offline
+		 * The code is commented out for now. If someone wants to have this behavior, he can implement an override
+		 * for the method and call the code below
+		 */
+		// EventbookingHelper::callOverridableHelperMethod('Mail', 'sendOfflinePaymentEmailToRegistrant', [$row, $config]);
 	}
 
 	/**
@@ -609,9 +659,10 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 			$data['coupon_code'] = $db->loadResult();
 		}
 
-		$data['__registrant_user'] = User::getInstance($row->user_id ?: 0);
+		$user                      = User::getInstance($row->user_id ?: 0);
+		$data['__registrant_user'] = $user;
 
-		$event = EventbookingHelperDatabase::getEvent($row->event_id, $row->register_date);
+		$event = EventbookingHelperDatabase::getEvent($row->event_id, $row->register_date, null, false, $user);
 
 		if ($event->has_multiple_ticket_types)
 		{
@@ -849,13 +900,13 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 		if ($row->group_id > 0)
 		{
 			// We don't send email to group members, return false
-			throw new Exception('Request payment email could not be ent to group members');
+			throw new Exception(Text::_('EB_COULD_NOT_SEND_PAYMENT_REQUEST_TO_GROUP_MEMBERS'));
 		}
 
 		if ($row->published == 1 && $row->payment_status == 1)
 		{
 			// We don't send request payment email to paid registration
-			throw new Exception('Request payment can only be sent to waiting list or pending registration');
+			throw new Exception(Text::_('EB_REQUEST_PAYMENT_CAN_ONLY_BE_SENT_TO_WAITING_LIST_AND_PENDING'));
 		}
 
 		$config = EventbookingHelper::getConfig();
@@ -1843,6 +1894,8 @@ class EventbookingModelCommonRegistrant extends RADModelAdmin
 				'emailtemplates/tmpl/email.php',
 				['body' => $message, 'subject' => $subject]
 			);
+
+			$message = EventbookingHelper::callOverridableHelperMethod('Html', 'processConditionalText', [$message]);
 
 			$mailer->addRecipient($email);
 			$mailer->setSubject($subject)

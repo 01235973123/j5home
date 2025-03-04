@@ -142,7 +142,10 @@ class RADViewList extends RADViewHtml
 			);
 
 			// Render sub-menus
-			EventbookingHelperHtml::renderSubmenu($this->name);
+			if ($this->input->getCmd('layout') !== 'modal')
+			{
+				EventbookingHelperHtml::renderSubmenu($this->name);
+			}
 		}
 
 		if ($this->isAdminView || $this->addToolbarForFrontend)

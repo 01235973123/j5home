@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="bankcategory" name="BankCategoryId" default="0" none_label="COM_ARIQUIZ_LABEL_NONE" label="COM_ARIQUIZ_LABEL_BANKCATEGORY" description="" />
+		<param type="text" size="10" name="QuestionCount" label="COM_ARIQUIZ_LABEL_QUESTIONCOUNT" description="" />
+	</params>
+</form>

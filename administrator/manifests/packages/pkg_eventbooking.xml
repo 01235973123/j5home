@@ -6,9 +6,9 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2010 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2010 - 2025 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>5.0.0</version>
+    <version>5.0.4</version>
     <description>Event Booking is a simple, secure, extendable, intuitive event registration extension for Joomla 4.x and Joomla 5.x
     </description>
     <scriptfile>script.php</scriptfile>
@@ -90,6 +90,7 @@
         <file type="plugin" id="ebreminder" group="system">plug_system_ebreminder.zip</file>
 		<file type="plugin" id="eventbookingsms" group="system">plug_system_eventbookingsms.zip</file>
         <file type="plugin" id="icprnotify" group="system">plug_system_icprnotify.zip</file>
+        <file type="plugin" id="ebhousekeeping" group="task">plug_task_ebhousekeeping.zip</file>
         <file type="plugin" id="eventbooking" group="user">plug_user_eventbooking.zip</file>
         <file type="library" id="omnipay3">lib_omnipay.tar.gz</file>
         <file type="component" id="com_eventbooking">com_eventbooking.zip</file>

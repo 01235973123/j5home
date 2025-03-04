@@ -1,9 +1,10 @@
 <?php
+
 /**
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -22,9 +23,10 @@ trait EventbookingControllerCommonRegistrant
 	{
 		$this->csrfProtection();
 
-		if ($this->app->isClient('site')
-			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking'))
-		{
+		if (
+			$this->app->isClient('site')
+			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking')
+		) {
 			throw new Exception('You need to have registrants management permission to resend email', 403);
 		}
 
@@ -35,17 +37,13 @@ trait EventbookingControllerCommonRegistrant
 		$model = $this->getModel();
 		$ret   = true;
 
-		foreach ($cid as $id)
-		{
+		foreach ($cid as $id) {
 			$ret = $model->resendEmail($id);
 		}
 
-		if ($ret)
-		{
+		if ($ret) {
 			$this->setMessage(Text::_('EB_EMAIL_SUCCESSFULLY_RESENT'));
-		}
-		else
-		{
+		} else {
 			$this->setMessage(Text::_('EB_COULD_NOT_RESEND_EMAIL_TO_GROUP_MEMBER'), 'notice');
 		}
 
@@ -61,9 +59,10 @@ trait EventbookingControllerCommonRegistrant
 	{
 		$this->csrfProtection();
 
-		if ($this->app->isClient('site')
-			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking'))
-		{
+		if (
+			$this->app->isClient('site')
+			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking')
+		) {
 			throw new Exception('You need to have registrants management permission to request payment', 403);
 		}
 
@@ -74,17 +73,13 @@ trait EventbookingControllerCommonRegistrant
 		/* @var EventbookingModelRegistrant $model */
 		$model = $this->getModel();
 
-		try
-		{
-			foreach ($cid as $id)
-			{
+		try {
+			foreach ($cid as $id) {
 				$model->sendPaymentRequestEmail($id);
 			}
 
 			$this->setMessage(Text::_('EB_REQUEST_PAYMENT_EMAIL_SENT_SUCCESSFULLY'));
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$this->setMessage($e->getMessage(), 'warning');
 		}
 
@@ -98,9 +93,10 @@ trait EventbookingControllerCommonRegistrant
 	{
 		$this->csrfProtection();
 
-		if ($this->app->isClient('site')
-			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking'))
-		{
+		if (
+			$this->app->isClient('site')
+			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking')
+		) {
 			throw new Exception('You need to have registrants management permission to send certificates', 403);
 		}
 
@@ -121,17 +117,13 @@ trait EventbookingControllerCommonRegistrant
 		/* @var EventbookingModelRegistrant $model */
 		$model = $this->getModel();
 
-		try
-		{
-			foreach ($cid as $id)
-			{
+		try {
+			foreach ($cid as $id) {
 				$model->sendCertificates($id);
 			}
 
 			$this->setMessage(Text::_('EB_CERTIFICATES_SUCCESSFULLY_SENT'));
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$this->setMessage($e->getMessage(), 'error');
 		}
 
@@ -145,9 +137,10 @@ trait EventbookingControllerCommonRegistrant
 	{
 		$this->csrfProtection();
 
-		if ($this->app->isClient('site')
-			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking'))
-		{
+		if (
+			$this->app->isClient('site')
+			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking')
+		) {
 			throw new Exception('You do not have permission to download certificates', 403);
 		}
 
@@ -155,13 +148,17 @@ trait EventbookingControllerCommonRegistrant
 		$cid = ArrayHelper::toInteger($cid);
 		$cid = $this->getManagableIds($cid);
 
+		$filterOrder    = $this->input->getCmd('filter_order', 'id');
+		$filterOrderDir = $this->input->getCmd('filter_order_Dir', 'ASC');
+
 		/* @var \Joomla\Database\DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('*')
-			->from('#__eb_registrants')
-			->whereIn('id', $cid)
-			->order('id');
+			->from('#__eb_registrants AS tbl')
+			->leftJoin('#__eb_events AS ev ON tbl.event_id = ev.id')
+			->whereIn('tbl.id', $cid)
+			->order($filterOrder . ' ' . $filterOrderDir);
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
@@ -183,9 +180,10 @@ trait EventbookingControllerCommonRegistrant
 	 */
 	public function check_out()
 	{
-		if ($this->app->isClient('site')
-			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking'))
-		{
+		if (
+			$this->app->isClient('site')
+			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking')
+		) {
 			throw new Exception('You do not have permission to checkout registrant', 403);
 		}
 
@@ -195,17 +193,13 @@ trait EventbookingControllerCommonRegistrant
 		/* @var EventbookingModelRegistrant $model */
 		$model = $this->getModel();
 
-		try
-		{
-			foreach ($cid as $id)
-			{
+		try {
+			foreach ($cid as $id) {
 				$model->resetCheckin($id);
 			}
 
 			$this->setMessage(Text::_('EB_CHECKOUT_REGISTRANTS_SUCCESSFULLY'));
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$this->setMessage($e->getMessage(), 'error');
 		}
 
@@ -217,22 +211,20 @@ trait EventbookingControllerCommonRegistrant
 	 */
 	public function batch_mail()
 	{
-		if ($this->app->isClient('site')
-			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking'))
-		{
+		if (
+			$this->app->isClient('site')
+			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking')
+		) {
 			throw new Exception('You do not have permission to cancel registrations', 403);
 		}
 
 		/* @var EventbookingModelRegistrant $model */
 		$model = $this->getModel();
 
-		try
-		{
+		try {
 			$model->batchMail($this->input);
 			$this->setMessage(Text::_('EB_BATCH_MAIL_SUCCESS'));
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 			$this->setMessage($e->getMessage(), 'error');
 		}
 
@@ -246,9 +238,10 @@ trait EventbookingControllerCommonRegistrant
 	 */
 	public function cancel_registrations()
 	{
-		if ($this->app->isClient('site')
-			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking'))
-		{
+		if (
+			$this->app->isClient('site')
+			&& !$this->app->getIdentity()->authorise('eventbooking.registrantsmanagement', 'com_eventbooking')
+		) {
 			throw new Exception('You do not have permission to cancel registrations', 403);
 		}
 
@@ -257,8 +250,7 @@ trait EventbookingControllerCommonRegistrant
 		$cid = $this->getManagableIds($cid);
 
 		// For some reasons, no records was selected, don't process further
-		if (!$cid)
-		{
+		if (!$cid) {
 			echo 'No registration records selected';
 
 			return;
@@ -283,21 +275,15 @@ trait EventbookingControllerCommonRegistrant
 	{
 		$newFields = $newHeaders = [];
 
-		foreach ($templateFields as $field)
-		{
-			if (in_array($field, $fields))
-			{
+		foreach ($templateFields as $field) {
+			if (in_array($field, $fields)) {
 				$fieldIndex   = array_search($field, $fields);
 				$newFields[]  = $field;
 				$newHeaders[] = $headers[$fieldIndex];
-			}
-			elseif ($field == 'eb_ticket_types_plugin')
-			{
+			} elseif ($field == 'eb_ticket_types_plugin') {
 				// Special handle for ticket types
-				foreach ($fields as $outputField)
-				{
-					if (str_contains($outputField, 'event_ticket_type_'))
-					{
+				foreach ($fields as $outputField) {
+					if (str_contains($outputField, 'event_ticket_type_')) {
 						$fieldIndex   = array_search($outputField, $fields);
 						$newFields[]  = $outputField;
 						$newHeaders[] = $headers[$fieldIndex];

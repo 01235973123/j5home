@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -14,14 +14,15 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
-$document = Factory::getApplication()->getDocument();
-$document->addScript(Uri::root(true) . '/media/com_eventbooking/js/admin-category-default.min.js');
-$document->addStyleDeclaration('.hasTip{display:block !important}');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('com_eventbooking.admin-category-default', 'media/com_eventbooking/js/admin-category-default.min.js')
+	->addInlineStyle('.hasTip{display:block !important}');
 
 $editor          = Editor::getInstance(Factory::getApplication()->get('editor'));
 $translatable    = Multilanguage::isEnabled() && count($this->languages);
@@ -194,6 +195,19 @@ Text::script('EB_ENTER_CATEGORY_TITLE', true);
 	</div>
 <?php
 echo HTMLHelper::_( 'uitab.endTab');
+
+if (EventbookingHelper::isCategoryCustomFieldsEnabled())
+{
+	echo HTMLHelper::_( 'uitab.addTab', 'category', 'fields-page', Text::_('EB_FIELDS'));
+
+	/* @var \Joomla\CMS\Form\FormField $field */
+	foreach ($this->form->getFieldset('basic') as $field)
+	{
+		echo $field->renderField();
+	}
+
+	echo HTMLHelper::_( 'uitab.endTab');
+}
 
 echo HTMLHelper::_( 'uitab.addTab', 'category', 'meta-data-page', Text::_('EB_META_DATA'));
 echo $this->loadTemplate('seo_options');

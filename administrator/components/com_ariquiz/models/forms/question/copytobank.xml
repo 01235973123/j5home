@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="bankcategory" name="QuestionCategoryId" default="0" label="COM_ARIQUIZ_LABEL_CATEGORY" description="" />
+		<param type="list" name="BasedOnBank" default="0" label="COM_ARIQUIZ_LABEL_BASEDONBANK" description="">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+	</validators>
+</form>

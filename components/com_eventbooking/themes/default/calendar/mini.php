@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -102,7 +102,14 @@ $link = Route::_('index.php?option=com_eventbooking&view=calendar&month=' . $thi
 						}
 						elseif ($numberEvents == 1)
 						{
-							$link = Route::_(EventbookingHelperRoute::getEventRoute($currentDay['events'][0]->id, 0, $this->Itemid));
+							if (!empty($currentDay['events'][0]->event_detail_url))
+							{
+								$link = $currentDay['events'][0]->event_detail_url;
+							}
+							else
+							{
+								$link = Route::_(EventbookingHelperRoute::getEventRoute($currentDay['events'][0]->id, $currentDay['events'][0]->main_category_id, $this->Itemid));
+							}
 						}
 
 						if ($numberEvents > 0)

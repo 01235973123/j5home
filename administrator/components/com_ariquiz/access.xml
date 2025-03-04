@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<access component="com_ariquiz">
+	<section name="component">
+		<!-- global actions -->
+		<action name="core.admin" title="JACTION_ADMIN" description="JACTION_ADMIN_COMPONENT_DESC" />
+		<action name="core.manage" title="JACTION_MANAGE" description="JACTION_MANAGE_COMPONENT_DESC" />
+		<!-- category actions -->
+		<action name="category.create" title="COM_ARIQUIZ_JACTION_CREATECATEGORY" description="" />
+		<action name="category.delete" title="COM_ARIQUIZ_JACTION_DELETECATEGORY" description="" />
+		<action name="category.edit" title="COM_ARIQUIZ_JACTION_EDITCATEGORY" description="" />
+		<!-- quiz actions -->
+		<action name="quiz.create" title="COM_ARIQUIZ_JACTION_CREATEQUIZ" description="" />
+		<action name="quiz.delete" title="COM_ARIQUIZ_JACTION_DELETEQUIZ" description="" />
+		<action name="quiz.edit" title="COM_ARIQUIZ_JACTION_EDITQUIZ" description="" />
+		<action name="quiz.edit.state" title="COM_ARIQUIZ_JACTION_EDITSTATEQUIZ" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+		<!-- question category actions -->
+		<action name="questioncategory.create" title="COM_ARIQUIZ_JACTION_CREATEQUESTIONCATEGORY" description="" />
+		<action name="questioncategory.delete" title="COM_ARIQUIZ_JACTION_DELETEQUESTIONCATEGORY" description="" />
+		<action name="questioncategory.edit" title="COM_ARIQUIZ_JACTION_EDITQUESTIONCATEGORY" description="" />
+		<!-- questions actions -->
+		<action name="question.create" title="COM_ARIQUIZ_JACTION_CREATEQUESTION" description="" />
+		<action name="question.delete" title="COM_ARIQUIZ_JACTION_DELETEQUESTION" description="" />
+		<action name="question.edit" title="COM_ARIQUIZ_JACTION_EDITQUESTION" description="" />
+		<!-- bank category actions -->
+		<action name="bankcategory.create" title="COM_ARIQUIZ_JACTION_CREATEBANKCATEGORY" description="" />
+		<action name="bankcategory.delete" title="COM_ARIQUIZ_JACTION_DELETEBANKCATEGORY" description="" />
+		<action name="bankcategory.edit" title="COM_ARIQUIZ_JACTION_EDITBANKCATEGORY" description="" />
+		<!-- questions actions -->
+		<action name="bankquestion.create" title="COM_ARIQUIZ_JACTION_CREATEBANKQUESTION" description="" />
+		<action name="bankquestion.delete" title="COM_ARIQUIZ_JACTION_DELETEBANKQUESTION" description="" />
+		<action name="bankquestion.edit" title="COM_ARIQUIZ_JACTION_EDITBANKQUESTION" description="" />
+		<!-- quizzes results actions -->
+		<action name="results.delete" title="COM_ARIQUIZ_JACTION_DELETERESULTS" description="" />
+		<!-- mail templates actions -->
+		<action name="mailtemplate.create" title="COM_ARIQUIZ_JACTION_CREATEMAILTEMPLATE" description="" />
+		<action name="mailtemplate.delete" title="COM_ARIQUIZ_JACTION_DELETEMAILTEMPLATE" description="" />
+		<action name="mailtemplate.edit" title="COM_ARIQUIZ_JACTION_EDITMAILTEMPLATE" description="" />
+		<!-- result scales actions -->
+		<action name="resultscale.create" title="COM_ARIQUIZ_JACTION_CREATERESULTSCALE" description="" />
+		<action name="resultscale.delete" title="COM_ARIQUIZ_JACTION_DELETERESULTSCALE" description="" />
+		<action name="resultscale.edit" title="COM_ARIQUIZ_JACTION_EDITRESULTSCALE" description="" />
+		<!-- result question tempplates -->
+		<action name="questiontemplate.create" title="COM_ARIQUIZ_JACTION_CREATEQUESTIONTEMPLATE" description="" />
+		<action name="questiontemplate.delete" title="COM_ARIQUIZ_JACTION_DELETEQUESTIONTEMPLATE" description="" />
+		<action name="questiontemplate.edit" title="COM_ARIQUIZ_JACTION_EDITQUESTIONTEMPLATE" description="" />
+		<!-- text templates actions -->
+		<action name="texttemplate.create" title="COM_ARIQUIZ_JACTION_CREATETEXTTEMPLATE" description="" />
+		<action name="texttemplate.delete" title="COM_ARIQUIZ_JACTION_DELETETEXTTEMPLATE" description="" />
+		<action name="texttemplate.edit" title="COM_ARIQUIZ_JACTION_EDITTEXTTEMPLATE" description="" />
+	</section>
+	<section name="category">
+		<action name="category.create" title="COM_ARIQUIZ_JACTION_CREATECATEGORY" description="" />
+		<action name="category.delete" title="COM_ARIQUIZ_JACTION_DELETECATEGORY" description="" />
+		<action name="category.edit" title="COM_ARIQUIZ_JACTION_EDITCATEGORY" description="" />
+		<!-- quiz actions -->
+		<action name="quiz.create" title="COM_ARIQUIZ_JACTION_CREATEQUIZ" description="" />
+		<action name="quiz.delete" title="COM_ARIQUIZ_JACTION_DELETEQUIZ" description="" />
+		<action name="quiz.edit" title="COM_ARIQUIZ_JACTION_EDITQUIZ" description="" />
+		<action name="quiz.edit.state" title="COM_ARIQUIZ_JACTION_EDITSTATEQUIZ" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+	</section>
+	<section name="quiz">
+		<action name="quiz.delete" title="COM_ARIQUIZ_JACTION_DELETEQUIZ" description="" />
+		<action name="quiz.edit" title="COM_ARIQUIZ_JACTION_EDITQUIZ" description="" />
+		<action name="quiz.edit.state" title="COM_ARIQUIZ_JACTION_EDITSTATEQUIZ" description="JACTION_EDITSTATE_COMPONENT_DESC" />
+		<!-- question category actions -->
+		<action name="questioncategory.create" title="COM_ARIQUIZ_JACTION_CREATEQUESTIONCATEGORY" description="" />
+		<action name="questioncategory.delete" title="COM_ARIQUIZ_JACTION_DELETEQUESTIONCATEGORY" description="" />
+		<action name="questioncategory.edit" title="COM_ARIQUIZ_JACTION_EDITQUESTIONCATEGORY" description="" />
+		<!-- questions actions -->
+		<action name="question.create" title="COM_ARIQUIZ_JACTION_CREATEQUESTION" description="" />
+		<action name="question.delete" title="COM_ARIQUIZ_JACTION_DELETEQUESTION" description="" />
+		<action name="question.edit" title="COM_ARIQUIZ_JACTION_EDITQUESTION" description="" />
+	</section>
+	<section name="questioncategory">
+		<action name="questioncategory.delete" title="COM_ARIQUIZ_JACTION_DELETEQUESTIONCATEGORY" description="" />
+		<action name="questioncategory.edit" title="COM_ARIQUIZ_JACTION_EDITQUESTIONCATEGORY" description="" />
+		<!-- questions actions -->
+		<action name="question.create" title="COM_ARIQUIZ_JACTION_CREATEQUESTION" description="" />
+		<action name="question.delete" title="COM_ARIQUIZ_JACTION_DELETEQUESTION" description="" />
+		<action name="question.edit" title="COM_ARIQUIZ_JACTION_EDITQUESTION" description="" />
+	</section>
+	<section name="bankcategory">
+		<action name="bankcategory.delete" title="COM_ARIQUIZ_JACTION_DELETEBANKCATEGORY" description="" />
+		<action name="bankcategory.edit" title="COM_ARIQUIZ_JACTION_EDITBANKCATEGORY" description="" />
+		<!-- questions actions -->
+		<action name="bankquestion.create" title="COM_ARIQUIZ_JACTION_CREATEBANKQUESTION" description="" />
+		<action name="bankquestion.delete" title="COM_ARIQUIZ_JACTION_DELETEBANKQUESTION" description="" />
+		<action name="bankquestion.edit" title="COM_ARIQUIZ_JACTION_EDITBANKQUESTION" description="" />
+	</section>
+</access>

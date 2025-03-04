@@ -1,0 +1,161 @@
+{
+	"addons": [
+		{
+			"group": "addons",
+
+			"label": "COM_ARIQUIZ_LABEL_HELPERADDONS",
+
+			"directory": "addons",
+
+			"apps":
+			[
+				{
+					"name": "COM_ARIQUIZ_LABEL_ARIQUIZRESULTSMOD",
+
+					"description": "ARI_QUIZ_RESULT_MODULE",
+
+					"version": "2.2.0",
+
+					"since": "1.0.0",
+
+					"meta": {
+						"type": "module",
+
+						"name": "mod_ariquizresult"
+					},
+
+					"package": "mod_ariquizresult.zip"
+				},
+				{
+					"name": "COM_ARIQUIZ_LABEL_ARIQUIZTOPRESULTSMOD",
+
+					"description": "ARI_QUIZ_TOP_RESULT_MODULE",
+
+					"version": "2.2.0",
+
+					"since": "1.0.0",
+
+					"meta": {
+						"type": "module",
+
+						"name": "mod_ariquiztopresult"
+					},
+
+					"package": "mod_ariquiztopresult.zip"
+				},
+				{
+					"name": "COM_ARIQUIZ_LABEL_ARIQUIZUSERRESULTSMOD",
+
+					"description": "ARI_QUIZ_USER_RESULT_MODULE",
+
+					"version": "2.2.0",
+
+					"since": "1.0.0",
+
+					"meta": {
+						"type": "module",
+
+						"name": "mod_ariquizuserresult"
+					},
+
+					"package": "mod_ariquizuserresult.zip"
+				},
+				{
+					"name": "COM_ARIQUIZ_LABEL_ARIQUIZUSERTOPRESULTSMOD",
+
+					"description": "ARI_QUIZ_USER_TOP_RESULT_MODULE",
+
+					"version": "2.2.0",
+
+					"since": "1.0.0",
+
+					"meta": {
+						"type": "module",
+
+						"name": "mod_ariquizusertopresult"
+					},
+
+					"package": "mod_ariquizusertopresult.zip"
+				},
+
+
+				{
+					"name": "COM_ARIQUIZ_LABEL_ARIQUIZMATHJAXPLG",
+
+					"description": "ARI_QUIZ_MATHJAX_PLUGIN",
+
+					"version": "1.1.0",
+
+					"since": "1.0.0",
+
+					"meta": {
+						"type": "plugin",
+
+						"group": "system",
+
+						"name": "ariquizmathjax"
+					},
+
+					"package": "plg_system_ariquizmathjax.zip"
+				},
+                {
+                    "name": "COM_ARIQUIZ_LABEL_ARIQUIZANYWHEREPLG",
+
+                    "description": "ARI_QUIZ_ANYWHERE_PLUGIN",
+
+                    "version": "1.3.0",
+
+                    "since": "1.0.0",
+
+                    "meta": {
+                        "type": "plugin",
+
+                        "group": "system",
+
+                        "name": "ariquizanywhere"
+                    },
+
+                    "package": "plg_system_ariquizanywhere.zip"
+                },
+                {
+                    "name": "COM_ARIQUIZ_LABEL_ARIEASYSOCIALUPPLG",
+
+                    "description": "ARI_QUIZ_EASY_SOCIAL_USER_POINTS_PLUGIN",
+
+                    "version": "1.0.2",
+
+                    "since": "1.0.0",
+
+                    "meta": {
+                        "type": "plugin",
+
+                        "group": "system",
+
+                        "name": "ariquizeasysocialuserpoints"
+                    },
+
+                    "package": "plg_system_ariquizeasysocialuserpoints.zip"
+                },
+                {
+                    "name": "COM_ARIQUIZ_LABEL_ARIQUIZRELOADERPLG",
+
+                    "description": "ARI_QUIZ_RELOADER_PLUGIN",
+
+                    "version": "1.6.0",
+
+                    "since": "1.0.0",
+
+                    "meta": {
+                        "type": "plugin",
+
+                        "group": "system",
+
+                        "name": "ariquizreloader"
+                    },
+
+                    "package": "plg_system_ariquizreloader.zip"
+                }
+			]
+		}
+	]
+}

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="label" size="6" name="QuestionId" default="" label="COM_ARIQUIZ_LABEL_ID" description="COM_ARIQUIZ_DESCR_ID" />
+		<param type="label" name="BankQuestionId" default="0" label="COM_ARIQUIZ_LABEL_BANKID" description="COM_ARIQUIZ_DESCR_BANKID" />
+		<param type="quiz" name="QuizId" label="COM_ARIQUIZ_LABEL_QUIZ" description="" editable="0" />
+		<param type="list" name="Status" default="1" label="COM_ARIQUIZ_LABEL_STATUS" description="COM_ARIQUIZ_LABEL_QUESTIONSTATUS">
+			<option value="1">COM_ARIQUIZ_LABEL_PUBLISH</option>
+			<option value="4">COM_ARIQUIZ_LABEL_UNPUBLISH</option>
+		</param>
+		<param type="questioncategory" name="QuestionCategoryId" default="0" label="COM_ARIQUIZ_LABEL_CATEGORY" description="COM_ARIQUIZ_DESCR_QUESTIONCATEGORY" />
+		<param type="questiontype" name="QuestionTypeId" label="COM_ARIQUIZ_LABEL_QUESTIONTYPE" description="" disabled="1" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+	</validators>
+	
+	<params group="questionversion" addpath="/administrator/components/com_ariquiz/elements">
+		<param type="bankquizquestionscore" size="6" name="Score" label="COM_ARIQUIZ_LABEL_SCORE" description="COM_ARIQUIZ_DESCR_QUESTIONSCORE" score_field="OverridenScore" bank_group="bankquestionversion" />
+		<param type="bankquizquestionscore" size="6" name="Penalty" label="COM_ARIQUIZ_LABEL_QUESTIONPENALTY" description="COM_ARIQUIZ_DESCR_QUESTIONPENALTY" score_field="OverridenPenalty" bank_group="bankquestionversion" />	
+		<param type="richcontentliteral" name="Question" label="COM_ARIQUIZ_LABEL_QUESTION" description="" />
+		<param type="richcontentliteral" name="Note" label="COM_ARIQUIZ_LABEL_EXPLANATION" description="COM_ARIQUIZ_DESCR_QUESTIIONEXPLANATION" />
+	</params>
+	<validators group="questionversion" addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_SCORE" validate="Score" datatype="float" min="0" />
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_PENALTY" validate="Penalty" datatype="float" />
+	</validators>
+	
+	<params group="bankquestionversion" addpath="/administrator/components/com_ariquiz/elements">
+		<param type="hidden" name="OverridenScore" label="" description="" />
+		<param type="hidden" name="OverridenPenalty" label="" description="" />
+	</params>
+</form>

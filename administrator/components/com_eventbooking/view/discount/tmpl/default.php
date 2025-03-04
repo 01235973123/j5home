@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -12,11 +12,12 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/js/admin-discount-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('com_eventbooking.admin-discount-default', 'media/com_eventbooking/js/admin-discount-default.min.js');
 
 EventbookingHelper::normalizeNullDateTimeData($this->item, ['from_date', 'to_date']);
 
@@ -28,7 +29,7 @@ Text::script('EB_ENTER_DISCOUNT_AMOUNT', true);
 			<?php echo Text::_('EB_TITLE'); ?>
 		</div>
 		<div class="controls">
-			<input class="input-xlarge form-control" type="text" name="title" id="title" maxlength="250"
+			<input class="form-control" type="text" name="title" id="title" maxlength="250"
 				   value="<?php echo $this->item->title; ?>"/>
 		</div>
 	</div>

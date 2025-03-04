@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -16,7 +16,6 @@ use Joomla\CMS\Image\Image;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
 
@@ -272,11 +271,10 @@ class plgEventBookingGallery extends CMSPlugin implements SubscriberInterface
 	 */
 	private function drawGallery($images): void
 	{
-		$document = $this->app->getDocument();
-		$rootUrl  = Uri::root(true);
-
-		$document->addScript($rootUrl . '/media/com_eventbooking/assets/js/baguetteBox/baguetteBox.min.js');
-		$document->addStyleSheet($rootUrl . '/media/com_eventbooking/assets/js/baguetteBox/baguetteBox.min.css');
+		$this->app->getDocument()
+			->getWebAssetManager()
+			->registerAndUseScript('com_eventbooking.baguetteBox', 'media/com_eventbooking/assets/js/baguetteBox/baguetteBox.min.js')
+			->registerAndUseStyle('com_eventbooking.baguetteBox', 'media/com_eventbooking/assets/js/baguetteBox/baguetteBox.min.css');
 
 		echo EventbookingHelperHtml::loadCommonLayout('plugins/gallery.php', ['images' => $images]);
 	}

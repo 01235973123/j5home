@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Abstract Form Field class for the RAD framework
  *
@@ -10,7 +11,6 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 use Valitron\Validator;
 
 /**
@@ -49,34 +49,30 @@ class RADForm
 	{
 		$hasInputMask = false;
 
-		foreach ($fields as $field)
-		{
-			if ($field->input_mask)
-			{
+		foreach ($fields as $field) {
+			if ($field->input_mask) {
 				$hasInputMask = true;
 			}
 
 			$class         = 'RADFormField' . ucfirst($field->fieldtype);
 			$overrideClass = 'RADFormFieldOverride' . ucfirst($field->fieldtype);
 
-			if (class_exists($overrideClass))
-			{
+			if (class_exists($overrideClass)) {
 				$class = $overrideClass;
 			}
 
-			if (class_exists($class))
-			{
+			if (class_exists($class)) {
 				$this->fields[$field->name] = new $class($field, $field->default_values);
-			}
-			else
-			{
+			} else {
 				throw new RuntimeException('The field type ' . $field->fieldType . ' is not supported');
 			}
 		}
 
-		if ($hasInputMask)
-		{
-			Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/assets/js/imask/imask.min.js');
+		if ($hasInputMask) {
+			Factory::getApplication()
+				->getDocument()
+				->getWebAssetManager()
+				->registerAndUseScript('com_eventbooking.imask', 'media/com_eventbooking/assets/js/imask/imask.min.js');
 		}
 	}
 
@@ -105,11 +101,23 @@ class RADForm
 	 *
 	 * @param   string  $name
 	 *
-	 * @return RADFormField
+	 * @return ?RADFormField
 	 */
 	public function getField($name)
 	{
-		return $this->fields[$name];
+		return $this->fields[$name] ?? null;
+	}
+
+	/**
+	 * Remove give field from form
+	 *
+	 * @param   string  $name
+	 *
+	 * @return void
+	 */
+	public function removeField(string $name)
+	{
+		unset($this->fields[$name]);
 	}
 
 	/**
@@ -122,38 +130,27 @@ class RADForm
 	 */
 	public function bind($data, $useDefault = false)
 	{
-		foreach ($this->fields as $field)
-		{
-			if ($field->type == 'State')
-			{
+
+		foreach ($this->fields as $field) {
+			if ($field->type == 'State') {
 				$fieldName = $field->name;
 				$prefix    = str_replace('state', '', $fieldName);
 
-				if (!empty($data['country' . $prefix]))
-				{
+				if (!empty($data['country' . $prefix])) {
 					$field->country = $data['country' . $prefix];
 				}
 			}
 
-			if (isset($data[$field->name]))
-			{
+			if (isset($data[$field->name])) {
 				$field->setValue($data[$field->name]);
-			}
-			else
-			{
-				if ($useDefault || ($field->type == 'Message'))
-				{
-					if ($field->type == 'Checkboxes' || ($field->type == 'List' && $field->row->multiple))
-					{
+			} else {
+				if ($useDefault || ($field->type == 'Message')) {
+					if ($field->type == 'Checkboxes' || ($field->type == 'List' && $field->row->multiple)) {
 						$field->setValue(explode("\r\n", $field->row->default_values));
-					}
-					else
-					{
+					} else {
 						$field->setValue($field->row->default_values);
 					}
-				}
-				else
-				{
+				} else {
 					$field->setValue(null);
 				}
 			}
@@ -169,8 +166,7 @@ class RADForm
 	 */
 	public function setReplaceData($replaceData)
 	{
-		foreach ($this->fields as $field)
-		{
+		foreach ($this->fields as $field) {
 			$field->setReplaceData($replaceData);
 		}
 	}
@@ -184,8 +180,7 @@ class RADForm
 	{
 		$data = [];
 
-		foreach ($this->fields as $field)
-		{
+		foreach ($this->fields as $field) {
 			$data[$field->name] = $field->value;
 		}
 
@@ -201,22 +196,17 @@ class RADForm
 	{
 		$feeFormula = '';
 
-		foreach ($this->fields as $field)
-		{
-			if ($field->fee_formula)
-			{
+		foreach ($this->fields as $field) {
+			if ($field->fee_formula) {
 				$feeFormula .= $field->fee_formula;
 			}
 		}
 
-		foreach ($this->fields as $field)
-		{
-			if ($field->fee_field || str_contains($feeFormula, '[' . strtoupper($field->name) . ']'))
-			{
+		foreach ($this->fields as $field) {
+			if ($field->fee_field || str_contains($feeFormula, '[' . strtoupper($field->name) . ']')) {
 				$field->setFeeCalculation(true);
 
-				switch ($field->type)
-				{
+				switch ($field->type) {
 					case 'List':
 					case 'Text':
 					case 'Number':
@@ -242,10 +232,8 @@ class RADForm
 	 */
 	public function handleFieldsDependOnPaymentMethod($paymentMethod)
 	{
-		foreach ($this->fields as $field)
-		{
-			if ($field->row->payment_method && $field->row->payment_method != $paymentMethod)
-			{
+		foreach ($this->fields as $field) {
+			if ($field->row->payment_method && $field->row->payment_method != $paymentMethod) {
 				$field->hideOnDisplay();
 			}
 		}
@@ -260,14 +248,11 @@ class RADForm
 	 */
 	public function handleFieldsDependOnTicketTypes(array $ticketTypes = [])
 	{
-		foreach ($this->fields as $field)
-		{
-			if ($field->row->depend_on_ticket_type_ids)
-			{
+		foreach ($this->fields as $field) {
+			if ($field->row->depend_on_ticket_type_ids) {
 				$dependOnTicketTypes = explode(',', $field->row->depend_on_ticket_type_ids);
 
-				if (!count(array_intersect($dependOnTicketTypes, $ticketTypes)))
-				{
+				if (!count(array_intersect($dependOnTicketTypes, $ticketTypes))) {
 					$field->hideOnDisplay();
 				}
 			}
@@ -282,10 +267,8 @@ class RADForm
 		$masterFields = [];
 		$fieldsAssoc  = [];
 
-		foreach ($this->fields as $field)
-		{
-			if ($field->depend_on_field_id)
-			{
+		foreach ($this->fields as $field) {
+			if ($field->depend_on_field_id) {
 				$masterFields[] = $field->depend_on_field_id;
 			}
 
@@ -294,19 +277,15 @@ class RADForm
 
 		$masterFields = array_unique($masterFields);
 
-		if (count($masterFields))
-		{
+		if (count($masterFields)) {
 			$hiddenFields = [];
 
-			foreach ($this->fields as $field)
-			{
-				if (in_array($field->id, $masterFields))
-				{
+			foreach ($this->fields as $field) {
+				if (in_array($field->id, $masterFields)) {
 					$field->setFeeCalculation(true);
 					$field->setMasterField(true);
 
-					switch (strtolower($field->type))
-					{
+					switch (strtolower($field->type)) {
 						case 'list':
 							$field->setAttribute(
 								'onchange',
@@ -323,39 +302,27 @@ class RADForm
 					}
 				}
 
-				if ($field->depend_on_field_id && isset($fieldsAssoc[$field->depend_on_field_id]))
-				{
+				if ($field->depend_on_field_id && isset($fieldsAssoc[$field->depend_on_field_id])) {
 					// If master field is hided, then children field will be hided, too
-					if (in_array($field->depend_on_field_id, $hiddenFields))
-					{
+					if (in_array($field->depend_on_field_id, $hiddenFields)) {
 						$field->hideOnDisplay();
 						$hiddenFields[] = $field->id;
-					}
-					else
-					{
+					} else {
 						$masterFieldValues = $fieldsAssoc[$field->depend_on_field_id]->value;
 
-						if (is_array($masterFieldValues))
-						{
+						if (is_array($masterFieldValues)) {
 							$selectedOptions = $masterFieldValues;
-						}
-						elseif (is_string($masterFieldValues) && strpos($masterFieldValues, "\r\n"))
-						{
+						} elseif (is_string($masterFieldValues) && strpos($masterFieldValues, "\r\n")) {
 							$selectedOptions = explode("\r\n", $masterFieldValues);
-						}
-						elseif (is_string($masterFieldValues) && is_array(json_decode($masterFieldValues)))
-						{
+						} elseif (is_string($masterFieldValues) && is_array(json_decode($masterFieldValues))) {
 							$selectedOptions = json_decode($masterFieldValues);
-						}
-						else
-						{
+						} else {
 							$selectedOptions = [$masterFieldValues];
 						}
 
 						$dependOnOptions = json_decode($field->depend_on_options) ?? [];
 
-						if (!count(array_intersect($selectedOptions, $dependOnOptions)))
-						{
+						if (!count(array_intersect($selectedOptions, $dependOnOptions))) {
 							$field->hideOnDisplay();
 							$hiddenFields[] = $field->id;
 						}
@@ -374,10 +341,8 @@ class RADForm
 	{
 		$containFeeFields = false;
 
-		foreach ($this->fields as $field)
-		{
-			if ($field->fee_field)
-			{
+		foreach ($this->fields as $field) {
+			if ($field->fee_field) {
 				$containFeeFields = true;
 				break;
 			}
@@ -393,8 +358,7 @@ class RADForm
 	 */
 	public function setEventId($eventId)
 	{
-		foreach ($this->fields as $field)
-		{
+		foreach ($this->fields as $field) {
 			$field->setEventId($eventId);
 		}
 	}
@@ -413,13 +377,11 @@ class RADForm
 		$decPoint     = $config->dec_point ?? '.';
 		$thousandsSep = $config->thousands_sep ?? ',';
 
-		if (!isset($replaces['NUMBER_REGISTRANTS']))
-		{
+		if (!isset($replaces['NUMBER_REGISTRANTS'])) {
 			$replaces['NUMBER_REGISTRANTS'] = 1;
 		}
 
-		if (!isset($replaces['INDIVIDUAL_PRICE']))
-		{
+		if (!isset($replaces['INDIVIDUAL_PRICE'])) {
 			$replaces['INDIVIDUAL_PRICE'] = 1;
 		}
 
@@ -434,20 +396,16 @@ class RADForm
 		$this->buildFieldsDependency();
 		$fieldsFee = $this->calculateFieldsFee();
 
-		foreach ($this->fields as $field)
-		{
-			if ($field->hideOnDisplay)
-			{
+		foreach ($this->fields as $field) {
+			if ($field->hideOnDisplay) {
 				continue;
 			}
 
-			if (!$field->row->fee_field)
-			{
+			if (!$field->row->fee_field) {
 				continue;
 			}
 
-			if (!$field->row->fee_formula && in_array(strtolower($field->type), ['text', 'number', 'range', 'hidden']))
-			{
+			if (!$field->row->fee_formula && in_array(strtolower($field->type), ['text', 'number', 'range', 'hidden'])) {
 				$field->row->fee_formula = '[FIELD_VALUE]';
 			}
 
@@ -455,83 +413,65 @@ class RADForm
 
 			$feeValue = 0;
 
-			if ($field->row->fee_formula)
-			{
+			if ($field->row->fee_formula) {
 				$formula    = $field->row->fee_formula;
 				$fieldValue = $field->value ?? '';
 
 				// Convert the entered value to the right format expected by PHP
-				if (trim($thousandsSep) == ',')
-				{
+				if (trim($thousandsSep) == ',') {
 					$fieldValue = str_replace(',', '', $fieldValue);
 				}
 
-				if (trim($decPoint) == ',')
-				{
+				if (trim($decPoint) == ',') {
 					$fieldValue = str_replace($decPoint, '.', $fieldValue);
 				}
 
 				$formula = str_replace('[FIELD_VALUE]', floatval($fieldValue), $formula);
 
-				foreach ($fieldsFee as $fieldName => $fieldFee)
-				{
+				foreach ($fieldsFee as $fieldName => $fieldFee) {
 					$fieldName = strtoupper($fieldName);
 					$formula   = str_replace('[' . $fieldName . ']', $fieldFee, $formula);
 				}
 
-				foreach ($replaces as $fieldName => $fieldFee)
-				{
+				foreach ($replaces as $fieldName => $fieldFee) {
 					$fieldName = strtoupper($fieldName);
 					$formula   = str_replace('[' . $fieldName . ']', $fieldFee, $formula);
 				}
 
-				if ($formula)
-				{
+				if ($formula) {
 					@eval('$feeValue = ' . $formula . ';');
 				}
-			}
-			else
-			{
+			} else {
 				$feeValues = explode("\r\n", $field->row->fee_values);
 				$values    = explode("\r\n", $field->row->values);
 
-				if (is_array($field->value))
-				{
+				if (is_array($field->value)) {
 					$fieldValues = $field->value;
-				}
-				elseif ($field->value)
-				{
+				} elseif ($field->value) {
 					$fieldValues   = [];
 					$fieldValues[] = $field->value;
-				}
-				else
-				{
+				} else {
 					$fieldValues = [];
 				}
 
 				$values      = array_map('trim', $values);
 				$fieldValues = array_map('trim', $fieldValues);
 
-				foreach ($fieldValues as $fieldValue)
-				{
+				foreach ($fieldValues as $fieldValue) {
 					$fieldValueIndex = array_search($fieldValue, $values);
 
-					if ($fieldValueIndex !== false && isset($feeValues[$fieldValueIndex]))
-					{
+					if ($fieldValueIndex !== false && isset($feeValues[$fieldValueIndex])) {
 						$fieldValueFee = $feeValues[$fieldValueIndex];
 
-						if (str_contains($fieldValueFee, '['))
-						{
+						if (str_contains($fieldValueFee, '[')) {
 							$formula = $fieldValueFee;
 
-							foreach ($fieldsFee as $fieldName => $fieldFee)
-							{
+							foreach ($fieldsFee as $fieldName => $fieldFee) {
 								$fieldName = strtoupper($fieldName);
 								$formula   = str_replace('[' . $fieldName . ']', $fieldFee, $formula);
 							}
 
-							foreach ($replaces as $fieldName => $fieldFee)
-							{
+							foreach ($replaces as $fieldName => $fieldFee) {
 								$fieldName = strtoupper($fieldName);
 								$formula   = str_replace('[' . $fieldName . ']', $fieldFee, $formula);
 							}
@@ -539,9 +479,7 @@ class RADForm
 							@eval('$fieldValueFee = ' . $formula . ';');
 
 							$feeValue += (float) $fieldValueFee;
-						}
-						else
-						{
+						} else {
 							$feeValue += (float) $fieldValueFee;
 						}
 					}
@@ -552,13 +490,11 @@ class RADForm
 
 			$fieldsFeeAmount[$field->row->name] = $feeValue;
 
-			if (!$field->row->discountable)
-			{
+			if (!$field->row->discountable) {
 				$noneDiscountableFee += $feeValue;
 			}
 
-			if (!$field->row->taxable)
-			{
+			if (!$field->row->taxable) {
 				$noneTaxableFee += $feeValue;
 			}
 		}
@@ -579,8 +515,7 @@ class RADForm
 	{
 		$lang = strtolower($lang);
 
-		if (file_exists(JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/vendor/valitron/lang/' . $lang . '.php'))
-		{
+		if (file_exists(JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/vendor/valitron/lang/' . $lang . '.php')) {
 			$this->lang = $lang;
 
 			return;
@@ -588,8 +523,7 @@ class RADForm
 
 		$parts = explode('-', $lang);
 
-		if (file_exists(JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/vendor/valitron/lang/' . $parts[0] . '.php'))
-		{
+		if (file_exists(JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/vendor/valitron/lang/' . $parts[0] . '.php')) {
 			$this->lang = $parts[0];
 
 			return;
@@ -617,10 +551,8 @@ class RADForm
 		$dateFormat      = $config->date_field_format ?: '%Y-%m-%d';
 		$dateFormat      = str_replace('%', '', $dateFormat);
 
-		foreach ($fields as $fieldName => $field)
-		{
-			if ($fieldName != $field->name)
-			{
+		foreach ($fields as $fieldName => $field) {
+			if ($fieldName != $field->name) {
 				$fields[$field->name] = $field;
 				unset($fields[$fieldName]);
 			}
@@ -629,67 +561,53 @@ class RADForm
 		reset($fields);
 
 		/* @var RADFormField $field */
-		foreach ($fields as $field)
-		{
-			if ($field->hideOnDisplay)
-			{
+		foreach ($fields as $field) {
+			if ($field->hideOnDisplay) {
 				continue;
 			}
 
 			// Ignore State, Heading, Message validation since these field types don't need to have data
 			$fieldType = strtolower($field->type);
 
-			if (in_array($fieldType, ['state', 'heading', 'message']))
-			{
+			if (in_array($fieldType, ['state', 'heading', 'message'])) {
 				continue;
 			}
 
 			$data[$field->name] = $field->value;
 
 			// Special case for handling null date field
-			if ($fieldType == 'date' && !(int) $data[$field->name])
-			{
+			if ($fieldType == 'date' && !(int) $data[$field->name]) {
 				$data[$field->name] = '';
 			}
 
-			if ($fieldType == 'date' && (int) $data[$field->name])
-			{
+			if ($fieldType == 'date' && (int) $data[$field->name]) {
 				// Validate and make sure the date is entered in valid format
-				try
-				{
+				try {
 					$date = DateTime::createFromFormat($dateFormat, $data[$field->name]);
 
-					if ($date === false)
-					{
+					if ($date === false) {
 						$errors[$field->name] = Text::sprintf('EB_DATE_FIELD_IS_INVALID_FORMAT', $field->title, $dateFormat);
 
 						continue;
 					}
-				}
-				catch (Exception $e)
-				{
+				} catch (Exception $e) {
 					$errors[$field->name] = Text::sprintf('EB_DATE_FIELD_IS_INVALID_FORMAT', $field->title, $dateFormat);
 
 					continue;
 				}
 			}
 
-			if ($fieldType == 'datetime' && (int) $data[$field->name])
-			{
+			if ($fieldType == 'datetime' && (int) $data[$field->name]) {
 				// Validate and make sure the date is entered in valid format
-				try
-				{
+				try {
 					$date = DateTime::createFromFormat($dateFormat . ' H:i', $data[$field->name]);
 
-					if ($date === false)
-					{
+					if ($date === false) {
 						$errors[$field->name] = Text::sprintf('EB_DATETIME_FIELD_IS_INVALID_FORMAT', $field->title, $dateFormat . ' H:M');
 
 						continue;
 					}
-				}
-				catch (Exception $e)
-				{
+				} catch (Exception $e) {
 					$errors[$field->name] = Text::sprintf('EB_DATETIME_FIELD_IS_INVALID_FORMAT', $field->title, $dateFormat . 'H:M');
 
 					continue;
@@ -701,58 +619,46 @@ class RADForm
 			$fieldRules = [];
 
 			// Required rule
-			if ($field->required)
-			{
+			if ($field->required) {
 				$fieldRules[] = 'required';
 			}
 
 			// Custom rules
-			if ($field->row->server_validation_rules)
-			{
+			if ($field->row->server_validation_rules) {
 				$rules = explode('|', $field->row->server_validation_rules);
 
-				foreach ($rules as $rule)
-				{
+				foreach ($rules as $rule) {
 					$parts    = explode(':', $rule);
 					$ruleName = $parts[0];
 
-					if (count($parts) > 1)
-					{
+					if (count($parts) > 1) {
 						$params = explode(',', $parts[1]);
 						$params = array_map('trim', $params);
 
 						// The
-						if (in_array($ruleName, ['in', 'notIn']))
-						{
+						if (in_array($ruleName, ['in', 'notIn'])) {
 							$fieldRules[] = [$ruleName, $params];
-						}
-						else
-						{
+						} else {
 							$fieldRules[] = array_merge([$ruleName], $params);
 						}
-					}
-					else
-					{
+					} else {
 						$fieldRules[] = $ruleName;
 					}
 				}
 			}
 
-			if (count($fieldRules))
-			{
+			if (count($fieldRules)) {
 				$validationRules[$field->name] = $fieldRules;
 			}
 		}
 
 		// Load custom validators if exist
-		if (file_exists(JPATH_ROOT . '/components/com_eventbooking/helper/validator.php'))
-		{
+		if (file_exists(JPATH_ROOT . '/components/com_eventbooking/helper/validator.php')) {
 			require_once JPATH_ROOT . '/components/com_eventbooking/helper/validator.php';
 		}
 
 		// Set validation language
-		if (empty($this->lang))
-		{
+		if (empty($this->lang)) {
 			$this->setValidatorLanguage(Factory::getApplication()->getLanguage()->getTag());
 		}
 
@@ -764,19 +670,14 @@ class RADForm
 		$v->labels($labels);
 
 		// Perform validation and return error message
-		if (!$v->validate())
-		{
-			foreach ($v->errors() as $fieldName => $errorMessages)
-			{
+		if (!$v->validate()) {
+			foreach ($v->errors() as $fieldName => $errorMessages) {
 				$field = $fields[$fieldName];
 
 				// If the field has a custom error message, use it
-				if (!empty($field->row->validation_error_message))
-				{
+				if (!empty($field->row->validation_error_message)) {
 					$errors[$fieldName] = str_ireplace('[FIELD_NAME]', $field->title, $field->row->validation_error_message);
-				}
-				else
-				{
+				} else {
 					$errors[$fieldName] = Text::sprintf('EB_FIELD_IS_INVALID', $field->title);
 				}
 			}
@@ -805,16 +706,12 @@ class RADForm
 		$fieldIds      = [0];
 		$fileFieldIds  = [0];
 
-		foreach ($this->fields as $field)
-		{
+		foreach ($this->fields as $field) {
 			$fieldType = strtolower($field->type);
 
-			if ($fieldType == 'file')
-			{
+			if ($fieldType == 'file') {
 				$fileFieldIds[] = $field->id;
-			}
-			elseif (!$excludeFeeFields || !$field->fee_field)
-			{
+			} elseif (!$excludeFeeFields || !$field->fee_field) {
 				$fieldIds[] = $field->id;
 			}
 		}
@@ -828,46 +725,37 @@ class RADForm
 		$db->setQuery($query)
 			->execute();
 
-		foreach ($this->fields as $field)
-		{
+		foreach ($this->fields as $field) {
 			$fieldType = strtolower($field->type);
 
-			if ($field->row->is_core
+			if (
+				$field->row->is_core
 				|| $field->hideOnDisplay
 				|| $fieldType == 'heading'
-				|| $fieldType == 'message')
-			{
+				|| $fieldType == 'message'
+			) {
 				continue;
 			}
 
 			// Don't update fee field if not needed
-			if ($excludeFeeFields && $field->fee_field)
-			{
+			if ($excludeFeeFields && $field->fee_field) {
 				continue;
 			}
 
-			if ($fieldType == 'date')
-			{
+			if ($fieldType == 'date') {
 				$fieldValue = $data[$field->name];
 
-				if ($fieldValue)
-				{
+				if ($fieldValue) {
 					// Try to convert the format
-					try
-					{
+					try {
 						$date = DateTime::createFromFormat($dateFormat, $fieldValue);
 
-						if ($date)
-						{
+						if ($date) {
 							$fieldValue = $date->format('Y-m-d');
-						}
-						else
-						{
+						} else {
 							$fieldValue = '';
 						}
-					}
-					catch (Exception $e)
-					{
+					} catch (Exception $e) {
 						$fieldValue = '';
 					}
 
@@ -875,28 +763,20 @@ class RADForm
 				}
 			}
 
-			if ($fieldType == 'datetime')
-			{
+			if ($fieldType == 'datetime') {
 				$fieldValue = $data[$field->name];
 
-				if ($fieldValue)
-				{
+				if ($fieldValue) {
 					// Try to convert the format
-					try
-					{
+					try {
 						$date = DateTime::createFromFormat($dateFormat . ' H:i', $fieldValue);
 
-						if ($date)
-						{
+						if ($date) {
 							$fieldValue = $date->format('Y-m-d H:i:s');
-						}
-						else
-						{
+						} else {
 							$fieldValue = '';
 						}
-					}
-					catch (Exception $e)
-					{
+					} catch (Exception $e) {
 						$fieldValue = '';
 					}
 
@@ -907,10 +787,8 @@ class RADForm
 
 			$fieldValue = $data[$field->name] ?? '';
 
-			if ($fieldValue != '')
-			{
-				if (in_array($field->id, $fileFieldIds))
-				{
+			if ($fieldValue != '') {
+				if (in_array($field->id, $fileFieldIds)) {
 					$query->clear()
 						->delete('#__eb_field_values')
 						->where('registrant_id=' . (int) $registrantId)
@@ -923,14 +801,10 @@ class RADForm
 				$rowFieldValue->field_id      = $field->row->id;
 				$rowFieldValue->registrant_id = $registrantId;
 
-				if (is_array($fieldValue))
-				{
+				if (is_array($fieldValue)) {
 					$rowFieldValue->field_value = json_encode($fieldValue);
-				}
-				else
-				{
-					if ($field->row->encrypt_data && $fieldType == 'text')
-					{
+				} else {
+					if ($field->row->encrypt_data && $fieldType == 'text') {
 						$fieldValue = EventbookingHelperCryptor::encrypt($fieldValue);
 					}
 
@@ -953,8 +827,7 @@ class RADForm
 	{
 		$this->fieldSuffix = $suffix;
 
-		foreach ($this->fields as $field)
-		{
+		foreach ($this->fields as $field) {
 			$field->setFieldSuffix($suffix);
 		}
 	}
@@ -964,8 +837,7 @@ class RADForm
 	 */
 	public function removeFieldSuffix()
 	{
-		foreach ($this->fields as $field)
-		{
+		foreach ($this->fields as $field) {
 			$field->removeFieldSuffix();
 		}
 	}
@@ -980,10 +852,8 @@ class RADForm
 		$fieldsFee     = [];
 		$feeFieldTypes = ['text', 'range', 'number', 'radio', 'list', 'checkboxes', 'hidden'];
 
-		foreach ($this->fields as $fieldName => $field)
-		{
-			if ($field->hideOnDisplay)
-			{
+		foreach ($this->fields as $fieldName => $field) {
+			if ($field->hideOnDisplay) {
 				$fieldsFee[$fieldName] = 0;
 				continue;
 			}
@@ -991,14 +861,10 @@ class RADForm
 			$fieldsFee[$fieldName] = 0;
 			$fieldType             = strtolower($field->type);
 
-			if (in_array($fieldType, $feeFieldTypes))
-			{
-				if (in_array($fieldType, ['text', 'number', 'range', 'hidden']))
-				{
+			if (in_array($fieldType, $feeFieldTypes)) {
+				if (in_array($fieldType, ['text', 'number', 'range', 'hidden'])) {
 					$fieldsFee[$fieldName] = floatval($field->value);
-				}
-				elseif ($fieldType == 'checkboxes' || ($fieldType == 'list' && $field->row->multiple))
-				{
+				} elseif ($fieldType == 'checkboxes' || ($fieldType == 'list' && $field->row->multiple)) {
 					$fieldsFee[$fieldName . '_selected_options_count']     = 0;
 					$fieldsFee[$fieldName . '_selected_fee_options_count'] = 0;
 
@@ -1006,39 +872,28 @@ class RADForm
 					$values    = explode("\r\n", $field->row->values);
 					$feeAmount = 0;
 
-					if (is_array($field->value))
-					{
+					if (is_array($field->value)) {
 						$selectedOptions = $field->value;
-					}
-					elseif (is_string($field->value) && strpos($field->value, "\r\n"))
-					{
+					} elseif (is_string($field->value) && strpos($field->value, "\r\n")) {
 						$selectedOptions = explode("\r\n", $field->value);
-					}
-					elseif (is_string($field->value) && is_array(json_decode($field->value)))
-					{
+					} elseif (is_string($field->value) && is_array(json_decode($field->value))) {
 						$selectedOptions = json_decode($field->value);
-					}
-					else
-					{
+					} else {
 						$selectedOptions = [$field->value];
 					}
 
-					if (is_array($selectedOptions))
-					{
+					if (is_array($selectedOptions)) {
 						$selectedOptionsCount    = 0;
 						$selectedFeeOptionsCount = 0;
 
-						foreach ($selectedOptions as $selectedOption)
-						{
+						foreach ($selectedOptions as $selectedOption) {
 							$index = array_search($selectedOption, $values);
 
-							if ($index !== false)
-							{
+							if ($index !== false) {
 								$selectedOptionsCount++;
 							}
 
-							if ($index !== false && isset($feeValues[$index]))
-							{
+							if ($index !== false && isset($feeValues[$index])) {
 								$feeAmount += floatval($feeValues[$index]);
 								$selectedFeeOptionsCount++;
 							}
@@ -1049,16 +904,13 @@ class RADForm
 					}
 
 					$fieldsFee[$fieldName] = $feeAmount;
-				}
-				else
-				{
+				} else {
 					$feeValues  = explode("\r\n", $field->row->fee_values);
 					$values     = explode("\r\n", $field->row->values);
 					$values     = array_map('trim', $values);
 					$valueIndex = array_search(trim((string) $field->value), $values);
 
-					if ($valueIndex !== false && isset($feeValues[$valueIndex]))
-					{
+					if ($valueIndex !== false && isset($feeValues[$valueIndex])) {
 						$fieldsFee[$fieldName] = floatval($feeValues[$valueIndex]);
 					}
 				}

@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<!-- Main parameters -->
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="label" size="6" name="QuizId" default="" label="COM_ARIQUIZ_LABEL_ID" description="COM_ARIQUIZ_DESCR_ID" />
+		<param type="text" size="50" name="QuizName" label="COM_ARIQUIZ_LABEL_NAME" description="COM_ARIQUIZ_DESCR_QUIZNAME" />
+		<param type="list" name="Status" default="1" label="COM_ARIQUIZ_LABEL_STATUS" description="COM_ARIQUIZ_LABEL_QUIZSTATUS">
+			<option value="1">COM_ARIQUIZ_LABEL_PUBLISH</option>
+			<option value="2">COM_ARIQUIZ_LABEL_UNPUBLISH</option>
+		</param>
+		<param type="quizcategory" name="CategoryList" size="5" multiple="0" label="COM_ARIQUIZ_LABEL_CATEGORY" description="COM_ARIQUIZ_DESCR_QUIZCATEGORY" massedit="1" dimension="2" />
+		<param type="text" size="6" name="PassedScore" label="COM_ARIQUIZ_LABEL_PASSEDSCORE" description="COM_ARIQUIZ_DESCR_PASSEDSCORE" massedit="1" />
+		<param type="text" size="6" name="TotalTime" label="COM_ARIQUIZ_LABEL_TOTALTIME" description="COM_ARIQUIZ_DESCR_TOTALTIME" massedit="1" />
+		<param type="text" size="6" name="QuestionTime" label="COM_ARIQUIZ_LABEL_QUESTIONTIME" description="COM_ARIQUIZ_DESCR_QUESTIONTIME" massedit="1" />
+		<param type="text" size="6" name="QuestionCount" label="COM_ARIQUIZ_LABEL_QUESTIONCOUNT" description="COM_ARIQUIZ_DESCR_QUESTIONCOUNT" massedit="1" />
+		<param type="switcher" name="RandomQuestion" default="0" label="COM_ARIQUIZ_LABEL_RANDOMQUESTION" description="COM_ARIQUIZ_DESCR_RANDOMQUESTION">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="quizeditor" size="50" name="Description" label="COM_ARIQUIZ_LABEL_DESCRIPTION" description="COM_ARIQUIZ_LABEL_QUIZDESCRIPTION" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_NAMEREQUIRE" validate="QuizName" />
+		<validator type="quizname" error_message="COM_ARIQUIZ_ERROR_NAMEUNIQUE" validate="QuizName" />
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_PASSEDSCORE" validate="PassedScore" datatype="float" min="0" max="100" massedit="1" />
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_TOTALTIME" validate="TotalTime" min="0" massedit="1" />
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_QUESTIONTIME" validate="QuestionTime" min="0" massedit="1" />
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_QUESTIONCOUNT" validate="QuestionCount" min="0" massedit="1" />
+		
+		<validator type="required" error_message="" validate="CategoryList" client_validation="0" />
+		<validator type="range" error_message="" validate="CategoryList" min="1" client_validation="0" massedit="1" />
+	</validators>
+	
+	<!-- Security and access -->
+	<params group="security" addpath="/administrator/components/com_ariquiz/elements">
+		<param type="list" name="Anonymous" default="Yes" label="COM_ARIQUIZ_LABEL_QUIZANONYMOUS" description="COM_ARIQUIZ_DESCR_QUIZANONYMOUS" massedit="1" dimension="2">
+			<option value="Yes">COM_ARIQUIZ_LABEL_YES</option>
+			<option value="No">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="ByUser">COM_ARIQUIZ_LABEL_BYUSERWISH</option>
+		</param>
+		<param type="switcher" name="StartImmediately" default="0" label="COM_ARIQUIZ_LABEL_QUIZSTARTIMMEDIATELY" description="COM_ARIQUIZ_DESCR_QUIZSTARTIMMEDIATELY" massedit="1">
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+		</param>
+        <param type="selectquiz" name="PrevQuizId" label="COM_ARIQUIZ_LABEL_PREVQUIZ" description="COM_ARIQUIZ_DESCR_PREVQUIZ" massedit="0" />
+		<param type="text" name="LagTime" size="6" label="COM_ARIQUIZ_LABEL_LAGTIME" description="COM_ARIQUIZ_DESCR_LAGTIME" massedit="1" />
+		<param type="text" name="AttemptCount" size="6" label="COM_ARIQUIZ_LABEL_ATTEMPTCOUNT" description="COM_ARIQUIZ_DESCR_ATTEMPTCOUNT" massedit="1" />
+		<param type="period" name="AttemptPeriod" label="COM_ARIQUIZ_LABEL_ATTEMPTPERIOD" description="COM_ARIQUIZ_DESCR_ATTEMPTPERIOD" massedit="0" />
+		<param type="calendar" name="StartDate" label="COM_ARIQUIZ_LABEL_STARTDATE" description="COM_ARIQUIZ_DESCR_QUIZSTARTDATE" />
+		<param type="calendar" name="EndDate" label="COM_ARIQUIZ_LABEL_ENDDATE" description="COM_ARIQUIZ_DESCR_QUIZENDDATE" />
+		<param type="accesslevels" name="Access" label="COM_ARIQUIZ_LABEL_ACCESS" description="COM_ARIQUIZ_DESCR_QUIZACCESS" default="-1" root_group="Registered" guest_label="COM_ARIQUIZ_LABEL_GUEST" add_inherited="1" />
+	</params>
+	<validators group="security" addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_LAGTIME" validate="LagTime" min="0" />
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_ATTEMPTCOUNT" validate="AttemptCount" min="0" />
+		<validator type="period" error_message="COM_ARIQUIZ_ERROR_ATTEMPTCOUNTPERIOD" validate="AttemptPeriod" />
+	</validators>
+	
+	<!-- Results -->
+	<params group="results" addpath="/administrator/components/com_ariquiz/elements">
+		<param name="ResultTemplateType" type="groups" default="manual" label="COM_ARIQUIZ_LABEL_CHOOSETEXTTEMPLATETYPE" description="" massedit="1" hide_label="1" dimension="2" hide_headers="1">
+  			<group type="group" group_id="manual" default="" label="COM_ARIQUIZ_LABEL_MANUAL" description="" per_row="2">
+				<param type="texttemplates" name="PassedTemplateId" group="QuizResult" default="" label="COM_ARIQUIZ_LABEL_PASSEDTEMPLATE" description="" />
+				<param type="texttemplates" name="FailedTemplateId" group="QuizResult" default="" label="COM_ARIQUIZ_LABEL_FAILEDTEMPLATE" description="" massedit="1" />
+				<param type="texttemplates" name="PrintPassedTemplateId" group="QuizResult" default="" label="COM_ARIQUIZ_LABEL_PRINTPASSEDTEMPLATE" description="" massedit="1" />
+				<param type="texttemplates" name="PrintFailedTemplateId" group="QuizResult" default="" label="COM_ARIQUIZ_LABEL_PRINTFAILEDTEMPLATE" description="" massedit="1" />
+				<param type="texttemplates" name="MailPassedTemplateId" group="QuizMailResult" default="" label="COM_ARIQUIZ_LABEL_MAILPASSEDTEMPLATE" description="" massedit="1" />
+				<param type="texttemplates" name="MailFailedTemplateId" group="QuizMailResult" default="" label="COM_ARIQUIZ_LABEL_MAILFAILEDTEMPLATE" description="" massedit="1" />
+				<param type="texttemplates" name="CertificatePassedTemplateId" group="QuizResult" default="" label="COM_ARIQUIZ_LABEL_CERTIFATEPASSEDTEMPLATE" description="" massedit="1" />
+				<param type="texttemplates" name="CertificateFailedTemplateId" group="QuizResult" default="" label="COM_ARIQUIZ_LABEL_CERTIFATEFAILEDTEMPLATE" description="" massedit="1" />
+  			</group>
+  			<group type="group" group_id="scale" default="" label="COM_ARIQUIZ_LABEL_RESULTSCALE" description="">
+  				<param type="resultscale" name="ResultScaleId" default="" label="COM_ARIQUIZ_LABEL_RESULTSCALE" description="COM_ARIQUIZ_DESCR_QUIZRESULTSCALE" massedit="1" />
+  			</group>
+		</param>
+		<param type="spacer" name="" default="" label="" description="" />
+        <param type="switcher" name="ShareResults" default="0" label="COM_ARIQUIZ_LABEL_SHARERESULTS" description="COM_ARIQUIZ_DESCR_SHARERESULTS" massedit="1">
+            <option value="0">COM_ARIQUIZ_LABEL_NO</option>
+            <option value="1">COM_ARIQUIZ_LABEL_YES</option>
+        </param>
+		<param type="list" name="FullStatistics" default="Never" label="COM_ARIQUIZ_LABEL_FULLSTAT" description="COM_ARIQUIZ_DESCR_FULLSTAT" massedit="1">
+			<option value="Never">COM_ARIQUIZ_LABEL_NEVER</option>
+			<option value="Always">COM_ARIQUIZ_LABEL_ALWAYS</option>
+			<option value="OnLastAttempt">COM_ARIQUIZ_LABEL_ONLASTATTEMPT</option>
+			<option value="OnSuccess">COM_ARIQUIZ_LABEL_ONSUCCESS</option>
+			<option value="OnFail">COM_ARIQUIZ_LABEL_ONFAIL</option>
+		</param>
+		<param type="list" name="FullStatisticsOnSuccess" default="All" label="COM_ARIQUIZ_LABEL_FULLSTATONSUCCESS" description="COM_ARIQUIZ_DESCR_FULLSTATONSUCCESS" massedit="0">
+			<option value="None">COM_ARIQUIZ_LABEL_NONE</option>
+			<option value="All">COM_ARIQUIZ_LABEL_ALL</option>
+			<option value="OnlyCorrect">COM_ARIQUIZ_LABEL_ONLYCORRECT</option>
+			<option value="OnlyIncorrect">COM_ARIQUIZ_LABEL_ONLYINCORRECT</option>
+		</param>
+		<param type="list" name="FullStatisticsOnFail" default="All" label="COM_ARIQUIZ_LABEL_FULLSTATONFAIL" description="COM_ARIQUIZ_DESCR_FULLSTATONFAIL" massedit="0">
+			<option value="None">COM_ARIQUIZ_LABEL_NONE</option>
+			<option value="All">COM_ARIQUIZ_LABEL_ALL</option>
+			<option value="OnlyCorrect">COM_ARIQUIZ_LABEL_ONLYCORRECT</option>
+			<option value="OnlyIncorrect">COM_ARIQUIZ_LABEL_ONLYINCORRECT</option>
+		</param>
+		<param type="switcher" name="HideCorrectAnswers" default="0" label="COM_ARIQUIZ_LABEL_HIDECORRECTANSWERS" description="COM_ARIQUIZ_DESCR_HIDECORRECTANSWERS" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="splitter" default="" label="" description="" />
+		<param type="switcher" name="AutoMailToUser" default="0" label="COM_ARIQUIZ_LABEL_AUTOSENDRESULTS" description="COM_ARIQUIZ_DESCR_AUTOSENDRESULTS" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="spacer" name="" default="" label="" description="" />
+		<param type="text" name="AdminEmail" size="90" default="" label="COM_ARIQUIZ_LABEL_ADMINEMAIL" description="COM_ARIQUIZ_DESCR_ADMINEMAIL" />
+		<param type="texttemplates" name="AdminMailTemplateId" group="QuizMailResult" default="" label="COM_ARIQUIZ_LABEL_TEMPLATE" description="COM_ARIQUIZ_DESCR_NOTIFICATIONTEMPLATE" />
+		<param type="usergroups" name="MailGroupList" label="COM_ARIQUIZ_LABEL_USERGROUPS" description="COM_ARIQUIZ_DESCR_QUIZMAILGROUPS" multiple="1" size="10" />
+	</params>
+	<validators group="results" addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="email" multiple="1" error_message="COM_ARIQUIZ_ERROR_ADMINEMAIL" validate="AdminEmail" />
+	</validators>
+	
+	<!-- Extra params -->
+	<params group="extra" addpath="/administrator/components/com_ariquiz/elements">
+		<param type="switcher" name="CanBack" default="0" label="COM_ARIQUIZ_LABEL_CANBACK" description="COM_ARIQUIZ_DESCR_CANBACK" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="switcher" name="CanSkip" default="0" label="COM_ARIQUIZ_LABEL_CANSKIP" description="COM_ARIQUIZ_DESCR_CANSKIP" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="switcher" name="CanStop" default="0" label="COM_ARIQUIZ_LABEL_CANSTOP" description="COM_ARIQUIZ_DESCR_CANSTOP" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="switcher" name="CanTerminate" default="0" label="COM_ARIQUIZ_LABEL_CANTERMINATE" description="COM_ARIQUIZ_DESCR_CANTERMINATE" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="switcher" name="UseCalculator" default="0" label="COM_ARIQUIZ_LABEL_USECALC" description="COM_ARIQUIZ_DESCR_USECALC" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+        <param type="switcher" name="TryAgain" default="0" label="COM_ARIQUIZ_LABEL_TRYAGAIN" description="COM_ARIQUIZ_DESCR_TRYAGAIN" massedit="1">
+            <option value="0">COM_ARIQUIZ_LABEL_NO</option>
+            <option value="1">COM_ARIQUIZ_LABEL_YES</option>
+        </param>
+		<param type="switcher" name="ParsePluginTag" default="0" label="COM_ARIQUIZ_LABEL_PARSEPLUGINTAG" description="COM_ARIQUIZ_DESCR_PARSEPLUGINTAG" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="switcher" name="ShowCorrectAnswer" default="0" label="COM_ARIQUIZ_LABEL_SHOWCORRECTANSWER" description="COM_ARIQUIZ_DESCR_SHOWCORRECTANSWER" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="switcher" name="ShowExplanation" default="0" label="COM_ARIQUIZ_LABEL_SHOWEXPLANATION" description="COM_ARIQUIZ_DESCR_SHOWEXPLANATION" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="list" name="AnswersOrderType" default="Numeric" label="COM_ARIQUIZ_LABEL_QUESTIONORDERTYPE" description="COM_ARIQUIZ_DESCR_QUESTIONORDERTYPE" massedit="1">
+			<option value="Numeric">COM_ARIQUIZ_LABEL_NUMERIC</option>
+			<option value="AlphaLower">COM_ARIQUIZ_LABEL_ALPHALOWER</option>
+			<option value="AlphaUpper">COM_ARIQUIZ_LABEL_ALPHAUPPER</option>
+		</param>
+		<param type="switcher" name="NoPenaltyForEmptyAnswer" default="0" label="COM_ARIQUIZ_LABEL_NOPENALTYFOREMPTYANSWER" description="COM_ARIQUIZ_DESCR_NOPENALTYFOREMPTYANSWER" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+		<param type="switcher" name="DisableEmptyAnswer" default="0" label="COM_ARIQUIZ_LABEL_DISABLEEMPTYANSWER" description="COM_ARIQUIZ_DESCR_DISABLEEMPTYANSWER" massedit="1">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+        <param type="switcher" name="ShowPaging" default="0" label="COM_ARIQUIZ_LABEL_SHOWPAGING" description="COM_ARIQUIZ_DESCR_SHOWPAGING" massedit="1">
+            <option value="0">COM_ARIQUIZ_LABEL_NO</option>
+            <option value="1">COM_ARIQUIZ_LABEL_YES</option>
+        </param>
+		<param name="Paging" type="groups" default="OnePerPage" label="COM_ARIQUIZ_LABEL_CHOOSEPAGINGTYPE" description="" massedit="1" hide_label="1" dimension="3" hide_headers="1">
+  			<group type="group" group_id="OnePerPage" default="" label="COM_ARIQUIZ_LABEL_PAGING_ONEPERPAGE" description="" per_row="3">
+			</group>
+			<group type="group" group_id="AllOnPage" default="" label="COM_ARIQUIZ_LABEL_PAGING_ALLONPAGE" description="" per_row="3">
+			</group>
+			<group type="group" group_id="SeparateByCat" default="" label="COM_ARIQUIZ_LABEL_PAGING_SEPARATEBYCATEGORIES" description="" per_row="3">
+			</group>
+			<group type="group" group_id="CustomNumber" default="" label="COM_ARIQUIZ_LABEL_PAGING_CUSTOMNUMBER" description="" per_row="3">
+				<param type="text" name="Paging_CustomNumber_PageSize" size="5" default="" label="COM_ARIQUIZ_LABEL_PAGING_PAGESIZE" description="COM_ARIQUIZ_DESCR_PAGING_PAGESIZE" massedit="1" />
+			</group>
+		</param>
+	</params>
+	
+	<params group="rules" addpath="/administrator/components/com_ariquiz/elements">
+		<param type="rules" name="rules" label=" " translate_label="false" class="inputbox" filter="rules" component="com_ariquiz" section="quiz" validate="rules" />
+		<param type="hidden" name="asset_id" label="" description="" />
+	</params>
+	
+	<!-- Metadata params -->
+	<params group="metadata" addpath="/administrator/components/com_ariquiz/elements">
+		<param type="text" size="70" name="title" label="COM_ARIQUIZ_LABEL_METADATATITLE" description="COM_ARIQUIZ_DESCR_METADATATITLE" />
+		<param type="textarea" rows="3" cols="80" name="description" label="COM_ARIQUIZ_LABEL_METADATADESCRIPTION" description="COM_ARIQUIZ_DESCR_METADATADESCRIPTION" />
+		<param type="textarea" rows="3" cols="80" name="keywords" label="COM_ARIQUIZ_LABEL_METADATAKEYWORDS" description="COM_ARIQUIZ_DESCR_METADATAKEYWORDS" />
+	</params>
+</form>

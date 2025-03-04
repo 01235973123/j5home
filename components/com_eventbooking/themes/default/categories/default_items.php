@@ -3,12 +3,13 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -39,7 +40,7 @@ else
 	$hTag = 'h2';
 }
 
-if ($this->params->get('image_lazy_loading', 'lazy'))
+if ($this->params->get('image_lazy_loading', '0'))
 {
 	$imgLoadingAttr = ' loading="lazy"';
 }
@@ -108,7 +109,15 @@ $lazyLoadingStartIndex = $this->params->get('image_lazy_loading_start_index', 0)
 				<?php
 				}
 
-				echo $category->description;
+
+				if ($this->params->get('category_description_limit'))
+				{
+					echo HTMLHelper::_('string.truncate', $category->description, $this->params->get('category_description_limit', 120));
+				}
+				else
+				{
+					echo $category->description;
+				}
 				?>
 			</div>
 		<?php

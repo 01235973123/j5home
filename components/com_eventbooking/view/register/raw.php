@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -255,7 +255,13 @@ class EventbookingViewRegisterRaw extends EventbookingViewRegisterBase
 		$input                 = $this->input;
 		$eventId               = $input->getInt('event_id', 0);
 		$event                 = EventbookingHelperDatabase::getEvent($eventId);
-		$category              = EventbookingHelperDatabase::getCategory($event->main_category_id);
+
+		if (!$event)
+		{
+			throw new Exception(sprintf('Event %d not found', $eventId), 404);
+		}
+
+		$category = EventbookingHelperDatabase::getCategory($event->main_category_id);
 
 		if (!$event->payment_methods && $category->payment_methods)
 		{
@@ -708,8 +714,8 @@ class EventbookingViewRegisterRaw extends EventbookingViewRegisterBase
 		$user   = Factory::getApplication()->getIdentity();
 
 		/* @var \Joomla\Database\DatabaseDriver $db */
-		$db     = Factory::getContainer()->get('db');
-		$query  = $db->getQuery(true);
+		$db    = Factory::getContainer()->get('db');
+		$query = $db->getQuery(true);
 
 		// First, try to get Members Data from previous registration of this event
 		$query->select('id')

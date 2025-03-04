@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -19,7 +19,7 @@ $this->includeTemplate('script');
 	        <?php $this->renderSearchBar(); ?>
         </div>
         <div class="clearfix"></div>
-        <table class="adminlist table table-striped" id="exporttmplList">
+        <table class="table itemList table-striped" id="exporttmplList">
             <thead>
             <tr>
                 <th width="1%" class="nowrap center hidden-phone">

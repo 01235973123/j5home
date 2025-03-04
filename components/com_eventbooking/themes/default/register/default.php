@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -320,16 +320,21 @@ $layoutData = [
 
 	EventbookingHelperPayments::writeJavascriptObjects();
 
-	Factory::getApplication()->getDocument()->addScriptDeclaration('var eb_current_page = "default";')
+	Factory::getApplication()
+		->getDocument()
 		->addScriptOptions('hidePaymentInformation', $hidePaymentInformation)
 		->addScriptOptions('hasTicketTypes', $hasTicketTypes)
-		->addScriptOptions('selectedState', $selectedState);
+		->addScriptOptions('selectedState', $selectedState)
+		->getWebAssetManager()
+		->addInlineScript('var eb_current_page = "default";');
 
 	EventbookingHelperHtml::addOverridableScript('media/com_eventbooking/js/site-register-default.min.js', ['version' => EventbookingHelper::getInstalledVersion()]);
 
 	if (isset($this->fees['show_vat_number_field']))
 	{
-		Factory::getApplication()->getDocument()->addScriptOptions('showVatNumberField', (bool) $this->fees['show_vat_number_field']);
+		Factory::getApplication()
+			->getDocument()
+			->addScriptOptions('showVatNumberField', (bool) $this->fees['show_vat_number_field']);
 	}
 	?>
 	<input type="hidden" id="ticket_type_values" name="ticket_type_values" value="" />

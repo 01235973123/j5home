@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -24,7 +24,10 @@ use Joomla\CMS\Uri\Uri;
 
 EventbookingHelper::normalizeNullDateTimeData($this->item, ['event_date', 'late_fee_date', 'registration_start_date', 'cut_off_date']);
 
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/assets/js/eventbookingjq.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->registerAndUseScript('com_eventbooking.eventbookingjq', 'media/com_eventbooking/assets/js/eventbookingjq.min.js');
 
 EventbookingHelperJquery::colorbox('eb-colorbox-addlocation');
 ?>
@@ -33,13 +36,13 @@ EventbookingHelperJquery::colorbox('eb-colorbox-addlocation');
 	<div class="control-group">
 		<div class="control-label"><?php echo Text::_('EB_TITLE'); ?></div>
 		<div class="controls">
-			<input type="text" name="title" value="<?php echo $this->escape($this->item->title); ?>" class="input-xlarge form-control w-100" size="70"/>
+			<input type="text" name="title" value="<?php echo $this->escape($this->item->title); ?>" class="form-control" size="70"/>
 		</div>
 	</div>
 	<div class="control-group">
 		<div class="control-label"><?php echo Text::_('EB_ALIAS'); ?></div>
 		<div class="controls">
-			<input type="text" name="alias" value="<?php echo $this->item->alias; ?>" class="input-xlarge form-control w-100" size="70"/>
+			<input type="text" name="alias" value="<?php echo $this->item->alias; ?>" class="form-control" size="70"/>
 		</div>
 	</div>
 	<div class="control-group">

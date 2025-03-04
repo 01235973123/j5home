@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="label" size="6" name="ScaleId" default="" label="COM_ARIQUIZ_LABEL_ID" description="COM_ARIQUIZ_DESCR_ID" />
+		<param type="text" size="50" name="ScaleName" label="COM_ARIQUIZ_LABEL_NAME" description="COM_ARIQUIZ_DESCR_SCALENAME" />
+        <param name="ScaleType" type="list" default="percent" label="COM_ARIQUIZ_LABEL_SCALETYPE" description="COM_ARIQUIZ_DESCR_SCALETYPE">
+            <option value="Percent">COM_ARIQUIZ_LABEL_LBLPERCENT</option>
+            <option value="Score">COM_ARIQUIZ_LABEL_SCORE</option>
+        </param>
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_NAMEREQUIRE" validate="ScaleName" />
+		<validator type="resultscalename" error_message="COM_ARIQUIZ_ERROR_NAMEUNIQUE" validate="ScaleName" />
+		<validator type="resultscale" error_message="" validate="" />
+	</validators>
+	<params group="scaleitem" addpath="/administrator/components/com_ariquiz/elements">
+		<param type="text" size="5" name="BeginPoint" label="COM_ARIQUIZ_LABEL_STARTPOINT" description="COM_ARIQUIZ_DESCR_POINT" />
+		<param type="text" size="5" name="EndPoint" label="COM_ARIQUIZ_LABEL_ENDPOINT" description="COM_ARIQUIZ_DESCR_POINT" />
+		<param type="texttemplates" name="TextTemplateId" group="QuizResult" default="" label="COM_ARIQUIZ_LABEL_TEXTTEMPLATE" description="" />
+		<param type="texttemplates" name="PrintTemplateId" group="QuizResult" default="" label="COM_ARIQUIZ_LABEL_PRINTTEMPLATE" description="" />
+		<param type="texttemplates" name="MailTemplateId" group="QuizMailResult" default="" label="COM_ARIQUIZ_LABEL_MAILTEMPLATE" description="" />
+		<param type="texttemplates" name="CertificateTemplateId" group="QuizResult" default="" label="COM_ARIQUIZ_LABEL_CERTIFICATETEMPLATE" description="" />
+	</params>
+</form>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="bankcategory" name="QuestionCategoryId" default="0" label="COM_ARIQUIZ_LABEL_CATEGORY" description="" massedit="1" />
+		<param type="text" size="6" name="Score" label="COM_ARIQUIZ_LABEL_SCORE" description="" massedit="1" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_SCORE" validate="Score" datatype="float" min="0" massedit="1" />
+	</validators>
+</form>

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -195,11 +195,16 @@ class EventbookingControllerCart extends EventbookingController
 			$this->app->redirect(Uri::root());
 		}
 
+		if (!$user->id && $config->use_email_as_username && !$this->input->post->exists('username'))
+		{
+			$this->input->post->set('username', $this->input->post->getString('email'));
+		}
+
 		// Validate username and password
 		if (!$user->id && $config->user_registration)
 		{
-			$errors = array_merge($errors, EventbookingHelperRegistration::validateUsername($this->input->post->get('username', '', 'raw')));
-			$errors = array_merge($errors, EventbookingHelperRegistration::validatePassword($this->input->post->get('password1', '', 'raw')));
+			$errors = array_merge($errors, EventbookingHelperValidator::validateUsername($this->input->post->get('username', '', 'raw')));
+			$errors = array_merge($errors, EventbookingHelperValidator::validatePassword($this->input->post->get('password1', '', 'raw')));
 		}
 
 		// Check email
@@ -420,45 +425,9 @@ class EventbookingControllerCart extends EventbookingController
 
 			foreach ($eventIds as $eventId)
 			{
-				$event       = EventbookingHelperDatabase::getEvent($eventId);
-				$eventIsFull = false;
-
-				$numberAwaitingPaymentRegistrants = EventbookingHelperRegistration::countAwaitingPaymentRegistrations($event);
-
-				if ($event->event_capacity && (($event->total_registrants + $numberAwaitingPaymentRegistrants) >= $event->event_capacity))
+				if (!EventbookingHelperValidator::validateDuplicateRegistration($eventId, $user->id, $email))
 				{
-					$eventIsFull = true;
-				}
-
-				$query->clear()
-					->select('COUNT(id)')
-					->from('#__eb_registrants')
-					->where('event_id = ' . $eventId);
-
-				if ($user->id)
-				{
-					$query->where('(user_id = ' . $user->id . ' OR email = ' . $db->quote($email) . ')');
-				}
-				else
-				{
-					$query->where('email = ' . $db->quote($email));
-				}
-
-				// Check if user joined waiting list
-				if ($eventIsFull)
-				{
-					$query->where('published = 3');
-				}
-				else
-				{
-					$query->where('(published = 1 OR (published = 0 AND payment_method LIKE "os_offline%"))');
-				}
-
-				$db->setQuery($query);
-				$total = $db->loadResult();
-
-				if ($total)
-				{
+					$event                   = EventbookingHelperDatabase::getEvent($eventId);
 					$registeredEventTitles[] = $event->title;
 				}
 			}
@@ -484,6 +453,15 @@ class EventbookingControllerCart extends EventbookingController
 				$result['success'] = false;
 				$result['message'] = Text::_('EB_EMAIL_USED_BY_DIFFERENT_USER');
 			}
+		}
+
+		if ($result['success'] && !EventbookingHelperValidator::validateEmailDomain($email))
+		{
+			$emailDomain = explode('@', $email);
+			$emailDomain = $emailDomain[1];
+
+			$result['success'] = false;
+			$result['message'] = Text::sprintf('JGLOBAL_EMAIL_DOMAIN_NOT_ALLOWED', $emailDomain);
 		}
 
 		return $result;

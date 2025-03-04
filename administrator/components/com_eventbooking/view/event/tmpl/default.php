@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -14,9 +14,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
 // Little command to allow viewing event data easier without having to edit code during support
@@ -25,9 +23,12 @@ if ($this->input->getInt('debug'))
 	print_r($this->item);
 }
 
-$document = Factory::getApplication()->getDocument();
-$document->getWebAssetManager()->useScript('showon');
-$document->addScript(Uri::root(true) . '/media/com_eventbooking/js/admin-event-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->useScript('showon')
+	->registerAndUseScript('com_eventbooking.admin-event-default', 'media/com_eventbooking/js/admin-event-default.min.js');
 
 $translatable    = Multilanguage::isEnabled() && count($this->languages);
 $editor          = Editor::getInstance(Factory::getApplication()->get('editor'));
@@ -72,52 +73,6 @@ EventbookingHelperHtml::addJSStrings($languageKeys);
 
 			echo $this->loadTemplate('misc');
 			?>
-			<fieldset class="form-horizontal options-form eb-event-meta-data">
-				<legend class="adminform"><?php echo Text::_('EB_META_DATA'); ?></legend>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo Text::_('EB_PAGE_TITLE'); ?>
-					</div>
-					<div class="controls">
-						<input class="input-large form-control" type="text" name="page_title" id="page_title" size="" maxlength="250" value="<?php echo $this->item->page_title; ?>"/>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo Text::_('EB_PAGE_HEADING'); ?>
-					</div>
-					<div class="controls">
-						<input class="input-large form-control" type="text" name="page_heading" id="page_heading" size="" maxlength="250" value="<?php echo $this->item->page_heading; ?>"/>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo Text::_('EB_ICS_CONTENT'); ?>
-					</div>
-					<div class="controls">
-						<textarea rows="5" cols="30" class="input-large form-control"
-						          name="ics_content"><?php echo $this->item->ics_content; ?></textarea>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo Text::_('EB_META_KEYWORDS'); ?>
-					</div>
-					<div class="controls">
-						<textarea rows="5" cols="30" class="input-large form-control"
-								  name="meta_keywords"><?php echo $this->item->meta_keywords; ?></textarea>
-					</div>
-				</div>
-				<div class="control-group">
-					<div class="control-label">
-						<?php echo Text::_('EB_META_DESCRIPTION'); ?>
-					</div>
-					<div class="controls">
-						<textarea rows="5" cols="30" class="input-large form-control"
-								  name="meta_description"><?php echo $this->item->meta_description; ?></textarea>
-					</div>
-				</div>
-			</fieldset>
 		</div>
 	</div>
 	<?php
@@ -159,6 +114,17 @@ EventbookingHelperHtml::addJSStrings($languageKeys);
 	{
 		echo HTMLHelper::_( 'uitab.addTab', 'event', 'certificate-page', Text::_('EB_CERTIFICATE_SETTINGS'));
 		echo $this->loadTemplate('certificate', ['editor' => $editor]);
+		echo HTMLHelper::_( 'uitab.endTab');
+	}
+
+	echo HTMLHelper::_( 'uitab.addTab', 'event', 'metadata-page', Text::_('EB_META_DATA'));
+	echo $this->loadTemplate('metadata', ['editor' => $editor]);
+	echo HTMLHelper::_( 'uitab.endTab');
+
+	if ($this->config->get('bes_show_options_tab', 1))
+	{
+		echo HTMLHelper::_( 'uitab.addTab', 'event', 'options-page', Text::_('EB_OPTIONS'));
+		echo $this->loadTemplate('options', ['editor' => $editor]);
 		echo HTMLHelper::_( 'uitab.endTab');
 	}
 
@@ -204,7 +170,6 @@ EventbookingHelperHtml::addJSStrings($languageKeys);
 
 	echo HTMLHelper::_( 'uitab.endTabSet');
 	?>
-	<input type="hidden" name="option" value="com_eventbooking"/>
 	<input type="hidden" name="id" value="<?php echo (int) $this->item->id; ?>"/>
 	<input type="hidden" name="task" value=""/>
 	<input type="hidden" id="activate_recurring_events" value="<?php echo (int) $this->config->activate_recurring_event; ?>">

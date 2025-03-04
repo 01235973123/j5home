@@ -3,48 +3,48 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
 
 trait EventbookingControllerDisplay
 {
 	protected function loadAssets()
 	{
-		$document = $this->app->getDocument();
-		$rootUrl = Uri::root(true);
-		$config = EventbookingHelper::getConfig();
+		$wa            = $this->app->getDocument()->getWebAssetManager();
+		$config        = EventbookingHelper::getConfig();
 		$calendarTheme = $config->get('calendar_theme', 'default');
 
 		// Add base AjaxURL to use in JS, it is only used in shopping cart
 		if ($config->multiple_booking)
 		{
 			$baseAjaxUrl = Uri::root(true) . '/index.php?option=com_eventbooking' . EventbookingHelper::getLangLink() . '&time=' . time();
-			$document->addScriptDeclaration('var EBBaseAjaxUrl = "' . $baseAjaxUrl . '";');
+			$wa->addInlineScript('var EBBaseAjaxUrl = "' . $baseAjaxUrl . '";');
 		}
 
-		// CSS
+		// Twitter Bootrap CSS
 		if ($config->load_bootstrap_css_in_frontend && in_array($config->get('twitter_bootstrap_version', 5), [5]))
 		{
-			HTMLHelper::_('bootstrap.loadCss');
+			$wa->useStyle('bootstrap.css');
 		}
 
 		if ($config->get('load_font_awesome', '1'))
 		{
-			$document->addStyleSheet($rootUrl . '/media/com_eventbooking/assets/css/font-awesome.min.css');
+			$wa->registerAndUseStyle('com_eventbooking.font-awesome', 'media/com_eventbooking/assets/css/font-awesome.min.css');
 		}
 
-		$document->addStyleSheet(
-			$rootUrl . '/media/com_eventbooking/assets/css/style.min.css',
+		$wa->registerAndUseStyle(
+			'com_eventbooking.style',
+			'media/com_eventbooking/assets/css/style.min.css',
 			['version' => EventbookingHelper::getInstalledVersion()]
 		)
-			->addStyleSheet(
-				$rootUrl . '/media/com_eventbooking/assets/css/themes/' . $calendarTheme . '.css',
+			->registerAndUseStyle(
+				'com_eventbooking.calendar.theme',
+				'media/com_eventbooking/assets/css/themes/' . $calendarTheme . '.css',
 				['version' => EventbookingHelper::getInstalledVersion()]
 			);
 
@@ -60,7 +60,11 @@ trait EventbookingControllerDisplay
 
 		if (file_exists($customCssFile) && filesize($customCssFile) > 0)
 		{
-			$document->addStyleSheet($rootUrl . '/media/com_eventbooking/assets/css/custom.css', ['version' => filemtime($customCssFile)]);
+			$wa->registerAndUseStyle(
+				'com_eventbooking.style.custom',
+				'media/com_eventbooking/assets/css/custom.css',
+				['version' => filemtime($customCssFile)]
+			);
 		}
 	}
 }

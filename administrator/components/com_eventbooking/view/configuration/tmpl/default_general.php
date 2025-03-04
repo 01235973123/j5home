@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
@@ -29,7 +29,7 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 					<?php echo EventbookingHelperHtml::getFieldLabel('download_id', Text::_('EB_DOWNLOAD_ID'), Text::_('EB_DOWNLOAD_ID_EXPLAIN')); ?>
 				</div>
 				<div class="controls">
-					<input type="text" name="download_id" class="input-xlarge form-control" value="<?php echo $config->get('download_id', ''); ?>" size="45" />
+					<input type="text" name="download_id" class="form-control" value="<?php echo $config->get('download_id', ''); ?>" size="45" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -216,7 +216,7 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
             <legend><?php echo Text::_('EB_AMOUNT_CURRENCY'); ?></legend>
             <div class="control-group">
                 <div class="control-label">
-			        <?php echo EventbookingHelperHtml::getFieldLabel('currency_code', Text::_('EB_CURRENCY_CODE')); ?>
+			        <?php echo EventbookingHelperHtml::getFieldLabel('currency_code', Text::_('EB_CURRENCY')); ?>
                 </div>
                 <div class="controls">
 			        <?php echo $this->lists['currency_code']; ?>
@@ -302,7 +302,7 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 			        <?php echo EventbookingHelperHtml::getFieldLabel('submit_event_redirect_url', Text::_('EB_SUBMIT_EVENT_REDIRECT_URL'), Text::_('EB_SUBMIT_EVENT_REDIRECT_URL_EXPLAIN')); ?>
                 </div>
                 <div class="controls">
-                    <input type="text" name="submit_event_redirect_url" class="input-xlarge form-control" value="<?php echo $config->get('submit_event_redirect_url'); ?>" size="50" />
+                    <input type="text" name="submit_event_redirect_url" class="form-control" value="<?php echo $config->get('submit_event_redirect_url'); ?>" size="50" />
                 </div>
             </div>
             <div class="control-group">
@@ -482,7 +482,7 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 					<?php echo EventbookingHelperHtml::getFieldLabel('map_api_key', Text::_('EB_MAP_API_KEY')); ?>
 				</div>
 				<div class="controls">
-					<input type="text" name="map_api_key" class="input-xlarge form-control" value="<?php echo $config->get('map_api_key', ''); ?>" size="60" />
+					<input type="text" name="map_api_key" class="form-control" value="<?php echo $config->get('map_api_key', ''); ?>" size="60" />
 					<p class="text-warning" style="margin-top: 10px;">
 						Google requires an API KEY to use their API.
 						<a href="https://developers.google.com/maps/documentation/javascript/get-api-key" target="_blank"><strong>CLICK HERE</strong></a> to register for an own API Key, then enter the received key into this config option.
@@ -532,6 +532,14 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 				</div>
 				<div class="controls">
 					<?php echo EventbookingHelperHtml::getBooleanInput('user_registration', $config->user_registration); ?>
+				</div>
+			</div>
+			<div class="control-group" data-showon='<?php echo EventbookingHelperHtml::renderShowOn(['user_registration' => '1']); ?>'>
+				<div class="control-label">
+					<?php echo EventbookingHelperHtml::getFieldLabel('use_email_as_username', Text::_('EB_USE_EMAIL_AS_USERNAME'), Text::_('EB_USE_EMAIL_AS_USERNAME_EXPLAIN')); ?>
+				</div>
+				<div class="controls">
+					<?php echo EventbookingHelperHtml::getBooleanInput('use_email_as_username', $config->use_email_as_username); ?>
 				</div>
 			</div>
 			<?php
@@ -1177,7 +1185,7 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 					<?php echo EventbookingHelperHtml::getFieldLabel('conversion_tracking_code', Text::_('EB_CONVERSION_TRACKING_CODE'), Text::_('EB_CONVERSION_TRACKING_CODE_EXPLAIN')); ?>
 				</div>
 				<div class="controls">
-					<textarea name="conversion_tracking_code" class="input-xlarge form-control" rows="10"><?php echo $config->conversion_tracking_code;?></textarea>
+					<textarea name="conversion_tracking_code" class="form-control" rows="10"><?php echo $config->conversion_tracking_code;?></textarea>
 				</div>
 			</div>
 			<div class="control-group">

@@ -117,7 +117,7 @@
                 if (($amount.length || $totalAmount.length) && msg.payment_amount == 0) {
                     $('.payment_information').css('display', 'none');
                 } else {
-                    $('.payment_information').css('display', '');
+                    $('.payment_information:not(.eb-credit-card-input)').css('display', '');
                     updatePaymentMethod();
                 }
 

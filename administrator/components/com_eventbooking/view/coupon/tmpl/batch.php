@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -128,6 +128,43 @@ ToolbarHelper::cancel('coupon.cancel');
 			</div>
 			<div class="controls">
 				<?php echo $this->lists['enable_for']; ?>
+			</div>
+		</div>
+
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo Text::_('EB_COUPON_MIN_NUMBER_REGISTRANTS'); ?>
+			</div>
+			<div class="controls">
+				<input class="input-medium form-control" type="number" name="min_number_registrants" id="min_number_registrants" size="5" maxlength="250"
+				       value="<?php echo $this->item->min_number_registrants; ?>"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo Text::_('EB_COUPON_MAX_NUMBER_REGISTRANTS'); ?>
+			</div>
+			<div class="controls">
+				<input class="input-medium form-control" type="number" name="max_number_registrants" id="max_number_registrants" size="5" maxlength="250"
+				       value="<?php echo $this->item->max_number_registrants; ?>"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo Text::_('EB_COUPON_MIN_PAYMENT_AMOUNT'); ?>
+			</div>
+			<div class="controls">
+				<input class="input-medium form-control" type="number" name="min_payment_amount" id="min_payment_amount" size="5" maxlength="250"
+				       value="<?php echo $this->item->min_payment_amount; ?>"/>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo Text::_('EB_COUPON_MAX_PAYMENT_AMOUNT'); ?>
+			</div>
+			<div class="controls">
+				<input class="input-medium form-control" type="number" name="max_payment_amount" id="max_payment_amount" size="5" maxlength="250"
+				       value="<?php echo $this->item->max_payment_amount; ?>"/>
 			</div>
 		</div>
 	<?php

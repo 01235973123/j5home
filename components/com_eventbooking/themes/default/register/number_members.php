@@ -3,7 +3,7 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
@@ -66,7 +66,7 @@ if (strlen($msg))
 		</div>
 	</div>
 	<div class="form-actions">
-		<input type="button" name="btn-number-members-back" id="btn-number-members-back" class="<?php echo $btnPrimaryClass; ?>" value="<?php echo Text::_('EB_BACK'); ?>" onclick="window.history.go(-1) ;" />
+		<input type="button" name="btn-number-members-back" id="btn-number-members-back" class="<?php echo $btnPrimaryClass; ?>" value="<?php echo Text::_('EB_BACK'); ?>" onclick="window.history.back();" />
 		<input type="button" name="btn-process-number-members" id="btn-process-number-members" class="<?php echo $btnPrimaryClass; ?>" value="<?php echo Text::_('EB_NEXT'); ?>" />
 	</div>
 </form>

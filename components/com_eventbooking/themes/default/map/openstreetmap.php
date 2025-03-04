@@ -3,7 +3,7 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
@@ -12,8 +12,6 @@ defined('_JEXEC') or die ;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
-
-HTMLHelper::_('behavior.core');
 
 $height      = (int) $this->config->map_height ?: 600;
 $height      += 20;
@@ -46,13 +44,17 @@ else
 if ($showMap)
 {
 	$rootUri = Uri::root(true);
-	Factory::getApplication()->getDocument()->addScript($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.js')
-		->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.css')
+	Factory::getApplication()
+		->getDocument()
 		->addScriptOptions('lat', $this->location->lat)
 		->addScriptOptions('long', $this->location->long)
 		->addScriptOptions('zoomLevel', $zoomLevel)
 		->addScriptOptions('rootUri', $rootUri)
-		->addScriptOptions('popupContent', $popupContent);
+		->addScriptOptions('popupContent', $popupContent)
+		->getWebAssetManager()
+		->useScript('core')
+		->registerAndUseScript('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.js')
+		->registerAndUseStyle('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.css');
 
 	EventbookingHelperHtml::addOverridableScript('media/com_eventbooking/js/site-map-openstreetmap.min.js');
 }

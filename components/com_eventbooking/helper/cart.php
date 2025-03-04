@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -424,6 +424,7 @@ class EventbookingHelperCart
 
 	/**
 	 * Calculate total discount for the registration
+	 *
 	 * @return float
 	 */
 	public function calculateTotalDiscount()
@@ -437,8 +438,8 @@ class EventbookingHelperCart
 
 		if (isset($_SESSION['coupon_id']))
 		{
-			$query = $db->getQuery(true);
-			$query->select('*')
+			$query = $db->getQuery(true)
+				->select('*')
 				->from('#__eb_coupons')
 				->where('id=' . (int) $_SESSION['coupon_id']);
 			$db->setQuery($query);

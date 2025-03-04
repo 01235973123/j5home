@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="quizcategory" name="CategoryId" label=" " description="" none_label="COM_ARIQUIZ_LABEL_ALLCATEGORIES" />
+		<param type="list" name="Status" label=" " description="">
+			<option value="0">COM_ARIQUIZ_LABEL_ALLSTATUSES</option>
+			<option value="1">COM_ARIQUIZ_LABEL_PUBLISH</option>
+			<option value="2">COM_ARIQUIZ_LABEL_UNPUBLISH</option>
+		</param>
+        <param type="hidden" name="IgnoreQuizId" label="" />
+	</params>
+</form>

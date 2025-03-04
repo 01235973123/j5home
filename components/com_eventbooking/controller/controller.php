@@ -3,13 +3,12 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
@@ -80,8 +79,14 @@ class EventbookingController extends RADController
 	 */
 	public function download_file()
 	{
+		$inline   = (int) $this->input->getInt('inline', 0);
 		$fileName = basename($this->input->getString('file_name'));
 		$filePath = JPATH_ROOT . '/media/com_eventbooking/files/' . $fileName;
+
+		if (!EventbookingHelper::isImageFilename($fileName))
+		{
+			$inline = false;
+		}
 
 		if (file_exists($filePath))
 		{
@@ -135,7 +140,7 @@ class EventbookingController extends RADController
 				return;
 			}
 
-			$this->processDownloadFile($filePath);
+			$this->processDownloadFile($filePath, $fileName, $inline);
 		}
 		else
 		{
@@ -272,117 +277,44 @@ class EventbookingController extends RADController
 		$db           = Factory::getContainer()->get('db');
 		$user         = $this->app->getIdentity();
 		$config       = EventbookingHelper::getConfig();
-		$query        = $db->getQuery(true);
 		$email        = $this->input->get('fieldValue', '', 'string');
 		$eventId      = $this->input->getInt('event_id', 0);
 		$validateId   = $this->input->get('fieldId', '', 'none');
 		$arrayToJs    = [];
 		$arrayToJs[0] = $validateId;
 
-		if (!$config->multiple_booking)
+		if (!$config->multiple_booking
+			&& !EventbookingHelperValidator::validateDuplicateRegistration($eventId, $user->id, $email))
 		{
-			$event = EventbookingHelperDatabase::getEvent($eventId);
-			EventbookingHelper::overrideGlobalConfig($config, $event);
+			$arrayToJs[1] = false;
+			$arrayToJs[2] = Text::_('EB_EMAIL_REGISTER_FOR_EVENT_ALREADY');
+		}
 
-			if ($event->prevent_duplicate_registration === '')
-			{
-				$preventDuplicateRegistration = $config->prevent_duplicate_registration;
-			}
-			else
-			{
-				$preventDuplicateRegistration = $event->prevent_duplicate_registration;
-			}
+		/**
+		 * If user registration is enabled and user is not logged in,
+		 * make sure email is not used by any existing user yet
+		 */
+		if (!isset($arrayToJs[1])
+			&& $config->user_registration
+			&& !$user->id
+			&& EventbookingHelperValidator::emailAlreadyTaken($email))
+		{
+			$arrayToJs[1] = false;
+			$arrayToJs[2] = Text::_('EB_EMAIL_USED_BY_OTHER_CUSTOMER');
+		}
 
-			if ($preventDuplicateRegistration)
-			{
-				$query->select('COUNT(id)')
-					->from('#__eb_registrants')
-					->where('event_id = ' . $eventId)
-					->where('email = ' . $db->quote($email))
-					->where('(published = 1 OR (published = 0 AND payment_method LIKE "os_offline%"))');
-				$db->setQuery($query);
-				$total = $db->loadResult();
-
-				if ($total)
-				{
-					$arrayToJs[1] = false;
-					$arrayToJs[2] = Text::_('EB_EMAIL_REGISTER_FOR_EVENT_ALREADY');
-				}
-			}
+		if (!isset($arrayToJs[1])
+			&& !EventbookingHelperValidator::validateEmailDomain($email))
+		{
+			$emailDomain  = explode('@', $email);
+			$emailDomain  = $emailDomain[1];
+			$arrayToJs[1] = false;
+			$arrayToJs[2] = Text::sprintf('JGLOBAL_EMAIL_DOMAIN_NOT_ALLOWED', $emailDomain);
 		}
 
 		if (!isset($arrayToJs[1]))
 		{
-			$query->clear()
-				->select('COUNT(*)')
-				->from('#__users')
-				->where('email = ' . $db->quote($email));
-			$db->setQuery($query);
-			$total = $db->loadResult();
-
-			if (!$total || $user->id || !$config->user_registration)
-			{
-				$arrayToJs[1] = true;
-			}
-			else
-			{
-				$arrayToJs[1] = false;
-				$arrayToJs[2] = Text::_('EB_EMAIL_USED_BY_OTHER_CUSTOMER');
-			}
-		}
-
-		if (!isset($arrayToJs[1]))
-		{
-			$domains = ComponentHelper::getParams('com_users')->get('domains');
-
-			if ($domains)
-			{
-				$emailDomain = explode('@', $email);
-				$emailDomain = $emailDomain[1];
-				$emailParts  = array_reverse(explode('.', $emailDomain));
-				$emailCount  = count($emailParts);
-				$allowed     = true;
-
-				foreach ($domains as $domain)
-				{
-					$domainParts = array_reverse(explode('.', $domain->name));
-					$status      = 0;
-
-					// Don't run if the email has less segments than the rule.
-					if ($emailCount < count($domainParts))
-					{
-						continue;
-					}
-
-					foreach ($emailParts as $key => $emailPart)
-					{
-						if (!isset($domainParts[$key]) || $domainParts[$key] == $emailPart || $domainParts[$key] == '*')
-						{
-							$status++;
-						}
-					}
-
-					// All segments match, check whether to allow the domain or not.
-					if ($status === $emailCount)
-					{
-						if ($domain->rule == 0)
-						{
-							$allowed = false;
-						}
-						else
-						{
-							$allowed = true;
-						}
-					}
-				}
-
-				// If domain is not allowed, fail validation. Otherwise continue.
-				if (!$allowed)
-				{
-					$arrayToJs[1] = false;
-					$arrayToJs[2] = Text::sprintf('JGLOBAL_EMAIL_DOMAIN_NOT_ALLOWED', $emailDomain);
-				}
-			}
+			$arrayToJs[1] = true;
 		}
 
 		echo json_encode($arrayToJs);

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Mail\MailHelper;
 
 class EventbookingModelInvite extends RADModel
@@ -102,7 +103,15 @@ class EventbookingModelInvite extends RADModel
 
 		$emails = explode("\r\n", $data['friend_emails']);
 		$names  = explode("\r\n", $data['friend_names']);
-		$mailer = Factory::getMailer();
+
+		if (version_compare(JVERSION, '4.4.0', 'ge'))
+		{
+			$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
+		}
+		else
+		{
+			$mailer = Factory::getMailer();
+		}
 
 		$n = max(count($emails), 5);
 

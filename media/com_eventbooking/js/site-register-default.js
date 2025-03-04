@@ -154,7 +154,7 @@
                 }
                 else
                 {
-                    $('.payment_information').css('display', '');
+                    $('.payment_information:not(.eb-credit-card-input)').css('display', '');
                     updatePaymentMethod();
                 }
 

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Events Booking
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2010 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -23,14 +23,15 @@ use Joomla\CMS\Uri\Uri;
  * @var array                     $sliderSettings
  */
 
-$rootUri  = Uri::root(true);
-$document = Factory::getApplication()->getDocument()
-	->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/splide/css/themes/' . $params->get('theme', 'splide-default.min.css'))
-	->addScript($rootUri . '/media/com_eventbooking/assets/js/splide/js/splide.min.js')
-	->addStyleSheet(
-		$rootUri . '/media/com_eventbooking/assets/css/eventgrid.min.css',
-		['version' => EventbookingHelper::getInstalledVersion()]
-	);
+$wa = Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->registerAndUseStyle(
+		'com_eventbooking.splide-theme',
+		'media/com_eventbooking/assets/js/splide/css/themes/' . $params->get('theme', 'splide-default.min.css')
+	)
+	->registerAndUseStyle('com_eventbooking.eventgrid', 'media/com_eventbooking/assets/css/eventgrid.min.css', ['version' => EventbookingHelper::getInstalledVersion()])
+	->registerAndUseScript('com_eventbooking.splide', 'media/com_eventbooking/assets/js/splide/js/splide.min.js');
 
 EventbookingHelper::loadComponentCssForModules();
 
@@ -76,7 +77,7 @@ if ($params->get('show_register_buttons', 1) && $config->multiple_booking)
 	}
 
 	$baseAjaxUrl = Uri::root(true) . '/index.php?option=com_eventbooking' . EventbookingHelper::getLangLink() . '&time=' . time();
-	$document->addScriptDeclaration('var EBBaseAjaxUrl = "' . $baseAjaxUrl . '";');
+	$wa->addInlineScript('var EBBaseAjaxUrl = "' . $baseAjaxUrl . '";');
 }
 ?>
 <div class="eb-events-slider-container_<?php echo $module->id; ?> splide eb-events-grid-items"<?php echo $inlineStyles; ?>>

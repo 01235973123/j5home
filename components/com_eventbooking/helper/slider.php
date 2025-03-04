@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -18,6 +18,7 @@ class EventbookingHelperSlider
 			'perPage'    => min($params->get('number_items', 3), $numberItems),
 			'speed'      => (int) $params->get('speed', 300),
 			'autoplay'   => (bool) $params->get('autoplay', 1),
+			'interval'   => $params->get('interval', 5000),
 			'arrows'     => (bool) $params->get('arrows', 1),
 			'pagination' => (bool) $params->get('pagination', 1),
 			'gap'        => $params->get('gap', '1em'),

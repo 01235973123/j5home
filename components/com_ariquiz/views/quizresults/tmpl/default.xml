@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="QUIZ_RESULTS_LAYOUT">
+		<message>QUIZ_RESULTS_LAYOUT_DESC</message>
+	</layout>
+	<state>
+		<name>QUIZ_RESULTS_LAYOUT</name>
+		<description>QUIZ_RESULTS_LAYOUT_DESC</description>
+		<url addpath="/administrator/components/com_ariquiz/elements">
+		</url>
+		<params>
+			<param name="sortfield" type="list" default="StartDate2" label="QUIZ_CATEGORY_LAYOUT_SORT_FIELD" description="QUIZ_RESULTS_LAYOUT_SORT_FIELD_DESCR">
+				<option value="EndDate2">QUIZ_RESULTS_LAYOUT_SORT_ENDDATE</option>
+				<option value="StartDate2">QUIZ_RESULTS_LAYOUT_SORT_STARTDATE</option>
+			</param>
+			<param name="sortdir" type="list" default="desc" label="QUIZ_CATEGORY_LAYOUT_SORT_DIR" description="QUIZ_CATEGORY_LAYOUT_SORT_DIR_DESCR">
+				<option value="asc">QUIZ_CATEGORY_LAYOUT_SORT_ASC</option>
+				<option value="desc">QUIZ_CATEGORY_LAYOUT_SORT_DESC</option>
+			</param>
+		</params>
+	</state>
+	<fields name="params">
+		<fieldset name="basic" addfieldpath="/administrator/components/com_ariquiz/fields">
+			<field name="sortfield" type="list" default="StartDate2" label="QUIZ_CATEGORY_LAYOUT_SORT_FIELD" description="QUIZ_RESULTS_LAYOUT_SORT_FIELD_DESCR">
+				<option value="EndDate2">QUIZ_RESULTS_LAYOUT_SORT_ENDDATE</option>
+				<option value="StartDate2">QUIZ_RESULTS_LAYOUT_SORT_STARTDATE</option>
+			</field>
+			<field name="sortdir" type="list" default="desc" label="QUIZ_CATEGORY_LAYOUT_SORT_DIR" description="QUIZ_CATEGORY_LAYOUT_SORT_DIR_DESCR">
+				<option value="asc">QUIZ_CATEGORY_LAYOUT_SORT_ASC</option>
+				<option value="desc">QUIZ_CATEGORY_LAYOUT_SORT_DESC</option>
+			</field>
+		</fieldset>
+	</fields>
+</metadata>

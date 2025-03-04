@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="quiz" name="QuizId" label="COM_ARIQUIZ_LABEL_QUIZ" description="" none_label="COM_ARIQUIZ_LABEL_ALLQUIZZES" dimension="2" />
+		<param type="quizuser" name="UserId" label="COM_ARIQUIZ_LABEL_USER" description="" default="-1" none_label="COM_ARIQUIZ_LABEL_ALLUSERS" guest_label="COM_ARIQUIZ_LABEL_GUEST" allusers_label="COM_ARIQUIZ_LABEL_ALLUSERS" dimension="2" />
+		<param type="calendar" name="StartDate" label="COM_ARIQUIZ_LABEL_STARTDATE" description="" use_time="0" />
+		<param type="calendar" name="EndDate" label="COM_ARIQUIZ_LABEL_ENDDATE" description="" use_time="0" />
+	</params>
+</form>

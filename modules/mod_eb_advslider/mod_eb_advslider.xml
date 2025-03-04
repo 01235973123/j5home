@@ -3,11 +3,11 @@
     <name>Events Booking - Advanced Events Slider</name>
     <author>Tuan Pham Ngoc</author>
     <creationDate>Feb 2022</creationDate>
-    <copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <version>5.0.0</version>
+    <version>5.0.4</version>
     <description>This module display events in a slider.</description>
     <media destination="mod_eb_advslider">
         <folder>assets</folder>
@@ -167,6 +167,15 @@
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>
                 </field>
+                <field
+                        name="interval"
+                        type="number"
+                        label="Auto Play Interval (Milliseconds)"
+                        description="The autoplay interval duration in milliseconds"
+                        default="5000"
+                        showon="autoplay:1"
+                        filter="integer"
+                />
                 <field name="speed" type="text" label="Speed" default="300"/>
 
                 <field name="gap" type="text" label="Gap"

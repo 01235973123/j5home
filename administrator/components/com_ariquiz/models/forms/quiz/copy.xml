@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<!-- Main parameters -->
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="text" size="50" default="Copy of {$QuizName}" name="QuizName" label="COM_ARIQUIZ_LABEL_NAME" description="" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_NAMEREQUIRE" validate="QuizName" />
+	</validators>
+</form>

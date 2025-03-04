@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -16,13 +16,15 @@ use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
-$document = Factory::getApplication()->getDocument();
-$document->addStyleDeclaration('.hasTip{display:block !important}');
+
 $translatable = Multilanguage::isEnabled() && count($this->languages);
 $editor       = Editor::getInstance(Factory::getApplication()->get('editor'));
 $config       = $this->config;
 
-Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('showon');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()->useScript('showon')
+	->addInlineStyle('.hasTip{display:block !important}');
 
 /* @var EventbookingViewConfigurationHtml $this */
 ?>

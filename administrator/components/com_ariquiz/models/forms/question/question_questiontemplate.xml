@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="questiontemplate" name="TemplateId" default="0" label="COM_ARIQUIZ_LABEL_QUESTIONTEMPLATE" description="" lazy_load="1" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_SELECTTEMPLATE" validate="TemplateId" min="1" />
+	</validators>
+</form>

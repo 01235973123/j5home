@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="hidden" name="QuizId" label="" description="" />
+		<param type="questioncategory" name="CategoryId" default="0" label="COM_ARIQUIZ_LABEL_QUESTIONCATEGORY" description="" lazy_load="1" related_element="QuizId" />
+		<param type="text" size="6" name="Score" label="COM_ARIQUIZ_LABEL_SCORE" description="" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_SCORE" validate="Score" datatype="float" min="0" />
+	</validators>
+</form>

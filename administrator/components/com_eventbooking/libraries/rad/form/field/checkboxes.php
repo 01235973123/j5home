@@ -129,10 +129,7 @@ class RADFormFieldCheckboxes extends RADFormField
 		{
 			$optionValue = trim($value);
 
-			if (!$config->show_available_number_for_each_quantity_option || empty($quantityValues[$optionValue]) || $user->authorise(
-					'eventbooking.registrantsmanagement',
-					'com_eventbooking'
-				))
+			if (!$config->show_available_number_for_each_quantity_option || empty($quantityValues[$optionValue]))
 			{
 				$optionText = $optionValue;
 			}

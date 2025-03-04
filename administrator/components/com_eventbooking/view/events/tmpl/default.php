@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -24,12 +24,14 @@ $isMultilingual               = Multilanguage::isEnabled();
 $languages                    = LanguageHelper::getLanguages('lang_code');
 $colspan                      = 12;
 $additionalDatesPluginEnabled = PluginHelper::isEnabled('eventbooking', 'dates');
+
+HTMLHelper::_('bootstrap.tooltip', '.hasTooltip');
 ?>
 <form action="<?php echo $this->getFormAction(); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container" class="eb-joomla4-container">
 		<?php echo $this->loadTemplate('filter'); ?>
 		<div class="clearfix"></div>
-		<table class="adminlist table table-striped" id="eventList">
+		<table class="table itemList table-striped" id="eventList">
 			<thead>
 			<tr>
 				<th width="1%" class="nowrap center hidden-phone">
@@ -154,7 +156,17 @@ $additionalDatesPluginEnabled = PluginHelper::isEnabled('eventbooking', 'dates')
 					</td>
 					<td class="center">
 						<?php
-							if ($row->individual_price > 0)
+							if ($row->price_text)
+							{
+								echo $row->price_text;
+							}
+							elseif ($row->has_multiple_ticket_types)
+							{
+							?>
+								<i class="fa fa-circle-info hasTooltip" title="<?php echo HTMLHelper::tooltipText('EB_HAS_TICKETS_DEFINED'); ?>"></i>
+							<?php
+							}
+							elseif ($row->individual_price > 0)
 							{
 								echo EventbookingHelper::formatAmount($row->individual_price, $this->config);
 							}

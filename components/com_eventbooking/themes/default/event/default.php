@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -145,6 +145,18 @@ else
 			<?php
 			if (!empty($this->items))
 			{
+				// This parent event, we will show event custom fields data if available
+				if (isset($item->paramData))
+				{
+				?>
+					<table class="<?php echo $bootstrapHelper->getClassMapping('table table-bordered table-striped'); ?>" id="parent-event-information">
+						<tbody>
+							<?php echo EventbookingHelperHtml::loadCommonLayout('common/event_fields.php', ['item' => $this->item]); ?>
+						</tbody>
+					</table>
+				<?php
+				}
+
 				if (EventbookingHelperHtml::isLayoutOverridden('common/events_children.php'))
 				{
 					echo EventbookingHelperHtml::loadCommonLayout('common/events_children.php', ['items' => $this->items, 'config' => $this->config, 'Itemid' => $this->Itemid, 'nullDate' => $this->nullDate, 'ssl' => 0, 'viewLevels' => $this->viewLevels, 'categoryId' => $this->item->category_id, 'bootstrapHelper' => $this->bootstrapHelper]);
@@ -231,7 +243,7 @@ else
 				if ($this->config->get('show_back_button', 1)) {
 				?>
 	                <li>
-		                <a class="eb-button-button-link <?php echo $bootstrapHelper->getClassMapping('btn'); ?>" href="javascript: window.history.go(-1);"><?php echo Text::_('EB_BACK'); ?></a>
+		                <a class="eb-button-button-link <?php echo $bootstrapHelper->getClassMapping('btn'); ?>" href="javascript: window.history.back();"><?php echo Text::_('EB_BACK'); ?></a>
 	                </li>
 				<?php
 				}
@@ -255,7 +267,10 @@ else
 </div>
 
 <?php
-Factory::getApplication()->getDocument()->addScriptDeclaration('
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->addInlineScript('
 		function cancelRegistration(registrantId)
 		{
 			var form = document.adminForm ;

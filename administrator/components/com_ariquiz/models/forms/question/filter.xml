@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+        <param type="text" name="Id" label="COM_ARIQUIZ_LABEL_ID" description="" class="input-mini" placeholder="COM_ARIQUIZ_LABEL_ID" />
+	</params>
+</form>

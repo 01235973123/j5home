@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="text" name="UserName" size="50" label="COM_ARIQUIZ_LABEL_NAME" description="" />
+		<param type="text" name="Email" size="50" label="COM_ARIQUIZ_LABEL_EMAIL" description="" />
+	</params>
+	<params addpath="/administrator/components/com_ariquiz/elements" group="readonly">
+		<param type="literal" name="UserName" label="COM_ARIQUIZ_LABEL_NAME" description="" />
+		<param type="literal" name="Email" label="COM_ARIQUIZ_LABEL_EMAIL" description="" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_GUESTFORMNAMEREQUIRE" validate="UserName" />
+		<validator type="required" multiple="0" error_message="COM_ARIQUIZ_ERROR_GUESTFORMMAILREQUIRE" validate="Email" />
+		<validator type="email" multiple="0" error_message="COM_ARIQUIZ_ERROR_GUESTFORMMAIL" validate="Email" />
+	</validators>
+	<validators addpath="/administrator/components/com_ariquiz/validators" group="simple">
+		<validator type="email" multiple="0" error_message="COM_ARIQUIZ_ERROR_GUESTFORMMAIL" validate="Email" />
+	</validators>
+</form>

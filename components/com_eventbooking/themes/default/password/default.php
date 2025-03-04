@@ -3,18 +3,21 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 
-HTMLHelper::_('behavior.core');
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('eventUrl', $this->eventUrl)
+	->getWebAssetManager()
+	->useScript('core');
 
 EventbookingHelperJquery::validateForm();
 
@@ -24,8 +27,6 @@ $controlLabelClass = $bootstrapHelper->getClassMapping('control-label');
 $controlsClass     = $bootstrapHelper->getClassMapping('controls');
 $btnPrimary        = $bootstrapHelper->getClassMapping('btn btn-primary');
 $btnClass          = $bootstrapHelper->getClassMapping('btn');
-
-Factory::getApplication()->getDocument()->addScriptOptions('eventUrl', $this->eventUrl);
 ?>
 <div id="eb-event-password-page" class="eb-container">
 <h1 class="eb-page-heading"><?php echo $this->escape(Text::_('EB_PRIVATE_EVENT_VALIDATION')); ?></h1>
@@ -41,7 +42,7 @@ Factory::getApplication()->getDocument()->addScriptOptions('eventUrl', $this->ev
 	</div>
 	<div class="<?php echo $controlGroupClass; ?>">
 		<div class="<?php echo $controlsClass; ?>">
-			<input type="button" id="btn-cancel" value="<?php echo Text::_('EB_CANCEL'); ?>" class="<?php echo $btnClass; ?>" onclick="window.history.go(-1);" />
+			<input type="button" id="btn-cancel" value="<?php echo Text::_('EB_CANCEL'); ?>" class="<?php echo $btnClass; ?>" onclick="window.history.back();" />
 			<input type="submit" value="<?php echo Text::_('EB_CONTINUE'); ?>" class="<?php echo $btnPrimary; ?>" />
 		</div>
 	</div>

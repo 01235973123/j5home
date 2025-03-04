@@ -4,10 +4,10 @@
 	<author>Tuan Pham Ngoc</author>
 	<authorEmail>tuanpn@joomdonation.com</authorEmail>
 	<authorUrl>https://joomdonation.com</authorUrl>
-	<copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
+	<copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
 	<license>GNU General Public License version 3, or later</license>
 	<creationDate>March 2023</creationDate>
-	<version>5.0.0</version>
+	<version>5.0.4</version>
 	<description>This module is used to display any view configured in a menu item linked to Events Booking.</description>
 	<files>
 		<filename module="mod_eb_easyview">mod_eb_easyview.php</filename>

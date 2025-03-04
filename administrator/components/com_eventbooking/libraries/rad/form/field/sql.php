@@ -7,6 +7,8 @@
  */
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
 
 class RADFormFieldSQL extends RADFormFieldList
 {
@@ -82,7 +84,15 @@ class RADFormFieldSQL extends RADFormFieldList
 
 			$this->query = str_replace('[USER_ID]', $userId, $this->query);
 			$db->setQuery($this->query);
-			$options = $db->loadObjectList();
+
+			$options = [];
+
+			if ($this->row->prompt_text)
+			{
+				$options[] = HTMLHelper::_('select.option', '', Text::_($this->row->prompt_text));
+			}
+
+			$options = array_merge($options, $db->loadObjectList());
 		}
 		catch (Exception $e)
 		{

@@ -3,16 +3,14 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\UserFactoryInterface;
 
 class EventbookingController extends RADControllerAdmin
@@ -21,33 +19,37 @@ class EventbookingController extends RADControllerAdmin
 
 	public function display($cachable = false, array $urlparams = [])
 	{
-		$document = $this->app->getDocument();
-		$rootUri  = Uri::root(true);
-		$version  = EventbookingHelper::getInstalledVersion();
+		$wa      = $this->app->getDocument()->getWebAssetManager();
+		$version = EventbookingHelper::getInstalledVersion();
 
-		$document->addStyleSheet($rootUri . '/media/com_eventbooking/assets/admin/css/style.css', ['version' => $version]);
+		$wa->registerAndUseStyle('com_eventbooking.style', 'media/com_eventbooking/assets/admin/css/style.css', ['version' => $version]);
 
 		if (version_compare(JVERSION, '5.1.0', 'ge'))
 		{
-			$document->addStyleSheet($rootUri . '/media/com_eventbooking/assets/admin/css/light51.css', ['version' => $version]);
+			$wa->registerAndUseStyle('com_eventbooking.light', 'media/com_eventbooking/assets/admin/css/light51.css', ['version' => $version]);
 		}
 		else
 		{
-			$document->addStyleSheet($rootUri . '/media/com_eventbooking/assets/admin/css/light.css', ['version' => $version]);
+			$wa->registerAndUseStyle('com_eventbooking.light', 'media/com_eventbooking/assets/admin/css/light.css', ['version' => $version]);
 		}
 
 		$customCssFile = JPATH_ROOT . '/media/com_eventbooking/assets/admin/css/custom.css';
 
 		if (file_exists($customCssFile) && filesize($customCssFile) > 0)
 		{
-			$document->addStyleSheet($rootUri . '/media/com_eventbooking/assets/admin/css/custom.css', ['version' => filemtime($customCssFile)]);
+			$wa->registerAndUseStyle(
+				'com_eventbooking.style.custom',
+				'media/com_eventbooking/assets/admin/css/custom.css',
+				['version' => filemtime($customCssFile)]
+			);
 		}
 
 		$view = $this->input->getCmd('view');
 
-		if (in_array($view, ['location', 'registrant']))
+		if (in_array($view, ['location', 'event', 'registrant']))
 		{
-			HTMLHelper::_('jquery.framework');
+			$wa->useScript('jquery')
+				->useScript('jquery-noconflict');
 		}
 
 		parent::display($cachable, $urlparams);
@@ -71,12 +73,18 @@ class EventbookingController extends RADControllerAdmin
 	 */
 	public function download_file()
 	{
+		$inline   = (bool) $this->input->getInt('inline', 0);
 		$fileName = basename($this->input->getString('file_name'));
 		$filePath = JPATH_ROOT . '/media/com_eventbooking/files/' . $fileName;
 
+		if (!EventbookingHelper::isImageFilename($fileName))
+		{
+			$inline = false;
+		}
+
 		if (file_exists($filePath))
 		{
-			$this->processDownloadFile($filePath);
+			$this->processDownloadFile($filePath, $fileName, $inline);
 		}
 		else
 		{
@@ -91,9 +99,9 @@ class EventbookingController extends RADControllerAdmin
 	 */
 	public function get_profile_data()
 	{
-		$userId = $this->input->getInt('user_id', 0);
+		$userId  = $this->input->getInt('user_id', 0);
 		$eventId = $this->input->getInt('event_id');
-		$data = [];
+		$data    = [];
 
 		if ($userId && $eventId)
 		{

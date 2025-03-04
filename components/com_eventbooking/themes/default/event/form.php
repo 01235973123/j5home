@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -16,12 +16,15 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\Toolbar;
 
-HTMLHelper::_('behavior.core');
 HTMLHelper::_('bootstrap.tooltip');
 
-Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('showon');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->useScript('showon');
 
-EventbookingHelperJquery::colorbox('a.modal');
+EventbookingHelperJquery::colorbox('a.eb-event-image-modal');
 
 $editor          = Editor::getInstance(Factory::getApplication()->get('editor', 'none'));
 $bootstrapHelper = EventbookingHelperBootstrap::getInstance();

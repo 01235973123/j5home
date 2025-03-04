@@ -4,11 +4,11 @@
 	<title>Offline Payment</title>	
 	<author>Tuan Pham Ngoc</author>
 	<creationDate>09-03-2010</creationDate>
-	<copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
+	<copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
 	<license>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU/GPL version 2</license>
 	<authorEmail>tuanpn@joomdonation.com</authorEmail>
 	<authorUrl>https://joomdonation.com</authorUrl>
-	<version>5.0.0</version>
+	<version>5.0.4</version>
 	<description>Offline Payment Plugin For Events Booking Extension</description>
     <config>
         <fields name="params">

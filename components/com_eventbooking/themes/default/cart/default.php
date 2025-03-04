@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -178,9 +178,12 @@ if (count($this->items))
 
 	</form>
 <?php
-	Factory::getApplication()->getDocument()->addScriptDeclaration($this->jsString)
-		->addScriptDeclaration('var EB_INVALID_QUANTITY = "' . Text::_('EB_INVALID_QUANTITY', true) . '";')
-		->addScriptDeclaration('var EB_REMOVE_CONFIRM = "' . Text::_('EB_REMOVE_CONFIRM', true) . '";');
+	Factory::getApplication()
+		->getDocument()
+		->getWebAssetManager()
+		->addInlineScript($this->jsString)
+		->addInlineScript('var EB_INVALID_QUANTITY = "' . Text::_('EB_INVALID_QUANTITY', true) . '";')
+		->addInlineScript('var EB_REMOVE_CONFIRM = "' . Text::_('EB_REMOVE_CONFIRM', true) . '";');
 }
 else
 {

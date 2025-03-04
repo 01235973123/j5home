@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -19,8 +19,6 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 
 ToolbarHelper::custom('send', 'envelope', 'envelope', 'EB_SEND_MAILS', false);
 
-HTMLHelper::_('behavior.core');
-
 $editor  = Editor::getInstance(Factory::getApplication()->get('editor', 'none'));
 $message = EventbookingHelper::getMessages();
 
@@ -28,6 +26,11 @@ $languageItems = [
 	'EB_CHOOSE_EVENT',
 	'EB_ENTER_MASSMAIL_SUBJECT',
 ];
+
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core');
 
 EventbookingHelperHtml::addOverridableScript('media/com_eventbooking/js/site-massmail-default.min.js');
 

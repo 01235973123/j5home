@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.9.0" type="plugin" group="eventbooking" method="upgrade">
+<extension version="4.2.0" type="plugin" group="eventbooking" method="upgrade">
     <name>Events Booking - AcyMailing</name>
     <author>Tuan Pham Ngoc</author>
     <creationDate>February 2019</creationDate>
-    <copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <version>5.0.0</version>
+    <version>5.0.4</version>
     <description>This plugin is used to add registrants to AcyMailing when they register for an event.</description>
     <files>
         <filename plugin="acym">acym.php</filename>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="quiz" name="QuizId" default="0" label="COM_ARIQUIZ_LABEL_QUIZ" description="" lazy_load="1" init_label="COM_ARIQUIZ_LABEL_SELECTQUIZ" />
+		<param type="questioncategory" name="CategoryId" default="0" label="COM_ARIQUIZ_LABEL_CATEGORY" description="" lazy_load="1" related_element="QuizId" />
+	</params>
+	<validators addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="range" error_message="COM_ARIQUIZ_ERROR_SELECTQUIZ" validate="QuizId" min="1" />
+	</validators>
+</form>

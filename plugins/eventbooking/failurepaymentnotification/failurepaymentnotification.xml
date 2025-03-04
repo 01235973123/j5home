@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.9.0" type="plugin" group="eventbooking" method="upgrade">
+<extension version="4.2.0" type="plugin" group="eventbooking" method="upgrade">
     <name>Events Booking - Failure Payment Notification</name>
     <author>Tuan Pham Ngoc</author>
     <creationDate>March 2022</creationDate>
@@ -7,7 +7,7 @@
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <version>5.0.0</version>
+    <version>5.0.4</version>
     <description>This plugin sends notification to users from selected groups.</description>
     <files>
         <filename plugin="failurepaymentnotification">failurepaymentnotification.php</filename>

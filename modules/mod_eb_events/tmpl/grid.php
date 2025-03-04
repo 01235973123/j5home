@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -24,10 +24,14 @@ use Joomla\CMS\Uri\Uri;
  *
  */
 
-Factory::getApplication()->getDocument()->addStyleSheet(
-	Uri::root(true) . '/media/com_eventbooking/assets/css/eventgrid.min.css',
-	['version' => EventbookingHelper::getInstalledVersion()]
-);
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->registerAndUseStyle(
+		'com_eventbooking.eventgrid',
+		'media/com_eventbooking/assets/css/eventgrid.min.css',
+		['version' => EventbookingHelper::getInstalledVersion()]
+	);
 
 $span = 'span' . intval(12 / $numberEventPerRow);
 
@@ -50,19 +54,22 @@ if ($params->get('show_register_buttons', 1) && $config->multiple_booking)
 	}
 
 	$baseAjaxUrl = Uri::root(true) . '/index.php?option=com_eventbooking' . EventbookingHelper::getLangLink() . '&time=' . time();
-	Factory::getApplication()->getDocument()->addScriptDeclaration('var EBBaseAjaxUrl = "' . $baseAjaxUrl . '";');
+	Factory::getApplication()
+		->getDocument()
+		->getWebAssetManager()
+		->addInlineScript('var EBBaseAjaxUrl = "' . $baseAjaxUrl . '";');
 }
 
 $cssVariables = [];
 
 if ($params->get('category_bg_color'))
 {
-	$cssVariables[] = '--eb-grid-default-main-category-color: '.$params->get('category_bg_color');
+	$cssVariables[] = '--eb-grid-default-main-category-color: ' . $params->get('category_bg_color');
 }
 
 if ($params->get('event_datetime_color'))
 {
-	$cssVariables[] = '--eb-grid-default-datetime-color: '.$params->get('event_datetime_color');
+	$cssVariables[] = '--eb-grid-default-datetime-color: ' . $params->get('event_datetime_color');
 }
 
 if (count($cssVariables))
@@ -83,8 +90,10 @@ if (count($rows) > 0)
 	{
 		echo $params->get('pre_text');
 	}
-?>
-	<div class="<?php echo $rowFluid . ' ' . $clearfix; ?> eb-events-grid-items"<?php echo $inlineStyles; ?>>
+	?>
+	<div class="<?php
+	echo $rowFluid . ' ' . $clearfix; ?> eb-events-grid-items"<?php
+	echo $inlineStyles; ?>>
 		<?php
 		$rowCount = 0;
 
@@ -101,7 +110,9 @@ if (count($rows) > 0)
 				'Itemid' => $itemId,
 			];
 			?>
-			<div class="<?php echo $span; ?> eb-events-grid-row-<?php echo $rowCount; ?>">
+			<div class="<?php
+			echo $span; ?> eb-events-grid-row-<?php
+			echo $rowCount; ?>">
 				<?php
 				echo EventbookingHelperHtml::loadSharedLayout(
 					'eventgrid/' . $params->get('event_item_layout', 'default') . '.php',
@@ -113,11 +124,12 @@ if (count($rows) > 0)
 		}
 		?>
 	</div>
-<?php
+	<?php
 }
 else
 {
-?>
-    <div class="eb_empty"><?php echo Text::_('EB_NO_UPCOMING_EVENTS') ?></div>
-<?php
+	?>
+	<div class="eb_empty"><?php
+		echo Text::_('EB_NO_UPCOMING_EVENTS') ?></div>
+	<?php
 }

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -30,10 +30,9 @@ if (!EventbookingHelper::needToShowModule($params->get('show_on_pages', '')))
 // Require module helper
 require_once __DIR__ . '/helper.php';
 
-$document = Factory::getApplication()->getDocument();
-$user     = Factory::getApplication()->getIdentity();
-$config   = EventbookingHelper::getConfig();
-$baseUrl  = Uri::root(true);
+$user    = Factory::getApplication()->getIdentity();
+$config  = EventbookingHelper::getConfig();
+$baseUrl = Uri::root(true);
 
 // Load component language
 EventbookingHelper::loadLanguage();
@@ -47,7 +46,10 @@ if ($params->get('show_location', 0))
 // Load CSS
 $layout = $params->get('layout', 'default');
 
-$document->addStyleSheet($baseUrl . '/media/mod_eb_events/css/style.css', ['version' => EventbookingHelper::getInstalledVersion()]);
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->registerAndUseStyle('mod_eb_events.style', 'media/mod_eb_events/css/style.css', ['version' => EventbookingHelper::getInstalledVersion()]);
 
 EventbookingHelper::loadComponentCssForModules();
 

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -15,8 +15,6 @@ use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
-
-HTMLHelper::_('behavior.core') ;
 
 /* @var EventbookingHelperBootstrap $bootstrapHelper */
 $bootstrapHelper   = $this->bootstrapHelper;
@@ -67,27 +65,30 @@ else
 $coordinates = explode(',', $coordinates);
 $zoomLevel   = (int) $config->zoom_level ?: 14;
 
-$document = Factory::getApplication()->getDocument();
+$wa = Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('coordinates', $coordinates)
+	->addScriptOptions('zoomLevel', $zoomLevel)
+	->addScriptOptions('baseUri', Uri::base(true))
+	->getWebAssetManager()
+	->useScript('core');
+
 $rootUri = Uri::root(true);
 
 if ($mapProvider === 'googlemap')
 {
-	$document->addScript('https://maps.google.com/maps/api/js?key=' . $mapApiKey . '&v=quarterly');
+	$wa->registerAndUseScript('com_eventbooking.googlemapapi', 'https://maps.google.com/maps/api/js?key=' . $mapApiKey . '&v=quarterly');
 
 	EventbookingHelperHtml::addOverridableScript('media/com_eventbooking/js/site-location-form.min.js');
 }
 else
 {
-	$document->addScript($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.js')
-	->addScript($rootUri . '/media/com_eventbooking/assets/js/autocomplete/jquery.autocomplete.min.js')
-	->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.css')
-	->addScriptOptions('baseUri', Uri::base(true));
+	$wa->registerAndUseScript('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.js')
+		->registerAndUseStyle('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.css')
+		->registerAndUseScript('com_eventbooking.jquery.autocomplete', 'media/com_eventbooking/assets/js/autocomplete/jquery.autocomplete.min.js');
 
 	EventbookingHelperHtml::addOverridableScript('media/com_eventbooking/js/site-location-openstreetmap.min.js');
 }
-
-$document->addScriptOptions('coordinates', $coordinates)
-	->addScriptOptions('zoomLevel', $zoomLevel);
 
 $languageItems = [
 	'EB_ENTER_LOCATION_NAME',

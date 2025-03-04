@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -51,5 +51,36 @@ class EventbookingTableField extends Table
 	public function __construct(&$db)
 	{
 		parent::__construct('#__eb_fields', 'id', $db);
+	}
+
+	/**
+	 * Method to perform sanity checks on the Table instance properties to ensure they are safe to store in the database.
+	 *
+	 * @return bool
+	 */
+	public function check()
+	{
+		if ($this->min === '')
+		{
+			$this->min = null;
+		}
+		if ($this->max === '')
+		{
+			$this->max = null;
+		}
+
+		return parent::check();
+	}
+
+	/**
+	 * @param   bool  $updateNulls
+	 *
+	 * @return bool
+	 */
+	public function store($updateNulls = false)
+	{
+		$updateNulls = true;
+
+		return parent::store($updateNulls);
 	}
 }

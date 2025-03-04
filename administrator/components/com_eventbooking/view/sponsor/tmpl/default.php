@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -14,14 +14,15 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
-$document = Factory::getApplication()->getDocument();
-$document->addStyleDeclaration('.hasTip{display:block !important}')
-	->addScript(Uri::root(true) . '/media/com_eventbooking/js/admin-sponsor-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('com_eventbooking.admin-sponsor-default', 'media/com_eventbooking/js/admin-sponsor-default.min.js')
+	->addInlineStyle('.hasTip{display:block !important}');
 
 $translatable    = Multilanguage::isEnabled() && count($this->languages);
 $bootstrapHelper = EventbookingHelperBootstrap::getInstance();

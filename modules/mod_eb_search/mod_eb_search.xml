@@ -4,9 +4,9 @@
 	<author>Tuan Pham Ngoc</author>
 	<authorEmail>tuanpn@joomdonation.com</authorEmail>
 	<authorUrl>https://joomdonation.com</authorUrl>
-	<copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
+	<copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
 	<license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<version>5.0.0</version>
+	<version>5.0.4</version>
 	<description>Search Module for Event Booking</description>
 	<files>		
 		<filename module="mod_eb_search">mod_eb_search.php</filename>		
@@ -26,7 +26,9 @@
 					label="Show Category" description="Choose to show/hide category from down in the search module" default="1">
 					<option value="0">No</option>
 					<option value="1">Yes</option>
-				</field>				
+				</field>
+				<field name="category_ids" type="ebcategory" multiple="true" showon="show_category:1" label="Categories"
+					   description="Select categories which you want to display in the module. If no categories selected, all categories will be displayed"/>
 				<field name="show_location" type="radio"
 					label="Show Location" description="Choose to show/hide location from dropdown in the search module" default="0">
 					<option value="0">No</option>

@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<extension type="component" version="3.0.0" method="upgrade">
+	<name>ARI Quiz</name>
+	<creationDate>January 2025</creationDate>
+	<author>ARI Soft</author>
+	<copyright>ARI Soft</copyright>
+	<authorEmail>info@ari-soft.com</authorEmail>
+	<authorUrl>www.ari-soft.com</authorUrl>
+	<version>3.10.21</version>
+	<description>ARI_QUIZ_COMPONENT</description>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<installfile>install.ariquiz.php</installfile>
+	<uninstallfile>uninstall.ariquiz.php</uninstallfile>
+	<scriptfile>script.php</scriptfile>
+	<updateservers>
+    	<server type="extension" name="ARI Quiz Extension's Updates">https://www.ari-soft.com/joomla-updates/ariquiz/ariquiz.xml</server>
+ 	</updateservers>
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">install/sql/mysql/install.sql</file>
+		</sql>
+	</install>
+	<uninstall>
+	</uninstall>
+	<languages folder="languages">
+		<language tag="en-GB">frontend/en-GB/en-GB.com_ariquiz.ini</language>
+		<language tag="en-GB">frontend/en-GB/en-GB.com_ariquiz.ajax.ini</language>
+		<language tag="ru-RU">frontend/ru-RU/ru-RU.com_ariquiz.ini</language>
+		<language tag="ru-RU">frontend/ru-RU/ru-RU.com_ariquiz.ajax.ini</language>
+		<language tag="de-DE">frontend/de-DE/de-DE.com_ariquiz.ini</language>
+		<language tag="de-DE">frontend/de-DE/de-DE.com_ariquiz.ajax.ini</language>
+		<language tag="uk-UA">frontend/uk-UA/uk-UA.com_ariquiz.ini</language>
+		<language tag="uk-UA">frontend/uk-UA/uk-UA.com_ariquiz.ajax.ini</language>
+	</languages>
+	<files folder="frontend">
+		<folder>assets/</folder>
+		<folder>controllers/</folder>
+		<folder>models/</folder>
+		<folder>router/</folder>
+		<folder>themes/</folder>
+		<folder>views/</folder>
+		<filename>ariquiz.php</filename>
+		<filename>router.php</filename>
+		<filename>index.html</filename>
+	</files>
+	<administration>
+		<languages folder="languages">
+			<language tag="en-GB">backend/en-GB/en-GB.com_ariquiz.ini</language>
+			<language tag="en-GB">backend/en-GB/en-GB.com_ariquiz.sys.ini</language>
+			<language tag="en-GB">backend/en-GB/en-GB.com_ariquiz.ajax.ini</language>
+			<language tag="ru-RU">backend/ru-RU/ru-RU.com_ariquiz.ini</language>
+			<language tag="ru-RU">backend/ru-RU/ru-RU.com_ariquiz.sys.ini</language>
+			<language tag="ru-RU">backend/ru-RU/ru-RU.com_ariquiz.ajax.ini</language>
+			<language tag="uk-UA">backend/uk-UA/uk-UA.com_ariquiz.ini</language>
+			<language tag="uk-UA">backend/uk-UA/uk-UA.com_ariquiz.sys.ini</language>
+			<language tag="uk-UA">backend/uk-UA/uk-UA.com_ariquiz.ajax.ini</language>
+		</languages>
+		<menu link="option=com_ariquiz&amp;view=quizzes" view="quizzes" img="components/com_ariquiz/assets/images/arisoft_icon.png">COM_ARIQUIZ_MENU_ARIQUIZ</menu>
+	    <submenu>
+	    	<menu view="quizzes" img="class:content">COM_ARIQUIZ_MENU_QUIZZES</menu>
+			<menu view="categories" img="class:category">COM_ARIQUIZ_MENU_QUIZCATEGORIES</menu>
+			<menu view="bankcategories" img="class:category">COM_ARIQUIZ_MENU_BANKCATEGORIES</menu>
+			<menu view="questioncategories" img="class:category">COM_ARIQUIZ_MENU_QUESTIONCATEGORIES</menu>
+			<menu view="bankquestions" img="class:content">COM_ARIQUIZ_MENU_QUESTIONBANK</menu>
+			<menu view="resultscales" img="class:themes">COM_ARIQUIZ_MENU_RESULTSCALES</menu>
+			<menu view="questiontemplates" img="class:themes">COM_ARIQUIZ_MENU_QUESTIONTEMPLATES</menu>
+			<menu view="resulttemplates" img="class:themes">COM_ARIQUIZ_MENU_TEXTTEMPLATES</menu>
+			<menu view="mailtemplates" img="class:themes">COM_ARIQUIZ_MENU_MAILTEMPLATES</menu>
+			<menu view="quizresults" img="class:search">COM_ARIQUIZ_MENU_QUIZZESRESULTS</menu>
+			<menu view="config" img="class:config">COM_ARIQUIZ_MENU_CONFIG</menu>
+			<menu view="about" img="class:help">COM_ARIQUIZ_MENU_ABOUT</menu>
+	    </submenu>
+	    <files folder="backend">
+	    	<folder>assets/</folder>
+	    	<folder>config/</folder>
+			<folder>controllers/</folder>
+			<folder>elements/</folder>
+			<folder>fields/</folder>
+			<folder>files/</folder>
+			<folder>install/</folder>
+			<folder>kernel/</folder>
+			<folder>libraries/</folder>
+			<folder>models/</folder>
+			<folder>tables/</folder>
+			<folder>validators/</folder>
+			<folder>views/</folder>
+			<filename>admin.ariquiz.php</filename>
+			<filename>ariquiz.php</filename>
+			<filename>defines.php</filename>
+			<filename>helper.php</filename>
+			<filename>index.html</filename>
+			<filename>access.xml</filename>
+			<filename>config.xml</filename>
+			<filename>install.php</filename>
+			<filename>uninstall.php</filename>
+		</files>
+	</administration>
+</extension>

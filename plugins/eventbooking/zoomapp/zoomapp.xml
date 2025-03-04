@@ -3,12 +3,12 @@
     <name>Events Booking - Zoom App</name>
     <author>Tuan Pham Ngoc</author>
     <creationDate>May 2023</creationDate>
-    <copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>5.0.0</version>
+    <version>5.0.4</version>
     <description>This plugin is used to automatically register attendees for a Zoom Webibar or Zoom Meetings via Zooms
         API using Server-To-Server OAuth. See https://developers.zoom.us/docs/internal-apps/s2s-oauth/
     </description>

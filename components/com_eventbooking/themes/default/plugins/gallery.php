@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -18,7 +18,10 @@ use Joomla\CMS\Uri\Uri;
  * @var array $images
  */
 
-Factory::getApplication()->getDocument()->addScriptDeclaration("
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->addInlineScript("
     document.addEventListener('DOMContentLoaded', function () {
         baguetteBox.run('.gallery', {});
     });	

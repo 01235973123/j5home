@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -17,8 +17,6 @@ use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
-
-HTMLHelper::_('behavior.core');
 
 $rootUri = Uri::root(true);
 
@@ -66,20 +64,24 @@ $editor       = Editor::getInstance(Factory::getApplication()->get('editor', 'no
 $translatable = Multilanguage::isEnabled() && count($this->languages);
 
 $document = Factory::getApplication()->getDocument();
+$wa       = $document->getWebAssetManager()
+	->useScript('core');
+
 $rootUri  = Uri::root(true);
 
 if ($mapProvider === 'googlemap')
 {
-	$document->addScript('https://maps.googleapis.com/maps/api/js?key=' . $mapApiKey . '&v=quarterly')
-		->addScript($rootUri . '/media/com_eventbooking/js/admin-location-default.min.js');
+	$wa->registerAndUseScript('com_eventbooking.googlemapapi', 'https://maps.googleapis.com/maps/api/js?key=' . $mapApiKey . '&v=quarterly')
+		->registerAndUseScript('com_eventbooking.admin-location-default', 'media/com_eventbooking/js/admin-location-default.min.js');
 }
 else
 {
-	$document->addScript($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.js')
-		->addScript($rootUri . '/media/com_eventbooking/assets/js/autocomplete/jquery.autocomplete.min.js')
-		->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.css')
-		->addScript($rootUri . '/media/com_eventbooking/js/admin-location-openstreetmap.min.js')
-		->addScriptOptions('baseUri', Uri::base(true));
+	$wa->registerAndUseScript('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.js')
+		->registerAndUseScript('com_eventbooking.jquery.autocomplete', 'media/com_eventbooking/assets/js/autocomplete/jquery.autocomplete.min.js')
+		->registerAndUseStyle('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.css')
+		->registerAndUseScript('com_eventbooking.admin-location-openstreetmap', 'media/com_eventbooking/js/admin-location-openstreetmap.min.js');
+
+	$document->addScriptOptions('baseUri', Uri::base(true));
 }
 
 $document->addScriptOptions('coordinates', $coordinates)
@@ -265,7 +267,7 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 					<?php echo  Text::_('EB_NAME'); ?>
 				</div>
 				<div class="controls">
-					<input class="input-xlarge form-control" type="text" name="name_<?php echo $sef; ?>" id="title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'name_' . $sef}; ?>" />
+					<input class="form-control" type="text" name="name_<?php echo $sef; ?>" id="title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'name_' . $sef}; ?>" />
 				</div>
 			</div>
 			<div class="control-group">
@@ -273,7 +275,7 @@ $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 					<?php echo  Text::_('EB_ALIAS'); ?>
 				</div>
 				<div class="controls">
-					<input class="input-xlarge form-control" type="text" name="alias_<?php echo $sef; ?>" id="alias_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'alias_' . $sef}; ?>" />
+					<input class="form-control" type="text" name="alias_<?php echo $sef; ?>" id="alias_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'alias_' . $sef}; ?>" />
 				</div>
 			</div>
 			<div class="control-group">

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="system" method="upgrade">
+	<name>System - ARI Extensions</name>
+	<author>ARI Soft</author>
+	<creationDate>August 2023</creationDate>
+	<copyright>ARI Soft</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>info@ari-soft.com</authorEmail>
+	<authorUrl>www.ari-soft.com</authorUrl>
+	<version>1.4.0</version>
+	<description>ARI_EXTENSIONS_PLUGIN</description>
+	<scriptfile>script.php</scriptfile>
+	<languages>
+		<language tag="en-GB">language/en-GB/plg_system_ariextensions.ini</language>
+		<language tag="en-GB">language/en-GB/plg_system_ariextensions.sys.ini</language>
+	</languages>
+	<files>
+		<filename plugin="ariextensions">ariextensions.php</filename>
+		<filename>ariextensions.xml</filename>	
+		<filename>index.html</filename>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="fixCacheIssue" type="list" default="0" label="AEP_PARAM_FIXCACHE_LABEL" description="AEP_PARAM_FIXCACHE_DESCR">
+					<option value="0">AEP_NO</option>
+					<option value="1">AEP_YES</option>
+					<option value="auto">AEP_AUTO</option>
+				</field>
+			</fieldset>	
+		</fields>
+	</config>
+</extension>

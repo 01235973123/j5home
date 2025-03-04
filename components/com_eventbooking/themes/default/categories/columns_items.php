@@ -3,21 +3,31 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
-$document = Factory::getApplication()->getDocument();
+$wa       = Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager();
+
 $rootUri  = Uri::root(true);
 
-$document->addScript($rootUri . '/media/com_eventbooking/assets/js/responsive-auto-height.min.js', [], ['defer' => true]);
+$wa->registerAndUseScript(
+	'com_eventbooking.responsive-auto-height',
+	'media/com_eventbooking/assets/js/responsive-auto-height.min.js',
+	[],
+	['defer' => true]
+);
+
 
 /* @var EventbookingHelperBootstrap $bootstrapHelper */
 $bootstrapHelper   = EventbookingHelperBootstrap::getInstance();
@@ -29,7 +39,7 @@ $span             = 'span' . intval(12 / $numberColumns);
 $span             = $bootstrapHelper->getClassMapping($span);
 $numberCategories = count($this->items);
 
-if ($this->params->get('image_lazy_loading', 'lazy'))
+if ($this->params->get('image_lazy_loading', '0'))
 {
 	$imgLoadingAttr = ' loading="lazy"';
 }
@@ -103,7 +113,14 @@ $lazyLoadingStartIndex = $this->params->get('image_lazy_loading_start_index', 0)
                             <?php
 							}
 
-							echo $category->description;
+                            if ($this->params->get('category_description_limit'))
+                            {
+	                            echo HTMLHelper::_('string.truncate', $category->description, $this->params->get('category_description_limit', 120));
+                            }
+                            else
+                            {
+	                            echo $category->description;
+                            }
 							?>
                         </div>
                     <?php
@@ -125,4 +142,4 @@ for ($i = 1; $i <= $rowCount; $i++)
 
 $equalHeightScript[] = '});';
 
-$document->addScriptDeclaration(implode("\r\n", $equalHeightScript));
+$wa->addInlineScript(implode("\r\n", $equalHeightScript));

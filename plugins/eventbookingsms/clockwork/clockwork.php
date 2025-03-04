@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -29,6 +29,11 @@ class plgEventbookingSMSClockwork extends CMSPlugin
 
 		foreach ($rows as $row)
 		{
+			if (!trim($row->phone))
+			{
+				continue;
+			}
+
 			$message = ['to' => $this->sanitize($row->phone), 'message' => $row->sms_message];
 
 			try

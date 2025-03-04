@@ -38,7 +38,7 @@
 
     populateRegistrantData = (function () {
         const userId = $('#user_id_id').val();
-        const eventId = $('#event_id').val();
+        const eventId = $('#event_id_id').val();
         $.ajax({
             type: 'GET',
             url: 'index.php?option=com_eventbooking&task=get_profile_data&user_id=' + userId + '&event_id=' + eventId,

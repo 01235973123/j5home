@@ -3,7 +3,7 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
@@ -301,7 +301,7 @@ $lazyLoadingStartIndex = $this->params->get('image_lazy_loading_start_index', 0)
 					?>
 						<td class="center tdno<?php echo $i; ?>" data-content="<?php echo Text::_('EB_REGISTERED'); ?>">
 							<?php
-								if ($item->registration_type != 3)
+								if ($item->registration_type != 3 && ((int) $item->total_registrants >= (int) $this->config->get('show_registered_if_greater_than_or_equal', 0)))
 								{
 									echo $item->total_registrants ;
 								}

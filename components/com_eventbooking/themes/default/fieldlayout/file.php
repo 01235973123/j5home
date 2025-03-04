@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -22,7 +22,11 @@ use Joomla\CMS\Uri\Uri;
  * @var stdClass $row
  * @var string   $attributes
  */
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/assets/js/ajaxupload.min.js');
+
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->registerAndUseScript('com_eventbooking.ajaxupload', 'media/com_eventbooking/assets/js/ajaxupload.min.js');
 ?>
 <input type="button" value="<?php echo Text::_('EB_SELECT_FILE'); ?>" id="button-file-<?php echo $name; ?>" class="btn btn-primary" />
 <span class="eb-uploaded-file" id="uploaded-file-<?php echo $name; ?>">

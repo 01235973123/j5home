@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -18,7 +18,6 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
 use Joomla\Registry\Registry;
-use Joomla\Utilities\ArrayHelper;
 
 class plgEventBookingDates extends CMSPlugin implements SubscriberInterface
 {
@@ -95,6 +94,9 @@ class plgEventBookingDates extends CMSPlugin implements SubscriberInterface
 		{
 			return;
 		}
+
+		/* @var EventbookingModelEvent $eventModel */
+		$eventModel = RADModel::getTempInstance('Event', 'EventbookingModel');
 
 		$db    = $this->db;
 		$query = $db->getQuery(true);
@@ -223,10 +225,10 @@ class plgEventBookingDates extends CMSPlugin implements SubscriberInterface
 			if ($isChildEventNew || isset($data['update_data_from_main_event']))
 			{
 				// Store categories
-				$this->storeEventCategories($rowEvent->id, $data, $isChildEventNew);
+				$eventModel->storeEventCategories($rowEvent->id, $data, $isChildEventNew);
 
-				// Store price
-				$this->storeEventGroupRegistrationRates($rowEvent->id, $data, $isChildEventNew);
+				// Store group registration rate
+				$eventModel->storeEventGroupRegistrationRates($rowEvent->id, $data, $isChildEventNew);
 			}
 
 			$additionalEventIds[] = $rowEvent->id;
@@ -239,8 +241,8 @@ class plgEventBookingDates extends CMSPlugin implements SubscriberInterface
 		elseif (!$isNew)
 		{
 			$db    = $this->db;
-			$query = $db->getQuery(true);
-			$query->select('COUNT(*)')
+			$query = $db->getQuery(true)
+				->select('COUNT(*)')
 				->from('#__eb_events')
 				->where('parent_id = ' . (int) $row->id);
 			$db->setQuery($query);
@@ -263,8 +265,8 @@ class plgEventBookingDates extends CMSPlugin implements SubscriberInterface
 		if (!$isNew)
 		{
 			$db    = $this->db;
-			$query = $db->getQuery(true);
-			$query->select('id')
+			$query = $db->getQuery(true)
+				->select('id')
 				->from('#__eb_events')
 				->where('parent_id = ' . $row->id)
 				->where('is_additional_date = 1');
@@ -277,9 +279,7 @@ class plgEventBookingDates extends CMSPlugin implements SubscriberInterface
 
 				if (count($deletedEventIds))
 				{
-					$model = new EventbookingModelEvent();
-
-					$model->delete($deletedEventIds);
+					$eventModel->delete($deletedEventIds);
 				}
 			}
 		}
@@ -454,99 +454,6 @@ class plgEventBookingDates extends CMSPlugin implements SubscriberInterface
 		}
 
 		return $xml->asXML();
-	}
-
-	/**
-	 * Store categories of an event
-	 *
-	 * @param   int    $eventId
-	 * @param   array  $data
-	 * @param   bool   $isNew
-	 *
-	 * @return void
-	 */
-	private function storeEventCategories($eventId, $data, $isNew): void
-	{
-		$db    = $this->db;
-		$query = $db->getQuery(true);
-
-		if (!$isNew)
-		{
-			$query->delete('#__eb_event_categories')->where('event_id=' . $eventId);
-			$db->setQuery($query)
-				->execute();
-		}
-
-		$mainCategoryId = (int) $data['main_category_id'];
-
-		if ($mainCategoryId)
-		{
-			$query->clear()
-				->insert('#__eb_event_categories')
-				->columns('event_id, category_id, main_category')
-				->values("$eventId, $mainCategoryId, 1");
-			$db->setQuery($query);
-			$db->execute();
-		}
-
-		$categoryIds = array_filter(ArrayHelper::toInteger($data['category_id'])) ?? [];
-
-		foreach ($categoryIds as $categoryId)
-		{
-			if ($categoryId && ($categoryId != $mainCategoryId))
-			{
-				$query->clear()
-					->insert('#__eb_event_categories')
-					->columns('event_id, category_id, main_category')
-					->values("$eventId, $categoryId, 0");
-				$db->setQuery($query)
-					->execute();
-			}
-		}
-	}
-
-	/**
-	 * Store group registration rates of an event
-	 *
-	 * @param $eventId
-	 * @param $data
-	 * @param $isNew
-	 */
-	private function storeEventGroupRegistrationRates($eventId, $data, $isNew)
-	{
-		$db    = $this->db;
-		$query = $db->getQuery(true);
-
-		if (!$isNew)
-		{
-			$query->delete('#__eb_event_group_prices')->where('event_id=' . $eventId);
-			$db->setQuery($query);
-			$db->execute();
-		}
-
-		if (!isset($data['price']) || !isset($data['registrant_number']))
-		{
-			return;
-		}
-
-		$prices            = $data['price'];
-		$registrantNumbers = $data['registrant_number'];
-
-		for ($i = 0, $n = count($prices); $i < $n; $i++)
-		{
-			$price            = $prices[$i];
-			$registrantNumber = $registrantNumbers[$i];
-
-			if (($registrantNumber > 0) && ($price > 0))
-			{
-				$query->clear()
-					->insert('#__eb_event_group_prices')
-					->columns('event_id, registrant_number, price')
-					->values("$eventId, $registrantNumber, $price");
-				$db->setQuery($query);
-				$db->execute();
-			}
-		}
 	}
 
 	/**

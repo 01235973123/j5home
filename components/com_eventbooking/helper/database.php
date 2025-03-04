@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -61,7 +61,7 @@ class EventbookingHelperDatabase
 	 *
 	 * @return mixed
 	 */
-	public static function getEvent($id, $currentDate = null, $fieldSuffix = null, $reload = false)
+	public static function getEvent($id, $currentDate = null, $fieldSuffix = null, $reload = false, $user = null)
 	{
 		static $events = [];
 
@@ -124,27 +124,36 @@ class EventbookingHelperDatabase
 				$params = new Registry($event->params);
 
 				$keys = [
-					'ticket_bg_top',
-					'ticket_bg_left',
-					'ticket_bg_width',
-					'ticket_bg_height',
-					'certificate_bg_left',
-					'certificate_bg_top',
-					'certificate_bg_width',
-					'certificate_bg_height',
+					'ticket_bg_top'            => '',
+					'ticket_bg_left'           => '',
+					'ticket_bg_width'          => '',
+					'ticket_bg_height'         => '',
+					'certificate_bg_left'      => '',
+					'certificate_bg_top'       => '',
+					'certificate_bg_width'     => '',
+					'certificate_bg_height'    => '',
+					'ics_content'              => '',
+					'robots'                   => '',
+					'send_ics_file'            => '',
+					'deposit_amount_apply_for' => 0,
 				];
 
-				foreach ($keys as $key)
+				foreach ($keys as $key => $defaultValue)
 				{
 					if ($params->exists($key) || !property_exists($event, $key))
 					{
-						$event->{$key} = $params->get($key, '');
+						$event->{$key} = $params->get($key, $defaultValue);
 					}
 				}
-
+				
 				// Trigger events to allow plugins to modify event data before it is being processed further
 				PluginHelper::importPlugin('eventbooking');
 				$eventObj = new AfterReturnEventsFromDatabase(['rows' => [$event], 'context' => 'item']);
+
+				if ($user)
+				{
+					$eventObj->setArgument('user', $user);
+				}
 
 				Factory::getApplication()->triggerEvent($eventObj->getName(), $eventObj);
 			}
@@ -312,7 +321,7 @@ class EventbookingHelperDatabase
 	 *
 	 * @return mixed
 	 */
-	public static function getAllLocations($order = 'name')
+	public static function getAllLocations($order = 'name', $filters = [])
 	{
 		/* @var \Joomla\Database\DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
@@ -322,6 +331,11 @@ class EventbookingHelperDatabase
 			->where('published = 1')
 			->order($order);
 		$db->setQuery($query);
+
+		foreach ($filters as $filter)
+		{
+			$query->where($filter);
+		}
 
 		return $db->loadObjectList();
 	}

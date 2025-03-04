@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -361,10 +361,10 @@ class EventbookingHelperHtml
 	 */
 	public static function addOverridableScript($files, $options = [], $attribs = [])
 	{
-		$config   = EventbookingHelper::getConfig();
-		$document = Factory::getApplication()->getDocument();
-		$rootUri  = Uri::root(true);
-		$files    = (array) $files;
+		$config = EventbookingHelper::getConfig();
+		$wa     = Factory::getApplication()->getDocument()
+			->getWebAssetManager();
+		$files  = (array) $files;
 
 		foreach ($files as $file)
 		{
@@ -383,7 +383,7 @@ class EventbookingHelperHtml
 				$file = $overridableFile;
 			}
 
-			$document->addScript($rootUri . '/' . $file, $options, $attribs);
+			$wa->registerAndUseScript('com_eventbooking.' . $file, $file, $options, $attribs);
 		}
 	}
 

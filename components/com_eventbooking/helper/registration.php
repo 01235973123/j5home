@@ -1,9 +1,10 @@
 <?php
+
 /**
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -12,7 +13,6 @@ defined('_JEXEC') or die;
 use CB\Database\Table\UserTable;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Form\Form;
@@ -62,13 +62,11 @@ class EventbookingHelperRegistration
 	{
 		$user = $user ?? Factory::getApplication()->getIdentity();
 
-		if (!$discount)
-		{
+		if (!$discount) {
 			return 0;
 		}
 
-		if (!$groupIds)
-		{
+		if (!$groupIds) {
 			return $discount;
 		}
 
@@ -76,20 +74,16 @@ class EventbookingHelperRegistration
 		$userGroupIds = ArrayHelper::toInteger($userGroupIds);
 		$groups       = $user->groups;
 
-		if (count(array_intersect($groups, $userGroupIds)))
-		{
+		if (count(array_intersect($groups, $userGroupIds))) {
 			//Calculate discount amount
-			if (str_contains($discount, ','))
-			{
+			if (str_contains($discount, ',')) {
 				$discountRates = explode(',', $discount);
 				$maxDiscount   = 0;
 
-				foreach ($groups as $group)
-				{
+				foreach ($groups as $group) {
 					$index = array_search($group, $userGroupIds);
 
-					if ($index !== false && isset($discountRates[$index]))
-					{
+					if ($index !== false && isset($discountRates[$index])) {
 						$maxDiscount = max($maxDiscount, $discountRates[$index]);
 					}
 				}
@@ -121,8 +115,7 @@ class EventbookingHelperRegistration
 		/* @var DatabaseQuery $query */
 		$query = EventbookingHelper::callOverridableHelperMethod('Registration', 'getCouponQuery', [$couponCode, $event, $user]);
 
-		switch ($registrationType)
-		{
+		switch ($registrationType) {
 			case 0:
 				// Individual registration
 				$query->whereIn('enable_for', [0, 1]);
@@ -170,8 +163,7 @@ class EventbookingHelperRegistration
 		$config        = EventbookingHelper::getConfig();
 		$numberMinutes = (int) $config->count_awaiting_payment_registration_times;
 
-		if ($numberMinutes == 0)
-		{
+		if ($numberMinutes == 0) {
 			return 0;
 		}
 
@@ -201,30 +193,21 @@ class EventbookingHelperRegistration
 	public static function canInviteFriend($event)
 	{
 		// If cut off date is entered, we will check registration based on cut of date, not event date
-		if ((int) $event->cut_off_date)
-		{
-			if ($event->cut_off_minutes > 0)
-			{
+		if ((int) $event->cut_off_date) {
+			if ($event->cut_off_minutes > 0) {
 				return false;
 			}
-		}
-		elseif (isset($event->event_start_minutes))
-		{
-			if ($event->event_start_minutes > 0)
-			{
+		} elseif (isset($event->event_start_minutes)) {
+			if ($event->event_start_minutes > 0) {
 				return false;
 			}
-		}
-		else
-		{
-			if ($event->number_event_dates < 0)
-			{
+		} else {
+			if ($event->number_event_dates < 0) {
 				return false;
 			}
 		}
 
-		if ($event->event_capacity && ($event->total_registrants >= $event->event_capacity))
-		{
+		if ($event->event_capacity && ($event->total_registrants >= $event->event_capacity)) {
 			return false;
 		}
 
@@ -240,15 +223,16 @@ class EventbookingHelperRegistration
 	 */
 	public static function passFieldPaymentMethodDataToJS($rowFields)
 	{
-		HTMLHelper::_('behavior.core');
+		$document = Factory::getApplication()->getDocument();
+
+		$document->getWebAssetManager()
+			->useScript('core');
 
 		$allFields           = [];
 		$paymentMethodFields = [];
 
-		foreach ($rowFields as $rowField)
-		{
-			if (!$rowField->payment_method)
-			{
+		foreach ($rowFields as $rowField) {
+			if (!$rowField->payment_method) {
 				continue;
 			}
 
@@ -256,11 +240,9 @@ class EventbookingHelperRegistration
 			$paymentMethodFields[$rowField->payment_method][] = $rowField->name;
 		}
 
-		$document = Factory::getApplication()->getDocument();
 		$document->addScriptOptions('all_payment_method_fields', $allFields);
 
-		foreach ($paymentMethodFields as $paymentMethod => $fields)
-		{
+		foreach ($paymentMethodFields as $paymentMethod => $fields) {
 			$document->addScriptOptions($paymentMethod . '_fields', $fields);
 		}
 	}
@@ -274,34 +256,31 @@ class EventbookingHelperRegistration
 	 */
 	public static function passFieldTicketTypesDataToJS($rowFields)
 	{
-		HTMLHelper::_('behavior.core');
+		$document = Factory::getApplication()->getDocument();
+
+		$document->getWebAssetManager()
+			->useScript('core');
 
 		$ticketTypesFields = [];
 
-		foreach ($rowFields as $rowField)
-		{
-			if (!$rowField->depend_on_ticket_type_ids)
-			{
+		foreach ($rowFields as $rowField) {
+			if (!$rowField->depend_on_ticket_type_ids) {
 				continue;
 			}
 
 			$ticketTypeIds = array_filter(ArrayHelper::toInteger(explode(',', $rowField->depend_on_ticket_type_ids)));
 
-			if (count($ticketTypeIds) === 0)
-			{
+			if (count($ticketTypeIds) === 0) {
 				continue;
 			}
 
-			foreach ($ticketTypeIds as $ticketTypeId)
-			{
+			foreach ($ticketTypeIds as $ticketTypeId) {
 				$ticketTypesFields[$ticketTypeId][] = $rowField->name;
 			}
 		}
 
-		$document = Factory::getApplication()->getDocument();
 
-		foreach ($ticketTypesFields as $ticketTypeId => $fields)
-		{
+		foreach ($ticketTypesFields as $ticketTypeId => $fields) {
 			$document->addScriptOptions('ticket_type_' . $ticketTypeId . '_fields', $fields);
 		}
 	}
@@ -318,71 +297,57 @@ class EventbookingHelperRegistration
 		$user         = Factory::getApplication()->getIdentity();
 		$accessLevels = $user->getAuthorisedViewLevels();
 
-		if (empty($event) || !$event->published)
-		{
+		if (empty($event) || !$event->published) {
 			$event->cannot_register_reason = 'invalid_event_or_event';
 
 			return false;
 		}
 
-		if ($event->published == 2)
-		{
+		if ($event->published == 2) {
 			$event->cannot_register_reason = 'event_cancelled';
 
 			return false;
 		}
 
-		if (!in_array($event->access, $accessLevels))
-		{
+		if (!in_array($event->access, $accessLevels)) {
 			$event->cannot_register_reason = 'user_does_not_have_access';
 
 			return false;
 		}
 
-		if ($event->registration_type == 3)
-		{
+		if ($event->registration_type == 3) {
 			$event->cannot_register_reason = 'registration_is_disabled';
 
 			return false;
 		}
 
-		if (!in_array($event->registration_access, $accessLevels))
-		{
+		if (!in_array($event->registration_access, $accessLevels)) {
 			$event->cannot_register_reason = 'user_does_not_have_registration_access';
 
 			return false;
 		}
 
-		if ($event->registration_start_minutes < 0)
-		{
+		if ($event->registration_start_minutes < 0) {
 			$event->cannot_register_reason = 'registration_is_not_started';
 
 			return false;
 		}
 
 		// If cut off date is entered, we will check registration based on cut of date, not event date
-		if ((int) $event->cut_off_date)
-		{
-			if ($event->cut_off_minutes > 0)
-			{
+		if ((int) $event->cut_off_date) {
+			if ($event->cut_off_minutes > 0) {
 				$event->cannot_register_reason = 'cut_off_date_pass';
 
 				return false;
 			}
-		}
-		elseif (isset($event->event_start_minutes))
-		{
-			if ($event->event_start_minutes > 0)
-			{
+		} elseif (isset($event->event_start_minutes)) {
+			if ($event->event_start_minutes > 0) {
 				$event->cannot_register_reason = 'event_already_started';
 
 				return false;
 			}
-		}
-		else
-		{
-			if ($event->number_event_dates < 0)
-			{
+		} else {
+			if ($event->number_event_dates < 0) {
 				$event->cannot_register_reason = 'event_already_started';
 
 				return false;
@@ -392,41 +357,32 @@ class EventbookingHelperRegistration
 		$eventIsFull                      = false;
 		$numberAwaitingPaymentRegistrants = static::countAwaitingPaymentRegistrations($event);
 
-		if ($event->event_capacity && (($event->total_registrants + $numberAwaitingPaymentRegistrants) >= $event->event_capacity))
-		{
+		if ($event->event_capacity && (($event->total_registrants + $numberAwaitingPaymentRegistrants) >= $event->event_capacity)) {
 			$eventIsFull = true;
 		}
 
 		$config = EventbookingHelper::getConfig();
 
 		//Check to see whether the current user has registered for the event
-		if ($event->prevent_duplicate_registration === '')
-		{
+		if ($event->prevent_duplicate_registration === '') {
 			$preventDuplicateRegistration = $config->prevent_duplicate_registration;
-		}
-		else
-		{
+		} else {
 			$preventDuplicateRegistration = $event->prevent_duplicate_registration;
 		}
 
-		if ($preventDuplicateRegistration && $user->id)
-		{
-			if (static::isUserJoinedEvent($event->id))
-			{
+		if ($preventDuplicateRegistration && $user->id) {
+			if (static::isUserJoinedEvent($event->id)) {
 				$event->cannot_register_reason = 'duplicate_registration';
 
 				return false;
-			}
-			elseif (static::isUserJoinedWaitingList($event->id) && $eventIsFull)
-			{
+			} elseif (static::isUserJoinedWaitingList($event->id) && $eventIsFull) {
 				$event->cannot_register_reason = 'duplicate_registration_waiting_list';
 
 				return false;
 			}
 		}
 
-		if ($eventIsFull)
-		{
+		if ($eventIsFull) {
 			$event->cannot_register_reason = 'event_is_full';
 
 			return false;
@@ -440,8 +396,7 @@ class EventbookingHelperRegistration
 
 		$results = Factory::getApplication()->triggerEvent('onEBCheckAcceptRegistration', $eventObj);
 
-		if (in_array(false, $results, true))
-		{
+		if (in_array(false, $results, true)) {
 			return false;
 		}
 
@@ -462,67 +417,52 @@ class EventbookingHelperRegistration
 		$user = Factory::getApplication()->getIdentity();
 
 		$accessLevels = $user->getAuthorisedViewLevels();
-		if (empty($event)
+		if (
+			empty($event)
 			|| !$event->published
 			|| !in_array($event->access, $accessLevels)
 			|| !in_array($event->registration_access, $accessLevels)
-		)
-		{
+		) {
 			return Text::_('EB_REGISTRATION_NOT_AVAILABLE_FOR_ACCOUNT');
 		}
 
-		if ($event->registration_type == 3)
-		{
+		if ($event->registration_type == 3) {
 			return Text::_('EB_REGISTRATION_IS_DISABLED');
 		}
 
-		if ($event->registration_start_minutes < 0)
-		{
+		if ($event->registration_start_minutes < 0) {
 			return Text::_('EB_REGISTRATION_IS_NOT_STARTED_YET');
 		}
 
 		// If cut off date is entered, we will check registration based on cut of date, not event date
-		if ((int) $event->cut_off_date)
-		{
-			if ($event->cut_off_minutes > 0)
-			{
+		if ((int) $event->cut_off_date) {
+			if ($event->cut_off_minutes > 0) {
 				return Text::_('EB_NO_LONGER_ACCEPT_REGISTRATION');
 			}
-		}
-		elseif (isset($event->event_start_minutes))
-		{
-			if ($event->event_start_minutes > 0)
-			{
+		} elseif (isset($event->event_start_minutes)) {
+			if ($event->event_start_minutes > 0) {
 				return Text::_('EB_NO_LONGER_ACCEPT_REGISTRATION');
 			}
-		}
-		else
-		{
-			if ($event->number_event_dates < 0)
-			{
+		} else {
+			if ($event->number_event_dates < 0) {
 				return Text::_('EB_NO_LONGER_ACCEPT_REGISTRATION');
 			}
 		}
 
-		if ($event->event_capacity && ($event->total_registrants >= $event->event_capacity))
-		{
+		if ($event->event_capacity && ($event->total_registrants >= $event->event_capacity)) {
 			return Text::_('EB_EVENT_IS_FULL');
 		}
 
 		$config = EventbookingHelper::getConfig();
 
 		//Check to see whether the current user has registered for the event
-		if ($event->prevent_duplicate_registration === '')
-		{
+		if ($event->prevent_duplicate_registration === '') {
 			$preventDuplicateRegistration = $config->prevent_duplicate_registration;
-		}
-		else
-		{
+		} else {
 			$preventDuplicateRegistration = $event->prevent_duplicate_registration;
 		}
 
-		if ($preventDuplicateRegistration && $user->id && static::getRegistrantId($event->id) != false)
-		{
+		if ($preventDuplicateRegistration && $user->id && static::getRegistrantId($event->id) != false) {
 			return Text::_('EB_YOU_REGISTERED_ALREADY');
 		}
 
@@ -541,12 +481,9 @@ class EventbookingHelperRegistration
 		/* @var \Joomla\Database\DatabaseDriver $db */
 		$db = Factory::getContainer()->get('db');
 
-		if ($eventId)
-		{
+		if ($eventId) {
 			$query = EventbookingHelperRegistration::getBaseEventFieldsQuery($eventId);
-		}
-		else
-		{
+		} else {
 			$query = $db->getQuery(true)
 				->select('*')
 				->from('#__eb_fields')
@@ -554,8 +491,7 @@ class EventbookingHelperRegistration
 				->order('ordering');
 		}
 
-		if (Factory::getApplication()->isClient('site') && $fieldSuffix = EventbookingHelper::getFieldSuffix())
-		{
+		if (Factory::getApplication()->isClient('site') && $fieldSuffix = EventbookingHelper::getFieldSuffix()) {
 			EventbookingHelperDatabase::getMultilingualFields($query, ['title'], $fieldSuffix);
 		}
 
@@ -581,8 +517,7 @@ class EventbookingHelperRegistration
 			->where('show_on_public_registrants_list = 1')
 			->whereIn('access', Factory::getApplication()->getIdentity()->getAuthorisedViewLevels());
 
-		if ($fieldSuffix = EventbookingHelper::getFieldSuffix())
-		{
+		if ($fieldSuffix = EventbookingHelper::getFieldSuffix()) {
 			EventbookingHelperDatabase::getMultilingualFields($query, ['title'], $fieldSuffix);
 		}
 
@@ -629,8 +564,7 @@ class EventbookingHelperRegistration
 			->whereIn('access', $user->getAuthorisedViewLevels())
 			->order('ordering');
 
-		if ($fieldSuffix = EventbookingHelper::getFieldSuffix())
-		{
+		if ($fieldSuffix = EventbookingHelper::getFieldSuffix()) {
 			EventbookingHelperDatabase::getMultilingualFields(
 				$query,
 				['title', 'description', 'values', 'default_values', 'depend_on_options'],
@@ -654,12 +588,10 @@ class EventbookingHelperRegistration
 	{
 		$config = EventbookingHelper::getConfig();
 
-		if ($config->get('use_custom_fields_from_parent_event'))
-		{
+		if ($config->get('use_custom_fields_from_parent_event')) {
 			$event = EventbookingHelperDatabase::getEvent($eventId);
 
-			if ($event->parent_id > 0)
-			{
+			if ($event->parent_id > 0) {
 				$eventId = $event->parent_id;
 			}
 		}
@@ -677,20 +609,17 @@ class EventbookingHelperRegistration
 
 		$whereOrs = [];
 
-		if ($filterByCategories)
-		{
+		if ($filterByCategories) {
 			$whereOrs[]  = 'category_id = - 1';
 			$categoryIds = EventbookingHelperDatabase::getEventCategories([$eventId]);
 
-			if (count($categoryIds) > 0)
-			{
+			if (count($categoryIds) > 0) {
 				$categoryIds = implode(',', $categoryIds);
 				$whereOrs[]  = 'id IN (SELECT field_id FROM #__eb_field_categories AS fc WHERE fc.category_id IN (' . $categoryIds . '))';
 			}
 		}
 
-		if ($filterByEvents)
-		{
+		if ($filterByEvents) {
 			$negEventId = -1 * $eventId;
 			$whereOrs[] = 'event_id = -1';
 			$whereOrs[] = 'id IN (SELECT field_id FROM #__eb_field_events AS fv WHERE fv.event_id = ' . $eventId . ' OR fv.event_id < 0)';
@@ -716,8 +645,7 @@ class EventbookingHelperRegistration
 	 */
 	public static function getFormFields($eventId = 0, $registrationType = 0, $activeLanguage = null, $userId = null, $typeOfRegistration = 1)
 	{
-		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideRegistration', 'getFormFields'))
-		{
+		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideRegistration', 'getFormFields')) {
 			return EventbookingHelperOverrideRegistration::getFormFields($eventId, $registrationType, $activeLanguage, $userId);
 		}
 
@@ -725,23 +653,18 @@ class EventbookingHelperRegistration
 
 		$cacheKey = md5(serialize(func_get_args()));
 
-		if (empty($cache[$cacheKey]))
-		{
+		if (empty($cache[$cacheKey])) {
 			$app = Factory::getApplication();
 
-			if ($userId != -1 && $userId !== null)
-			{
+			if ($userId != -1 && $userId !== null) {
 				/* @var \Joomla\CMS\User\User $user */
 				$user = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById((int) $userId);
-			}
-			else
-			{
+			} else {
 				$user = Factory::getApplication()->getIdentity();
 			}
 
 			// Fallback to current user to prevent fatal error while loading invalid user
-			if ($user->id === null)
-			{
+			if ($user->id === null) {
 				$user = Factory::getApplication()->getIdentity();
 			}
 
@@ -755,14 +678,14 @@ class EventbookingHelperRegistration
 				->from('#__eb_fields')
 				->where('published = 1');
 
-			if ($userId != -1
-				&& (!$user->authorise('core.admin', 'com_eventbooking') || $app->isClient('site')))
-			{
+			if (
+				$userId != -1
+				&& (!$user->authorise('core.admin', 'com_eventbooking') || $app->isClient('site'))
+			) {
 				$query->whereIn('access', $user->getAuthorisedViewLevels());
 			}
 
-			if ($fieldSuffix)
-			{
+			if ($fieldSuffix) {
 				EventbookingHelperDatabase::getMultilingualFields(
 					$query,
 					['title', 'place_holder', 'description', 'values', 'default_values', 'depend_on_options'],
@@ -770,8 +693,7 @@ class EventbookingHelperRegistration
 				);
 			}
 
-			switch ($registrationType)
-			{
+			switch ($registrationType) {
 				case 0:
 					$query->whereIn('display_in', [0, 1, 3, 5]); // Individual Registration Form
 					break;
@@ -786,8 +708,7 @@ class EventbookingHelperRegistration
 					break;
 			}
 
-			if ($typeOfRegistration > 0)
-			{
+			if ($typeOfRegistration > 0) {
 				$query->whereIn('show_on_registration_type', [0, $typeOfRegistration]);
 			}
 
@@ -796,24 +717,20 @@ class EventbookingHelperRegistration
 
 			$whereOrs = [];
 
-			if ($filterByCategories)
-			{
+			if ($filterByCategories) {
 				$whereOrs[] = 'category_id = - 1';
 			}
 
-			if ($filterByEvents)
-			{
+			if ($filterByEvents) {
 				$whereOrs[] = 'event_id = -1';
 			}
 
-			if ($registrationType == 4)
-			{
+			if ($registrationType == 4) {
 				$cart  = new EventbookingHelperCart();
 				$items = $cart->getItems();
 
 				//In this case, we have ID of registration record, so, get list of events from that registration
-				if (!count($items))
-				{
+				if (!count($items)) {
 					$subQuery = $db->getQuery(true)
 						->select('event_id')
 						->from('#__eb_registrants')
@@ -822,19 +739,16 @@ class EventbookingHelperRegistration
 					$items = $db->loadColumn();
 				}
 
-				if ($filterByCategories)
-				{
+				if ($filterByCategories) {
 					$categoryIds = EventbookingHelperDatabase::getEventCategories($items);
 
-					if (count($categoryIds) > 0)
-					{
+					if (count($categoryIds) > 0) {
 						$categoryIds = implode(',', $categoryIds);
 						$whereOrs[]  = 'id IN (SELECT field_id FROM #__eb_field_categories AS fc WHERE fc.category_id IN (' . $categoryIds . '))';
 					}
 				}
 
-				if ($filterByEvents)
-				{
+				if ($filterByEvents) {
 					$whereOrs[] = 'id IN (SELECT field_id FROM #__eb_field_events AS fv WHERE fv.event_id IN (' . implode(',', $items) . '))';
 					/*$negEventIds = array_map(function ($eventId) {
 						return -1 * $eventId;
@@ -845,41 +759,31 @@ class EventbookingHelperRegistration
 				}
 
 				$query->where('(' . implode(' OR ', $whereOrs) . ')');
-			}
-			else
-			{
+			} else {
 				// Get custom fields from parent event for children events
-				if ($config->get('use_custom_fields_from_parent_event'))
-				{
+				if ($config->get('use_custom_fields_from_parent_event')) {
 					$event = EventbookingHelperDatabase::getEvent($eventId);
 
-					if ($event->parent_id > 0)
-					{
+					if ($event->parent_id > 0) {
 						$eventId = $event->parent_id;
 					}
 				}
 
-				if ($filterByCategories)
-				{
+				if ($filterByCategories) {
 					$categoryIds = EventbookingHelperDatabase::getEventCategories([$eventId]);
 
-					if (count($categoryIds) > 0)
-					{
+					if (count($categoryIds) > 0) {
 						$categoryIds = implode(',', $categoryIds);
 						$whereOrs[]  = 'id IN (SELECT field_id FROM #__eb_field_categories AS fc WHERE fc.category_id IN (' . $categoryIds . '))';
 					}
 				}
 
-				if ($filterByEvents)
-				{
+				if ($filterByEvents) {
 					$negEventId = -1 * $eventId;
 
-					if ($filterByCategories)
-					{
+					if ($filterByCategories) {
 						$whereOrs[] = 'id IN (SELECT field_id FROM #__eb_field_events AS fv WHERE fv.event_id = ' . $eventId . ')';
-					}
-					else
-					{
+					} else {
 						$whereOrs[] = 'id IN (SELECT field_id FROM #__eb_field_events AS fv WHERE fv.event_id = ' . $eventId . ' OR fv.event_id < 0)';
 					}
 
@@ -912,37 +816,28 @@ class EventbookingHelperRegistration
 			return clone $field;
 		}, $rowFields);
 
-		if ($memberNumber == 1)
-		{
-			foreach ($memberFields as $i => $field)
-			{
-				if ($field->hide_for_first_group_member)
-				{
+		if ($memberNumber == 1) {
+			foreach ($memberFields as $i => $field) {
+				if ($field->hide_for_first_group_member) {
 					unset($memberFields[$i]);
 
 					continue;
 				}
 
-				if ($field->not_required_for_first_group_member && $field->required)
-				{
+				if ($field->not_required_for_first_group_member && $field->required) {
 					$field->required         = 0;
 					$field->validation_rules = RADFormField::getOptionalValudationRules($field->validation_rules);
 				}
 			}
-		}
-		else
-		{
-			foreach ($memberFields as $i => $field)
-			{
-				if ($field->only_show_for_first_member)
-				{
+		} else {
+			foreach ($memberFields as $i => $field) {
+				if ($field->only_show_for_first_member) {
 					unset($memberFields[$i]);
 
 					continue;
 				}
 
-				if ($field->only_require_for_first_member && $field->required)
-				{
+				if ($field->only_require_for_first_member && $field->required) {
 					$field->required         = 0;
 					$field->validation_rules = RADFormField::getOptionalValudationRules($field->validation_rules);
 				}
@@ -965,58 +860,30 @@ class EventbookingHelperRegistration
 	 */
 	public static function getRegistrationReplaces($row, $rowEvent = null, $userId = 0, $enableShoppingCart = false, $loadCss = true)
 	{
-		static $cache = [];
-
 		$config = EventbookingHelper::getConfig();
 
-		if (!$userId)
-		{
+		if (!$userId) {
 			$userId = (int) $row->user_id;
 		}
 
-		if ($enableShoppingCart)
-		{
-			$cacheKey = $row->id . '_' . $userId . '_true';
-		}
-		else
-		{
-			$cacheKey = $row->id . '_' . $userId . '_false';
-		}
-
-		if (isset($cache[$cacheKey]))
-		{
-			return $cache[$cacheKey];
-		}
-
-		if ($rowEvent === null)
-		{
+		if ($rowEvent === null) {
 			$fieldSuffix = EventbookingHelper::getFieldSuffix($row->language);
 			$rowEvent    = EventbookingHelperDatabase::getEvent($row->event_id, null, $fieldSuffix);
 		}
 
-		if ($row->published == 3)
-		{
+		if ($row->published == 3) {
 			$typeOfRegistration = 2;
-		}
-		else
-		{
+		} else {
 			$typeOfRegistration = 1;
 		}
 
-		if ($enableShoppingCart)
-		{
+		if ($enableShoppingCart) {
 			$rowFields = EventbookingHelperRegistration::getFormFields($row->id, 4, $row->language, $userId, $typeOfRegistration);
-		}
-		elseif ($row->is_group_billing)
-		{
+		} elseif ($row->is_group_billing) {
 			$rowFields = EventbookingHelperRegistration::getFormFields($row->event_id, 1, $row->language, $userId, $typeOfRegistration);
-		}
-		elseif ($row->group_id > 0)
-		{
+		} elseif ($row->group_id > 0) {
 			$rowFields = EventbookingHelperRegistration::getFormFields($row->event_id, 2, $row->language, $userId, $typeOfRegistration);
-		}
-		else
-		{
+		} else {
 			$rowFields = EventbookingHelperRegistration::getFormFields($row->event_id, 0, $row->language, $userId, $typeOfRegistration);
 		}
 
@@ -1038,12 +905,10 @@ class EventbookingHelperRegistration
 			'Helper'
 		);
 
-		$cache[$cacheKey] = $replaces;
-
 		// Restore $config->multiple_booking value
 		$config->multiple_booking = $multipleBooking;
 
-		return $cache[$cacheKey];
+		return $replaces;
 	}
 
 	/**
@@ -1067,8 +932,7 @@ class EventbookingHelperRegistration
 		$db->setQuery($query, 0, 1);
 		$rate = $db->loadResult();
 
-		if ($rate === null)
-		{
+		if ($rate === null) {
 			$event = EventbookingHelperDatabase::getEvent($eventId);
 
 			$rate = $event->individual_price;
@@ -1086,8 +950,7 @@ class EventbookingHelperRegistration
 	 */
 	public static function getTypeOfRegistration($event)
 	{
-		if ($event->event_capacity > 0 && ($event->event_capacity <= $event->total_registrants))
-		{
+		if ($event->event_capacity > 0 && ($event->event_capacity <= $event->total_registrants)) {
 			return 2;
 		}
 
@@ -1105,20 +968,17 @@ class EventbookingHelperRegistration
 	 */
 	public static function calculatePaymentProcessingFee($paymentMethod, $amount, $includeFeeAmount = true)
 	{
-		if ($paymentMethod !== null && str_contains($paymentMethod, 'os_paypal'))
-		{
+		if ($paymentMethod !== null && str_contains($paymentMethod, 'os_paypal')) {
 			return static::calculatePayPalPaymentProcessingFee($paymentMethod, $amount, $includeFeeAmount);
 		}
 
-		if ($paymentMethod)
-		{
+		if ($paymentMethod) {
 			$method            = EventbookingHelperPayments::loadPaymentMethod($paymentMethod);
 			$params            = new Registry($method->params);
 			$paymentFeeAmount  = $includeFeeAmount ? (float) $params->get('payment_fee_amount') : 0;
 			$paymentFeePercent = (float) $params->get('payment_fee_percent');
 
-			if ($paymentFeeAmount != 0 || $paymentFeePercent != 0)
-			{
+			if ($paymentFeeAmount != 0 || $paymentFeePercent != 0) {
 				return round($paymentFeeAmount + $amount * $paymentFeePercent / 100, 2);
 			}
 		}
@@ -1142,8 +1002,7 @@ class EventbookingHelperRegistration
 		$paymentFeeAmount  = $includeFeeAmount ? (float) $params->get('payment_fee_amount') : 0;
 		$paymentFeePercent = (float) $params->get('payment_fee_percent');
 
-		if ($paymentFeeAmount != 0 || $paymentFeePercent != 0)
-		{
+		if ($paymentFeeAmount != 0 || $paymentFeePercent != 0) {
 			$paymentProcessingFee = ($amount + $paymentFeeAmount) / (1 - $paymentFeePercent / 100) - $amount;
 
 			return round($paymentProcessingFee, 2);
@@ -1220,13 +1079,12 @@ class EventbookingHelperRegistration
 			->where('(valid_to = ' . $db->quote($nullDate) . ' OR valid_to >= ' . $currentDate . ')')
 			->whereIn('user_id', [0, $user->id])
 			->where('(times = 0 OR times > used)')
-			->where('discount > used_amount')
+			->where('(coupon_type != 2 OR discount > used_amount)')
 			->order('id DESC');
 		$db->setQuery($query);
 		$coupon = $db->loadObject();
 
-		if ($coupon && $coupon->max_usage_per_user > 0 && $user->id > 0)
-		{
+		if ($coupon && $coupon->max_usage_per_user > 0 && $user->id > 0) {
 			$query->clear()
 				->select('COUNT(*)')
 				->from('#__eb_registrants')
@@ -1237,8 +1095,7 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$total = $db->loadResult();
 
-			if ($total >= $coupon->max_usage_per_user)
-			{
+			if ($total >= $coupon->max_usage_per_user) {
 				$coupon = null;
 			}
 		}
@@ -1270,8 +1127,7 @@ class EventbookingHelperRegistration
 		$whereOrs[] = 'category_id = - 1';
 		$whereOrs[] = 'event_id = -1';
 
-		if (count($categoryIds) > 0)
-		{
+		if (count($categoryIds) > 0) {
 			$whereOrs[] = 'id IN (SELECT coupon_id FROM #__eb_coupon_categories AS ec WHERE ec.category_id IN (' . implode(',', $categoryIds) . '))';
 		}
 
@@ -1285,14 +1141,13 @@ class EventbookingHelperRegistration
 			->where('(valid_from = ' . $db->quote($nullDate) . ' OR valid_from <= ' . $currentDate . ')')
 			->where('(valid_to = ' . $db->quote($nullDate) . ' OR valid_to >= ' . $currentDate . ')')
 			->where('(times = 0 OR times > used)')
-			->where('discount > used_amount')
+			->where('(coupon_type != 2 OR discount > used_amount)')
 			->whereIn('user_id', [0, $user->id])
 			->where('(' . implode(' OR ', $whereOrs) . ')')
 			->where('id NOT IN (SELECT coupon_id FROM #__eb_coupon_events WHERE event_id = ' . $negEventId . ')')
 			->order('id DESC');
 
-		if ($couponCode)
-		{
+		if ($couponCode) {
 			$query->where('code = ' . $db->quote($couponCode));
 		}
 
@@ -1314,8 +1169,7 @@ class EventbookingHelperRegistration
 
 		$filterInput = InputFilter::getInstance();
 
-		foreach ($event->paramData as $customFieldName => $param)
-		{
+		foreach ($event->paramData as $customFieldName => $param) {
 			$feeCalculationTags[strtoupper($customFieldName)] = $filterInput->clean($param['value'], 'float');
 		}
 
@@ -1351,8 +1205,7 @@ class EventbookingHelperRegistration
 
 		$discountRules = $db->loadObjectList();
 
-		if (!empty($discountRules))
-		{
+		if (!empty($discountRules)) {
 			$query->clear()
 				->select('DISTINCT event_id')
 				->from('#__eb_registrants')
@@ -1361,16 +1214,13 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$registeredEventIds = $db->loadColumn();
 
-			if (count($registeredEventIds))
-			{
+			if (count($registeredEventIds)) {
 				$registeredEventIds[] = $event->id;
 
-				foreach ($discountRules as $rule)
-				{
+				foreach ($discountRules as $rule) {
 					$eventIds = explode(',', $rule->event_ids);
 
-					if (!array_diff($eventIds, $registeredEventIds))
-					{
+					if (!array_diff($eventIds, $registeredEventIds)) {
 						$bundleDiscountAmount += $rule->discount_amount;
 						$bundleDiscountIds[]  = $rule->id;
 					}
@@ -1392,13 +1242,10 @@ class EventbookingHelperRegistration
 	{
 		$config = EventbookingHelper::getConfig();
 
-		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideRegistration', 'calculateMemberDiscount'))
-		{
+		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideRegistration', 'calculateMemberDiscount')) {
 			// This is added here for backward compatible purpose, in case someone overrides the method calculateMemberDiscount before
 			$discountRate = EventbookingHelperOverrideRegistration::calculateMemberDiscount($event->discount_amounts, $event->discount_groups);
-		}
-		else
-		{
+		} else {
 			$discountRate = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculateMemberDiscountForUser',
@@ -1406,8 +1253,7 @@ class EventbookingHelperRegistration
 			);
 		}
 
-		if ($discountRate > 0 && $config->get('setup_price') && $event->discount_type == 2)
-		{
+		if ($discountRate > 0 && $config->get('setup_price') && $event->discount_type == 2) {
 			$discountRate = $discountRate / (1 + $event->tax_rate / 100);
 		}
 
@@ -1426,16 +1272,14 @@ class EventbookingHelperRegistration
 	{
 		$lateFee = 0;
 
-		if ((int) $event->late_fee_date
+		if (
+			(int) $event->late_fee_date
 			&& $event->late_fee_date_diff >= 0
-			&& $event->late_fee_amount > 0)
-		{
-			if ($event->late_fee_type == 1)
-			{
+			&& $event->late_fee_amount > 0
+		) {
+			if ($event->late_fee_type == 1) {
 				$lateFee = $totalAmount * $event->late_fee_amount / 100;
-			}
-			else
-			{
+			} else {
 				$lateFee = $event->late_fee_amount;
 			}
 		}
@@ -1454,19 +1298,17 @@ class EventbookingHelperRegistration
 	{
 		$config = EventbookingHelper::getConfig();
 
-		if ($config->activate_deposit_feature && $event->deposit_amount > 0)
-		{
-			if ($event->deposit_type == 2)
-			{
-				$depositAmount = $numberRegistrants * $event->deposit_amount;
-			}
-			else
-			{
+		if ($config->activate_deposit_feature && $event->deposit_amount > 0) {
+			if ($event->deposit_type == 2) {
+				if ($event->deposit_amount_apply_for) {
+					$depositAmount = $event->deposit_amount;
+				} else {
+					$depositAmount = $numberRegistrants * $event->deposit_amount;
+				}
+			} else {
 				$depositAmount = $event->deposit_amount * $amount / 100;
 			}
-		}
-		else
-		{
+		} else {
 			$depositAmount = 0;
 		}
 
@@ -1490,13 +1332,10 @@ class EventbookingHelperRegistration
 		$fees       = [];
 		$couponCode = $data['coupon_code'] ?? '';
 
-		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideData', 'calculateEventsDiscountedPrice'))
-		{
+		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideData', 'calculateEventsDiscountedPrice')) {
 			// This is added here for backward compatible purpose, in case someone override the method
 			EventbookingHelperOverrideData::calculateEventsDiscountedPrice([$event]);
-		}
-		else
-		{
+		} else {
 			EventbookingHelper::callOverridableHelperMethod('Data', 'calculateEventsDiscountedPriceForUser', [[$event], $user]);
 		}
 
@@ -1515,18 +1354,16 @@ class EventbookingHelperRegistration
 			'SUB_TOTAL'          => $event->individual_price,
 		];
 
-		if ($config->event_custom_field
-			&& file_exists(JPATH_ROOT . '/components/com_eventbooking/fields.xml'))
-		{
+		if (
+			$config->event_custom_field
+			&& file_exists(JPATH_ROOT . '/components/com_eventbooking/fields.xml')
+		) {
 			$feeCalculationTags = array_merge($feeCalculationTags, static::getFeeCalculationTagsFromEventFields($event));
 		}
 
-		if ($event->has_multiple_ticket_types)
-		{
+		if ($event->has_multiple_ticket_types) {
 			$ticketTypes = EventbookingHelperData::getTicketTypes($event->id);
-		}
-		else
-		{
+		} else {
 			$ticketTypes = [];
 		}
 
@@ -1534,14 +1371,11 @@ class EventbookingHelperRegistration
 		$totalNumberPaidTickets = 0;
 		$ticketTypeIds          = [];
 
-		foreach ($ticketTypes as $ticketType)
-		{
-			if (!empty($data['ticket_type_' . $ticketType->id]))
-			{
+		foreach ($ticketTypes as $ticketType) {
+			if (!empty($data['ticket_type_' . $ticketType->id])) {
 				$totalNumberTickets += $data['ticket_type_' . $ticketType->id];
 
-				if ($ticketType->price > 0)
-				{
+				if ($ticketType->price > 0) {
 					$totalNumberPaidTickets          += $data['ticket_type_' . $ticketType->id];
 					$feeCalculationTags['SUB_TOTAL'] += $data['ticket_type_' . $ticketType->id] * $ticketType->price;
 				}
@@ -1550,8 +1384,7 @@ class EventbookingHelperRegistration
 			}
 		}
 
-		if ($event->has_multiple_ticket_types)
-		{
+		if ($event->has_multiple_ticket_types) {
 			$form->handleFieldsDependOnTicketTypes($ticketTypeIds);
 		}
 
@@ -1564,38 +1397,31 @@ class EventbookingHelperRegistration
 		$totalAmount         -= $noneDiscountableFee;
 		$discountAmount      = 0;
 
-		if ($event->has_multiple_ticket_types)
-		{
+		if ($event->has_multiple_ticket_types) {
 			$params                    = new Registry($event->params);
 			$collectMembersInformation = $params->get('ticket_types_collect_members_information', 0);
 
-			foreach ($ticketTypes as $ticketType)
-			{
-				if (empty($data['ticket_type_' . $ticketType->id]))
-				{
+			foreach ($ticketTypes as $ticketType) {
+				if (empty($data['ticket_type_' . $ticketType->id])) {
 					continue;
 				}
 
 				$ticketType->quantity = $data['ticket_type_' . $ticketType->id];
 				$totalAmount          += (int) $ticketType->quantity * $ticketType->price;
 
-				if ($ticketType->discount_rules)
-				{
+				if ($ticketType->discount_rules) {
 					$rules = explode(',', $ticketType->discount_rules);
 
 					$ticketDiscountAmount = 0;
 
-					foreach ($rules as $rule)
-					{
-						if (!str_contains($rule, ':'))
-						{
+					foreach ($rules as $rule) {
+						if (!str_contains($rule, ':')) {
 							continue;
 						}
 
 						[$ruleQuantity, $ruleDiscountAmount] = explode(':', $rule);
 
-						if ($ticketType->quantity >= $ruleQuantity)
-						{
+						if ($ticketType->quantity >= $ruleQuantity) {
 							$ticketDiscountAmount = $ruleDiscountAmount;
 						}
 					}
@@ -1604,8 +1430,7 @@ class EventbookingHelperRegistration
 				}
 			}
 
-			if ($collectMembersInformation)
-			{
+			if ($collectMembersInformation) {
 				$ticketsMembersData                = [];
 				$ticketsMembersData['eventId']     = $event->id;
 				$ticketsMembersData['ticketTypes'] = $ticketTypes;
@@ -1617,15 +1442,12 @@ class EventbookingHelperRegistration
 
 				$count = 0;
 
-				foreach ($ticketTypes as $item)
-				{
-					if (empty($item->quantity))
-					{
+				foreach ($ticketTypes as $item) {
+					if (empty($item->quantity)) {
 						continue;
 					}
 
-					for ($i = 0; $i < $item->quantity; $i++)
-					{
+					for ($i = 0; $i < $item->quantity; $i++) {
 						$count++;
 						$memberForm = new RADForm($rowFields);
 						$memberForm->setFieldSuffix($count);
@@ -1639,23 +1461,20 @@ class EventbookingHelperRegistration
 			}
 		}
 
-		if ($config->get('setup_price'))
-		{
+		if ($config->get('setup_price')) {
 			$totalAmount         = $totalAmount / (1 + $event->tax_rate / 100);
 			$noneDiscountableFee = $noneDiscountableFee / (1 + $event->tax_rate / 100);
 		}
 
 		$fees['discount_rate'] = 0;
 
-		if ($user->id)
-		{
+		if ($user->id) {
 			$discountAmount += static::calculateMemberDiscountForIndividualRegistration($user, $event, $totalAmount, $fees);
 		}
 
 		$discountAmount += static::calculateEarlyBirdDiscountForIndividualRegistration($event, $totalAmount);
 
-		if ($couponCode)
-		{
+		if ($couponCode) {
 			$discountAmount += static::calculateCouponDiscountForIndividualRegistration(
 				$couponCode,
 				$event,
@@ -1665,9 +1484,7 @@ class EventbookingHelperRegistration
 				$realTotalAmount,
 				$ticketTypes
 			);
-		}
-		else
-		{
+		} else {
 			$fees['coupon_valid'] = 1;
 		}
 
@@ -1675,8 +1492,7 @@ class EventbookingHelperRegistration
 		$fees['bundle_discount_ids']    = [];
 
 		// Calculate bundle discount if setup
-		if ($user->id > 0)
-		{
+		if ($user->id > 0) {
 			[$bundleDiscountAmount, $bundleDiscountIds] = static::calculateBundleDiscountForRegistration($user, $event);
 
 			$fees['bundle_discount_amount'] = $bundleDiscountAmount;
@@ -1686,20 +1502,16 @@ class EventbookingHelperRegistration
 
 		$totalAmount += $noneDiscountableFee;
 
-		if ($discountAmount > $totalAmount)
-		{
+		if ($discountAmount > $totalAmount) {
 			$discountAmount = $totalAmount;
 		}
 
 		// Late Fee
 		$lateFee = static::calculateLateFeeForIndividualRegistration($event, $totalAmount);
 
-		if ($event->tax_rate > 0 && ($totalAmount - $discountAmount + $lateFee > 0))
-		{
+		if ($event->tax_rate > 0 && ($totalAmount - $discountAmount + $lateFee > 0)) {
 			$taxAmount = round(($totalAmount - $discountAmount + $lateFee) * $event->tax_rate / 100, 2);
-		}
-		else
-		{
+		} else {
 			$taxAmount = 0;
 		}
 
@@ -1710,8 +1522,7 @@ class EventbookingHelperRegistration
 
 		$paymentType = isset($data['payment_type']) ? (int) $data['payment_type'] : 0;
 
-		if ($paymentType == 0 && $amount > 0)
-		{
+		if ($paymentType == 0 && $amount > 0) {
 			$fees['payment_processing_fee'] = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculatePaymentProcessingFee',
@@ -1722,17 +1533,15 @@ class EventbookingHelperRegistration
 
 		$couponDiscountAmount = 0;
 
-		if (!empty($coupon) && $coupon->coupon_type == 2)
-		{
+		$coupon = $fees['coupon'] ?? null;
+
+		if (!empty($coupon) && $coupon->coupon_type == 2) {
 			$couponAvailableAmount = $coupon->discount - $coupon->used_amount;
 
-			if ($couponAvailableAmount >= $amount)
-			{
+			if ($couponAvailableAmount >= $amount) {
 				$couponDiscountAmount = $amount;
 				$amount               = 0;
-			}
-			else
-			{
+			} else {
 				$amount               = $amount - $couponAvailableAmount;
 				$couponDiscountAmount = $couponAvailableAmount;
 			}
@@ -1743,8 +1552,7 @@ class EventbookingHelperRegistration
 		// Calculate the deposit amount
 		$depositAmount = static::calculateDepositAmountForRegistration($event, $amount);
 
-		if ($paymentType == 1 && $depositAmount > 0)
-		{
+		if ($paymentType == 1 && $depositAmount > 0) {
 			$fees['payment_processing_fee'] = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculatePaymentProcessingFee',
@@ -1790,8 +1598,7 @@ class EventbookingHelperRegistration
 		$db->setQuery($couponQuery);
 		$coupon = $db->loadObject();
 
-		if ($coupon && $coupon->max_usage_per_user > 0 && $user->id > 0)
-		{
+		if ($coupon && $coupon->max_usage_per_user > 0 && $user->id > 0) {
 			$query = $db->getQuery(true)
 				->select('COUNT(*)')
 				->from('#__eb_registrants')
@@ -1802,8 +1609,7 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$total = $db->loadResult();
 
-			if ($total >= $coupon->max_usage_per_user)
-			{
+			if ($total >= $coupon->max_usage_per_user) {
 				$coupon = null;
 			}
 		}
@@ -1827,16 +1633,16 @@ class EventbookingHelperRegistration
 
 		$discountRate = static::calculateMemberDiscountRateForRegistration($user, $event);
 
-		if ($discountRate > 0)
-		{
+		if ($discountRate > 0) {
 			$fees['discount_rate'] = $discountRate;
 
-			if ($event->discount_type == 1)
-			{
+			if ($event->discount_type == 1) {
 				$discountAmount += $totalAmount * $discountRate / 100;
-			}
-			else
-			{
+			} else {
+				if ($discountRate > $totalAmount) {
+					$discountRate = $totalAmount;
+				}
+
 				$discountAmount += $discountRate;
 			}
 		}
@@ -1856,19 +1662,18 @@ class EventbookingHelperRegistration
 	{
 		$config = EventbookingHelper::getConfig();
 
-		if ((int) $event->early_bird_discount_date
+		if (
+			(int) $event->early_bird_discount_date
 			&& $event->date_diff >= 0
-			&& $event->early_bird_discount_amount > 0)
-		{
+			&& $event->early_bird_discount_amount > 0
+		) {
 			// Discount By Percent
-			if ($event->early_bird_discount_type == 1)
-			{
+			if ($event->early_bird_discount_type == 1) {
 				return $totalAmount * $event->early_bird_discount_amount / 100;
 			}
 
 			// Discount By Fixed Amount
-			if ($config->get('setup_price'))
-			{
+			if ($config->get('setup_price')) {
 				return $event->early_bird_discount_amount / (1 + $event->tax_rate / 100);
 			}
 
@@ -1908,42 +1713,32 @@ class EventbookingHelperRegistration
 			[$couponCode, $event, $user]
 		);
 
-		if ($coupon
+		if (
+			$coupon
 			&& ($coupon->min_payment_amount == 0 || $coupon->min_payment_amount <= $realTotalAmount)
-			&& ($coupon->max_payment_amount == 0 || $coupon->max_payment_amount >= $realTotalAmount))
-		{
+			&& ($coupon->max_payment_amount == 0 || $coupon->max_payment_amount >= $realTotalAmount)
+		) {
 			$fees['coupon_valid'] = 1;
 			$fees['coupon']       = $coupon;
 
-			if ($coupon->coupon_type == 0)
-			{
+			if ($coupon->coupon_type == 0) {
 				$discountAmount += $totalAmount * $coupon->discount / 100;
-			}
-			elseif ($coupon->coupon_type == 1)
-			{
-				if ($coupon->apply_to == 0 && $event->has_multiple_ticket_types)
-				{
-					foreach ($ticketTypes as $item)
-					{
-						if (empty($item->quantity))
-						{
+			} elseif ($coupon->coupon_type == 1) {
+				if ($coupon->apply_to == 0 && $event->has_multiple_ticket_types) {
+					foreach ($ticketTypes as $item) {
+						if (empty($item->quantity)) {
 							continue;
 						}
 
-						if ($item->discountable)
-						{
+						if ($item->discountable) {
 							$discountAmount += $item->quantity * $coupon->discount;
 						}
 					}
-				}
-				else
-				{
+				} else {
 					$discountAmount += $coupon->discount;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$fees['coupon_valid'] = 0;
 		}
 
@@ -1966,25 +1761,19 @@ class EventbookingHelperRegistration
 		$fees    = [];
 		$session = Factory::getApplication()->getSession();
 
-		if (isset($data['__registrant_user']) && ($data['__registrant_user'] instanceof User))
-		{
+		if (isset($data['__registrant_user']) && ($data['__registrant_user'] instanceof User)) {
 			$user = $data['__registrant_user'];
-		}
-		else
-		{
+		} else {
 			$user = Factory::getApplication()->getIdentity();
 		}
 
 		$couponCode = $data['coupon_code'] ?? '';
 		$eventId    = $event->id;
 
-		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideData', 'calculateEventsDiscountedPrice'))
-		{
+		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideData', 'calculateEventsDiscountedPrice')) {
 			// This is added here for backward compatible purpose, in case someone override the method
 			EventbookingHelperOverrideData::calculateEventsDiscountedPrice([$event]);
-		}
-		else
-		{
+		} else {
 			EventbookingHelper::callOverridableHelperMethod('Data', 'calculateEventsDiscountedPriceForUser', [[$event], $user]);
 		}
 
@@ -1998,8 +1787,7 @@ class EventbookingHelperRegistration
 
 		$numberRegistrants = (int) $session->get('eb_number_registrants', '');
 
-		if (!$numberRegistrants && isset($data['number_registrants']))
-		{
+		if (!$numberRegistrants && isset($data['number_registrants'])) {
 			$numberRegistrants = (int) $data['number_registrants'];
 		}
 
@@ -2014,9 +1802,10 @@ class EventbookingHelperRegistration
 			'SUB_TOTAL'                     => $numberRegistrants * $rate,
 		];
 
-		if ($config->event_custom_field
-			&& file_exists(JPATH_ROOT . '/components/com_eventbooking/fields.xml'))
-		{
+		if (
+			$config->event_custom_field
+			&& file_exists(JPATH_ROOT . '/components/com_eventbooking/fields.xml')
+		) {
 			$feeCalculationTags = array_merge($feeCalculationTags, static::getFeeCalculationTagsFromEventFields($event));
 		}
 
@@ -2036,25 +1825,18 @@ class EventbookingHelperRegistration
 		$collectMemberInformation = self::isCollectMemberInformationForGroupRegistration($event);
 
 		// Members data
-		if ($collectMemberInformation)
-		{
+		if ($collectMemberInformation) {
 			$membersData = $session->get('eb_group_members_data', null);
 
-			if ($membersData)
-			{
+			if ($membersData) {
 				$membersData = unserialize($membersData);
-			}
-			elseif (!empty($data['re_calculate_fee']))
-			{
+			} elseif (!empty($data['re_calculate_fee'])) {
 				$membersData = $data;
-			}
-			else
-			{
+			} else {
 				$membersData = [];
 			}
 
-			for ($i = 0; $i < $numberRegistrants; $i++)
-			{
+			for ($i = 0; $i < $numberRegistrants; $i++) {
 				$currentMemberFormFields = static::getGroupMemberFields($memberFormFields, $i + 1);
 				$memberForm              = new RADForm($currentMemberFormFields);
 				$memberForm->setFieldSuffix($i + 1);
@@ -2067,8 +1849,7 @@ class EventbookingHelperRegistration
 				$membersNoneDiscountableFee[$i]  = $memberNoneDiscountableFee;
 				$membersTotalAmount[$i]          -= $memberNoneDiscountableFee;
 
-				if ($config->get('setup_price'))
-				{
+				if ($config->get('setup_price')) {
 					$membersTotalAmount[$i]         = $membersTotalAmount[$i] / (1 + $event->tax_rate / 100);
 					$membersNoneDiscountableFee[$i] = $membersNoneDiscountableFee[$i] / (1 + $event->tax_rate / 100);
 				}
@@ -2077,33 +1858,25 @@ class EventbookingHelperRegistration
 				$membersLateFee[$i]        = 0;
 				$membersForm[$i]           = $memberForm;
 			}
-		}
-		else
-		{
-			for ($i = 0; $i < $numberRegistrants; $i++)
-			{
+		} else {
+			for ($i = 0; $i < $numberRegistrants; $i++) {
 				$membersTotalAmount[$i] = $rate;
 
-				if ($config->get('setup_price'))
-				{
+				if ($config->get('setup_price')) {
 					$membersTotalAmount[$i] = $membersTotalAmount[$i] / (1 + $event->tax_rate / 100);
 				}
 			}
 		}
 
-		if ($event->fixed_group_price > 0)
-		{
+		if ($event->fixed_group_price > 0) {
 			$totalAmount     = $event->fixed_group_price + $extraFee - $noneDiscountableFee - $totalMembersNoneDiscountableFee;
 			$realTotalAmount = $event->fixed_group_price + $extraFee;
-		}
-		else
-		{
+		} else {
 			$realTotalAmount = $rate * $numberRegistrants + $extraFee;
 			$totalAmount     = $rate * $numberRegistrants + $extraFee - $noneDiscountableFee - $totalMembersNoneDiscountableFee;
 		}
 
-		if ($config->get('setup_price'))
-		{
+		if ($config->get('setup_price')) {
 			$totalAmount                     = $totalAmount / (1 + $event->tax_rate / 100);
 			$noneDiscountableFee             = $noneDiscountableFee / (1 + $event->tax_rate / 100);
 			$totalMembersNoneDiscountableFee = $totalMembersNoneDiscountableFee / (1 + $event->tax_rate / 100);
@@ -2112,8 +1885,7 @@ class EventbookingHelperRegistration
 		// Calculate discount amount
 		$discountAmount = 0;
 
-		if ($user->id)
-		{
+		if ($user->id) {
 			// Calculate and handle members discount
 			$discountAmount += static::calculateMemberDiscountForGroupRegistration(
 				$user,
@@ -2125,8 +1897,7 @@ class EventbookingHelperRegistration
 			);
 		}
 
-		if ($couponCode)
-		{
+		if ($couponCode) {
 			$discountAmount += static::calculateCouponDiscountForGroupRegistration(
 				$couponCode,
 				$event,
@@ -2138,9 +1909,7 @@ class EventbookingHelperRegistration
 				$membersTotalAmount,
 				$membersDiscountAmount
 			);
-		}
-		else
-		{
+		} else {
 			$fees['coupon_valid'] = 1;
 		}
 
@@ -2157,8 +1926,7 @@ class EventbookingHelperRegistration
 		$fees['bundle_discount_ids']    = [];
 
 		// Calculate bundle discount if setup
-		if ($user->id > 0)
-		{
+		if ($user->id > 0) {
 			[$bundleDiscountAmount, $bundleDiscountIds] = static::calculateBundleDiscountForRegistration($user, $event);
 
 			$fees['bundle_discount_amount'] = $bundleDiscountAmount;
@@ -2169,10 +1937,8 @@ class EventbookingHelperRegistration
 		// Re-set none discountable fee back to total amount
 		$totalAmount += $noneDiscountableFee + $totalMembersNoneDiscountableFee;
 
-		if ($collectMemberInformation)
-		{
-			for ($i = 0; $i < $numberRegistrants; $i++)
-			{
+		if ($collectMemberInformation) {
+			for ($i = 0; $i < $numberRegistrants; $i++) {
 				$membersTotalAmount[$i] += $membersNoneDiscountableFee[$i];
 			}
 		}
@@ -2181,33 +1947,26 @@ class EventbookingHelperRegistration
 		$lateFee = static::calculateLateFeeForGroupRegistration($event, $numberRegistrants, $totalAmount, $membersTotalAmount, $membersLateFee);
 
 		// In case discount amount greater than total amount, reset it to total amount
-		if ($discountAmount > $totalAmount)
-		{
+		if ($discountAmount > $totalAmount) {
 			$discountAmount = $totalAmount;
 		}
 
-		if ($collectMemberInformation)
-		{
-			for ($i = 0; $i < $numberRegistrants; $i++)
-			{
-				if ($membersDiscountAmount[$i] > $membersTotalAmount[$i])
-				{
+		if ($collectMemberInformation) {
+			for ($i = 0; $i < $numberRegistrants; $i++) {
+				if ($membersDiscountAmount[$i] > $membersTotalAmount[$i]) {
 					$membersDiscountAmount[$i] = $membersTotalAmount[$i];
 				}
 			}
 		}
 
 		// Calculate tax amount
-		if ($event->tax_rate > 0 && ($totalAmount - $discountAmount + $lateFee > 0))
-		{
+		if ($event->tax_rate > 0 && ($totalAmount - $discountAmount + $lateFee > 0)) {
 			$taxAmount = round(($totalAmount - $discountAmount + $lateFee) * $event->tax_rate / 100, 2);
 			// Gross amount
 			$amount = $totalAmount - $discountAmount + $taxAmount + $lateFee;
 
-			if ($collectMemberInformation)
-			{
-				for ($i = 0; $i < $numberRegistrants; $i++)
-				{
+			if ($collectMemberInformation) {
+				for ($i = 0; $i < $numberRegistrants; $i++) {
 					$membersTaxAmount[$i] = round(
 						($membersTotalAmount[$i] - $membersDiscountAmount[$i] + $membersLateFee[$i]) * $event->tax_rate / 100,
 						2
@@ -2215,18 +1974,14 @@ class EventbookingHelperRegistration
 					$membersAmount[$i]    = $membersTotalAmount[$i] - $membersDiscountAmount[$i] + $membersLateFee[$i] + $membersTaxAmount[$i];
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$taxAmount = 0;
 
 			// Gross amount
 			$amount = $totalAmount - $discountAmount + $taxAmount + $lateFee;
 
-			if ($collectMemberInformation)
-			{
-				for ($i = 0; $i < $numberRegistrants; $i++)
-				{
+			if ($collectMemberInformation) {
+				for ($i = 0; $i < $numberRegistrants; $i++) {
 					$membersTaxAmount[$i] = 0;
 					$membersAmount[$i]    = $membersTotalAmount[$i] - $membersDiscountAmount[$i] + $membersLateFee[$i] + $membersTaxAmount[$i];
 				}
@@ -2238,8 +1993,7 @@ class EventbookingHelperRegistration
 
 		$paymentType = isset($data['payment_type']) ? (int) $data['payment_type'] : 0;
 
-		if ($paymentType == 0 && $amount > 0)
-		{
+		if ($paymentType == 0 && $amount > 0) {
 			$fees['payment_processing_fee'] = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculatePaymentProcessingFee',
@@ -2250,31 +2004,20 @@ class EventbookingHelperRegistration
 
 		$couponDiscountAmount = 0;
 
-		if (!empty($coupon) && $coupon->coupon_type == 2)
-		{
+		$coupon = $fees['coupon'] ?? null;
+
+		if (!empty($coupon) && $coupon->coupon_type == 2) {
 			$couponAvailableAmount = $coupon->discount - $coupon->used_amount;
 
-			if ($couponAvailableAmount >= $amount)
-			{
-				$couponDiscountAmount = $amount;
-			}
-			else
-			{
-				$couponDiscountAmount = $couponAvailableAmount;
-			}
+			$couponDiscountAmount = min($couponAvailableAmount, $amount);
 
 			$amount -= $couponDiscountAmount;
 
-			if ($collectMemberInformation)
-			{
-				for ($i = 0; $i < $numberRegistrants; $i++)
-				{
-					if ($couponAvailableAmount >= $membersAmount[$i])
-					{
+			if ($collectMemberInformation) {
+				for ($i = 0; $i < $numberRegistrants; $i++) {
+					if ($couponAvailableAmount >= $membersAmount[$i]) {
 						$memberCouponDiscountAmount = $membersAmount[$i];
-					}
-					else
-					{
+					} else {
 						$memberCouponDiscountAmount = $couponAvailableAmount;
 					}
 
@@ -2283,8 +2026,7 @@ class EventbookingHelperRegistration
 
 					$couponAvailableAmount -= $memberCouponDiscountAmount;
 
-					if ($couponAvailableAmount <= 0)
-					{
+					if ($couponAvailableAmount <= 0) {
 						break;
 					}
 				}
@@ -2296,8 +2038,7 @@ class EventbookingHelperRegistration
 		// Deposit amount
 		$depositAmount = static::calculateDepositAmountForRegistration($event, $amount, $numberRegistrants);
 
-		if ($paymentType == 1 && $depositAmount > 0)
-		{
+		if ($paymentType == 1 && $depositAmount > 0) {
 			$fees['payment_processing_fee'] = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculatePaymentProcessingFee',
@@ -2353,8 +2094,7 @@ class EventbookingHelperRegistration
 		$db->setQuery($couponQuery);
 		$coupon = $db->loadObject();
 
-		if ($coupon && $coupon->max_usage_per_user > 0 && $user->id > 0)
-		{
+		if ($coupon && $coupon->max_usage_per_user > 0 && $user->id > 0) {
 			$query = $db->getQuery(true)
 				->select('COUNT(*)')
 				->from('#__eb_registrants')
@@ -2365,8 +2105,7 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$total = $db->loadResult();
 
-			if ($total >= $coupon->max_usage_per_user)
-			{
+			if ($total >= $coupon->max_usage_per_user) {
 				$coupon = null;
 			}
 		}
@@ -2400,55 +2139,39 @@ class EventbookingHelperRegistration
 
 		$discountRate = static::calculateMemberDiscountRateForRegistration($user, $event);
 
-		if ($discountRate > 0)
-		{
-			if ($event->discount_type == 1)
-			{
+		if ($discountRate > 0) {
+			if ($event->discount_type == 1) {
 				// Discount applied for first member only
-				if ($event->members_discount_apply_for)
-				{
+				if ($event->members_discount_apply_for) {
 					$discountAmount = $membersTotalAmount[0] * $discountRate / 100;
 
-					if ($collectMemberInformation)
-					{
+					if ($collectMemberInformation) {
 						$membersDiscountAmount[0] += $membersTotalAmount[0] * $discountRate / 100;
 					}
-				}
-				else
-				{
+				} else {
 					// Discount applied for each member in group
 					$discountAmount = $totalAmount * $discountRate / 100;
 
-					if ($collectMemberInformation)
-					{
-						for ($i = 0; $i < $numberRegistrants; $i++)
-						{
+					if ($collectMemberInformation) {
+						for ($i = 0; $i < $numberRegistrants; $i++) {
 							$membersDiscountAmount[$i] += $membersTotalAmount[$i] * $discountRate / 100;
 						}
 					}
 				}
-			}
-			else
-			{
+			} else {
 				// Discount applied for first member only
-				if ($event->members_discount_apply_for)
-				{
+				if ($event->members_discount_apply_for) {
 					$discountAmount = $discountRate;
 
-					if ($collectMemberInformation)
-					{
+					if ($collectMemberInformation) {
 						$membersDiscountAmount[0] = $discountRate;
 					}
-				}
-				else
-				{
+				} else {
 					// Discount applied for each member in the group
 					$discountAmount = $numberRegistrants * $discountRate;
 
-					if ($collectMemberInformation)
-					{
-						for ($i = 0; $i < $numberRegistrants; $i++)
-						{
+					if ($collectMemberInformation) {
+						for ($i = 0; $i < $numberRegistrants; $i++) {
 							$membersDiscountAmount[$i] += $discountRate;
 						}
 					}
@@ -2495,48 +2218,37 @@ class EventbookingHelperRegistration
 			[$couponCode, $event, $user, $numberRegistrants]
 		);
 
-		if ($coupon
+		if (
+			$coupon
 			&& ($coupon->min_payment_amount == 0 || $coupon->min_payment_amount <= $realTotalAmount)
-			&& ($coupon->max_payment_amount == 0 || $coupon->max_payment_amount >= $realTotalAmount))
-		{
+			&& ($coupon->max_payment_amount == 0 || $coupon->max_payment_amount >= $realTotalAmount)
+		) {
 			$fees['coupon_valid'] = 1;
 			$fees['coupon']       = $coupon;
 
-			if ($coupon->coupon_type == 0)
-			{
+			if ($coupon->coupon_type == 0) {
 				$discountAmount += $totalAmount * $coupon->discount / 100;
 
-				if ($collectMemberInformation)
-				{
-					for ($i = 0; $i < $numberRegistrants; $i++)
-					{
+				if ($collectMemberInformation) {
+					for ($i = 0; $i < $numberRegistrants; $i++) {
 						$membersDiscountAmount[$i] += $membersTotalAmount[$i] * $coupon->discount / 100;
 					}
 				}
-			}
-			elseif ($coupon->coupon_type == 1)
-			{
-				if ($coupon->apply_to == 0)
-				{
+			} elseif ($coupon->coupon_type == 1) {
+				if ($coupon->apply_to == 0) {
 					$discountAmount += $numberRegistrants * $coupon->discount;
 
-					if ($collectMemberInformation)
-					{
-						for ($i = 0; $i < $numberRegistrants; $i++)
-						{
+					if ($collectMemberInformation) {
+						for ($i = 0; $i < $numberRegistrants; $i++) {
 							$membersDiscountAmount[$i] += $coupon->discount;
 						}
 					}
-				}
-				else
-				{
+				} else {
 					$discountAmount           += $coupon->discount;
 					$membersDiscountAmount[0] += $coupon->discount;
 				}
 			}
-		}
-		else
-		{
+		} else {
 			$fees['coupon_valid'] = 0;
 		}
 
@@ -2565,30 +2277,24 @@ class EventbookingHelperRegistration
 
 		$discountAmount = 0;
 
-		if ((int) $event->early_bird_discount_date
+		if (
+			(int) $event->early_bird_discount_date
 			&& $event->date_diff >= 0
-			&& $event->early_bird_discount_amount > 0)
-		{
-			if ($event->early_bird_discount_type == 1)
-			{
+			&& $event->early_bird_discount_amount > 0
+		) {
+			if ($event->early_bird_discount_type == 1) {
 				$discountAmount += $totalAmount * $event->early_bird_discount_amount / 100;
 
-				if ($collectMemberInformation)
-				{
-					for ($i = 0; $i < $numberRegistrants; $i++)
-					{
+				if ($collectMemberInformation) {
+					for ($i = 0; $i < $numberRegistrants; $i++) {
 						$membersDiscountAmount[$i] += $membersTotalAmount[$i] * $event->early_bird_discount_amount / 100;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$discountAmount += $numberRegistrants * $event->early_bird_discount_amount;
 
-				if ($collectMemberInformation)
-				{
-					for ($i = 0; $i < $numberRegistrants; $i++)
-					{
+				if ($collectMemberInformation) {
+					for ($i = 0; $i < $numberRegistrants; $i++) {
 						$membersDiscountAmount[$i] += $event->early_bird_discount_amount;
 					}
 				}
@@ -2615,30 +2321,24 @@ class EventbookingHelperRegistration
 
 		$lateFee = 0;
 
-		if ((int) $event->late_fee_date
+		if (
+			(int) $event->late_fee_date
 			&& $event->late_fee_date_diff >= 0
-			&& $event->late_fee_amount > 0)
-		{
-			if ($event->late_fee_type == 1)
-			{
+			&& $event->late_fee_amount > 0
+		) {
+			if ($event->late_fee_type == 1) {
 				$lateFee = $totalAmount * $event->late_fee_amount / 100;
 
-				if ($collectMemberInformation)
-				{
-					for ($i = 0; $i < $numberRegistrants; $i++)
-					{
+				if ($collectMemberInformation) {
+					for ($i = 0; $i < $numberRegistrants; $i++) {
 						$membersLateFee[$i] = $membersTotalAmount[$i] * $event->late_fee_amount / 100;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$lateFee = $numberRegistrants * $event->late_fee_amount;
 
-				if ($collectMemberInformation)
-				{
-					for ($i = 0; $i < $numberRegistrants; $i++)
-					{
+				if ($collectMemberInformation) {
+					for ($i = 0; $i < $numberRegistrants; $i++) {
 						$membersLateFee[$i] = $event->late_fee_amount;
 					}
 				}
@@ -2669,8 +2369,7 @@ class EventbookingHelperRegistration
 		$items = $cart->getItems();
 
 		// Early return to prevent error in case session was lost for some reasons
-		if (empty($items))
-		{
+		if (empty($items)) {
 			$fees['total_amount']           = 0;
 			$fees['discount_amount']        = 0;
 			$fees['late_fee']               = 0;
@@ -2715,16 +2414,13 @@ class EventbookingHelperRegistration
 
 		$numberDecimals = (int) $config->get('decimals') > 2 ? (int) $config->get('decimals') : 2;
 
-		if ($couponCode)
-		{
+		if ($couponCode) {
 			$coupon = static::getCouponForCartRegistration($couponCode, $user);
 
-			if ($coupon)
-			{
+			if ($coupon) {
 				$fees['coupon_valid'] = 1;
 
-				if ($coupon->event_id != -1)
-				{
+				if ($coupon->event_id != -1) {
 					// Get list of events which will receive discount
 					$query->clear()
 						->select('event_id')
@@ -2734,8 +2430,7 @@ class EventbookingHelperRegistration
 					$couponDiscountedEventIds = $db->loadColumn();
 				}
 
-				if ($coupon->category_id != -1)
-				{
+				if ($coupon->category_id != -1) {
 					$query->clear()
 						->select('category_id')
 						->from('#__eb_coupon_categories')
@@ -2744,18 +2439,13 @@ class EventbookingHelperRegistration
 					$couponDiscountedCategoryIds = $db->loadColumn();
 				}
 
-				if ($coupon->coupon_type == 2)
-				{
+				if ($coupon->coupon_type == 2) {
 					$couponAvailableAmount = $coupon->discount - $coupon->used_amount;
 				}
-			}
-			else
-			{
+			} else {
 				$fees['coupon_valid'] = 0;
 			}
-		}
-		else
-		{
+		} else {
 			$fees['coupon_valid'] = 1;
 		}
 
@@ -2778,8 +2468,7 @@ class EventbookingHelperRegistration
 		$showVatNumberField = false;
 		$taxRate            = 0;
 
-		for ($i = 0, $n = count($items); $i < $n; $i++)
-		{
+		for ($i = 0, $n = count($items); $i < $n; $i++) {
 			$eventId                  = (int) $items[$i];
 			$quantity                 = (int) $quantities[$i];
 			$recordsData[$eventId]    = [];
@@ -2798,27 +2487,21 @@ class EventbookingHelperRegistration
 
 			$event->tax_rate = $taxRate;
 
-			if ($i == 0)
-			{
+			if ($i == 0) {
 				$registrantTotalAmount = $rate * $quantity + $feeAmount;
-			}
-			else
-			{
+			} else {
 				$registrantTotalAmount = $rate * $quantity;
 			}
 
-			if ($config->get('setup_price'))
-			{
+			if ($config->get('setup_price')) {
 				$registrantTotalAmount = $registrantTotalAmount / (1 + $event->tax_rate / 100);
 			}
 
 			// Members data
-			if ($config->collect_member_information_in_cart)
-			{
+			if ($config->collect_member_information_in_cart) {
 				$memberFormFields = EventbookingHelperRegistration::getFormFields($eventId, 2);
 
-				for ($j = 0; $j < $quantity; $j++)
-				{
+				for ($j = 0; $j < $quantity; $j++) {
 					$count++;
 					$currentMemberFormFields = static::getGroupMemberFields($memberFormFields, $j + 1);
 					$memberForm              = new RADForm($currentMemberFormFields);
@@ -2831,8 +2514,7 @@ class EventbookingHelperRegistration
 					$membersTotalAmount[$eventId][$j] = $rate + $memberExtraFee;
 					$eventNoneDiscountableFee         += $memberNoneDiscountableFee;
 
-					if ($config->get('setup_price'))
-					{
+					if ($config->get('setup_price')) {
 						$membersTotalAmount[$eventId][$j] = $membersTotalAmount[$eventId][$j] / (1 + $event->tax_rate / 100);
 					}
 
@@ -2847,8 +2529,7 @@ class EventbookingHelperRegistration
 			$registrantDiscount = 0;
 
 			// Member discount
-			if ($user->id)
-			{
+			if ($user->id) {
 				$registrantDiscount += static::calculateRegistrantMemberDiscountForCart(
 					$user,
 					$event,
@@ -2868,16 +2549,16 @@ class EventbookingHelperRegistration
 			);
 
 			// Coupon discount
-			if (!empty($coupon)
+			if (
+				!empty($coupon)
 				&& (
 					$coupon->category_id == -1
 					|| $coupon->event_id == -1
 					|| in_array($eventId, $couponDiscountedEventIds)
 					|| count(array_intersect($eventCategoryIds, $couponDiscountedCategoryIds)) > 0)
 				&& !in_array($eventId * -1, $couponDiscountedEventIds)
-			)
-			{
-				static::calculateRegistrantCouponDiscountForCart(
+			) {
+				$registrantDiscount += static::calculateRegistrantCouponDiscountForCart(
 					$coupon,
 					$event,
 					$registrantTotalAmount,
@@ -2890,37 +2571,29 @@ class EventbookingHelperRegistration
 			}
 
 			// Restore registrant total amount
-			if ($i == 0)
-			{
+			if ($i == 0) {
 				$registrantTotalAmount += $noneDiscountableFee;
 			}
 
 			$registrantTotalAmount += $eventNoneDiscountableFee;
 			$remainingAmount       = $registrantTotalAmount - $registrantDiscount;
 
-			if ($remainingAmount > 0 && $totalBundleDiscountAmount > 0)
-			{
-				if ($totalBundleDiscountAmount > $remainingAmount)
-				{
+			if ($remainingAmount > 0 && $totalBundleDiscountAmount > 0) {
+				if ($totalBundleDiscountAmount > $remainingAmount) {
 					$registrantDiscount        += $remainingAmount;
 					$totalBundleDiscountAmount = $totalBundleDiscountAmount - $remainingAmount;
-				}
-				else
-				{
+				} else {
 					$registrantDiscount        += $totalBundleDiscountAmount;
 					$totalBundleDiscountAmount = 0;
 				}
 			}
 
-			if ($registrantDiscount > $registrantTotalAmount)
-			{
+			if ($registrantDiscount > $registrantTotalAmount) {
 				$registrantDiscount = $registrantTotalAmount;
 			}
 
-			if ($config->collect_member_information_in_cart)
-			{
-				for ($j = 0; $j < $quantity; $j++)
-				{
+			if ($config->collect_member_information_in_cart) {
+				for ($j = 0; $j < $quantity; $j++) {
 					$membersTotalAmount[$eventId][$j] += $membersNoneDiscountableAmount[$eventId][$j];
 				}
 			}
@@ -2934,15 +2607,12 @@ class EventbookingHelperRegistration
 				$membersLateFee
 			);
 
-			if ($event->tax_rate > 0)
-			{
+			if ($event->tax_rate > 0) {
 				$registrantTaxAmount = $event->tax_rate * ($registrantTotalAmount - $registrantDiscount + $registrantLateFee) / 100;
 				$registrantAmount    = $registrantTotalAmount - $registrantDiscount + $registrantTaxAmount + $registrantLateFee;
 
-				if ($config->collect_member_information_in_cart)
-				{
-					for ($j = 0; $j < $quantity; $j++)
-					{
+				if ($config->collect_member_information_in_cart) {
+					for ($j = 0; $j < $quantity; $j++) {
 						$membersTaxAmount[$eventId][$j] = round(
 							$event->tax_rate * ($membersTotalAmount[$eventId][$j] - $membersDiscountAmount[$eventId][$j] + $membersLateFee[$eventId][$j]) / 100,
 							$numberDecimals
@@ -2950,34 +2620,26 @@ class EventbookingHelperRegistration
 						$membersAmount[$eventId][$j]    = $membersTotalAmount[$eventId][$j] - $membersDiscountAmount[$eventId][$j] + $membersLateFee[$eventId][$j] + $membersTaxAmount[$eventId][$j];
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$registrantTaxAmount = 0;
 				$registrantAmount    = $registrantTotalAmount - $registrantDiscount + $registrantTaxAmount + $registrantLateFee;
 
-				if ($config->collect_member_information_in_cart)
-				{
-					for ($j = 0; $j < $quantity; $j++)
-					{
+				if ($config->collect_member_information_in_cart) {
+					for ($j = 0; $j < $quantity; $j++) {
 						$membersTaxAmount[$eventId][$j] = 0;
 						$membersAmount[$eventId][$j]    = $membersTotalAmount[$eventId][$j] - $membersDiscountAmount[$eventId][$j] + $membersLateFee[$eventId][$j] + $membersTaxAmount[$eventId][$j];
 					}
 				}
 			}
 
-			if ($registrantAmount > 0)
-			{
-				if ($paymentFeeAmountAdded)
-				{
+			if ($registrantAmount > 0) {
+				if ($paymentFeeAmountAdded) {
 					$registrantPaymentProcessingFee = EventbookingHelper::callOverridableHelperMethod(
 						'Registration',
 						'calculatePaymentProcessingFee',
 						[$paymentMethod, $registrantAmount, false]
 					);
-				}
-				else
-				{
+				} else {
 					$paymentFeeAmountAdded          = true;
 					$registrantPaymentProcessingFee = EventbookingHelper::callOverridableHelperMethod(
 						'Registration',
@@ -2987,27 +2649,22 @@ class EventbookingHelperRegistration
 				}
 
 				$registrantAmount += $registrantPaymentProcessingFee;
-			}
-			else
-			{
+			} else {
 				$registrantPaymentProcessingFee = 0;
 			}
 
-			if (!empty($coupon) && $coupon->coupon_type == 2
+			if (
+				!empty($coupon) && $coupon->coupon_type == 2
 				&& (
 					$coupon->category_id == -1
 					|| $coupon->event_id == -1
 					|| in_array($eventId, $couponDiscountedEventIds)
 					|| count(array_intersect($eventCategoryIds, $couponDiscountedCategoryIds)) > 0)
 				&& !in_array($eventId * -1, $couponDiscountedEventIds)
-			)
-			{
-				if ($couponAvailableAmount > $registrantAmount)
-				{
+			) {
+				if ($couponAvailableAmount > $registrantAmount) {
 					$registrantCouponDiscountAmount = $registrantAmount;
-				}
-				else
-				{
+				} else {
 					$registrantCouponDiscountAmount = $couponAvailableAmount;
 				}
 
@@ -3017,18 +2674,13 @@ class EventbookingHelperRegistration
 
 				$couponDiscountAmount += $registrantCouponDiscountAmount;
 
-				if ($config->collect_member_information_in_cart)
-				{
+				if ($config->collect_member_information_in_cart) {
 					$totalMemberDiscountAmount = $registrantCouponDiscountAmount;
 
-					for ($j = 0; $j < $quantity; $j++)
-					{
-						if ($totalMemberDiscountAmount > $membersAmount[$eventId][$j])
-						{
+					for ($j = 0; $j < $quantity; $j++) {
+						if ($totalMemberDiscountAmount > $membersAmount[$eventId][$j]) {
 							$memberCouponDiscountAmount = $membersAmount[$eventId][$j];
-						}
-						else
-						{
+						} else {
 							$memberCouponDiscountAmount = $totalMemberDiscountAmount;
 						}
 
@@ -3038,8 +2690,7 @@ class EventbookingHelperRegistration
 
 						$membersDiscountAmount[$eventId][$j] += $memberCouponDiscountAmount;
 
-						if ($totalMemberDiscountAmount <= 0)
-						{
+						if ($totalMemberDiscountAmount <= 0) {
 							break;
 						}
 					}
@@ -3056,8 +2707,7 @@ class EventbookingHelperRegistration
 			$amount               += $registrantAmount;
 			$paymentProcessingFee += $registrantPaymentProcessingFee;
 
-			if ($collectRecordsData)
-			{
+			if ($collectRecordsData) {
 				$recordsData[$eventId]['item_price']             = $rate;
 				$recordsData[$eventId]['total_amount']           = round($registrantTotalAmount, $numberDecimals);
 				$recordsData[$eventId]['discount_amount']        = round($registrantDiscount, $numberDecimals);
@@ -3083,13 +2733,11 @@ class EventbookingHelperRegistration
 		$fees['show_vat_number_field'] = $showVatNumberField;
 		$fees['fields_fee_amount']     = $replaces['fields_fee_amount'] ?? [];
 
-		if ($collectRecordsData)
-		{
+		if ($collectRecordsData) {
 			$fees['records_data'] = $recordsData;
 		}
 
-		if ($config->collect_member_information_in_cart)
-		{
+		if ($config->collect_member_information_in_cart) {
 			$fees['members_form']            = $membersForm;
 			$fees['members_total_amount']    = $membersTotalAmount;
 			$fees['members_discount_amount'] = $membersDiscountAmount;
@@ -3138,21 +2786,15 @@ class EventbookingHelperRegistration
 		$db->setQuery($query);
 		$largestDiscountBundle = $db->loadObject();
 
-		if ($largestDiscountBundle)
-		{
-			if ($largestDiscountBundle->discount_type == 1)
-			{
+		if ($largestDiscountBundle) {
+			if ($largestDiscountBundle->discount_type == 1) {
 				$fees['bundle_discount_amount'] += $largestDiscountBundle->discount_amount;
-			}
-			else
-			{
+			} else {
 				$fees['bundle_discount_amount'] += round($cartAmount * $largestDiscountBundle->discount_amount / 100, $numberDecimals);
 			}
 
 			$fees['bundle_discount_ids'][] = $largestDiscountBundle->id;
-		}
-		else
-		{
+		} else {
 			$query->clear()
 				->select('id, event_ids, discount_type ,discount_amount')
 				->from('#__eb_discounts')
@@ -3164,12 +2806,10 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$discountRules = $db->loadObjectList();
 
-			if (!empty($discountRules))
-			{
+			if (!empty($discountRules)) {
 				$registeredEventIds = $items;
 
-				if ($user->id)
-				{
+				if ($user->id) {
 					$query->clear()
 						->select('DISTINCT event_id')
 						->from('#__eb_registrants')
@@ -3179,18 +2819,13 @@ class EventbookingHelperRegistration
 					$registeredEventIds = array_merge($registeredEventIds, $db->loadColumn());
 				}
 
-				foreach ($discountRules as $rule)
-				{
+				foreach ($discountRules as $rule) {
 					$eventIds = explode(',', $rule->event_ids);
 
-					if (!array_diff($eventIds, $registeredEventIds))
-					{
-						if ($rule->discount_type == 1)
-						{
+					if (!array_diff($eventIds, $registeredEventIds)) {
+						if ($rule->discount_type == 1) {
 							$fees['bundle_discount_amount'] += $rule->discount_amount;
-						}
-						else
-						{
+						} else {
 							$fees['bundle_discount_amount'] += round($cartAmount * $rule->discount_amount / 100, $numberDecimals);
 						}
 
@@ -3225,16 +2860,13 @@ class EventbookingHelperRegistration
 		$registrantMemberDiscountAmount = 0;
 		$eventId                        = $event->id;
 
-		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideRegistration', 'calculateMemberDiscount'))
-		{
+		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideRegistration', 'calculateMemberDiscount')) {
 			// This is added here for backward compatible purpose
 			$discountRate = EventbookingHelperOverrideRegistration::calculateMemberDiscount(
 				$event->discount_amounts,
 				$event->discount_groups
 			);
-		}
-		else
-		{
+		} else {
 			$discountRate = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculateMemberDiscountForUser',
@@ -3242,33 +2874,24 @@ class EventbookingHelperRegistration
 			);
 		}
 
-		if ($discountRate > 0 && $config->get('setup_price') && $event->discount_type == 2)
-		{
+		if ($discountRate > 0 && $config->get('setup_price') && $event->discount_type == 2) {
 			$discountRate = $discountRate / (1 + $event->tax_rate / 100);
 		}
 
-		if ($discountRate > 0)
-		{
-			if ($event->discount_type == 1)
-			{
+		if ($discountRate > 0) {
+			if ($event->discount_type == 1) {
 				$registrantMemberDiscountAmount += $registrantTotalAmount * $discountRate / 100;
 
-				if ($config->collect_member_information_in_cart)
-				{
-					for ($j = 0; $j < $quantity; $j++)
-					{
+				if ($config->collect_member_information_in_cart) {
+					for ($j = 0; $j < $quantity; $j++) {
 						$membersDiscountAmount[$eventId][$j] += $membersTotalAmount[$eventId][$j] * $discountRate / 100;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$registrantMemberDiscountAmount += $quantity * $discountRate;
 
-				if ($config->collect_member_information_in_cart)
-				{
-					for ($j = 0; $j < $quantity; $j++)
-					{
+				if ($config->collect_member_information_in_cart) {
+					for ($j = 0; $j < $quantity; $j++) {
 						$membersDiscountAmount[$eventId][$j] += $discountRate;
 					}
 				}
@@ -3300,35 +2923,28 @@ class EventbookingHelperRegistration
 		$eventId                     = $event->id;
 		$registrantEarlyBirdDiscount = 0;
 
-		if ((int) $event->early_bird_discount_date
+		if (
+			(int) $event->early_bird_discount_date
 			&& $event->date_diff >= 0
-			&& $event->early_bird_discount_amount > 0)
-		{
-			if ($event->early_bird_discount_type == 1)
-			{
+			&& $event->early_bird_discount_amount > 0
+		) {
+			if ($event->early_bird_discount_type == 1) {
 				$registrantEarlyBirdDiscount += $registrantTotalAmount * $event->early_bird_discount_amount / 100;
 
-				if ($config->collect_member_information_in_cart)
-				{
-					for ($j = 0; $j < $quantity; $j++)
-					{
+				if ($config->collect_member_information_in_cart) {
+					for ($j = 0; $j < $quantity; $j++) {
 						$membersDiscountAmount[$eventId][$j] += $membersTotalAmount[$eventId][$j] * $event->early_bird_discount_amount / 100;
 					}
 				}
-			}
-			else
-			{
-				if ($config->get('setup_price'))
-				{
+			} else {
+				if ($config->get('setup_price')) {
 					$event->early_bird_discount_amount = $event->early_bird_discount_amount / (1 + $event->tax_rate / 100);
 				}
 
 				$registrantEarlyBirdDiscount += $quantity * $event->early_bird_discount_amount;
 
-				if ($config->collect_member_information_in_cart)
-				{
-					for ($j = 0; $j < $quantity; $j++)
-					{
+				if ($config->collect_member_information_in_cart) {
+					for ($j = 0; $j < $quantity; $j++) {
 						$membersDiscountAmount[$eventId][$j] += $event->early_bird_discount_amount;
 					}
 				}
@@ -3366,30 +2982,23 @@ class EventbookingHelperRegistration
 		$registrantCouponDiscount = 0;
 		$eventId                  = $event->id;
 
-		if ($coupon->coupon_type == 0)
-		{
+		if ($coupon->coupon_type == 0) {
 			$registrantCouponDiscount = $registrantCouponDiscount + $registrantTotalAmount * $coupon->discount / 100;
 
-			if ($config->collect_member_information_in_cart)
-			{
-				for ($j = 0; $j < $quantity; $j++)
-				{
+			if ($config->collect_member_information_in_cart) {
+				for ($j = 0; $j < $quantity; $j++) {
 					$membersDiscountAmount[$eventId][$j] += $membersTotalAmount[$eventId][$j] * $coupon->discount / 100;
 				}
 			}
-		}
-		elseif ($coupon->coupon_type == 1)
-		{
+		} elseif ($coupon->coupon_type == 1) {
 			$registrantCouponDiscount = $registrantCouponDiscount + $coupon->discount;
 
-			if ($config->collect_member_information_in_cart)
-			{
+			if ($config->collect_member_information_in_cart) {
 				$membersDiscountAmount[$eventId][0] += $coupon->discount;
 			}
 		}
 
-		if ($collectRecordsData)
-		{
+		if ($collectRecordsData) {
 			$recordsData[$eventId]['coupon_id'] = $coupon->id;
 		}
 
@@ -3414,30 +3023,24 @@ class EventbookingHelperRegistration
 		$registrantLateFee = 0;
 		$eventId           = $event->id;
 
-		if ((int) $event->late_fee_date
+		if (
+			(int) $event->late_fee_date
 			&& $event->late_fee_date_diff >= 0
-			&& $event->late_fee_amount > 0)
-		{
-			if ($event->late_fee_type == 1)
-			{
+			&& $event->late_fee_amount > 0
+		) {
+			if ($event->late_fee_type == 1) {
 				$registrantLateFee = $registrantTotalAmount * $event->late_fee_amount / 100;
 
-				if ($config->collect_member_information_in_cart)
-				{
-					for ($j = 0; $j < $quantity; $j++)
-					{
+				if ($config->collect_member_information_in_cart) {
+					for ($j = 0; $j < $quantity; $j++) {
 						$membersLateFee[$eventId][$j] = $membersTotalAmount[$eventId][$j] * $event->late_fee_amount / 100;
 					}
 				}
-			}
-			else
-			{
+			} else {
 				$registrantLateFee = $quantity * $event->late_fee_amount;
 
-				if ($config->collect_member_information_in_cart)
-				{
-					for ($j = 0; $j < $quantity; $j++)
-					{
+				if ($config->collect_member_information_in_cart) {
+					for ($j = 0; $j < $quantity; $j++) {
 						$membersLateFee[$eventId][$j] = $event->late_fee_amount;
 					}
 				}
@@ -3463,27 +3066,20 @@ class EventbookingHelperRegistration
 		$config         = EventbookingHelper::getConfig();
 		$numberDecimals = (int) $config->get('decimals') > 2 ? (int) $config->get('decimals') : 2;
 
-		if ($config->activate_deposit_feature && $event->deposit_amount > 0 && $paymentType == 1
-			&& EventbookingHelper::isNullOrGreaterThan($event->deposit_until_date))
-		{
-			if ($event->deposit_type == 2)
-			{
+		if (
+			$config->activate_deposit_feature && $event->deposit_amount > 0 && $paymentType == 1
+			&& EventbookingHelper::isNullOrGreaterThan($event->deposit_until_date)
+		) {
+			if ($event->deposit_type == 2) {
 				$registrantDepositAmount = $event->deposit_amount * $quantity;
-			}
-			else
-			{
+			} else {
 				$registrantDepositAmount = round($registrantAmount * $event->deposit_amount / 100, $numberDecimals);
 			}
-		}
-		else
-		{
+		} else {
 			// If user chooses deposit payment, for this event which deposit is not allowed, set deposit amount equals to payment amount
-			if (isset($data['payment_type']) && $data['payment_type'] == 1)
-			{
+			if (isset($data['payment_type']) && $data['payment_type'] == 1) {
 				$registrantDepositAmount = $registrantAmount;
-			}
-			else
-			{
+			} else {
 				$registrantDepositAmount = 0;
 			}
 		}
@@ -3503,22 +3099,17 @@ class EventbookingHelperRegistration
 		$config = EventbookingHelper::getConfig();
 		$event  = EventbookingHelperDatabase::getEvent($eventId);
 
-		if ($event->collect_member_information === '')
-		{
+		if ($event->collect_member_information === '') {
 			$collectMemberInformation = $config->collect_member_information;
-		}
-		else
-		{
+		} else {
 			$collectMemberInformation = $event->collect_member_information;
 		}
 
-		if (!$collectMemberInformation || $config->show_billing_step_for_free_events)
-		{
+		if (!$collectMemberInformation || $config->show_billing_step_for_free_events) {
 			return true;
 		}
 
-		if ($event->individual_price == 0 && $event->fixed_group_price == 0)
-		{
+		if ($event->individual_price == 0 && $event->fixed_group_price == 0) {
 			/* @var \Joomla\Database\DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
 			$query = EventbookingHelperRegistration::getBaseEventFieldsQuery($eventId)
@@ -3530,8 +3121,7 @@ class EventbookingHelperRegistration
 
 			$numberFeeFields = (int) $db->loadResult();
 
-			if ($numberFeeFields == 0)
-			{
+			if ($numberFeeFields == 0) {
 				return false;
 			}
 		}
@@ -3552,14 +3142,11 @@ class EventbookingHelperRegistration
 	{
 		$data = [];
 
-		if ($userId)
-		{
+		if ($userId) {
 			$mappings = [];
 
-			foreach ($rowFields as $rowField)
-			{
-				if ($rowField->field_mapping)
-				{
+			foreach ($rowFields as $rowField) {
+				if ($rowField->field_mapping) {
 					$mappings[$rowField->name] = $rowField->field_mapping;
 				}
 			}
@@ -3573,20 +3160,16 @@ class EventbookingHelperRegistration
 
 			$results = Factory::getApplication()->triggerEvent('onGetProfileData', $eventObj);
 
-			if (count($results))
-			{
-				foreach ($results as $res)
-				{
-					if (is_array($res) && count($res))
-					{
+			if (count($results)) {
+				foreach ($results as $res) {
+					if (is_array($res) && count($res)) {
 						$data = $res;
 						break;
 					}
 				}
 			}
 
-			if (!count($data))
-			{
+			if (!count($data)) {
 				/* @var \Joomla\Database\DatabaseDriver $db */
 				$db    = Factory::getContainer()->get('db');
 				$query = $db->getQuery(true)
@@ -3597,8 +3180,7 @@ class EventbookingHelperRegistration
 				$db->setQuery($query, 0, 1);
 				$rowRegistrant = $db->loadObject();
 
-				if (!$rowRegistrant)
-				{
+				if (!$rowRegistrant) {
 					//Try to get registration record from other events if available
 					$query->clear('where')
 						->where('user_id = ' . $userId . ' AND first_name != "" AND group_id = 0');
@@ -3606,17 +3188,14 @@ class EventbookingHelperRegistration
 					$rowRegistrant = $db->loadObject();
 				}
 
-				if ($rowRegistrant)
-				{
+				if ($rowRegistrant) {
 					$data = self::getRegistrantData($rowRegistrant, $rowFields);
 				}
 			}
 		}
 
-		foreach ($rowFields as $rowField)
-		{
-			if (!$rowField->populate_from_previous_registration)
-			{
+		foreach ($rowFields as $rowField) {
+			if (!$rowField->populate_from_previous_registration) {
 				unset($data[$rowField->name]);
 			}
 		}
@@ -3634,26 +3213,38 @@ class EventbookingHelperRegistration
 	 */
 	public static function getRegistrantData($rowRegistrant, $rowFields = null)
 	{
+		static $cache = [];
+
+		$cacheKey = $rowRegistrant->id;
+
+		if ($rowFields) {
+			$fieldNames = [];
+
+			foreach ($rowFields as $rowField) {
+				$fieldNames[] = $rowField->name;
+			}
+
+			$cacheKey .= md5(implode('', $fieldNames));
+		}
+
+		if (isset($cache[$cacheKey])) {
+			return $cache[$cacheKey];
+		}
+
 		/* @var \Joomla\Database\DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 		$data  = [];
 
 		// Get fields array if not provided in method call
-		if ($rowFields === null)
-		{
+		if ($rowFields === null) {
 			$config = EventbookingHelper::getConfig();
 
-			if ($config->multiple_booking)
-			{
+			if ($config->multiple_booking) {
 				$rowFields = EventbookingHelperRegistration::getFormFields($rowRegistrant->id, 4);
-			}
-			elseif ($rowRegistrant->is_group_billing)
-			{
+			} elseif ($rowRegistrant->is_group_billing) {
 				$rowFields = EventbookingHelperRegistration::getFormFields($rowRegistrant->event_id, 1);
-			}
-			else
-			{
+			} else {
 				$rowFields = EventbookingHelperRegistration::getFormFields($rowRegistrant->event_id, 0);
 			}
 		}
@@ -3662,30 +3253,31 @@ class EventbookingHelperRegistration
 			->from('#__eb_fields AS a')
 			->innerJoin('#__eb_field_values AS b ON a.id = b.field_id')
 			->where('b.registrant_id = ' . $rowRegistrant->id);
+		echo $query;
 		$db->setQuery($query);
 		$fieldValues = $db->loadObjectList('name');
 
-		foreach ($rowFields as $rowField)
-		{
-			if ($rowField->is_core)
-			{
+		echo '<pre>';
+		print_r($fieldValues);
+		echo '</pre>';
+		die();
+		foreach ($rowFields as $rowField) {
+			if ($rowField->is_core) {
 				$data[$rowField->name] = $rowRegistrant->{$rowField->name};
-			}
-			else
-			{
-				if (isset($fieldValues[$rowField->name]))
-				{
+			} else {
+				if (isset($fieldValues[$rowField->name])) {
 					$data[$rowField->name] = $fieldValues[$rowField->name]->field_value;
 
-					if ($rowField->encrypt_data && $rowField->fieldtype === 'Text' && strlen($data[$rowField->name]))
-					{
+					if ($rowField->encrypt_data && $rowField->fieldtype === 'Text' && strlen($data[$rowField->name])) {
 						$data[$rowField->name] = EventbookingHelperCryptor::decrypt($data[$rowField->name]);
 					}
 				}
 			}
 		}
 
-		return $data;
+		$cache[$cacheKey] = $data;
+
+		return $cache[$cacheKey];
 	}
 
 	/**
@@ -3699,8 +3291,7 @@ class EventbookingHelperRegistration
 	{
 		$config = EventbookingHelper::getConfig();
 
-		if ($config->use_cb_api)
-		{
+		if ($config->use_cb_api) {
 			return EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'userRegistrationCB',
@@ -3711,8 +3302,7 @@ class EventbookingHelperRegistration
 		$lang = Factory::getApplication()->getLanguage();
 		$tag  = $lang->getTag();
 
-		if (!$tag)
-		{
+		if (!$tag) {
 			$tag = 'en-GB';
 		}
 
@@ -3729,8 +3319,7 @@ class EventbookingHelperRegistration
 
 		$result = $model->register($data);
 
-		if ($result === false)
-		{
+		if ($result === false) {
 			$logData = $data;
 
 			unset($logData['password'], $logData['password1'], $logData['password2']);
@@ -3764,9 +3353,8 @@ class EventbookingHelperRegistration
 	public static function userRegistrationCB($firstName, $lastName, $email, $username, $password)
 	{
 		if ((!file_exists(JPATH_SITE . '/libraries/CBLib/CBLib/Core/CBLib.php')) || (!file_exists(
-				JPATH_ADMINISTRATOR . '/components/com_comprofiler/plugin.foundation.php'
-			)))
-		{
+			JPATH_ADMINISTRATOR . '/components/com_comprofiler/plugin.foundation.php'
+		))) {
 			echo 'CB not installed';
 
 			return;
@@ -3791,39 +3379,28 @@ class EventbookingHelperRegistration
 		$user->set('password', $user->hashAndSaltPassword($password));
 		$user->set('registeripaddr', cbGetIPlist());
 
-		if ($approval == 0)
-		{
+		if ($approval == 0) {
 			$user->set('approved', 1);
-		}
-		else
-		{
+		} else {
 			$user->set('approved', 0);
 		}
 
-		if ($confirmation == 0)
-		{
+		if ($confirmation == 0) {
 			$user->set('confirmed', 1);
-		}
-		else
-		{
+		} else {
 			$user->set('confirmed', 0);
 		}
 
-		if (($user->get('confirmed') == 1) && ($user->get('approved') == 1))
-		{
+		if (($user->get('confirmed') == 1) && ($user->get('approved') == 1)) {
 			$user->set('block', 0);
-		}
-		else
-		{
+		} else {
 			$user->set('block', 1);
 		}
 
 		$_PLUGINS->trigger('onBeforeUserRegistration', [&$user, &$user]);
 
-		if ($user->store())
-		{
-			if ($user->get('confirmed') == 0)
-			{
+		if ($user->store()) {
+			if ($user->get('confirmed') == 0) {
 				$user->store();
 			}
 
@@ -3847,45 +3424,37 @@ class EventbookingHelperRegistration
 	public static function needInvoice($row)
 	{
 		// Don't generate invoice for waiting list records
-		if ($row->published === 3 || $row->cart_id > 0 || $row->group_id > 0)
-		{
+		if ($row->published === 3 || $row->cart_id > 0 || $row->group_id > 0) {
 			return false;
 		}
 
 		$config = EventbookingHelper::getConfig();
 
-		if ($config->always_generate_invoice)
-		{
+		if ($config->always_generate_invoice) {
 			return true;
 		}
 
-		if ($row->payment_method != 'os_offline' && str_contains($row->payment_method, 'os_offline'))
-		{
+		if ($row->payment_method != 'os_offline' && str_contains($row->payment_method, 'os_offline')) {
 			$method = EventbookingHelperPayments::loadPaymentMethod($row->payment_method);
 
-			if ($method)
-			{
+			if ($method) {
 				$params = new Registry($method->params);
 
-				if ($params->get('generate_invoice', '1') === '0')
-				{
+				if ($params->get('generate_invoice', '1') === '0') {
 					return false;
 				}
 			}
 		}
 
-		if ($config->generated_invoice_for_paid_registration_only && $row->published == 0)
-		{
+		if ($config->generated_invoice_for_paid_registration_only && $row->published == 0) {
 			return false;
 		}
 
-		if ($row->amount > 0)
-		{
+		if ($row->amount > 0) {
 			return true;
 		}
 
-		if ($config->multiple_booking)
-		{
+		if ($config->multiple_booking) {
 			/* @var \Joomla\Database\DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
 			$query = $db->getQuery(true);
@@ -3895,8 +3464,7 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$totalAmount = $db->loadResult();
 
-			if ($totalAmount > 0)
-			{
+			if ($totalAmount > 0) {
 				return true;
 			}
 		}
@@ -3919,8 +3487,7 @@ class EventbookingHelperRegistration
 		$query->select('MAX(invoice_number)')
 			->from('#__eb_registrants');
 
-		if ($config->reset_invoice_number)
-		{
+		if ($config->reset_invoice_number) {
 			$currentYear = date('Y');
 			$query->where('invoice_year = ' . $currentYear);
 			$row->invoice_year = $currentYear;
@@ -3929,12 +3496,9 @@ class EventbookingHelperRegistration
 		$db->setQuery($query);
 		$invoiceNumber = (int) $db->loadResult();
 
-		if (!$invoiceNumber)
-		{
+		if (!$invoiceNumber) {
 			$invoiceNumber = (int) $config->invoice_start_number;
-		}
-		else
-		{
+		} else {
 			$invoiceNumber++;
 		}
 
@@ -3977,8 +3541,7 @@ class EventbookingHelperRegistration
 
 		$fieldSuffix = EventbookingHelper::getFieldSuffix($language);
 
-		if ($fieldSuffix)
-		{
+		if ($fieldSuffix) {
 			EventbookingHelperDatabase::getMultilingualFieldsUseDefaultLanguageData($query, ['a.title', 'a.description'], $fieldSuffix);
 		}
 
@@ -3996,8 +3559,7 @@ class EventbookingHelperRegistration
 		$db  = Factory::getContainer()->get('db');
 		$row = new EventbookingTableRegistrant($db);
 
-		if (!$row->load($groupId))
-		{
+		if (!$row->load($groupId)) {
 			return;
 		}
 
@@ -4031,26 +3593,19 @@ class EventbookingHelperRegistration
 		$rowFields = static::getDepositPaymentFormFields();
 		$replaces  = [];
 
-		foreach ($rowFields as $rowField)
-		{
+		foreach ($rowFields as $rowField) {
 			$replaces[$rowField->name] = $row->{$rowField->name};
 		}
 
-		if ($method)
-		{
+		if ($method) {
 			$replaces['payment_method'] = Text::_($method->title);
-		}
-		else
-		{
+		} else {
 			$replaces['payment_method'] = '';
 		}
 
-		if ($row->payment_status == 1)
-		{
+		if ($row->payment_status == 1) {
 			$dueAmount = 0;
-		}
-		else
-		{
+		} else {
 			$dueAmount = $row->amount - $row->deposit_amount;
 		}
 
@@ -4099,8 +3654,7 @@ class EventbookingHelperRegistration
 		$replaces['alias']                  = $event->alias;
 		$replaces['price_text']             = $event->price_text;
 
-		if ($event->event_date == EB_TBC_DATE)
-		{
+		if ($event->event_date == EB_TBC_DATE) {
 			$replaces['event_date']         = Text::_('EB_TBC');
 			$replaces['event_date_date']    = Text::_('EB_TBC');
 			$replaces['event_date_time']    = Text::_('EB_TBC');
@@ -4109,43 +3663,71 @@ class EventbookingHelperRegistration
 			$replaces['event_year']         = Text::_('EB_TBC');
 			$replaces['event_month_short']  = Text::_('EB_TBC');
 			$replaces['event_month_number'] = Text::_('EB_TBC');
-		}
-		else
-		{
-			if (str_contains($event->event_date, '00:00:00'))
-			{
+		} else {
+			if (str_contains($event->event_date, '00:00:00')) {
 				$replaces['event_date'] = HTMLHelper::_('date', $event->event_date, $config->date_format, null);
-			}
-			else
-			{
+			} else {
 				$replaces['event_date'] = HTMLHelper::_('date', $event->event_date, $config->event_date_format, null);
 			}
 
 			$replaces['event_date_date']    = HTMLHelper::_('date', $event->event_date, $config->date_format, null);
 			$replaces['event_date_time']    = HTMLHelper::_('date', $event->event_date, $timeFormat, null);
 			$replaces['event_day']          = HTMLHelper::_('date', $event->event_date, 'd', null);
-			$replaces['event_month']        = HTMLHelper::_('date', $event->event_date, 'F', null);
-			$replaces['event_month_short']  = HTMLHelper::_('date', $event->event_date, 'M', null);
 			$replaces['event_month_number'] = HTMLHelper::_('date', $event->event_date, 'm', null);
 			$replaces['event_year']         = HTMLHelper::_('date', $event->event_date, 'Y', null);
+
+			if ($row && $row->language && $row->language != '*' && LanguageHelper::exists($row->language)) {
+				$language = Language::getInstance($row->language);
+			} else {
+				$language = Factory::getApplication()->getLanguage();
+			}
+
+			$monthNames = [
+				$language->_('JANUARY'),
+				$language->_('FEBRUARY'),
+				$language->_('MARCH'),
+				$language->_('APRIL'),
+				$language->_('MAY'),
+				$language->_('JUNE'),
+				$language->_('JULY'),
+				$language->_('AUGUST'),
+				$language->_('SEPTEMBER'),
+				$language->_('OCTOBER'),
+				$language->_('NOVEMBER'),
+				$language->_('DECEMBER'),
+			];
+
+			$monthNamesShort = [
+				$language->_('JANUARY_SHORT'),
+				$language->_('FEBRUARY_SHORT'),
+				$language->_('MARCH_SHORT'),
+				$language->_('APRIL_SHORT'),
+				$language->_('MAY_SHORT'),
+				$language->_('JUNE_SHORT'),
+				$language->_('JULY_SHORT'),
+				$language->_('AUGUST_SHORT'),
+				$language->_('SEPTEMBER_SHORT'),
+				$language->_('OCTOBER_SHORT'),
+				$language->_('NOVEMBER_SHORT'),
+				$language->_('DECEMBER_SHORT'),
+			];
+
+			$monthNumber = HTMLHelper::_('date', $event->event_date, 'n', null);
+
+			$replaces['event_month']       = $monthNames[$monthNumber - 1];
+			$replaces['event_month_short'] = $monthNamesShort[$monthNumber - 1];
 		}
 
-		if ((int) $event->event_end_date)
-		{
-			if (str_contains($event->event_end_date, '00:00:00'))
-			{
+		if ((int) $event->event_end_date) {
+			if (str_contains($event->event_end_date, '00:00:00')) {
 				$replaces['event_end_date'] = HTMLHelper::_('date', $event->event_end_date, $config->date_format, null);
-			}
-			else
-			{
+			} else {
 				$replaces['event_end_date'] = HTMLHelper::_('date', $event->event_end_date, $config->event_date_format, null);
 			}
 
 			$replaces['event_end_date_date'] = HTMLHelper::_('date', $event->event_end_date, $config->date_format, null);
 			$replaces['event_end_date_time'] = HTMLHelper::_('date', $event->event_end_date, $timeFormat, null);
-		}
-		else
-		{
+		} else {
 			$replaces['event_end_date']      = '';
 			$replaces['event_end_date_date'] = '';
 			$replaces['event_end_date_time'] = '';
@@ -4153,36 +3735,26 @@ class EventbookingHelperRegistration
 
 		$replaces['enable_cancel_registration'] = (int) $event->enable_cancel_registration;
 
-		if ((int) $event->cancel_before_date)
-		{
+		if ((int) $event->cancel_before_date) {
 			$replaces['cancel_before_date'] = HTMLHelper::_('date', $event->cancel_before_date, $config->event_date_format, null);
-		}
-		else
-		{
+		} else {
 			$replaces['cancel_before_date'] = HTMLHelper::_('date', $event->cancel_before_date, $config->event_date_format, null);
 		}
 
-		if ((int) $event->cut_off_date)
-		{
+		if ((int) $event->cut_off_date) {
 			$replaces['cut_off_date'] = HTMLHelper::_('date', $event->cut_off_date, $config->event_date_format, null);
-		}
-		else
-		{
+		} else {
 			$replaces['cut_off_date'] = HTMLHelper::_('date', $event->cut_off_date, $config->event_date_format, null);
 		}
 
 		$replaces['event_capacity'] = $event->event_capacity;
 
-		if ($event && property_exists($event, 'total_registrants'))
-		{
+		if ($event && property_exists($event, 'total_registrants')) {
 			$replaces['total_registrants'] = $event->total_registrants;
 
-			if ($event->event_capacity > 0)
-			{
+			if ($event->event_capacity > 0) {
 				$replaces['available_place'] = $event->event_capacity - $event->total_registrants;
-			}
-			else
-			{
+			} else {
 				$replaces['available_place'] = '';
 			}
 		}
@@ -4191,25 +3763,20 @@ class EventbookingHelperRegistration
 
 		$replaces['individual_price'] = EventbookingHelper::formatCurrency($event->individual_price, $config, $event->currency_symbol);
 
-		if ($event->location_id > 0)
-		{
+		if ($event->location_id > 0) {
 			$rowLocation = EventbookingHelperDatabase::getLocation($event->location_id);
 
 			$locationInformation = [];
 
-			if ($rowLocation->address)
-			{
+			if ($rowLocation->address) {
 				$locationInformation[] = $rowLocation->address;
 			}
 
 			$locationLink = $siteUrl . 'index.php?option=com_eventbooking&view=map&location_id=' . $rowLocation->id . '&Itemid=' . $Itemid;
 
-			if (count($locationInformation))
-			{
+			if (count($locationInformation)) {
 				$locationName = $rowLocation->name . ' (' . implode(', ', $locationInformation) . ')';
-			}
-			else
-			{
+			} else {
 				$locationName = $rowLocation->name;
 			}
 
@@ -4221,17 +3788,12 @@ class EventbookingHelperRegistration
 			$replaces['location_address']      = $rowLocation->address;
 			$replaces['location_description']  = $rowLocation->description;
 
-			if ($rowLocation->image)
-			{
+			if ($rowLocation->image) {
 				$replaces['location_image'] = EventbookingHelperHtml::getCleanImagePath($rowLocation->image);
-			}
-			else
-			{
+			} else {
 				$replaces['location_image'] = '';
 			}
-		}
-		else
-		{
+		} else {
 			$replaces['location']              = '';
 			$replaces['location_name_address'] = '';
 			$replaces['location_name']         = '';
@@ -4242,13 +3804,13 @@ class EventbookingHelperRegistration
 			$replaces['location_image']        = '';
 		}
 
-		if ($config->event_custom_field
-			&& file_exists(JPATH_ROOT . '/components/com_eventbooking/fields.xml'))
-		{
+		if (
+			$config->event_custom_field
+			&& file_exists(JPATH_ROOT . '/components/com_eventbooking/fields.xml')
+		) {
 			EventbookingHelperData::prepareCustomFieldsData([$event], false);
 
-			foreach ($event->paramData as $customFieldName => $param)
-			{
+			foreach ($event->paramData as $customFieldName => $param) {
 				$replaces[strtoupper($customFieldName)] = $param['value'];
 			}
 		}
@@ -4267,25 +3829,20 @@ class EventbookingHelperRegistration
 
 		$speakerNames = [];
 
-		foreach ($rowSpeakers as $rowSpeaker)
-		{
+		foreach ($rowSpeakers as $rowSpeaker) {
 			$replaces['speaker_' . $rowSpeaker->id] = $rowSpeaker->name;
 			$speakerNames[]                         = $rowSpeaker->name;
 		}
 
 		$replaces['speakers'] = implode(', ', $speakerNames);
 
-		if (!$Itemid)
-		{
+		if (!$Itemid) {
 			$Itemid = EventbookingHelper::getItemid();
 		}
 
-		if (Factory::getApplication()->isClient('site'))
-		{
+		if (Factory::getApplication()->isClient('site')) {
 			$defaultMenuId = $Itemid;
-		}
-		else
-		{
+		} else {
 			$defaultMenuId = EventbookingHelper::getItemid();
 		}
 
@@ -4297,12 +3854,9 @@ class EventbookingHelperRegistration
 			true
 		);
 
-		if ($event->registration_handle_url)
-		{
+		if ($event->registration_handle_url) {
 			$replaces['individual_registration_link'] = $event->registration_handle_url;
-		}
-		else
-		{
+		} else {
 			$replaces['individual_registration_link'] = Route::_(
 				'index.php?option=com_eventbooking&task=register.individual_registration&event_id=' . $event->id . '&Itemid=' . $defaultMenuId,
 				false,
@@ -4319,12 +3873,9 @@ class EventbookingHelperRegistration
 			true
 		);
 
-		if ($row && is_object($row))
-		{
+		if ($row && is_object($row)) {
 			$fieldSuffix = EventbookingHelper::getFieldSuffix($row->language);
-		}
-		else
-		{
+		} else {
 			$fieldSuffix = EventbookingHelper::getFieldSuffix();
 		}
 
@@ -4335,8 +3886,7 @@ class EventbookingHelperRegistration
 			->where('b.event_id = ' . $event->id)
 			->order('b.id');
 
-		if ($fieldSuffix)
-		{
+		if ($fieldSuffix) {
 			EventbookingHelperDatabase::getMultilingualFields($query, ['a.name', 'a.description'], $fieldSuffix);
 		}
 
@@ -4344,12 +3894,10 @@ class EventbookingHelperRegistration
 		$categories    = $db->loadObjectList();
 		$categoryNames = [];
 
-		foreach ($categories as $category)
-		{
+		foreach ($categories as $category) {
 			$categoryNames[] = $category->name;
 
-			if ($category->id == $event->main_category_id)
-			{
+			if ($category->id == $event->main_category_id) {
 				$replaces['main_category_name']        = $category->name;
 				$replaces['main_category_description'] = $category->description;
 			}
@@ -4358,21 +3906,17 @@ class EventbookingHelperRegistration
 		$replaces['main_category_id'] = $event->main_category_id;
 		$replaces['category_name']    = implode(', ', $categoryNames);
 
-		if ($event->created_by > 0)
-		{
+		if ($event->created_by > 0) {
 			/* @var \Joomla\CMS\User\User $creator */
 			$creator = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById((int) $event->created_by);
 		}
 
-		if (!empty($creator->id))
-		{
+		if (!empty($creator->id)) {
 			$replaces['event_creator_name']     = $creator->name;
 			$replaces['event_creator_username'] = $creator->username;
 			$replaces['event_creator_email']    = $creator->email;
 			$replaces['event_creator_id']       = $creator->id;
-		}
-		else
-		{
+		} else {
 			$replaces['event_creator_name']     = '';
 			$replaces['event_creator_username'] = '';
 			$replaces['event_creator_email']    = '';
@@ -4382,45 +3926,42 @@ class EventbookingHelperRegistration
 		$thumbUrl = '';
 		$imageUrl = '';
 
-		if ($event->thumb && file_exists(JPATH_ROOT . '/media/com_eventbooking/images/thumbs/' . $event->thumb))
-		{
+		if ($event->thumb && file_exists(JPATH_ROOT . '/media/com_eventbooking/images/thumbs/' . $event->thumb)) {
 			$thumbUrl = 'media/com_eventbooking/images/thumbs/' . $event->thumb;
 
-			if ($event->image && file_exists(JPATH_ROOT . '/' . $event->image))
-			{
+			if ($event->image && file_exists(JPATH_ROOT . '/' . $event->image)) {
 				$imageUrl = $event->image;
-			}
-			elseif (file_exists(JPATH_ROOT . '/media/com_eventbooking/images/' . $event->thumb))
-			{
+			} elseif (file_exists(JPATH_ROOT . '/media/com_eventbooking/images/' . $event->thumb)) {
 				$imageUrl = 'media/com_eventbooking/images/' . $event->thumb;
-			}
-			else
-			{
+			} else {
 				$imageUrl = 'media/com_eventbooking/images/thumbs/' . $event->thumb;
 			}
 		}
 
-		if ($thumbUrl)
-		{
+		if ($thumbUrl) {
 			$replaces['EVENT_THUMB_IMAGE_URL'] = $thumbUrl;
 			$replaces['EVENT_THUMB_IMAGE']     = '<img src="' . $thumbUrl . '" />';
-		}
-		else
-		{
+		} else {
 			$replaces['EVENT_THUMB_IMAGE_URL'] = '';
 			$replaces['EVENT_THUMB_IMAGE']     = '';
 		}
 
-		if ($imageUrl)
-		{
+		if ($imageUrl) {
 			$replaces['EVENT_IMAGE_URL'] = $imageUrl;
 			$replaces['EVENT_IMAGE']     = '<img src="' . $imageUrl . '" />';
-		}
-		else
-		{
+		} else {
 			$replaces['EVENT_IMAGE_URL'] = '';
 			$replaces['EVENT_IMAGE']     = '';
 		}
+
+		$replaces['save_to_google_calendar_link'] = EventbookingHelperHtml::getAddToGoogleCalendarUrl($event);
+		$replaces['save_to_yahoo_calendar_link']  = EventbookingHelperHtml::getAddToYahooCalendarUrl($event);
+		$replaces['download_ical_link']           = Route::_(
+			'index.php?option=com_eventbooking&task=event.download_ical&event_id=' . $event->id . '&Itemid=' . $defaultMenuId,
+			false,
+			Route::TLS_IGNORE,
+			true
+		);
 
 		return $replaces;
 	}
@@ -4445,12 +3986,9 @@ class EventbookingHelperRegistration
 		$query   = $db->getQuery(true);
 		$siteUrl = EventbookingHelper::getSiteUrl();
 
-		if ($row->language && $row->language != '*' && LanguageHelper::exists($row->language))
-		{
+		if ($row->language && $row->language != '*' && LanguageHelper::exists($row->language)) {
 			$language = Language::getInstance($row->language);
-		}
-		else
-		{
+		} else {
 			$language = Factory::getApplication()->getLanguage();
 		}
 
@@ -4489,12 +4027,9 @@ class EventbookingHelperRegistration
 		$task          = $app->getInput()->getCmd('task');
 		$defaultItemId = EventbookingHelper::getDefaultItemidForRegistration($row);
 
-		if ($app->isClient('administrator') || ($task == 'payment_confirm' && !$app->getInput()->get->getInt('Itemid')))
-		{
+		if ($app->isClient('administrator') || ($task == 'payment_confirm' && !$app->getInput()->get->getInt('Itemid'))) {
 			$Itemid = EventbookingHelperRoute::getEventMenuId($event->id, $event->main_category_id, $defaultItemId, $row->language);
-		}
-		else
-		{
+		} else {
 			$defaultItemId = Factory::getApplication()->getInput()->getInt('Itemid', 0) ?: $defaultItemId;
 
 			$Itemid = EventbookingHelperRoute::getEventMenuId($event->id, $event->main_category_id, $defaultItemId, $row->language);
@@ -4504,17 +4039,13 @@ class EventbookingHelperRegistration
 
 		$active = $app->getMenu('site')->getItem($Itemid);
 
-		if ($active)
-		{
+		if ($active) {
 			$langLink = EventbookingHelper::getLangLink($active->language);
 
-			if ($active->access == 1)
-			{
+			if ($active->access == 1) {
 				$publicMenuItemId = $Itemid;
 			}
-		}
-		else
-		{
+		} else {
 			$langLink = '';
 		}
 
@@ -4523,8 +4054,7 @@ class EventbookingHelperRegistration
 		$replaces = static::buildEventTags($event, $config, $row, $Itemid);
 
 		// Event information
-		if ($config->multiple_booking)
-		{
+		if ($config->multiple_booking) {
 			$query->select('event_id')
 				->from('#__eb_registrants')
 				->where("(id = $row->id OR cart_id = $row->id)")
@@ -4555,61 +4085,42 @@ class EventbookingHelperRegistration
 		// Form fields
 		$fields = $form->getFields();
 
-		foreach ($fields as $field)
-		{
-			if ($field->hideOnDisplay || is_null($field->value))
-			{
+		foreach ($fields as $field) {
+			if ($field->hideOnDisplay || is_null($field->value)) {
 				$fieldValue = '';
-			}
-			else
-			{
-				if (is_string($field->value) && is_array(json_decode($field->value)))
-				{
+			} else {
+				if (is_string($field->value) && is_array(json_decode($field->value))) {
 					$fieldValue = implode(', ', json_decode($field->value));
-				}
-				elseif ($field->type == 'Heading')
-				{
+				} elseif ($field->type == 'Heading') {
 					$fieldValue = $field->title;
-				}
-				elseif ($field->type == 'Message')
-				{
+				} elseif ($field->type == 'Message') {
 					$fieldValue = $field->description;
-				}
-				elseif ($field->type == 'Textarea')
-				{
+				} elseif ($field->type == 'Textarea') {
 					$fieldValue = nl2br($field->value);
-				}
-				else
-				{
+				} else {
 					$fieldValue = $field->value;
 				}
 			}
 
-			if ($fieldValue && $field->type == 'Date')
-			{
-				try
-				{
+			if ($fieldValue && $field->type == 'Date') {
+				try {
 					$date = Factory::getDate($fieldValue);
 
-					if ($date)
-					{
+					if ($date) {
 						$dateFormat = $config->date_field_format ?: '%Y-%m-%d';
 						$dateFormat = str_replace('%', '', $dateFormat);
 						$fieldValue = $date->format($dateFormat);
 					}
-				}
-				catch (Exception $e)
-				{
+				} catch (Exception $e) {
 					// Do nothing
 				}
 			}
-			
+
 			$replaces[$field->name] = $fieldValue;
 		}
 
 		// Add support for group members name tags
-		if ($row->is_group_billing)
-		{
+		if ($row->is_group_billing) {
 			$groupMembersNames = [];
 
 			$query->clear()
@@ -4620,20 +4131,16 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$rowMembers = $db->loadObjectList();
 
-			foreach ($rowMembers as $rowMember)
-			{
+			foreach ($rowMembers as $rowMember) {
 				$groupMembersNames[] = trim($rowMember->first_name . ' ' . $rowMember->last_name);
 			}
-		}
-		else
-		{
+		} else {
 			$groupMembersNames = [trim($row->first_name . ' ' . $row->last_name)];
 		}
 
 		$replaces['group_members_names'] = implode(', ', $groupMembersNames);
 
-		if ($row->coupon_id)
-		{
+		if ($row->coupon_id) {
 			$query->clear()
 				->select('a.*')
 				->from('#__eb_coupons AS a')
@@ -4641,15 +4148,13 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$coupon = $db->loadObject();
 
-			if ($coupon)
-			{
+			if ($coupon) {
 				$replaces['coupon_code'] = $replaces['couponCode'] = $coupon->code;
 				$replaces['coupon_note'] = $coupon->note;
 			}
 		}
 
-		if ($row->user_id)
-		{
+		if ($row->user_id) {
 			$query->clear()
 				->select('username')
 				->from('#__users')
@@ -4658,51 +4163,53 @@ class EventbookingHelperRegistration
 			$replaces['username'] = $db->loadResult();
 		}
 
-		if ($config->multiple_booking)
-		{
-			//Amount calculation
+		// Auto coupon code
+		$query->clear()
+			->select('auto_coupon_coupon_id')
+			->from('#__eb_registrants')
+			->where('(id = ' . $row->id . ' OR cart_id = ' . $row->id . ')')
+			->where('auto_coupon_coupon_id > 0');
+		$db->setQuery($query);
+		$couponIds = $db->loadColumn();
+
+		if (count($couponIds)) {
 			$query->clear()
-				->select('SUM(total_amount)')
+				->select($db->quoteName('code'))
+				->from('#__eb_coupons')
+				->whereIn('id', $couponIds);
+			$db->setQuery($query);
+			$replaces['AUTO_COUPON_CODES'] = implode(', ', $db->loadColumn());
+		} else {
+			$replaces['AUTO_COUPON_CODES'] = '';
+		}
+
+		if ($config->multiple_booking) {
+			$query->clear()
+				->select('SUM(total_amount) AS cart_total_amount')
+				->select('SUM(tax_amount) AS cart_tax_amount')
+				->select('SUM(discount_amount) AS cart_discount_amount')
+				->select('SUM(late_fee) AS cart_late_fee')
+				->select('SUM(payment_processing_fee) AS cart_payment_processing_fee')
+				->select('SUM(deposit_amount) AS cart_deposit_amount')
 				->from('#__eb_registrants')
 				->where("(id = $row->id OR cart_id = $row->id)");
 			$db->setQuery($query);
-			$totalAmount = $db->loadResult();
+			$rowCartAmount = $db->loadObject();
 
-			$query->clear('select')
-				->select('SUM(tax_amount)');
-			$db->setQuery($query);
-			$taxAmount = $db->loadResult();
-
-			$query->clear('select')
-				->select('SUM(payment_processing_fee)');
-			$db->setQuery($query);
-			$paymentProcessingFee = $db->loadResult();
-
-			$query->clear('select')
-				->select('SUM(discount_amount)');
-			$db->setQuery($query);
-			$discountAmount = $db->loadResult();
-
-			$query->clear('select')
-				->select('SUM(late_fee)');
-			$db->setQuery($query);
-			$lateFee = $db->loadResult();
+			$totalAmount          = $rowCartAmount->cart_total_amount ?? 0;
+			$taxAmount            = $rowCartAmount->cart_tax_amount ?? 0;
+			$discountAmount       = $rowCartAmount->cart_discount_amount ?? 0;
+			$lateFee              = $rowCartAmount->cart_late_fee ?? 0;
+			$paymentProcessingFee = $rowCartAmount->cart_payment_processing_fee ?? 0;
 
 			$amount = $totalAmount - $discountAmount + $paymentProcessingFee + $taxAmount + $lateFee;
 
-			if ($row->payment_status == 1)
-			{
+			if ($row->payment_status == 1) {
 				$depositAmount = 0;
 				$dueAmount     = 0;
-			}
-			else
-			{
-				$query->clear('select')
-					->select('SUM(deposit_amount)');
-				$db->setQuery($query);
-				$depositAmount = $db->loadResult();
-
-				$dueAmount = $amount - $depositAmount;
+			} else {
+				$depositAmount = $rowCartAmount->cart_deposit_amount ?? 0;
+				$dueAmount     = $amount - $depositAmount;
 			}
 
 			$replaces['total_amount']                = EventbookingHelper::formatCurrency($totalAmount, $config, $event->currency_symbol);
@@ -4727,32 +4234,7 @@ class EventbookingHelperRegistration
 			$replaces['amt_payment_processing_fee'] = EventbookingHelper::roundAmount($paymentProcessingFee, $config);
 			$replaces['amt_deposit_amount']         = EventbookingHelper::roundAmount($depositAmount, $config);
 			$replaces['amt_due_amount']             = EventbookingHelper::roundAmount($dueAmount, $config);
-
-			// Auto coupon code
-			$query->clear()
-				->select('auto_coupon_coupon_id')
-				->from('#__eb_registrants')
-				->where('(id = ' . $row->id . ' OR cart_id = ' . $row->id . ')')
-				->where('auto_coupon_coupon_id > 0');
-			$db->setQuery($query);
-			$couponIds = $db->loadColumn();
-
-			if (count($couponIds))
-			{
-				$query->clear()
-					->select($db->quoteName('code'))
-					->from('#__eb_coupons')
-					->whereIn('id', $couponIds);
-				$db->setQuery($query);
-				$replaces['AUTO_COUPON_CODES'] = implode(', ', $db->loadColumn());
-			}
-			else
-			{
-				$replaces['AUTO_COUPON_CODES'] = '';
-			}
-		}
-		else
-		{
+		} else {
 			$replaces['total_amount']                = EventbookingHelper::formatCurrency($row->total_amount, $config, $event->currency_symbol);
 			$replaces['total_amount_minus_discount'] = EventbookingHelper::formatCurrency(
 				$row->total_amount - $row->discount_amount,
@@ -4783,51 +4265,36 @@ class EventbookingHelperRegistration
 			$replaces['amt_payment_processing_fee'] = EventbookingHelper::roundAmount($row->payment_processing_fee, $config);
 			$replaces['amt_amount']                 = EventbookingHelper::roundAmount($row->amount, $config);
 
-			if ($row->payment_status == 1)
-			{
+			if ($row->payment_status == 1) {
 				$depositAmount = 0;
 				$dueAmount     = 0;
 
-				if ($row->published == 1)
-				{
+				if ($row->published == 1) {
 					$replaces['PAID_AMOUNT'] = $replaces['amount'];
-				}
-				else
-				{
+				} else {
 					$replaces['PAID_AMOUNT'] = 0;
 				}
-			}
-			else
-			{
+			} else {
 				$depositAmount = $row->deposit_amount;
 				$dueAmount     = $row->amount - $row->deposit_amount;
 
-				if ($row->published == 1)
-				{
+				if ($row->published == 1) {
 					$replaces['PAID_AMOUNT'] = EventbookingHelper::formatCurrency($depositAmount, $config, $event->currency_symbol);
-				}
-				else
-				{
+				} else {
 					$replaces['PAID_AMOUNT'] = 0;
 				}
 			}
 
-			if ($row->published == 0)
-			{
+			if ($row->published == 0) {
 				// Deposit paid
-				if ($row->payment_status == 2)
-				{
+				if ($row->payment_status == 2) {
 					$replaces['REGISTRATION_DUE_AMOUNT']  = EventbookingHelper::formatCurrency($dueAmount, $config, $event->currency_symbol);
 					$replaces['REGISTRATION_PAID_AMOUNT'] = EventbookingHelper::formatCurrency($depositAmount, $config, $event->currency_symbol);
-				}
-				else
-				{
+				} else {
 					$replaces['REGISTRATION_DUE_AMOUNT']  = $replaces['amount'];
 					$replaces['REGISTRATION_PAID_AMOUNT'] = EventbookingHelper::formatCurrency(0, $config, $event->currency_symbol);
 				}
-			}
-			else
-			{
+			} else {
 				$replaces['REGISTRATION_DUE_AMOUNT']  = EventbookingHelper::formatCurrency(0, $config, $event->currency_symbol);
 				$replaces['REGISTRATION_PAID_AMOUNT'] = $replaces['amount'];
 			}
@@ -4841,15 +4308,13 @@ class EventbookingHelperRegistration
 			$replaces['amt_due_amount']     = EventbookingHelper::roundAmount($dueAmount, $config);
 
 			// Ticket Types
-			if ($event->has_multiple_ticket_types)
-			{
+			if ($event->has_multiple_ticket_types) {
 				$query->clear()
 					->select('id, title, price')
 					->from('#__eb_ticket_types')
 					->where('event_id = ' . $event->id);
 
-				if ($fieldSuffix)
-				{
+				if ($fieldSuffix) {
 					EventbookingHelperDatabase::getMultilingualFieldsUseDefaultLanguageData($query, ['title'], $fieldSuffix);
 				}
 
@@ -4865,8 +4330,7 @@ class EventbookingHelperRegistration
 
 				$ticketsOutput = [];
 
-				foreach ($registrantTickets as $registrantTicket)
-				{
+				foreach ($registrantTickets as $registrantTicket) {
 					$ticketsOutput[]          = Text::_($ticketTypes[$registrantTicket->ticket_type_id]->title) . ': ' . $registrantTicket->quantity;
 					$replaces['TICKET_TYPE']  = Text::_($ticketTypes[$registrantTicket->ticket_type_id]->title);
 					$replaces['TICKET_PRICE'] = EventbookingHelper::formatAmount($ticketTypes[$registrantTicket->ticket_type_id]->price, $config);
@@ -4880,8 +4344,7 @@ class EventbookingHelperRegistration
 					->innerJoin('#__eb_registrant_tickets AS b ON a.id = ticket_type_id')
 					->where('b.registrant_id = ' . $row->id);
 
-				if ($fieldSuffix)
-				{
+				if ($fieldSuffix) {
 					EventbookingHelperDatabase::getMultilingualFieldsUseDefaultLanguageData($query, ['a.title', 'a.description'], $fieldSuffix);
 				}
 
@@ -4922,17 +4385,13 @@ class EventbookingHelperRegistration
 		$replaces['current_month_short']  = $monthNamesShort[$currentMonthNumber - 1];
 		$replaces['current_year']         = HTMLHelper::_('date', 'Now', 'Y');
 
-		if ((int) $row->payment_date)
-		{
+		if ((int) $row->payment_date) {
 			$replaces['payment_date'] = HTMLHelper::_('date', $row->payment_date, $config->date_format);
-		}
-		else
-		{
+		} else {
 			$replaces['payment_date'] = '';
 		}
 
-		if ((int) $row->register_date)
-		{
+		if ((int) $row->register_date) {
 			$replaces['register_date']              = HTMLHelper::_('date', $row->register_date, $config->date_format);
 			$replaces['register_date_time']         = HTMLHelper::_('date', $row->register_date, $config->date_format . ' H:i:s');
 			$monthNumber                            = HTMLHelper::_('date', $row->register_date, 'n');
@@ -4940,9 +4399,7 @@ class EventbookingHelperRegistration
 			$replaces['register_date_month']        = $monthNames[$monthNumber - 1];
 			$replaces['register_date_month_short']  = $monthNamesShort[$monthNumber - 1];
 			$replaces['register_date_year']         = HTMLHelper::_('date', $row->register_date, 'Y');
-		}
-		else
-		{
+		} else {
 			$replaces['register_date']              = '';
 			$replaces['register_date_time']         = '';
 			$replaces['register_date_month_number'] = '';
@@ -4951,42 +4408,30 @@ class EventbookingHelperRegistration
 			$replaces['register_date_year']         = '';
 		}
 
-		if ((int) $row->checked_in_at)
-		{
+		if ((int) $row->checked_in_at) {
 			$replaces['checked_in_at'] = HTMLHelper::_('date', $row->checked_in_at, $config->date_format . ' H:i');
-		}
-		else
-		{
+		} else {
 			$replaces['checked_in_at'] = '';
 		}
 
-		if ((int) $row->registration_cancel_date)
-		{
+		if ((int) $row->registration_cancel_date) {
 			$replaces['registration_cancel_date'] = HTMLHelper::_('date', $row->registration_cancel_date, $config->date_format . ' H:i');
-		}
-		else
-		{
+		} else {
 			$replaces['registration_cancel_date'] = '';
 		}
 
-		if ($row->ticket_number > 0)
-		{
+		if ($row->ticket_number > 0) {
 			$replaces['ticket_number'] = EventbookingHelperTicket::formatTicketNumber($event->ticket_prefix, $row->ticket_number, $config);
-		}
-		else
-		{
+		} else {
 			$replaces['ticket_number'] = '';
 		}
 
 		$method = EventbookingHelperPayments::loadPaymentMethod($row->payment_method);
 
-		if ($method)
-		{
+		if ($method) {
 			$replaces['payment_method']      = Text::_($method->title);
 			$replaces['payment_method_name'] = $row->payment_method;
-		}
-		else
-		{
+		} else {
 			$replaces['payment_method']      = '';
 			$replaces['payment_method_name'] = '';
 		}
@@ -4995,12 +4440,9 @@ class EventbookingHelperRegistration
 		$replaces['registration_detail'] = static::getEmailContent($config, $row, $loadCss, $form);
 
 		// Cancel registraiton link
-		if ($event->enable_cancel_registration)
-		{
+		if ($event->enable_cancel_registration) {
 			$replaces['cancel_registration_link'] = $siteUrl . 'index.php?option=com_eventbooking&task=cancel_registration_confirm&cancel_code=' . $row->registration_code . '&Itemid=' . $publicMenuItemId . $langLink;
-		}
-		else
-		{
+		} else {
 			$replaces['cancel_registration_link'] = '';
 		}
 
@@ -5014,8 +4456,7 @@ class EventbookingHelperRegistration
 		$params          = new Registry($row->params);
 		$fieldsFeeValues = (array) $params->get('fields_fee_amount', []);
 
-		foreach ($fieldsFeeValues as $fieldName => $feeValue)
-		{
+		foreach ($fieldsFeeValues as $fieldName => $feeValue) {
 			$replaces[$fieldName . '_fee_value'] = EventbookingHelper::formatAmount($feeValue, $config);
 		}
 
@@ -5027,41 +4468,33 @@ class EventbookingHelperRegistration
 		$db->setQuery($query);
 		$allFields = $db->loadObjectList();
 
-		foreach ($allFields as $field)
-		{
-			if (!isset($replaces[$field->name]))
-			{
-				if ($field->is_core)
-				{
+		foreach ($allFields as $field) {
+			if (!isset($replaces[$field->name])) {
+				if ($field->is_core) {
 					$replaces[$field->name] = $row->{$field->name};
-				}
-				else
-				{
+				} else {
 					$replaces[$field->name] = '';
 				}
 			}
 
-			if ($field->fee_field && !isset($replaces[$field->name . '_fee_value']))
-			{
+			if ($field->fee_field && !isset($replaces[$field->name . '_fee_value'])) {
 				$replaces[$field->name . '_fee_value'] = EventbookingHelper::formatAmount(0, $config);
 			}
 		}
 
-		if (!isset($replaces['name']))
-		{
+		if (!isset($replaces['name'])) {
 			$replaces['name'] = trim($row->first_name . ' ' . $row->last_name);
 		}
 
 		// Registration status tag
-		switch ($row->published)
-		{
-			case 0 :
+		switch ($row->published) {
+			case 0:
 				$replaces['REGISTRATION_STATUS'] = Text::_('EB_PENDING');
 				break;
-			case 1 :
+			case 1:
 				$replaces['REGISTRATION_STATUS'] = Text::_('EB_PAID');
 				break;
-			case 2 :
+			case 2:
 				$replaces['REGISTRATION_STATUS'] = Text::_('EB_CANCELLED');
 				break;
 			case 3:
@@ -5072,16 +4505,11 @@ class EventbookingHelperRegistration
 				break;
 		}
 
-		if ($row->payment_status == 0)
-		{
+		if ($row->payment_status == 0) {
 			$replaces['PAYMENT_STATUS'] = Text::_('EB_PARTIAL_PAYMENT');
-		}
-		elseif ($row->payment_status == 2)
-		{
+		} elseif ($row->payment_status == 2) {
 			$replaces['PAYMENT_STATUS'] = Text::_('EB_DEPOSIT_PAID');
-		}
-		else
-		{
+		} else {
 			$replaces['PAYMENT_STATUS'] = Text::_('EB_FULL_PAYMENT');
 		}
 
@@ -5090,8 +4518,7 @@ class EventbookingHelperRegistration
 		// Auto coupon
 		$replaces['AUTO_COUPON_CODE'] = '';
 
-		if ($row->auto_coupon_coupon_id > 0)
-		{
+		if ($row->auto_coupon_coupon_id > 0) {
 			$query->clear()
 				->select($db->quoteName('code'))
 				->from('#__eb_coupons')
@@ -5104,27 +4531,20 @@ class EventbookingHelperRegistration
 		$replaces['payment_status'] = $row->payment_status;
 
 		// Subscribe to newsletter
-		if ($row->subscribe_newsletter)
-		{
+		if ($row->subscribe_newsletter) {
 			$replaces['SUBSCRIBE_NEWSLETTER'] = Text::_('EB_SUBSCRIBED_TO_NEWSLETTER');
-		}
-		else
-		{
+		} else {
 			$replaces['SUBSCRIBE_NEWSLETTER'] = Text::_('EB_DO_NOT_SUBSCRIBE_TO_NEWSLETTER');
 		}
 
-		if ($event->collect_member_information === '')
-		{
+		if ($event->collect_member_information === '') {
 			$collectMemberInformation = $config->collect_member_information;
-		}
-		else
-		{
+		} else {
 			$collectMemberInformation = $event->collect_member_information;
 		}
 
 		// Group members tag
-		if ($row->is_group_billing && $collectMemberInformation)
-		{
+		if ($row->is_group_billing && $collectMemberInformation) {
 			$query->clear()
 				->select('*')
 				->from('#__eb_registrants')
@@ -5137,39 +4557,31 @@ class EventbookingHelperRegistration
 				'emailtemplates/tmpl/email_group_members.php',
 				['rowMembers' => $rowMembers, 'rowFields' => $memberFormFields]
 			);
-		}
-		else
-		{
+		} else {
 			$replaces['group_members'] = '';
 		}
 
 		$replaces['tax_rate'] = EventbookingHelper::formatAmount($row->tax_rate, $config) . '%';
 
-		if (is_string($row->params) && is_array(json_decode($row->params, true)))
-		{
+		if (is_string($row->params) && is_array(json_decode($row->params, true))) {
 			$params = json_decode($row->params, true);
 
-			foreach ($params as $key => $value)
-			{
-				if (!array_key_exists($key, $replaces) && is_scalar($value))
-				{
+			foreach ($params as $key => $value) {
+				if (!array_key_exists($key, $replaces) && is_scalar($value)) {
 					$replaces[$key] = $value;
 				}
 			}
 		}
 
 		// Basic support for billing data
-		if ($row->group_id > 0)
-		{
+		if ($row->group_id > 0) {
 			$query->clear()
 				->select('*')
 				->from('#__eb_registrants')
 				->where('id = ' . $row->group_id);
 			$db->setQuery($query);
 			$rowBilling = $db->loadObject();
-		}
-		else
-		{
+		} else {
 			$rowBilling = $row;
 		}
 
@@ -5189,10 +4601,8 @@ class EventbookingHelperRegistration
 			'comment',
 		];
 
-		foreach ($billingFields as $billingField)
-		{
-			if (!isset($replaces['billing_' . $billingField]))
-			{
+		foreach ($billingFields as $billingField) {
+			if (!isset($replaces['billing_' . $billingField])) {
 				$replaces['billing_' . $billingField] = $rowBilling->{$billingField};
 			}
 		}
@@ -5210,16 +4620,13 @@ class EventbookingHelperRegistration
 		$config   = EventbookingHelper::getConfig();
 		$replaces = [];
 
-		if ($config->common_tags)
-		{
+		if ($config->common_tags) {
 			$commonTags = json_decode($config->common_tags, true);
 
-			foreach ($commonTags as $commonTag)
-			{
+			foreach ($commonTags as $commonTag) {
 				$tagName = $commonTag['name'];
 
-				if (!is_string($tagName) || trim($tagName) === '')
-				{
+				if (!is_string($tagName) || trim($tagName) === '') {
 					continue;
 				}
 
@@ -5249,27 +4656,21 @@ class EventbookingHelperRegistration
 		$replaces['event_id']    = $row->event_id;
 		$replaces['event_title'] = $row->event_title;
 
-		if ($row->event_date == EB_TBC_DATE)
-		{
+		if ($row->event_date == EB_TBC_DATE) {
 			$replaces['event_date']      = Text::_('EB_TBC');
 			$replaces['event_date_date'] = Text::_('EB_TBC');
 			$replaces['event_date_time'] = Text::_('EB_TBC');
-		}
-		else
-		{
+		} else {
 			$replaces['event_date']      = HTMLHelper::_('date', $row->event_date, $config->event_date_format, null);
 			$replaces['event_date_date'] = HTMLHelper::_('date', $row->event_date, $config->date_format, null);
 			$replaces['event_date_time'] = HTMLHelper::_('date', $row->event_date, $timeFormat, null);
 		}
 
-		if ((int) $row->event_end_date)
-		{
+		if ((int) $row->event_end_date) {
 			$replaces['event_end_date']      = HTMLHelper::_('date', $row->event_end_date, $config->event_date_format, null);
 			$replaces['event_end_date_date'] = HTMLHelper::_('date', $row->event_end_date, $config->date_format, null);
 			$replaces['event_end_date_time'] = HTMLHelper::_('date', $row->event_end_date, $timeFormat, null);
-		}
-		else
-		{
+		} else {
 			$replaces['event_end_date']      = '';
 			$replaces['event_end_date_date'] = '';
 			$replaces['event_end_date_time'] = '';
@@ -5294,8 +4695,7 @@ class EventbookingHelperRegistration
 			'comment',
 		];
 
-		foreach ($fields as $field)
-		{
+		foreach ($fields as $field) {
 			$replaces[$field] = $row->{$field};
 		}
 
@@ -5321,53 +4721,36 @@ class EventbookingHelperRegistration
 		$data   = [];
 		$Itemid = Factory::getApplication()->getInput()->getInt('Itemid', 0);
 
-		if ($config->multiple_booking)
-		{
-			if ($loadCss)
-			{
+		if ($config->multiple_booking) {
+			if ($loadCss) {
 				$layout = 'email_cart.php';
-			}
-			else
-			{
+			} else {
 				$layout = 'cart.php';
 			}
-		}
-		else
-		{
-			if ($row->is_group_billing)
-			{
-				if ($loadCss)
-				{
+		} else {
+			if ($row->is_group_billing) {
+				if ($loadCss) {
 					$layout = 'email_group_detail.php';
-				}
-				else
-				{
+				} else {
 					$layout = 'group_detail.php';
 				}
-			}
-			else
-			{
-				if ($loadCss)
-				{
+			} else {
+				if ($loadCss) {
 					$layout = 'email_individual_detail.php';
-				}
-				else
-				{
+				} else {
 					$layout = 'individual_detail.php';
 				}
 			}
 		}
 
-		if (!$loadCss)
-		{
+		if (!$loadCss) {
 			// Need to pass bootstrap helper
 			$data['bootstrapHelper'] = EventbookingHelperBootstrap::getInstance();
 		}
 
 		$fieldSuffix = EventbookingHelper::getFieldSuffix($row->language);
 
-		if ($config->multiple_booking)
-		{
+		if ($config->multiple_booking) {
 			$data['row']    = $row;
 			$data['config'] = $config;
 			$data['Itemid'] = $Itemid;
@@ -5383,38 +4766,26 @@ class EventbookingHelperRegistration
 			$rows = $db->loadObjectList();
 
 			$query->clear()
-				->select('SUM(total_amount)')
+				->select('SUM(total_amount) AS cart_total_amount')
+				->select('SUM(tax_amount) AS cart_tax_amount')
+				->select('SUM(discount_amount) AS cart_discount_amount')
+				->select('SUM(late_fee) AS cart_late_fee')
+				->select('SUM(payment_processing_fee) AS cart_payment_processing_fee')
+				->select('SUM(deposit_amount) AS cart_deposit_amount')
 				->from('#__eb_registrants')
 				->where("(id = $row->id OR cart_id = $row->id)");
 			$db->setQuery($query);
-			$totalAmount = $db->loadResult();
+			$rowCartAmount = $db->loadObject();
 
-			$query->clear('select')
-				->select('SUM(tax_amount)');
-			$db->setQuery($query);
-			$taxAmount = $db->loadResult();
-
-			$query->clear('select')
-				->select('SUM(discount_amount)');
-			$db->setQuery($query);
-			$discountAmount = $db->loadResult();
-
-			$query->clear('select')
-				->select('SUM(late_fee)');
-			$db->setQuery($query);
-			$lateFee = $db->loadResult();
-
-			$query->clear('select')
-				->select('SUM(payment_processing_fee)');
-			$db->setQuery($query);
-			$paymentProcessingFee = $db->loadResult();
+			$totalAmount          = $rowCartAmount->cart_total_amount ?? 0;
+			$taxAmount            = $rowCartAmount->cart_tax_amount ?? 0;
+			$discountAmount       = $rowCartAmount->cart_discount_amount ?? 0;
+			$lateFee              = $rowCartAmount->cart_late_fee ?? 0;
+			$paymentProcessingFee = $rowCartAmount->cart_payment_processing_fee ?? 0;
 
 			$amount = $totalAmount + $paymentProcessingFee - $discountAmount + $taxAmount + $lateFee;
 
-			$query->clear('select')
-				->select('SUM(deposit_amount)');
-			$db->setQuery($query);
-			$depositAmount = $db->loadResult();
+			$depositAmount = $rowCartAmount->cart_deposit_amount ?? 0;
 
 			//Added support for custom field feature
 			$data['discountAmount']       = $discountAmount;
@@ -5426,9 +4797,7 @@ class EventbookingHelperRegistration
 			$data['paymentProcessingFee'] = $paymentProcessingFee;
 			$data['depositAmount']        = $depositAmount;
 			$data['form']                 = $form;
-		}
-		else
-		{
+		} else {
 			$rowEvent    = EventbookingHelperDatabase::getEvent($row->event_id, null, $fieldSuffix);
 			$rowLocation = EventbookingHelperDatabase::getLocation($rowEvent->location_id, $fieldSuffix);
 
@@ -5444,8 +4813,7 @@ class EventbookingHelperRegistration
 				[$rowEvent, $config]
 			);
 
-			if ($row->is_group_billing && $collectMemberInformation)
-			{
+			if ($row->is_group_billing && $collectMemberInformation) {
 				$query->clear()
 					->select('*')
 					->from('#__eb_registrants')
@@ -5453,24 +4821,20 @@ class EventbookingHelperRegistration
 					->order('id');
 				$db->setQuery($query);
 				$rowMembers = $db->loadObjectList();
-			}
-			else
-			{
+			} else {
 				$rowMembers = [];
 			}
 
 			$data['rowMembers'] = $rowMembers;
 
-			if ($rowEvent->has_multiple_ticket_types)
-			{
+			if ($rowEvent->has_multiple_ticket_types) {
 				$query->clear()
 					->select('a.*, b.quantity')
 					->from('#__eb_ticket_types AS a')
 					->innerJoin('#__eb_registrant_tickets AS b ON a.id = ticket_type_id')
 					->where('b.registrant_id = ' . $row->id);
 
-				if ($fieldSuffix)
-				{
+				if ($fieldSuffix) {
 					EventbookingHelperDatabase::getMultilingualFieldsUseDefaultLanguageData($query, ['a.title', 'a.description'], $fieldSuffix);
 				}
 
@@ -5479,8 +4843,7 @@ class EventbookingHelperRegistration
 
 				$registeredTicketTypeIds = [];
 
-				foreach ($data['ticketTypes'] as $ticketType)
-				{
+				foreach ($data['ticketTypes'] as $ticketType) {
 					$registeredTicketTypeIds[] = $ticketType->id;
 				}
 
@@ -5488,19 +4851,16 @@ class EventbookingHelperRegistration
 			}
 		}
 
-		if ($toAdmin && $row->payment_method == 'os_offline_creditcard')
-		{
+		if ($toAdmin && $row->payment_method == 'os_offline_creditcard') {
 			$cardNumber = Factory::getApplication()->getInput()->getString('x_card_num', '');
 
-			if ($cardNumber)
-			{
+			if ($cardNumber) {
 				$last4Digits         = substr($cardNumber, strlen($cardNumber) - 4);
 				$data['last4Digits'] = $last4Digits;
 			}
 		}
 
-		if ($config->multiple_booking)
-		{
+		if ($config->multiple_booking) {
 			$query->clear()
 				->select('auto_coupon_coupon_id')
 				->from('#__eb_registrants')
@@ -5509,8 +4869,7 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$couponIds = $db->loadColumn();
 
-			if (count($couponIds))
-			{
+			if (count($couponIds)) {
 				$query->clear()
 					->select($db->quoteName('code'))
 					->from('#__eb_coupons')
@@ -5518,9 +4877,7 @@ class EventbookingHelperRegistration
 				$db->setQuery($query);
 				$data['autoCouponCode'] = implode(', ', $db->loadColumn());
 			}
-		}
-		elseif ($row->auto_coupon_coupon_id > 0)
-		{
+		} elseif ($row->auto_coupon_coupon_id > 0) {
 			$query->clear()
 				->select($db->quoteName('code'))
 				->from('#__eb_coupons')
@@ -5576,8 +4933,7 @@ class EventbookingHelperRegistration
 		$db->setQuery($query);
 		$row = $db->loadObject();
 
-		if ($row && file_exists(JPATH_ROOT . '/components/com_eventbooking/payments/' . $row->name . '.php'))
-		{
+		if ($row && file_exists(JPATH_ROOT . '/components/com_eventbooking/payments/' . $row->name . '.php')) {
 			require_once JPATH_ROOT . '/components/com_eventbooking/payments/' . $row->name . '.php';
 
 			$params = new Registry($row->params);
@@ -5603,8 +4959,7 @@ class EventbookingHelperRegistration
 	{
 		$config = EventbookingHelper::getConfig();
 
-		if (!$config->hide_price_column_for_free_ticket_types || static::eventHasPaidTicketType($eventId))
-		{
+		if (!$config->hide_price_column_for_free_ticket_types || static::eventHasPaidTicketType($eventId)) {
 			return true;
 		}
 
@@ -5664,8 +5019,7 @@ class EventbookingHelperRegistration
 	 */
 	public static function getTicketQrCode()
 	{
-		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideRegistration', 'getTicketQrCode'))
-		{
+		if (EventbookingHelper::isMethodOverridden('EventbookingHelperOverrideRegistration', 'getTicketQrCode')) {
 			return EventbookingHelperOverrideRegistration::getTicketQrCode();
 		}
 
@@ -5686,8 +5040,7 @@ class EventbookingHelperRegistration
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 
-		while (true)
-		{
+		while (true) {
 			$uniqueCode = UserHelper::genRandomPassword($length);
 			$query->clear()
 				->select('COUNT(*)')
@@ -5696,8 +5049,7 @@ class EventbookingHelperRegistration
 			$db->setQuery($query);
 			$total = $db->loadResult();
 
-			if (!$total)
-			{
+			if (!$total) {
 				break;
 			}
 		}
@@ -5729,8 +5081,7 @@ class EventbookingHelperRegistration
 	public static function generateQrcode($registrantId)
 	{
 		$Itemid     = EventbookingHelperRoute::findView('registrants', EventbookingHelper::getItemid());
-		$checkinUrl = EventbookingHelper::getSiteUrl(
-			) . 'index.php?option=com_eventbooking&task=registrant.checkin&id=' . $registrantId . '&Itemid=' . $Itemid;
+		$checkinUrl = EventbookingHelper::getSiteUrl() . 'index.php?option=com_eventbooking&task=registrant.checkin&id=' . $registrantId . '&Itemid=' . $Itemid;
 
 		static::generateQRCODEFile(
 			$checkinUrl,
@@ -5762,23 +5113,20 @@ class EventbookingHelperRegistration
 	{
 		$rootUri = Uri::root();
 
-		if (str_contains($output, '[QRCODE]'))
-		{
+		if (str_contains($output, '[QRCODE]')) {
 			EventbookingHelper::callOverridableHelperMethod('Registration', 'generateQrcode', [$row->id]);
 
 			$imgTag = '<img src="' . ($absolutePath ? $rootUri : '') . 'media/com_eventbooking/qrcodes/' . $row->id . '.png" border="0" class="eb-checkin-registrant-qrcode" alt="QRCODE" />';
 			$output = str_ireplace('[QRCODE]', $imgTag, $output);
 		}
 
-		if (($row->ticket_code || $row->ticket_qrcode) && str_contains($output, '[TICKET_QRCODE]'))
-		{
+		if (($row->ticket_code || $row->ticket_qrcode) && str_contains($output, '[TICKET_QRCODE]')) {
 			EventbookingHelper::callOverridableHelperMethod('Registration', 'generateTicketQrcode', [$row]);
 			$imgTag = '<img src="' . ($absolutePath ? $rootUri : '') . 'media/com_eventbooking/qrcodes/' . ($row->ticket_qrcode ?: $row->ticket_code) . '.png" border="0" class="eb-ticket-qrcode" alt="QRCODE" />';
 			$output = str_ireplace('[TICKET_QRCODE]', $imgTag, $output);
 		}
 
-		if (str_contains($output, '[QRCODE_REGISTRANT_DATA]'))
-		{
+		if (str_contains($output, '[QRCODE_REGISTRANT_DATA]')) {
 			$registrantQRCODEData = Text::_('EB_REGISTRANT_QRCODE_DATA');
 
 			$replaces = EventbookingHelperRegistration::getRegistrationReplaces($row);
@@ -5805,12 +5153,9 @@ class EventbookingHelperRegistration
 	{
 		$config = EventbookingHelper::getConfig();
 
-		if (isset($qrOptions['version']))
-		{
+		if (isset($qrOptions['version'])) {
 			$version = (int) $qrOptions['version'];
-		}
-		else
-		{
+		} else {
 			$version = (int) $config->get('qrcode_size') ?: QRCODE::VERSION_AUTO;
 		}
 
@@ -5832,42 +5177,7 @@ class EventbookingHelperRegistration
 	 */
 	public static function validateUsername($username)
 	{
-		$filterInput = InputFilter::getInstance();
-
-		/* @var \Joomla\Database\DatabaseDriver $db */
-		$db     = Factory::getContainer()->get('db');
-		$query  = $db->getQuery(true);
-		$errors = [];
-
-		if (empty($username))
-		{
-			$errors[] = Text::sprintf('EB_FORM_FIELD_IS_REQURED', Text::_('EB_USERNAME'));
-		}
-
-		if ($filterInput->clean($username, 'TRIM') == '')
-		{
-			$errors[] = Text::_('JLIB_DATABASE_ERROR_PLEASE_ENTER_A_USER_NAME');
-		}
-
-		if (preg_match('#[<>"\'%;()&\\\\]|\\.\\./#', $username) || strlen(utf8_decode($username)) < 2
-			|| $filterInput->clean($username, 'TRIM') !== $username
-		)
-		{
-			$errors[] = Text::sprintf('JLIB_DATABASE_ERROR_VALID_AZ09', 2);
-		}
-
-		$query->select('COUNT(*)')
-			->from('#__users')
-			->where('username = ' . $db->quote($username));
-		$db->setQuery($query);
-		$total = $db->loadResult();
-
-		if ($total)
-		{
-			$errors[] = Text::_('EB_VALIDATION_INVALID_USERNAME');
-		}
-
-		return $errors;
+		return EventbookingHelperValidator::validateUsername($username);
 	}
 
 	/**
@@ -5879,70 +5189,7 @@ class EventbookingHelperRegistration
 	 */
 	public static function validatePassword($password)
 	{
-		$errors = [];
-
-		$params           = ComponentHelper::getParams('com_users');
-		$minimumIntegers  = $params->get('minimum_integers');
-		$minimumSymbols   = $params->get('minimum_symbols');
-		$minimumUppercase = $params->get('minimum_uppercase');
-		$minimumLowercase = $params->get('minimum_lowercase');
-		$minimumLength    = $params->get('minimum_length');
-
-		// We don't allow white space inside passwords
-		$valueTrim   = trim($password);
-		$valueLength = strlen($password);
-
-		if (strlen($valueTrim) !== $valueLength)
-		{
-			$errors[] = Text::_('JFIELD_PASSWORD_SPACES_IN_PASSWORD');
-		}
-
-		if (!empty($minimumIntegers))
-		{
-			$nInts = preg_match_all('/[0-9]/', $password, $imatch);
-
-			if ($nInts < $minimumIntegers)
-			{
-				$errors[] = Text::plural('JFIELD_PASSWORD_NOT_ENOUGH_INTEGERS_N', $minimumIntegers);
-			}
-		}
-
-		if (!empty($minimumSymbols))
-		{
-			$nsymbols = preg_match_all('[\W]', $password, $smatch);
-
-			if ($nsymbols < $minimumSymbols)
-			{
-				$errors[] = Text::plural('JFIELD_PASSWORD_NOT_ENOUGH_SYMBOLS_N', $minimumSymbols);
-			}
-		}
-
-		if (!empty($minimumUppercase))
-		{
-			$nUppercase = preg_match_all('/[A-Z]/', $password, $umatch);
-
-			if ($nUppercase < $minimumUppercase)
-			{
-				$errors[] = Text::plural('JFIELD_PASSWORD_NOT_ENOUGH_UPPERCASE_LETTERS_N', $minimumUppercase);
-			}
-		}
-
-		if (!empty($minimumLowercase))
-		{
-			$nLowercase = preg_match_all('/[a-z]/', $password, $lmatch);
-
-			if ($nLowercase < $minimumLowercase)
-			{
-				$errors[] = Text::plural('JFIELD_PASSWORD_NOT_ENOUGH_LOWERCASE_LETTERS_N', $minimumLowercase);
-			}
-		}
-
-		if (!empty($minimumLength) && strlen((string) $password) < $minimumLength)
-		{
-			$errors[] = Text::plural('JFIELD_PASSWORD_TOO_SHORT_N', $minimumLength);
-		}
-
-		return $errors;
+		return EventbookingHelperValidator::validatePassword($password);
 	}
 
 	/**
@@ -5952,8 +5199,7 @@ class EventbookingHelperRegistration
 	 */
 	public static function acceptPrivacyConsent($row)
 	{
-		if (!$row->user_id)
-		{
+		if (!$row->user_id) {
 			return;
 		}
 
@@ -5968,8 +5214,7 @@ class EventbookingHelperRegistration
 		$db->setQuery($query);
 
 		// User consented, do not process it further
-		if ($db->loadResult())
-		{
+		if ($db->loadResult()) {
 			return;
 		}
 
@@ -5985,12 +5230,9 @@ class EventbookingHelperRegistration
 			'created' => Factory::getDate()->toSql(),
 		];
 
-		try
-		{
+		try {
 			$db->insertObject('#__privacy_consents', $privacyConsent);
-		}
-		catch (Exception $e)
-		{
+		} catch (Exception $e) {
 		}
 	}
 
@@ -6005,8 +5247,7 @@ class EventbookingHelperRegistration
 	{
 		static $cache;
 
-		if ($cache === null)
-		{
+		if ($cache === null) {
 			/* @var \Joomla\Database\DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
 			$user  = Factory::getApplication()->getIdentity();
@@ -6022,14 +5263,12 @@ class EventbookingHelperRegistration
 
 			$cache = [];
 
-			foreach ($rows as $row)
-			{
+			foreach ($rows as $row) {
 				$cache[$row->event_id] = $row->id;
 			}
 		}
 
-		if (isset($cache[$eventId]))
-		{
+		if (isset($cache[$eventId])) {
 			return $cache[$eventId];
 		}
 
@@ -6047,16 +5286,12 @@ class EventbookingHelperRegistration
 	{
 		static $cache = [];
 
-		if (!array_key_exists($eventId, $cache))
-		{
+		if (!array_key_exists($eventId, $cache)) {
 			$user = Factory::getApplication()->getIdentity();
 
-			if (!$user->id)
-			{
+			if (!$user->id) {
 				$cache[$eventId] = false;
-			}
-			else
-			{
+			} else {
 				/* @var \Joomla\Database\DatabaseDriver $db */
 				$db    = Factory::getContainer()->get('db');
 				$query = $db->getQuery(true)
@@ -6084,16 +5319,12 @@ class EventbookingHelperRegistration
 	{
 		static $cache = [];
 
-		if (!array_key_exists($eventId, $cache))
-		{
+		if (!array_key_exists($eventId, $cache)) {
 			$user = Factory::getApplication()->getIdentity();
 
-			if (!$user->id)
-			{
+			if (!$user->id) {
 				$cache[$eventId] = false;
-			}
-			else
-			{
+			} else {
 				/* @var \Joomla\Database\DatabaseDriver $db */
 				$db    = Factory::getContainer()->get('db');
 				$query = $db->getQuery(true)
@@ -6124,17 +5355,13 @@ class EventbookingHelperRegistration
 		// Validate cancel before date
 		$currentDate = Factory::getDate('Now', $offset);
 
-		if ((int) $event->cancel_before_date)
-		{
+		if ((int) $event->cancel_before_date) {
 			$cancelBeforeDate = Factory::getDate($event->cancel_before_date, $offset);
-		}
-		else
-		{
+		} else {
 			$cancelBeforeDate = Factory::getDate($event->event_date, $offset);
 		}
 
-		if ($currentDate > $cancelBeforeDate)
-		{
+		if ($currentDate > $cancelBeforeDate) {
 			return false;
 		}
 
@@ -6150,18 +5377,18 @@ class EventbookingHelperRegistration
 	 */
 	public static function canRefundRegistrant($row)
 	{
-		if ($row
+		if (
+			$row
 			&& $row->group_id == 0
 			&& $row->amount > 0
 			&& $row->payment_method
 			&& $row->transaction_id
 			&& !$row->refunded
-			&& Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_eventbooking'))
-		{
+			&& Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_eventbooking')
+		) {
 			$method = EventbookingHelperPayments::getPaymentMethod($row->payment_method);
 
-			if ($method && method_exists($method, 'supportRefundPayment') && $method->supportRefundPayment())
-			{
+			if ($method && method_exists($method, 'supportRefundPayment') && $method->supportRefundPayment()) {
 				return true;
 			}
 		}
@@ -6178,17 +5405,13 @@ class EventbookingHelperRegistration
 	{
 		static $euVatTaxRulesEnabled;
 
-		if ($euVatTaxRulesEnabled === null)
-		{
+		if ($euVatTaxRulesEnabled === null) {
 			$config      = EventbookingHelper::getConfig();
 			$countryCode = EventbookingHelper::getCountryCode($config->default_country);
 
-			if ($config->eu_vat_number_field && EventbookingHelperEuvat::isEUCountry($countryCode))
-			{
+			if ($config->eu_vat_number_field && EventbookingHelperEuvat::isEUCountry($countryCode)) {
 				$euVatTaxRulesEnabled = true;
-			}
-			else
-			{
+			} else {
 				$euVatTaxRulesEnabled = false;
 			}
 		}
@@ -6209,8 +5432,7 @@ class EventbookingHelperRegistration
 	public static function calculateRegistrationTaxRate($event, $form, $data, $config)
 	{
 		// Use simple tax rate
-		if ($config->activate_simple_tax)
-		{
+		if ($config->activate_simple_tax) {
 			return [1, $event->tax_rate, 0];
 		}
 
@@ -6218,8 +5440,7 @@ class EventbookingHelperRegistration
 		$state       = $data['state'] ?? '';
 		$countryCode = EventbookingHelper::getCountryCode($country);
 
-		if ($countryCode == 'GR')
-		{
+		if ($countryCode == 'GR') {
 			$countryCode = 'EL';
 		}
 
@@ -6227,48 +5448,38 @@ class EventbookingHelperRegistration
 		$vatNumber      = '';
 
 		// Calculate tax
-		if (!empty($config->eu_vat_number_field) && isset($data[$config->eu_vat_number_field]))
-		{
+		if (!empty($config->eu_vat_number_field) && isset($data[$config->eu_vat_number_field])) {
 			$vatNumber = $data[$config->eu_vat_number_field];
 
-			if ($vatNumber)
-			{
+			if ($vatNumber) {
 				// If users doesn't enter the country code into the VAT Number, append the code
 				$firstTwoCharacters = substr($vatNumber, 0, 2);
 
-				if (strtoupper($firstTwoCharacters) != $countryCode)
-				{
+				if (strtoupper($firstTwoCharacters) != $countryCode) {
 					$vatNumber = $countryCode . $vatNumber;
 				}
 			}
 		}
 
-		if ($vatNumber)
-		{
+		if ($vatNumber) {
 			$valid = EventbookingHelperEuvat::validateEUVATNumber($vatNumber);
 
-			if ($valid)
-			{
+			if ($valid) {
 				$taxRate = EventbookingHelperRegistration::calculateEventTaxRate($event, $country, $state, 1);
-			}
-			else
-			{
+			} else {
 				$vatNumberValid = 0;
 				$taxRate        = EventbookingHelperRegistration::calculateEventTaxRate($event, $country, $state, 0);
 			}
-		}
-		else
-		{
+		} else {
 			$taxRate = EventbookingHelperRegistration::calculateEventTaxRate($event, $country, $state, 0);
 		}
 
-		if (!EventbookingHelperEuvat::isEUCountry($countryCode)
-			|| ($config->hide_vat_field_for_home_country && $country == $config->default_country))
-		{
+		if (
+			!EventbookingHelperEuvat::isEUCountry($countryCode)
+			|| ($config->hide_vat_field_for_home_country && $country == $config->default_country)
+		) {
 			$showVatNumberField = 0;
-		}
-		else
-		{
+		} else {
 			$showVatNumberField = 1;
 		}
 
@@ -6291,13 +5502,10 @@ class EventbookingHelperRegistration
 		$db->setQuery($query, 0, 2);
 		$rows = $db->loadObjectList();
 
-		if (count($rows) == 0)
-		{
+		if (count($rows) == 0) {
 			// No tax
 			return 0;
-		}
-		elseif (count($rows) == 1)
-		{
+		} elseif (count($rows) == 1) {
 			return $rows[0]->rate;
 		}
 
@@ -6320,25 +5528,19 @@ class EventbookingHelperRegistration
 		$config = EventbookingHelper::getConfig();
 
 		// For backward compatible purpose
-		if (is_object($eventId))
-		{
+		if (is_object($eventId)) {
 			$event = $eventId;
-		}
-		else
-		{
+		} else {
 			$event = EventbookingHelperDatabase::getEvent($eventId);
 		}
 
-		if ($config->activate_simple_tax)
-		{
-			if ($event->tax_rate > 0)
-			{
+		if ($config->activate_simple_tax) {
+			if ($event->tax_rate > 0) {
 				return $event->tax_rate;
 			}
 
 			// Try to get tax rate from category
-			if (property_exists($event, 'cat_tax_rate'))
-			{
+			if (property_exists($event, 'cat_tax_rate')) {
 				return $event->cat_tax_rate;
 			}
 			$category = EventbookingHelperDatabase::getCategory($event->main_category_id);
@@ -6349,25 +5551,21 @@ class EventbookingHelperRegistration
 		// If the system has a single tax rate (which is in most of the case), we do not need to calculate it multiple times
 		static $uniqueTaxRate = -1;
 
-		if ($uniqueTaxRate === -1)
-		{
+		if ($uniqueTaxRate === -1) {
 			$uniqueTaxRate = static::getUniqueTaxRate();
 		}
 
-		if ($uniqueTaxRate !== null)
-		{
+		if ($uniqueTaxRate !== null) {
 			return $uniqueTaxRate;
 		}
 
-		if (empty($country) && $useDefaultCountryIfEmpty)
-		{
+		if (empty($country) && $useDefaultCountryIfEmpty) {
 			$config  = EventbookingHelper::getConfig();
 			$country = $config->default_country;
 		}
 
 		// Convert state name to state code because tax rules are defined base on state code
-		if ($state)
-		{
+		if ($state) {
 			$state = EventbookingHelper::getStateCode($country, $state);
 		}
 
@@ -6385,8 +5583,7 @@ class EventbookingHelperRegistration
 
 		$rule = self::matchTaxRule($rules, $country, $state);
 
-		if ($rule)
-		{
+		if ($rule) {
 			return $rule->rate;
 		}
 
@@ -6402,8 +5599,7 @@ class EventbookingHelperRegistration
 
 		$rule = self::matchTaxRule($rules, $country, $state);
 
-		if ($rule)
-		{
+		if ($rule) {
 			return $rule->rate;
 		}
 
@@ -6415,8 +5611,7 @@ class EventbookingHelperRegistration
 			->where('category_id = 0')
 			->where('published = 1');
 
-		if ($vies != 2)
-		{
+		if ($vies != 2) {
 			$query->where('vies = ' . (int) $vies);
 		}
 
@@ -6425,8 +5620,7 @@ class EventbookingHelperRegistration
 
 		$rule = self::matchTaxRule($rules, $country, $state);
 
-		if ($rule)
-		{
+		if ($rule) {
 			return $rule->rate;
 		}
 
@@ -6446,28 +5640,22 @@ class EventbookingHelperRegistration
 	public static function matchTaxRule($rules, $country, $state)
 	{
 		// First, find the rule which match both country and state
-		foreach ($rules as $rule)
-		{
-			if ($rule->country == $country && $rule->state == $state)
-			{
+		foreach ($rules as $rule) {
+			if ($rule->country == $country && $rule->state == $state) {
 				return $rule;
 			}
 		}
 
 		// If no rule found, find the rule which matches country and state empty
-		foreach ($rules as $rule)
-		{
-			if ($rule->country == $country && $rule->state == '')
-			{
+		foreach ($rules as $rule) {
+			if ($rule->country == $country && $rule->state == '') {
 				return $rule;
 			}
 		}
 
 		// Finally, if no rule found, return rule which is assigned to all country
-		foreach ($rules as $rule)
-		{
-			if ($rule->country == '')
-			{
+		foreach ($rules as $rule) {
+			if ($rule->country == '') {
 				return $rule;
 			}
 		}
@@ -6484,8 +5672,7 @@ class EventbookingHelperRegistration
 	{
 		$config = EventbookingHelper::getConfig();
 
-		if ($config->activate_simple_tax)
-		{
+		if ($config->activate_simple_tax) {
 			return false;
 		}
 
@@ -6510,8 +5697,7 @@ class EventbookingHelperRegistration
 	{
 		$config = EventbookingHelper::getConfig();
 
-		if ($config->activate_simple_tax)
-		{
+		if ($config->activate_simple_tax) {
 			return [];
 		}
 
@@ -6536,8 +5722,7 @@ class EventbookingHelperRegistration
 	 */
 	public static function isCollectMemberInformationForGroupRegistration($event): bool
 	{
-		if ($event->collect_member_information === '')
-		{
+		if ($event->collect_member_information === '') {
 			$config = EventbookingHelper::getConfig();
 
 			return (bool) $config->collect_member_information;
@@ -6554,19 +5739,15 @@ class EventbookingHelperRegistration
 	 */
 	public static function isCollectMembersInformation($event, $config)
 	{
-		if ($event->has_multiple_ticket_types)
-		{
+		if ($event->has_multiple_ticket_types) {
 			$params = new Registry($event->params);
 
 			return $params->get('ticket_types_collect_members_information');
 		}
 
-		if ($config->multiple_booking)
-		{
+		if ($config->multiple_booking) {
 			return $config->collect_member_information_in_cart;
-		}
-		elseif ($event->collect_member_information !== '')
-		{
+		} elseif ($event->collect_member_information !== '') {
 			return $event->collect_member_information;
 		}
 
@@ -6584,13 +5765,10 @@ class EventbookingHelperRegistration
 	{
 		$pos = strpos($name, ' ');
 
-		if ($pos !== false)
-		{
+		if ($pos !== false) {
 			$firstName = substr($name, 0, $pos);
 			$lastName  = substr($name, $pos + 1);
-		}
-		else
-		{
+		} else {
 			$firstName = $name;
 			$lastName  = '';
 		}

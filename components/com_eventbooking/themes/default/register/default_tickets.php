@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -14,11 +14,14 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\Registry\Registry;
 
-HTMLHelper::_('behavior.core');
-
 $params = new Registry($this->event->params);
 
-Factory::getApplication()->getDocument()->addScriptOptions('onlyAllowRegisterOneTicketType', (bool) $params->get('only_allow_register_one_ticket_type'));
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('onlyAllowRegisterOneTicketType', (bool) $params->get('only_allow_register_one_ticket_type'))
+	->getWebAssetManager()
+	->useScript('core');
+
 EventbookingHelperHtml::addOverridableScript('media/com_eventbooking/js/site-register-default-ticket-types.min.js', ['version' => EventbookingHelper::getInstalledVersion()], ['defer' => true]);
 
 $showPriceColumn = EventbookingHelperRegistration::showPriceColumnForTicketType($this->event->id);

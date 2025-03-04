@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -49,6 +49,24 @@ class plgEventBookingWaitinglist extends CMSPlugin implements SubscriberInterfac
 
 		// Require library + register autoloader
 		require_once JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/rad/bootstrap.php';
+
+		// Check to see if waiting list is enabled for this event
+		$config = EventbookingHelper::getConfig();
+
+		if ($row->activate_waiting_list == 2)
+		{
+			$waitingList = $config->activate_waitinglist_feature;
+		}
+		else
+		{
+			$waitingList = $row->activate_waiting_list;
+		}
+
+		// Do not show waiting list if waiting list is not enabled for the event
+		if (!$waitingList)
+		{
+			return;
+		}
 
 		if (!EventbookingHelper::callOverridableHelperMethod('Acl', 'canViewRegistrantList', [$row->id]))
 		{

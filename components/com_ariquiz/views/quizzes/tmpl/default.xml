@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="QUIZZES_LAYOUT">
+		<message>QUIZZES_LAYOUT_DESC</message>
+	</layout>
+	<state>
+		<name>Quizzes Layout</name>
+		<description>QUIZZES_LAYOUT_DESC</description>
+		<url addpath="/administrator/components/com_ariquiz/elements">
+			<param name="categoryId" type="quizcategory" default="0" multiple="0" include_root="1" root_lbl="COM_ARIQUIZ_LABEL_ROOTCATEGORY" label="QUIZ_LAYOUT_SELECT_PARENTCATEGORY" description="QUIZ_LAYOUT_SELECT_PARENTCATEGORY_DESCR" />
+		</url>
+		<params>
+			<param name="sortfield" type="list" default="QuizName" label="QUIZ_CATEGORY_LAYOUT_SORT_FIELD" description="QUIZ_CATEGORY_LAYOUT_SORT_FIELD_DESCR">
+				<option value="QuizName">QUIZ_CATEGORY_LAYOUT_SORT_QUIZNAME</option>
+				<option value="Created">QUIZ_CATEGORY_LAYOUT_SORT_CREATED</option>
+			</param>
+			<param name="sortdir" type="list" default="asc" label="QUIZ_CATEGORY_LAYOUT_SORT_DIR" description="QUIZ_CATEGORY_LAYOUT_SORT_DIR_DESCR">
+				<option value="asc">QUIZ_CATEGORY_LAYOUT_SORT_ASC</option>
+				<option value="desc">QUIZ_CATEGORY_LAYOUT_SORT_DESC</option>
+			</param>
+			<param name="showdescription" type="list" default="0" label="QUIZ_CATEGORY_LAYOUT_SHOW_DESCRIPTION" description="QUIZ_CATEGORY_LAYOUT_SHOW_DESCRIPTION_DESCR">
+			    <option value="0">COM_ARIQUIZ_LABEL_NO</option>
+				<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+			</param>
+            <param name="hideNotPermittedQuizzes" type="list" default="0" label="QUIZ_CATEGORY_LAYOUT_SHOW_HIDENOTPERMITTEDQUIZ" description="QUIZ_CATEGORY_LAYOUT_SHOW_HIDENOTPERMITTEDQUIZ_DESCR">
+                <option value="0">COM_ARIQUIZ_LABEL_NO</option>
+                <option value="1">COM_ARIQUIZ_LABEL_YES</option>
+            </param>
+		</params>
+	</state>
+	<fields name="request">
+		<fieldset name="request" addfieldpath="/administrator/components/com_ariquiz/fields">
+			<field name="categoryId" type="quizcategory" default="0" multiple="0" include_root="1" root_lbl="COM_ARIQUIZ_LABEL_ROOTCATEGORY" label="QUIZ_LAYOUT_SELECT_PARENTCATEGORY" description="QUIZ_LAYOUT_SELECT_PARENTCATEGORY_DESCR" />
+		</fieldset>
+	</fields>
+	<fields name="params">
+		<fieldset name="basic" addfieldpath="/administrator/components/com_ariquiz/fields">
+			<field name="sortfield" type="list" default="QuizName" label="QUIZ_CATEGORY_LAYOUT_SORT_FIELD" description="QUIZ_CATEGORY_LAYOUT_SORT_FIELD_DESCR">
+				<option value="QuizName">QUIZ_CATEGORY_LAYOUT_SORT_QUIZNAME</option>
+				<option value="Created">QUIZ_CATEGORY_LAYOUT_SORT_CREATED</option>
+			</field>
+			<field name="sortdir" type="list" default="asc" label="QUIZ_CATEGORY_LAYOUT_SORT_DIR" description="QUIZ_CATEGORY_LAYOUT_SORT_DIR_DESCR">
+				<option value="asc">QUIZ_CATEGORY_LAYOUT_SORT_ASC</option>
+				<option value="desc">QUIZ_CATEGORY_LAYOUT_SORT_DESC</option>
+			</field>
+			<field name="showdescription" type="list" default="0" label="QUIZ_CATEGORY_LAYOUT_SHOW_DESCRIPTION" description="QUIZ_CATEGORY_LAYOUT_SHOW_DESCRIPTION_DESCR">
+			    <option value="0">COM_ARIQUIZ_LABEL_NO</option>
+				<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+			</field>
+            <field name="hideNotPermittedQuizzes" type="list" default="0" label="QUIZ_CATEGORY_LAYOUT_SHOW_HIDENOTPERMITTEDQUIZ" description="QUIZ_CATEGORY_LAYOUT_SHOW_HIDENOTPERMITTEDQUIZ_DESCR">
+                <option value="0">COM_ARIQUIZ_LABEL_NO</option>
+                <option value="1">COM_ARIQUIZ_LABEL_YES</option>
+            </field>
+        </fieldset>
+	</fields>
+</metadata>

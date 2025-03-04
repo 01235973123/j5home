@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Event Booking
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2010 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -11,8 +11,6 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Uri\Uri;
 
 /**
  * Variables
@@ -57,9 +55,10 @@ if ($config->show_discounted_price)
 	}
 }
 
-HTMLHelper::_('behavior.core');
-
-Factory::getApplication()->getDocument()
-	->addScript(Uri::root(true) . '/media/com_eventbooking/js/mod-eb-cart.min.js', ['version' => EventbookingHelper::getInstalledVersion()]);
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('mod-eb-cart', 'media/com_eventbooking/js/mod-eb-cart.min.js', ['version' => EventbookingHelper::getInstalledVersion()]);
 
 require ModuleHelper::getLayoutPath('mod_eb_cart');

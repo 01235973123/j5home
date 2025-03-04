@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -303,7 +303,7 @@ class EventbookingHelperData
 					->from('#__eb_registrants')
 					->where('user_id = ' . $userId)
 					->where('event_id = ' . $row->id)
-					->where('(published=1 OR (published = 0 AND payment_method LIKE "os_offline%"))');
+					->where('(published = 1 OR (published = 0 AND payment_method LIKE "os_offline%"))');
 				$db->setQuery($query);
 				$row->user_registered = $db->loadResult();
 			}
@@ -605,15 +605,14 @@ class EventbookingHelperData
 		// Calculate discounted price
 		EventbookingHelper::callOverridableHelperMethod('Data', 'calculateDiscount', [$rows]);
 
-		$config = EventbookingHelper::getConfig();
+		$config      = EventbookingHelper::getConfig();
+		$fieldSuffix = EventbookingHelper::getFieldSuffix();
 
 		// Get categories data for each events
 		/* @var \Joomla\Database\DatabaseDriver $db */
-		$db          = Factory::getContainer()->get('db');
-		$query       = $db->getQuery(true);
-		$fieldSuffix = EventbookingHelper::getFieldSuffix();
-
-		$query->select('*')
+		$db    = Factory::getContainer()->get('db');
+		$query = $db->getQuery(true)
+			->select('*')
 			->from('#__eb_locations');
 
 		if ($fieldSuffix)
@@ -1398,7 +1397,7 @@ class EventbookingHelperData
 			$headers[] = Text::_('EB_USER_IP');
 			$fields[]  = 'user_ip';
 		}
-		
+
 		foreach ($rows as $row)
 		{
 			$row->event_date = HTMLHelper::_('date', $row->event_date, $config->event_date_format, null);

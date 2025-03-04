@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -385,7 +385,7 @@ class EventbookingModelCart extends RADModel
 		$row = $this->getTable('Registrant');
 		$row->load($cartId);
 
-		require_once JPATH_COMPONENT . '/payments/' . $row->payment_method . '.php';
+		require_once JPATH_ROOT . '/components/com_eventbooking/payments/' . $row->payment_method . '.php';
 
 		$config        = EventbookingHelper::getConfig();
 		$fieldSuffix   = EventbookingHelper::getFieldSuffix();

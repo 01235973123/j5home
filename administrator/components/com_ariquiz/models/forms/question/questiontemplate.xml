@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form>
+	<params addpath="/administrator/components/com_ariquiz/elements">
+		<param type="label" size="6" name="TemplateId" default="" label="COM_ARIQUIZ_LABEL_ID" description="COM_ARIQUIZ_DESCR_ID" />
+		<param type="text" size="30" name="TemplateName" label="COM_ARIQUIZ_LABEL_NAME" description="" />
+		<param type="questiontype" name="QuestionTypeId" label="COM_ARIQUIZ_LABEL_QUESTIONTYPE" description="" />
+		<param type="switcher" name="DisableValidation" default="0" label="COM_ARIQUIZ_LABEL_DISABLEVALIDATION" description="COM_ARIQUIZ_DESCR_DISABLEVALIDATION">
+			<option value="0">COM_ARIQUIZ_LABEL_NO</option>
+			<option value="1">COM_ARIQUIZ_LABEL_YES</option>
+		</param>
+	</params>
+	<validators section="params" addpath="/administrator/components/com_ariquiz/validators">
+		<validator type="required" error_message="COM_ARIQUIZ_ERROR_NAMEREQUIRE" validate="TemplateName" />
+		<validator type="questiontemplatename" error_message="COM_ARIQUIZ_ERROR_NAMEUNIQUE" validate="TemplateName" />
+	</validators>
+</form>

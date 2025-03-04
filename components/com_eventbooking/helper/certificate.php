@@ -1,9 +1,10 @@
 <?php
+
 /**
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -32,13 +33,11 @@ class EventbookingHelperCertificate
 		$options['title'] = 'Certificate';
 		$options['type']  = 'certificate';
 
-		if ($config->get('certificate_page_orientation'))
-		{
+		if ($config->get('certificate_page_orientation')) {
 			$options['PDF_PAGE_ORIENTATION'] = $config->get('certificate_page_orientation');
 		}
 
-		if ($config->get('certificate_page_format'))
-		{
+		if ($config->get('certificate_page_format')) {
 			$options['PDF_PAGE_FORMAT'] = $config->get('certificate_page_format');
 		}
 
@@ -48,12 +47,10 @@ class EventbookingHelperCertificate
 		$events = [];
 		$pages  = [];
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$fieldSuffix = EventbookingHelper::getFieldSuffix($row->language);
 
-			if (!isset($events[$row->event_id]))
-			{
+			if (!isset($events[$row->event_id])) {
 				$events[$row->event_id] = EventbookingHelperDatabase::getEvent($row->event_id, null, $fieldSuffix);
 			}
 
@@ -61,30 +58,21 @@ class EventbookingHelperCertificate
 
 			$certificateOptions = static::getCertificatePageOptions($rowEvent, $config);
 
-			if (EventbookingHelper::isValidMessage($rowEvent->certificate_layout))
-			{
+			if (EventbookingHelper::isValidMessage($rowEvent->certificate_layout)) {
 				$certificateLayout = $rowEvent->certificate_layout;
-			}
-			elseif ($fieldSuffix && EventbookingHelper::isValidMessage($config->{'certificate_layout' . $fieldSuffix}))
-			{
+			} elseif ($fieldSuffix && EventbookingHelper::isValidMessage($config->{'certificate_layout' . $fieldSuffix})) {
 				$certificateLayout = $config->{'certificate_layout' . $fieldSuffix};
-			}
-			else
-			{
+			} else {
 				$certificateLayout = $config->certificate_layout;
 			}
 
-			if ($rowEvent->collect_member_information === '')
-			{
+			if ($rowEvent->collect_member_information === '') {
 				$collectMemberInformation = $config->collect_member_information;
-			}
-			else
-			{
+			} else {
 				$collectMemberInformation = $rowEvent->collect_member_information;
 			}
 
-			if ($row->is_group_billing && $collectMemberInformation)
-			{
+			if ($row->is_group_billing && $collectMemberInformation) {
 				$query->clear()
 					->select('*')
 					->from('#__eb_registrants')
@@ -92,8 +80,7 @@ class EventbookingHelperCertificate
 				$db->setQuery($query);
 				$rowMembers = $db->loadObjectList();
 
-				foreach ($rowMembers as $rowMember)
-				{
+				foreach ($rowMembers as $rowMember) {
 					$page                           = new stdClass();
 					$page->options                  = $certificateOptions;
 					$replaces                       = EventbookingHelperRegistration::getRegistrationReplaces($rowMember, $rowEvent, -1);
@@ -113,9 +100,7 @@ class EventbookingHelperCertificate
 					$page->content = $output;
 					$pages[]       = $page;
 				}
-			}
-			else
-			{
+			} else {
 				$page          = new stdClass();
 				$page->options = $certificateOptions;
 
@@ -137,12 +122,9 @@ class EventbookingHelperCertificate
 			}
 		}
 
-		if (count($rows) > 1)
-		{
+		if (count($rows) > 1) {
 			$fileName = 'certificates_' . date('Y-m-d') . '.pdf';
-		}
-		else
-		{
+		} else {
 			$row      = $rows[0];
 			$fileName = EventbookingHelper::callOverridableHelperMethod('Helper', 'formatCertificateNumber', [$row->id, $config]) . '.pdf';
 		}
@@ -166,73 +148,48 @@ class EventbookingHelperCertificate
 	{
 		$options = [];
 
-		if ($rowEvent->certificate_bg_image)
-		{
+		if ($rowEvent->certificate_bg_image) {
 			$backgroundImage = $rowEvent->certificate_bg_image;
-		}
-		else
-		{
+		} else {
 			$backgroundImage = $config->get('default_certificate_bg_image');
 		}
 
-		if ($backgroundImage)
-		{
+		if ($backgroundImage) {
 			$backgroundImage = EventbookingHelperHtml::getCleanImagePath($backgroundImage);
 		}
 
-		if ($backgroundImage && file_exists(JPATH_ROOT . '/' . $backgroundImage))
-		{
+		if ($backgroundImage && file_exists(JPATH_ROOT . '/' . $backgroundImage)) {
 			$backgroundImagePath = JPATH_ROOT . '/' . $backgroundImage;
 
-			if ($rowEvent->certificate_bg_left > 0)
-			{
+			if ($rowEvent->certificate_bg_left > 0) {
 				$certificateBgLeft = $rowEvent->certificate_bg_left;
-			}
-			elseif ($config->default_certificate_bg_left > 0)
-			{
+			} elseif ($config->default_certificate_bg_left > 0) {
 				$certificateBgLeft = $config->default_certificate_bg_left;
-			}
-			else
-			{
+			} else {
 				$certificateBgLeft = 0;
 			}
 
-			if ($rowEvent->certificate_bg_top > 0)
-			{
+			if ($rowEvent->certificate_bg_top > 0) {
 				$certificateBgTop = $rowEvent->certificate_bg_top;
-			}
-			elseif ($config->default_certificate_bg_top > 0)
-			{
+			} elseif ($config->default_certificate_bg_top > 0) {
 				$certificateBgTop = $config->default_certificate_bg_top;
-			}
-			else
-			{
+			} else {
 				$certificateBgTop = 0;
 			}
 
-			if ($rowEvent->certificate_bg_width > 0)
-			{
+			if ($rowEvent->certificate_bg_width > 0) {
 				$certificateBgWidth = $rowEvent->certificate_bg_width;
-			}
-			elseif ($config->default_certificate_bg_width > 0)
-			{
+			} elseif ($config->default_certificate_bg_width > 0) {
 				$certificateBgWidth = $config->default_certificate_bg_width;
-			}
-			else
-			{
+			} else {
 				$certificateBgWidth = 0;
 			}
 
-			if ($rowEvent->certificate_bg_height > 0)
-			{
+			if ($rowEvent->certificate_bg_height > 0) {
 				$certificateBgHeight = $rowEvent->ticket_bg_height;
-			}
-			elseif ($config->default_certificate_bg_height > 0)
-			{
+			} elseif ($config->default_certificate_bg_height > 0) {
 				$certificateBgHeight = $config->default_certificate_bg_height;
-			}
-			else
-			{
+			} else {
 				$certificateBgHeight = 0;
 			}
 
@@ -260,8 +217,7 @@ class EventbookingHelperCertificate
 		$config          = EventbookingHelper::getConfig();
 		$sendCertificate = false;
 
-		switch ($reminderNumber)
-		{
+		switch ($reminderNumber) {
 			case 1:
 				$sendCertificate = $row->published == 1
 					&& $row->activate_certificate_feature

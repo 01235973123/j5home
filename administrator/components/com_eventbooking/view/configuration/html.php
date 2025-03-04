@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -809,6 +809,16 @@ class EventbookingViewConfigurationHtml extends RADViewHtml
 		$options[] = HTMLHelper::_('select.option', 'P', Text::_('Portrait'));
 		$options[] = HTMLHelper::_('select.option', 'L', Text::_('Landscape'));
 
+		$lists['invoice_page_orientation']      = HTMLHelper::_(
+			'select.genericlist',
+			$options,
+			'invoice_page_orientation',
+			'class="form-select"',
+			'value',
+			'text',
+			$config->get('invoice_page_orientation', 'P')
+		);
+
 		$lists['ticket_page_orientation']      = HTMLHelper::_(
 			'select.genericlist',
 			$options,
@@ -818,6 +828,7 @@ class EventbookingViewConfigurationHtml extends RADViewHtml
 			'text',
 			$config->get('ticket_page_orientation', 'P')
 		);
+
 		$lists['certificate_page_orientation'] = HTMLHelper::_(
 			'select.genericlist',
 			$options,
@@ -917,6 +928,16 @@ class EventbookingViewConfigurationHtml extends RADViewHtml
 			$options[] = HTMLHelper::_('select.option', $format, Text::_($format));
 		}
 
+		$lists['invoice_page_format'] = HTMLHelper::_(
+			'select.genericlist',
+			$options,
+			'invoice_page_format',
+			'class="form-select"',
+			'value',
+			'text',
+			$config->get('invoice_page_format', 'A4')
+		);
+
 		$lists['ticket_page_format'] = HTMLHelper::_(
 			'select.genericlist',
 			$options,
@@ -936,6 +957,7 @@ class EventbookingViewConfigurationHtml extends RADViewHtml
 			'text',
 			$config->get('certificate_page_format', 'A4')
 		);
+
 		$lists['registrants_page_format'] = HTMLHelper::_(
 			'select.genericlist',
 			$options,

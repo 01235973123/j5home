@@ -3,13 +3,12 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -184,14 +183,14 @@ class EventbookingControllerRegister extends EventbookingController
 			{
 				// Redirect registrants to registration complete page
 				$this->setRedirect(
-					Route::_('index.php?option=com_eventbooking&view=complete&Itemid=' . $this->input->getInt('Itemid'), false, false)
+					Route::_('index.php?option=com_eventbooking&view=complete&Itemid=' . $this->input->getInt('Itemid'), false)
 				);
 			}
 			elseif ($return === 2)
 			{
 				// Redirect to waiting list complete page
 				$this->setRedirect(
-					Route::_('index.php?option=com_eventbooking&view=waitinglist&Itemid=' . $this->input->getInt('Itemid'), false, false)
+					Route::_('index.php?option=com_eventbooking&view=waitinglist&Itemid=' . $this->input->getInt('Itemid'), false)
 				);
 			}
 		}
@@ -224,6 +223,11 @@ class EventbookingControllerRegister extends EventbookingController
 			return;
 		}
 
+		if (!$user->id && $config->use_email_as_username && !$input->post->exists('username'))
+		{
+			$input->post->set('username', $input->post->getString('email'));
+		}
+
 		EventbookingHelper::overrideGlobalConfig($config, $event);
 
 		$errors = [];
@@ -237,8 +241,8 @@ class EventbookingControllerRegister extends EventbookingController
 		// Validate username and password
 		if (!$user->id && $config->user_registration)
 		{
-			$errors = array_merge($errors, EventbookingHelperRegistration::validateUsername($input->post->get('username', '', 'raw')));
-			$errors = array_merge($errors, EventbookingHelperRegistration::validatePassword($input->post->get('password1', '', 'raw')));
+			$errors = array_merge($errors, EventbookingHelperValidator::validateUsername($input->post->get('username', '', 'raw')));
+			$errors = array_merge($errors, EventbookingHelperValidator::validatePassword($input->post->get('password1', '', 'raw')));
 		}
 
 		// Validate email
@@ -358,7 +362,7 @@ class EventbookingControllerRegister extends EventbookingController
 		elseif ($return === 2)
 		{
 			// Redirect to waiting list complete page
-			$this->setRedirect(Route::_('index.php?option=com_eventbooking&view=waitinglist&Itemid=' . $this->input->getInt('Itemid'), false, false));
+			$this->setRedirect(Route::_('index.php?option=com_eventbooking&view=waitinglist&Itemid=' . $this->input->getInt('Itemid'), false));
 		}
 	}
 
@@ -436,8 +440,14 @@ class EventbookingControllerRegister extends EventbookingController
 			$numberRegistrants = (int) $session->get('eb_number_registrants', '');
 		}
 
-		$eventId            = $this->input->getInt('event_id', 0);
-		$event              = EventbookingHelperDatabase::getEvent($eventId);
+		$eventId = $this->input->getInt('event_id', 0);
+		$event   = EventbookingHelperDatabase::getEvent($eventId);
+
+		if (!$event)
+		{
+			throw new Exception(sprintf('Event %d not found', $eventId), 404);
+		}
+
 		$typeOfRegistration = EventbookingHelperRegistration::getTypeOfRegistration($event);
 		$memberFormFields   = EventbookingHelperRegistration::getFormFields($eventId, 2, null, null, $typeOfRegistration);
 
@@ -526,6 +536,11 @@ class EventbookingControllerRegister extends EventbookingController
 			$collectMemberInformation = $event->collect_member_information;
 		}
 
+		if (!$user->id && $config->use_email_as_username && !$input->post->exists('username'))
+		{
+			$input->post->set('username', $input->post->getString('email'));
+		}
+
 		$errors = [];
 
 		if (!$this->validateCaptcha($this->input))
@@ -536,8 +551,8 @@ class EventbookingControllerRegister extends EventbookingController
 		// Validate username and password
 		if (!$user->id && $config->user_registration)
 		{
-			$errors = array_merge($errors, EventbookingHelperRegistration::validateUsername($input->post->get('username', '', 'raw')));
-			$errors = array_merge($errors, EventbookingHelperRegistration::validatePassword($input->post->get('password1', '', 'raw')));
+			$errors = array_merge($errors, EventbookingHelperValidator::validateUsername($input->post->get('username', '', 'raw')));
+			$errors = array_merge($errors, EventbookingHelperValidator::validatePassword($input->post->get('password1', '', 'raw')));
 		}
 
 		$membersData = $session->get('eb_group_members_data', null);
@@ -760,11 +775,17 @@ class EventbookingControllerRegister extends EventbookingController
 	 */
 	public function calculate_individual_registration_fee()
 	{
-		$config             = EventbookingHelper::getConfig();
-		$eventId            = $this->input->getInt('event_id', 0);
-		$data               = $this->input->post->getData();
-		$paymentMethod      = $this->input->getString('payment_method', '');
-		$event              = EventbookingHelperDatabase::getEvent($eventId);
+		$config        = EventbookingHelper::getConfig();
+		$eventId       = $this->input->getInt('event_id', 0);
+		$data          = $this->input->post->getData();
+		$paymentMethod = $this->input->getString('payment_method', '');
+		$event         = EventbookingHelperDatabase::getEvent($eventId);
+
+		if (!$event)
+		{
+			throw new Exception(sprintf('Event %d not found', $eventId), 404);
+		}
+
 		$typeOfRegistration = EventbookingHelperRegistration::getTypeOfRegistration($event);
 		$rowFields          = EventbookingHelperRegistration::getFormFields($eventId, 0, null, null, $typeOfRegistration);
 		$form               = new RADForm($rowFields);
@@ -810,7 +831,13 @@ class EventbookingControllerRegister extends EventbookingController
 		$data          = $this->input->post->getData();
 		$paymentMethod = $this->input->getString('payment_method', '');
 
-		$event              = EventbookingHelperDatabase::getEvent($eventId);
+		$event = EventbookingHelperDatabase::getEvent($eventId);
+
+		if (!$event)
+		{
+			throw new Exception(sprintf('Event %d not found', $eventId), 404);
+		}
+
 		$typeOfRegistration = EventbookingHelperRegistration::getTypeOfRegistration($event);
 		$rowFields          = EventbookingHelperRegistration::getFormFields($eventId, 1, null, null, $typeOfRegistration);
 		$form               = new RADForm($rowFields);
@@ -852,7 +879,13 @@ class EventbookingControllerRegister extends EventbookingController
 	 */
 	protected function validateFormData($eventId, $registrationType, $data)
 	{
-		$event              = EventbookingHelperDatabase::getEvent($eventId);
+		$event = EventbookingHelperDatabase::getEvent($eventId);
+
+		if (!$event)
+		{
+			throw new Exception(sprintf('Event %d not found', $eventId), 404);
+		}
+
 		$typeOfRegistration = EventbookingHelperRegistration::getTypeOfRegistration($event);
 		$rowFields          = EventbookingHelperRegistration::getFormFields($eventId, $registrationType, null, null, $typeOfRegistration);
 		$paymentMethod      = $data['payment_method'] ?? '';
@@ -920,8 +953,8 @@ class EventbookingControllerRegister extends EventbookingController
 	/**
 	 * Validate to see whether this email can be used to register for this event or not
 	 *
-	 * @param $eventId
-	 * @param $email
+	 * @param   int     $eventId
+	 * @param   string  $email
 	 *
 	 * @return array
 	 */
@@ -929,142 +962,35 @@ class EventbookingControllerRegister extends EventbookingController
 	{
 		$user = $this->app->getIdentity();
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
-		$db     = Factory::getContainer()->get('db');
-		$query  = $db->getQuery(true);
 		$config = EventbookingHelper::getConfig();
 		$result = [
 			'success' => true,
 			'message' => '',
 		];
 
-		if (!$config->multiple_booking)
+		if (!$config->multiple_booking
+			&& !EventbookingHelperValidator::validateDuplicateRegistration($eventId, $user->id, $email))
 		{
-			$event = EventbookingHelperDatabase::getEvent($eventId);
-
-			EventbookingHelper::overrideGlobalConfig($config, $event);
-
-			if ($event->prevent_duplicate_registration === '')
-			{
-				$preventDuplicateRegistration = $config->prevent_duplicate_registration;
-			}
-			else
-			{
-				$preventDuplicateRegistration = $event->prevent_duplicate_registration;
-			}
-
-			if ($preventDuplicateRegistration && ($user->id || $email))
-			{
-				$eventIsFull                      = false;
-				$numberAwaitingPaymentRegistrants = EventbookingHelperRegistration::countAwaitingPaymentRegistrations($event);
-
-				if ($event->event_capacity && (($event->total_registrants + $numberAwaitingPaymentRegistrants) >= $event->event_capacity))
-				{
-					$eventIsFull = true;
-				}
-
-				$query->select('COUNT(id)')
-					->from('#__eb_registrants')
-					->where('event_id = ' . $eventId);
-
-				if ($email)
-				{
-					$query->where('email = ' . $db->quote($email));
-				}
-				else
-				{
-					$query->where('user_id = ' . $user->id);
-				}
-
-				// Check if user joined waiting list
-				if ($eventIsFull)
-				{
-					$query->where('published = 3');
-				}
-				else
-				{
-					$query->where('(published = 1 OR (published = 0 AND payment_method LIKE "os_offline%"))');
-				}
-
-				$db->setQuery($query);
-				$total = $db->loadResult();
-
-				if ($total)
-				{
-					$result['success'] = false;
-					$result['message'] = Text::_('EB_EMAIL_REGISTER_FOR_EVENT_ALREADY');
-				}
-			}
+			$result['success'] = false;
+			$result['message'] = Text::_('EB_EMAIL_REGISTER_FOR_EVENT_ALREADY');
 		}
 
-		if ($result['success'] && $config->user_registration && !$user->id)
+		if ($result['success']
+			&& $config->user_registration
+			&& !$user->id
+			&& EventbookingHelperValidator::emailAlreadyTaken($email))
 		{
-			$query->clear()
-				->select('COUNT(*)')
-				->from('#__users')
-				->where('email="' . $email . '"');
-			$db->setQuery($query);
-			$total = $db->loadResult();
-
-			if ($total)
-			{
-				$result['success'] = false;
-				$result['message'] = Text::_('EB_EMAIL_USED_BY_DIFFERENT_USER');
-			}
+			$result['success'] = false;
+			$result['message'] = Text::_('EB_EMAIL_USED_BY_DIFFERENT_USER');
 		}
 
-		if ($result['success'])
+		if ($result['success'] && !EventbookingHelperValidator::validateEmailDomain($email))
 		{
-			$domains = ComponentHelper::getParams('com_users')->get('domains');
+			$emailDomain = explode('@', $email);
+			$emailDomain = $emailDomain[1];
 
-			if ($domains)
-			{
-				$emailDomain = explode('@', $email);
-				$emailDomain = $emailDomain[1];
-				$emailParts  = array_reverse(explode('.', $emailDomain));
-				$emailCount  = count($emailParts);
-				$allowed     = true;
-
-				foreach ($domains as $domain)
-				{
-					$domainParts = array_reverse(explode('.', $domain->name));
-					$status      = 0;
-
-					// Don't run if the email has less segments than the rule.
-					if ($emailCount < count($domainParts))
-					{
-						continue;
-					}
-
-					foreach ($emailParts as $key => $emailPart)
-					{
-						if (!isset($domainParts[$key]) || $domainParts[$key] == $emailPart || $domainParts[$key] == '*')
-						{
-							$status++;
-						}
-					}
-
-					// All segments match, check whether to allow the domain or not.
-					if ($status === $emailCount)
-					{
-						if ($domain->rule == 0)
-						{
-							$allowed = false;
-						}
-						else
-						{
-							$allowed = true;
-						}
-					}
-				}
-
-				// If domain is not allowed, fail validation. Otherwise continue.
-				if (!$allowed)
-				{
-					$result['success'] = false;
-					$result['message'] = Text::sprintf('JGLOBAL_EMAIL_DOMAIN_NOT_ALLOWED', $emailDomain);
-				}
-			}
+			$result['success'] = false;
+			$result['message'] = Text::sprintf('JGLOBAL_EMAIL_DOMAIN_NOT_ALLOWED', $emailDomain);
 		}
 
 		return $result;

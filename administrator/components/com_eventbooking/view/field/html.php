@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -342,12 +342,21 @@ class EventbookingViewFieldHtml extends RADViewItem
 		$options[] = HTMLHelper::_('select.option', 3, Text::_('Email'));
 		$options[] = HTMLHelper::_('select.option', 4, Text::_('Url'));
 		$options[] = HTMLHelper::_('select.option', 5, Text::_('Phone'));
-		$options[] = HTMLHelper::_('select.option', 6, Text::_('Past Date'));
-		$options[] = HTMLHelper::_('select.option', 7, Text::_('Ip'));
-		$options[] = HTMLHelper::_('select.option', 8, Text::_('Min size'));
-		$options[] = HTMLHelper::_('select.option', 9, Text::_('Max size'));
-		$options[] = HTMLHelper::_('select.option', 10, Text::_('Min integer'));
-		$options[] = HTMLHelper::_('select.option', 11, Text::_('Max integer'));
+		$options[] = HTMLHelper::_('select.option', 6, Text::_('Date'));
+		$options[] = HTMLHelper::_('select.option', 7, Text::_('Past Date'));
+		$options[] = HTMLHelper::_('select.option', 8, Text::_('Future Date'));
+		$options[] = HTMLHelper::_('select.option', 9, Text::_('Ipv4'));
+		$options[] = HTMLHelper::_('select.option', 10, Text::_('Ipv6'));
+		$options[] = HTMLHelper::_('select.option', 11, Text::_('Min Number Characters'));
+		$options[] = HTMLHelper::_('select.option', 12, Text::_('Max Number Characters'));
+		$options[] = HTMLHelper::_('select.option', 13, Text::_('Min Integer'));
+		$options[] = HTMLHelper::_('select.option', 14, Text::_('Max Integer'));
+		$options[] = HTMLHelper::_('select.option', 15, Text::_('Min Selected Checkboxes'));
+		$options[] = HTMLHelper::_('select.option', 16, Text::_('Max Selected Checkboxes'));
+		$options[] = HTMLHelper::_('select.option', 17, Text::_('Only Number and Space characters'));
+		$options[] = HTMLHelper::_('select.option', 18, Text::_('Only Letter and Space characters'));
+		$options[] = HTMLHelper::_('select.option', 19, Text::_('Only Letter and Number characters, No Space'));
+		$options[] = HTMLHelper::_('select.option', 20, Text::_('Equals'));
 
 		$this->lists['datatype_validation'] = HTMLHelper::_(
 			'select.genericlist',
@@ -360,18 +369,26 @@ class EventbookingViewFieldHtml extends RADViewItem
 		);
 
 		$query->clear()
-			->select('id, title')
+			->select('id, event_id, title')
 			->from('#__eb_ticket_types')
+			->order('event_id')
 			->order('title');
 		$db->setQuery($query);
+		
+		$options = [];
+
+		foreach ($db->loadObjectList() as $ticketType)
+		{
+			$options[] = HTMLHelper::_('select.option', $ticketType->id, '[' . $ticketType->event_id . '] - ' . $ticketType->title);
+		}
 
 		$this->lists['depend_on_ticket_type_ids'] = HTMLHelper::_(
 			'select.genericlist',
-			$db->loadObjectList(),
+			$options,
 			'depend_on_ticket_type_ids[]',
 			'class="form-select" multiple',
-			'id',
-			'title',
+			'value',
+			'text',
 			explode(',', $this->item->depend_on_ticket_type_ids)
 		);
 
@@ -522,7 +539,7 @@ class EventbookingViewFieldHtml extends RADViewItem
 			$this->item->payment_method ?: ''
 		);
 
-		$this->config  = $config;
+		$this->config = $config;
 
 		$eventObj = new EditField(
 			'onEditField',

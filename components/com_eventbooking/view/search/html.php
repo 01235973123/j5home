@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -15,6 +15,13 @@ use Joomla\CMS\Pagination\Pagination;
 
 class EventbookingViewSearchHtml extends RADViewHtml
 {
+	/**
+	 * The search model state
+	 *
+	 * @var RADModelState
+	 */
+	protected $state;
+
 	/**
 	 * Events search result
 	 *
@@ -129,6 +136,7 @@ class EventbookingViewSearchHtml extends RADViewHtml
 		}
 
 		$this->viewLevels      = Factory::getApplication()->getIdentity()->getAuthorisedViewLevels();
+		$this->state           = $this->model->getState();
 		$this->items           = $this->model->getData();
 		$this->pagination      = $this->model->getPagination();
 		$this->config          = $config;
@@ -140,8 +148,10 @@ class EventbookingViewSearchHtml extends RADViewHtml
 		);
 
 		// Add cancelRegistration method
-		$document->addScriptDeclaration(
-			'
+		$document
+			->getWebAssetManager()
+			->addInlineScript(
+				'
 			function cancelRegistration(registrantId)
 			{
 				var form = document.adminForm ;
@@ -154,6 +164,78 @@ class EventbookingViewSearchHtml extends RADViewHtml
 				}
 			}
 		'
-		);
+			);
+
+		$this->setPaginationAdditionalParams();
+	}
+
+	/**
+	 * Add additional params to pagination in case some filters are selected on search bar
+	 *
+	 * @return void
+	 */
+	protected function setPaginationAdditionalParams(): void
+	{
+		// Internal search filer states - passed from search module
+		if ($this->state->search)
+		{
+			$this->pagination->setAdditionalUrlParam('search', $this->state->search);
+		}
+
+		if ($this->state->filter_from_date)
+		{
+			$this->pagination->setAdditionalUrlParam('filter_from_date', $this->state->filter_from_date);
+		}
+
+		if ($this->state->filter_to_date)
+		{
+			$this->pagination->setAdditionalUrlParam('filter_to_date', $this->state->filter_to_date);
+		}
+
+		if ($this->state->category_id)
+		{
+			$this->pagination->setAdditionalUrlParam('category_id', $this->state->category_id);
+		}
+
+		if ($this->state->location_id)
+		{
+			$this->pagination->setAdditionalUrlParam('location_id', $this->state->location_id);
+		}
+
+		if ($this->state->filter_address)
+		{
+			$this->pagination->setAdditionalUrlParam('filter_address', $this->state->filter_address);
+		}
+
+		if ($this->state->filter_distance)
+		{
+			$this->pagination->setAdditionalUrlParam('filter_distance', $this->state->filter_distance);
+		}
+
+		if ($this->state->filter_order)
+		{
+			$this->pagination->setAdditionalUrlParam('filter_order', $this->state->filter_order);
+		}
+
+		if ($this->state->filter_order_Dir)
+		{
+			$this->pagination->setAdditionalUrlParam('filter_order_Dir', $this->state->filter_order_Dir);
+		}
+
+		// External states, passed by link to search view
+		if ($this->state->created_by)
+		{
+			$this->pagination->setAdditionalUrlParam('created_by', $this->state->created_by);
+		}
+
+		if ($this->state->filter_city)
+		{
+			$this->pagination->setAdditionalUrlParam('filter_city', $this->state->filter_city);
+		}
+
+		if ($this->state->filter_state)
+		{
+			$this->pagination->setAdditionalUrlParam('filter_state', $this->state->filter_state);
+		}
 	}
 }

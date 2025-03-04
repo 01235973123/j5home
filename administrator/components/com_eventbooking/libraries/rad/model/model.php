@@ -144,14 +144,7 @@ class RADModel
 
 		if (!class_exists($class))
 		{
-			if (isset($config['default_model_class']))
-			{
-				$class = $config['default_model_class'];
-			}
-			else
-			{
-				$class = 'RADModel';
-			}
+			$class = $config['default_model_class'] ?? 'RADModel';
 		}
 
 		return new $class($config);
@@ -208,7 +201,11 @@ class RADModel
 		else
 		{
 			$className = get_class($this);
-			$pos       = strpos($className, 'Model');
+
+			// Do not use Override in name of class
+			$className = str_replace('ModelOverride', 'Model', $className);
+
+			$pos = strpos($className, 'Model');
 
 			if ($pos !== false)
 			{
@@ -236,15 +233,9 @@ class RADModel
 
 		$component = substr($this->option, 4);
 
-		if (empty($config['class_prefix']))
-		{
-			$config['class_prefix'] = ucfirst($component);
-		}
+		$config['class_prefix'] ??= ucfirst($component);
 
-		if (empty($config['language_prefix']))
-		{
-			$config['language_prefix'] = strtoupper($component);
-		}
+		$config['language_prefix'] ??= strtoupper($component);
 
 		if (isset($config['table']))
 		{
@@ -536,16 +527,16 @@ class RADModel
 	/**
 	 * Clean the cache
 	 *
-	 * @param   string   $group      The cache group
-	 * @param   integer  $client_id  The ID of the client
+	 * @param   string  $group  The cache group
 	 *
 	 * @return  void
 	 */
-	protected function cleanCache($group = null, $client_id = 0)
+	protected function cleanCache($group = null)
 	{
+		$app     = Factory::getApplication();
 		$options = [
 			'defaultgroup' => $group ?: $this->option,
-			'cachebase'    => ($client_id) ? JPATH_ADMINISTRATOR . '/cache' : Factory::getApplication()->get('cache_path', JPATH_SITE . '/cache'),
+			'cachebase'    => $app->get('cache_path', JPATH_CACHE),
 		];
 
 		$cache = Cache::getInstance('callback', $options);
@@ -554,7 +545,7 @@ class RADModel
 		// Trigger the onContentCleanCache event.
 		if (!empty($this->eventCleanCache))
 		{
-			Factory::getApplication()->triggerEvent($this->eventCleanCache, $options);
+			$app->triggerEvent($this->eventCleanCache, $options);
 		}
 	}
 }

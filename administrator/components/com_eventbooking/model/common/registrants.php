@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -334,7 +334,7 @@ class EventbookingModelCommonRegistrants extends RADModelList
 		$db          = $this->getDbo();
 		$currentDate = $db->quote(EventbookingHelper::getServerTimeFromGMTTime());
 		$query->select('tbl.*')
-			->select('ev.event_date, ev.event_end_date, ev.ticket_prefix, ev.main_category_id, ev.custom_fields, ev.activate_certificate_feature')
+			->select('ev.event_date, ev.event_end_date, ev.ticket_prefix, ev.cancel_before_date, ev.main_category_id, ev.custom_fields, ev.activate_certificate_feature')
 			->select($db->quoteName('ev.title' . $fieldSuffix, 'title'))
 			->select("TIMESTAMPDIFF(MINUTE, ev.event_end_date, $currentDate) AS event_end_date_minutes")
 			->select('u.username')

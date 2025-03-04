@@ -3,12 +3,16 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Language\Text;
+
+/**
+ * @var RADConfig $config
+ */
 
 ?>
 <div class="control-group">
@@ -81,6 +85,22 @@ use Joomla\CMS\Language\Text;
 	</div>
 	<div class="controls">
 		<input type="number" name="invoice_number_length" class="form-control" value="<?php echo $config->get('invoice_number_length', 5); ?>" size="10" />
+	</div>
+</div>
+<div class="control-group">
+	<div class="control-label">
+		<?php echo EventbookingHelperHtml::getFieldLabel('invoice_page_orientation', Text::_('EB_PAGE_ORIENTATION')); ?>
+	</div>
+	<div class="controls">
+		<?php echo $this->lists['invoice_page_orientation']; ?>
+	</div>
+</div>
+<div class="control-group">
+	<div class="control-label">
+		<?php echo EventbookingHelperHtml::getFieldLabel('invoice_page_format', Text::_('EB_PAGE_FORMAT')); ?>
+	</div>
+	<div class="controls">
+		<?php echo $this->lists['invoice_page_format']; ?>
 	</div>
 </div>
 <div class="control-group">

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -45,7 +45,7 @@ foreach ($this->languages as $language)
 			<?php echo  Text::_('EB_TITLE'); ?>
 		</div>
 		<div class="controls">
-			<input class="input-xlarge form-control" type="text" name="title_<?php echo $sef; ?>" id="title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'title_' . $sef}; ?>" />
+			<input class="form-control" type="text" name="title_<?php echo $sef; ?>" id="title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'title_' . $sef}; ?>" />
 		</div>
 	</div>
 	<div class="control-group">
@@ -53,7 +53,7 @@ foreach ($this->languages as $language)
 			<?php echo  Text::_('EB_ALIAS'); ?>
 		</div>
 		<div class="controls">
-			<input class="input-xlarge form-control" type="text" name="alias_<?php echo $sef; ?>" id="alias_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'alias_' . $sef}; ?>" />
+			<input class="form-control" type="text" name="alias_<?php echo $sef; ?>" id="alias_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'alias_' . $sef}; ?>" />
 		</div>
 	</div>
 	<div class="control-group">
@@ -61,7 +61,7 @@ foreach ($this->languages as $language)
 			<?php echo  Text::_('EB_PRICE_TEXT'); ?>
 		</div>
 		<div class="controls">
-			<input class="input-xlarge form-control" type="text" name="price_text_<?php echo $sef; ?>" id="price_text_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'price_text_' . $sef}; ?>" />
+			<input class="form-control" type="text" name="price_text_<?php echo $sef; ?>" id="price_text_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'price_text_' . $sef}; ?>" />
 		</div>
 	</div>
 	<div class="control-group">
@@ -69,7 +69,7 @@ foreach ($this->languages as $language)
 			<?php echo  Text::_('EB_CUSTOM_REGISTRATION_HANDLE_URL'); ?>
 		</div>
 		<div class="controls">
-			<input class="input-xlarge form-control" type="text" name="registration_handle_url_<?php echo $sef; ?>" id="registration_handle_url_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'registration_handle_url_' . $sef}; ?>" />
+			<input class="form-control" type="text" name="registration_handle_url_<?php echo $sef; ?>" id="registration_handle_url_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'registration_handle_url_' . $sef}; ?>" />
 		</div>
 	</div>
 	<div class="control-group">
@@ -97,7 +97,7 @@ foreach ($this->languages as $language)
 				<?php echo  Text::_('EB_PAGE_TITLE'); ?>
 			</div>
 			<div class="controls">
-				<input class="input-xlarge form-control" type="text" name="page_title_<?php echo $sef; ?>" id="page_title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'page_title_' . $sef}; ?>" />
+				<input class="form-control" type="text" name="page_title_<?php echo $sef; ?>" id="page_title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'page_title_' . $sef}; ?>" />
 			</div>
 		</div>
 		<div class="control-group">
@@ -105,7 +105,7 @@ foreach ($this->languages as $language)
 				<?php echo  Text::_('EB_PAGE_HEADING'); ?>
 			</div>
 			<div class="controls">
-				<input class="input-xlarge form-control" type="text" name="page_heading_<?php echo $sef; ?>" id="page_heading_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'page_heading_' . $sef}; ?>" />
+				<input class="form-control" type="text" name="page_heading_<?php echo $sef; ?>" id="page_heading_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'page_heading_' . $sef}; ?>" />
 			</div>
 		</div>
 	<?php
@@ -153,6 +153,14 @@ foreach ($this->languages as $language)
 				</div>
 				<div class="controls">
 			        <?php echo $editor->display('admin_email_body_' . $sef, $this->item->{'admin_email_body_' . $sef}, '100%', '350', '90', '10'); ?>
+				</div>
+			</div>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo  Text::_('EB_USER_EMAIL_SUBJECT'); ?>
+				</div>
+				<div class="controls">
+					<input class="form-control" type="text" name="user_email_subject_<?php echo $sef; ?>" id="user_email_subject_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'user_email_subject_' . $sef}; ?>" />
 				</div>
 			</div>
 			<div class="control-group">

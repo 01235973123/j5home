@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -114,7 +114,7 @@ $formFormHorizontal = $bootstrapHelper->getClassMapping('form form-horizontal');
 	<?php
 		$showBillingStep = EventbookingHelperRegistration::showBillingStep($row->event_id);
 
-		if ($showBillingStep)
+		if ($showBillingStep || $rowEvent->has_multiple_ticket_types)
 		{
 		?>
 			<div class="<?php echo $controlGroupClass;  ?>">

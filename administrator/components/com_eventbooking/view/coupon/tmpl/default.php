@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -12,12 +12,12 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/js/admin-coupon-default.min.js')
+Factory::getApplication()
+	->getDocument()
 	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('com_eventbooking.admin-coupon-default', 'media/com_eventbooking/js/admin-coupon-default.min.js')
 	->useScript('showon');
 
 EventbookingHelper::normalizeNullDateTimeData($this->item, ['valid_from', 'valid_to']);
@@ -28,6 +28,12 @@ $languageKeys = [
 ];
 
 EventbookingHelperHtml::addJSStrings($languageKeys);
+
+// Little command to allow viewing subscription data easier without having to edit code during support
+if ($this->input->getInt('debug'))
+{
+	print_r($this->item);
+}
 ?>
 <form action="<?php echo $this->getFormAction(); ?>" method="post" name="adminForm" id="adminForm" class="form form-horizontal">
 	<?php

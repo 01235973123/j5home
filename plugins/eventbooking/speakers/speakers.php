@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -34,6 +34,34 @@ class plgEventBookingSpeakers extends CMSPlugin implements SubscriberInterface
 	 * @var    \Joomla\Database\DatabaseDriver
 	 */
 	protected $db;
+
+	/**
+	 * Custom fields, added by customization to #__eb_speakers table
+	 *
+	 * @var array
+	 */
+	protected $customFields = [];
+
+	public function __construct(&$subject, $config = [])
+	{
+		parent::__construct($subject, $config);
+
+		// Detect none core fields
+		$fields = array_keys($this->db->getTableColumns('#__eb_speakers'));
+
+		$coreFields = [
+			'id',
+			'event_id',
+			'name',
+			'title',
+			'avatar',
+			'description',
+			'url',
+			'ordering',
+		];
+
+		$this->customFields = array_diff($fields, $coreFields);
+	}
 
 	/**
 	 * @return array
@@ -173,8 +201,15 @@ class plgEventBookingSpeakers extends CMSPlugin implements SubscriberInterface
 	 */
 	private function drawSettingForm($row)
 	{
-		$xml = simplexml_load_file(JPATH_ROOT . '/plugins/eventbooking/speakers/form/speaker.xml');
-
+		if (file_exists(__DIR__ . '/form/override_speaker.xml'))
+		{
+			$xml = simplexml_load_file(__DIR__ . '/form/override_speaker.xml');
+		}
+		else
+		{
+			$xml = simplexml_load_file(__DIR__ . '/form/speaker.xml');
+		}
+		
 		if ($this->params->get('use_editor_for_description', 0))
 		{
 			foreach ($xml->field->form->children() as $field)
@@ -206,7 +241,7 @@ class plgEventBookingSpeakers extends CMSPlugin implements SubscriberInterface
 
 			foreach ($db->loadObjectList() as $speaker)
 			{
-				$formData['speakers'][] = [
+				$speakerData = [
 					'id'          => $speaker->id,
 					'name'        => $speaker->name,
 					'title'       => $speaker->title,
@@ -214,6 +249,13 @@ class plgEventBookingSpeakers extends CMSPlugin implements SubscriberInterface
 					'description' => $speaker->description,
 					'url'         => $speaker->url,
 				];
+
+				foreach ($this->customFields as $customField)
+				{
+					$speakerData[$customField] = $speakerData->{$customField};
+				}
+
+				$formData['speakers'][] = $speakerData;
 			}
 
 			$query->clear()

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="3.9.0" type="plugin" group="eventbooking" method="upgrade">
+<extension version="4.2.0" type="plugin" group="eventbooking" method="upgrade">
     <name>Events Booking - Fee Fields Generator</name>
     <author>Tuan Pham Ngoc</author>
     <creationDate>Mar 2016</creationDate>    
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2010 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2010 - 2025 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>5.0.0</version>
+    <version>5.0.4</version>
     <description>This plugin will custom fee field for each event based on pricing options entered in event's custom fields section. It is useful in case your event has different price options like Adult Children Price</description>
     <files>
         <filename plugin="field">field.php</filename>

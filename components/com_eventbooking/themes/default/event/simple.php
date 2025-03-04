@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -19,7 +19,7 @@ use Joomla\CMS\Uri\Uri;
 
 HTMLHelper::_('bootstrap.tooltip');
 
-EventbookingHelperJquery::colorbox('a.modal');
+EventbookingHelperJquery::colorbox('a.eb-event-image-modal');
 
 $user = Factory::getApplication()->getIdentity();
 
@@ -190,7 +190,7 @@ if ($msg)
 									$largeImageUri = $baseUri . '/media/com_eventbooking/images/thumbs/' . $this->item->thumb;
 								}
 								?>
-								<a href="<?php echo $largeImageUri; ?>" class="modal"><img src="<?php echo $baseUri . '/media/com_eventbooking/images/thumbs/' . $this->item->thumb; ?>" class="img_preview" /></a>
+								<a href="<?php echo $largeImageUri; ?>" class="eb-event-image-modal"><img src="<?php echo $baseUri . '/media/com_eventbooking/images/thumbs/' . $this->item->thumb; ?>" class="img_preview" /></a>
 								<input type="checkbox" name="del_thumb" value="1" /><?php echo Text::_('EB_DELETE_CURRENT_THUMB'); ?>
 								<?php
 							}
@@ -661,6 +661,29 @@ if ($msg)
 				</div>
 				<div class="<?php echo $controlsClass; ?>">
 					<?php echo $this->lists['registration_access']; ?>
+				</div>
+			</div>
+		<?php
+		}
+
+		if ($this->config->get('fes_show_currency', 0))
+		{
+		?>
+			<div class="<?php echo $controlGroupClass;  ?>">
+				<div class="<?php echo $controlLabelClass; ?>">
+					<?php echo EventbookingHelperHtml::getFieldLabel('currency_code', Text::_('EB_CURRENCY'), Text::_('EB_CURRENCY_CODE_EXPLAIN')); ?>
+				</div>
+				<div class="<?php echo $controlsClass; ?>">
+					<?php echo EventbookingHelperHtml::getChoicesJsSelect($this->lists['currency_code']); ?>
+				</div>
+			</div>
+
+			<div class="<?php echo $controlGroupClass;  ?>">
+				<div class="<?php echo $controlLabelClass; ?>">
+					<?php echo EventbookingHelperHtml::getFieldLabel('currency_symbol', Text::_('EB_CURRENCY_SYMBOL'), Text::_('EB_CURRENCY_SYMBOL_EXPLAIN')); ?>
+				</div>
+				<div class="<?php echo $controlsClass; ?>">
+					<input type="text" name="currency_symbol" size="5" class="form-control" value="<?php echo $this->item->currency_symbol; ?>" />
 				</div>
 			</div>
 		<?php

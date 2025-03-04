@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -17,6 +17,7 @@ use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Http\HttpFactory;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
@@ -242,7 +243,29 @@ class EventbookingControllerTool extends RADController
 		echo 'Trigger Completed';
 	}
 
-	public function remove_orphant_group_member_records()
+	public function find_orphan_group_member_records()
+	{
+		$eventId = $this->input->getInt('event_id', 0);
+
+		/* @var \Joomla\Database\DatabaseDriver $db */
+		$db    = Factory::getContainer()->get('db');
+		$query = $db->getQuery(true)
+			->select('id')
+			->from('#__eb_registrants')
+			->where('group_id > 0')
+			->where('group_id NOT IN (SELECT id FROM #__eb_registrants WHERE is_group_billing = 1)');
+
+		if ($eventId > 0)
+		{
+			$query->where('event_id = ' . $eventId);
+		}
+
+		$db->setQuery($query);
+
+		print_r($db->loadColumn());
+	}
+
+	public function remove_orphan_group_member_records()
 	{
 		$eventId = $this->input->getInt('event_id', 0);
 
@@ -515,9 +538,16 @@ class EventbookingControllerTool extends RADController
 
 		if (count($languages))
 		{
-			$mailer   = Factory::getMailer();
+			if (version_compare(JVERSION, '4.4.0', 'ge'))
+			{
+				$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
+			}
+			else
+			{
+				$mailer = Factory::getMailer();
+			}
+
 			$app      = $this->app;
-			$jConfig  = Factory::getConfig();
 			$mailFrom = $app->get('mailfrom');
 			$fromName = $app->get('fromname');
 			$mailer->setSender([$mailFrom, $fromName]);
@@ -542,7 +572,7 @@ class EventbookingControllerTool extends RADController
 				}
 			}
 
-			require_once JPATH_COMPONENT . '/libraries/vendor/dbexporter/dumper.php';
+			require_once JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/vendor/dbexporter/dumper.php';
 
 			$tables = [$db->replacePrefix('#__eb_fields'), $db->replacePrefix('#__eb_messages')];
 
@@ -701,13 +731,14 @@ class EventbookingControllerTool extends RADController
 		/* @var \Joomla\Database\DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
-			->select('image')
-			->from('#__eb_events')
-			->where('published = 1')
-			->order('id DESC')
-			->where('LENGTH(image) > 0');
+			->select('a.image, a.created_by, b.username')
+			->from('#__eb_events AS a')
+			->leftJoin('#__users AS b ON a.created_by = b.id')
+			->where('a.published = 1')
+			->order('a.id DESC')
+			->where('LENGTH(a.image) > 0');
 		$db->setQuery($query, $start, 100);
-		$images = $db->loadColumn();
+		$images = $db->loadObjectList();
 
 		if (count($images) == 0)
 		{
@@ -715,9 +746,9 @@ class EventbookingControllerTool extends RADController
 		}
 		else
 		{
-			foreach ($images as $image)
+			foreach ($images as $imageObj)
 			{
-				$image = EventbookingHelperHtml::getCleanImagePath($image);
+				$image = EventbookingHelperHtml::getCleanImagePath($imageObj->image);
 
 				$path = JPATH_ROOT . '/' . $image;
 
@@ -726,7 +757,18 @@ class EventbookingControllerTool extends RADController
 					continue;
 				}
 
-				$fileName  = basename($image);
+				$fileName = basename($image);
+
+				if ($imageObj->username && $config->get('store_images_in_user_folder'))
+				{
+					if (!Folder::exists(JPATH_ROOT . '/media/com_eventbooking/images/thumbs/' . $imageObj->username))
+					{
+						Folder::create(JPATH_ROOT . '/media/com_eventbooking/images/thumbs/' . $imageObj->username);
+					}
+
+					$fileName = $imageObj->username . '/' . $fileName;
+				}
+
 				$thumbPath = JPATH_ROOT . '/media/com_eventbooking/images/thumbs/' . $fileName;
 
 				EventbookingHelper::resizeImage($path, $thumbPath, $width, $height);
@@ -1981,6 +2023,7 @@ class EventbookingControllerTool extends RADController
 			'#__eb_messages',
 			'#__eb_ticket_types',
 			'#__eb_agendas',
+			'#__eb_field_values',
 		];
 
 		foreach ($tablesToConvert as $table)
