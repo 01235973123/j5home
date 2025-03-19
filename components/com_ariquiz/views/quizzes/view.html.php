@@ -16,19 +16,15 @@ require_once dirname(__FILE__) . DS . '..' . DS . 'view.php';
 
 class AriQuizViewQuizzes extends AriQuizView 
 {
-	function displayView($quizzes, $categories, $statusList, $tpl = null) 
+	function display($quizzes, $categories, $tpl = null) 
 	{
 		$app = JFactory::getApplication();
-		$user = JFactory::getUser();
-		$userId = $user->get('id');
 		$params = $app->getParams();
 		$showDescription = (bool)$params->get('showdescription');
-
+		
 		$this->assignRef('quizzes', $quizzes);
-		$this->assign('statusList', $statusList);
 		$this->assign('showDescription', $showDescription);
 		$this->assign('categories', $categories);
-		$this->assign('userId', $userId);
 		$this->assign('itemId', AriMenuHelper::getActiveItemId());
 		
 		$this->_prepareDocument();

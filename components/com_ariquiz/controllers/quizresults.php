@@ -24,7 +24,7 @@ class AriQuizControllerQuizresults extends AriController
 		parent::__construct($config);
 	}
 	
-	function display($cachable = false, $urlparams = [])
+	function display()
 	{
 		$user =& JFactory::getUser();
 		$userId = $user->get('id');
@@ -36,7 +36,7 @@ class AriQuizControllerQuizresults extends AriController
 		}
 		
 		$view =& $this->getView();
-		$view->displayView();
+		$view->display();
 	}
 
 	function ajaxGetResultList()
@@ -46,30 +46,15 @@ class AriQuizControllerQuizresults extends AriController
 
 		if ($userId < 1)
 			return null;
-
-        $app = JFactory::getApplication();
-        $params = $app->getParams();
-        $sortField = 'StartDate2';
-        $sortDir = 'desc';
-        if (!empty($params))
-        {
-            $field = $params->get('sortfield');
-            if (in_array($field, array('StartDate2', 'EndDate2')))
-                $sortField = $field;
-
-            $dir = strtolower($params->get('sortdir'));
-            if (in_array($dir, array('asc', 'desc')))
-                $sortDir = $dir;
-        }
-
+		
 		$model =& $this->getModel();
 
 		$filter = new AriDataFilter(
 			array(
 				'startOffset' => 0, 
 				'limit' => 10, 
-				'sortField' => $sortField,
-				'sortDirection' => $sortDir,
+				'sortField' => 'StartDate2', 
+				'dir' => 'desc',
 				'filter' => array(
 					'UserId' => $userId
 				)

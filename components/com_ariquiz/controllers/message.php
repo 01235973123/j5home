@@ -16,7 +16,7 @@ class AriQuizControllerMessage extends AriController
 {
 	function gotopage()
 	{
-		$returnUrl = $this->input->getString('rurl');
+		$returnUrl = JRequest::getString('rurl');
 		
 		if ($returnUrl)
 			$returnUrl = urldecode($returnUrl);

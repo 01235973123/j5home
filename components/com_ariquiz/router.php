@@ -12,4 +12,13 @@
 
 defined('_JEXEC') or die('Restricted access');
 
-require_once dirname(__FILE__) . '/router/router_ariquiz.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_ariquiz/kernel/class.AriKernel.php';
+require_once JPATH_ADMINISTRATOR . '/components/com_ariquiz/helper.php';
+
+$config = AriQuizHelper::getConfig();
+$sefEnabled = (bool)$config->get('EnableSEF');
+
+if ($sefEnabled)
+	require_once dirname(__FILE__) . '/router/router_ariquiz.php';
+else
+	require_once dirname(__FILE__) . '/router/router_empty.php';

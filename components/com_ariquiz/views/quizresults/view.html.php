@@ -16,7 +16,7 @@ AriKernel::import('Joomla.Menu.MenuHelper');
 
 class AriQuizViewQuizresults extends AriQuizView 
 {
-	function displayView($tpl = null) 
+	function display($tpl = null) 
 	{
 		$this->assignRef('dtResults', $this->_getResultsDataTable());
 		
@@ -43,6 +43,13 @@ class AriQuizViewQuizresults extends AriQuizView
 					'key' => 'QuizName', 
 					'label' => JText::_('COM_ARIQUIZ_LABEL_QUIZ'), 
 					'sortable' => true 
+				)
+			),
+			new AriDataTableControlColumn(
+				array(
+					'key' => 'Name', 
+					'label' => JText::_('COM_ARIQUIZ_LABEL_QUIZ'), 
+					'sortable' => false 
 				)
 			),
 			new AriDataTableControlColumn(

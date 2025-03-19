@@ -27,11 +27,8 @@ class AriQuizViewMessage extends AriQuizView
 			$returnUrl = $config->get('ReturnUrl');
 		}
 
-		$hideBtn = JRequest::getBool('hide_btn');
-
 		$this->assign('message', JText::_(JRequest::getString('msg')));
 		$this->assign('returnUrl', $returnUrl);
-		$this->assign('hideBtn', $hideBtn);
 
 		parent::display($tpl);
 	}

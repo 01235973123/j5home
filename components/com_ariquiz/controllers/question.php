@@ -17,8 +17,6 @@ AriKernel::import('Utils.DateUtility');
 
 class AriQuizControllerQuestion extends AriController 
 {
-	var $_quizStorage = null;
-
 	function __construct($config = array()) 
 	{
 		if (!array_key_exists('model_path', $config))
@@ -26,16 +24,15 @@ class AriQuizControllerQuestion extends AriController
 
 		parent::__construct($config);
 	}
-
+	
 	function reload()
 	{
 		$this->display();
 	}
 
-	function display($cachable = false, $urlparams = [])
+	function display()
 	{
 		$quizStorage = $this->_getQuizStorage();
-
 		if (!$quizStorage->isAvailable())
 		{
 			$accessErrorCode = $quizStorage->getLastAccessError();
@@ -46,18 +43,18 @@ class AriQuizControllerQuestion extends AriController
 			);
 			exit();
 		}
-
-		$user = JFactory::getUser();
+		
 		$userQuizModel = $this->getModel('UserQuiz');
+		
 		$sid = $quizStorage->get('StatisticsInfoId');
 		$ticketId = $quizStorage->getTicketId();
-		$statistics = $userQuizModel->getNextPage($sid, $user->get('id'));
+		$statistics = $userQuizModel->getNextPage($sid);
 		if (empty($statistics) || empty($statistics->PageId) || empty($statistics->Questions))
 		{
 			$quizStorage->clear();
 			if ($userQuizModel->isQuizFinishedByTicketId($ticketId))
 			{
-				$itemId = $this->input->getInt('Itemid');
+				$itemId = JRequest::getInt('Itemid');
 				$this->redirect(
 					JRoute::_('index.php?option=com_ariquiz&view=quizcomplete&ticketId=' . $ticketId . ($itemId > 0 ? '&Itemid=' . $itemId : ''), false)
 				);
@@ -110,30 +107,19 @@ class AriQuizControllerQuestion extends AriController
 		if ($quizStorage->get('ParsePluginTag'))
 			$questions = $userQuizModel->getQuizQuestions($sid);
 
-        $quizInfo->PagesStatus = array();
-        if ($quizInfo->PageCount > 1)
-        {
-            $quizInfo->PagesStatus = $userQuizModel->getPagesStatus($sid);
-        }
-
 		$view =& $this->getView();
-		$view->displayView($quizStorage, $quizInfo, $questions);
+		$view->display($quizStorage, $quizInfo, $questions);
 	}
 	
 	function _getQuizStorage()
 	{
-		if (!is_null($this->_quizStorage))
-			return $this->_quizStorage;
-
 		$userQuizModel = $this->getModel('UserQuiz');
 
-		$ticketId = $this->input->getString('ticketId');
-		$quizId = $this->input->getInt('quizId');
+		$ticketId = JRequest::getString('ticketId');
+		$quizId = JRequest::getInt('quizId');
 		$user =& JFactory::getUser();
 
-		$this->_quizStorage = $userQuizModel->getQuizStorage($quizId, $ticketId, $user);
-		
-		return $this->_quizStorage;
+		return $userQuizModel->getQuizStorage($quizId, $ticketId, $user);
 	}
 
 	function _stopQuiz()
@@ -145,25 +131,9 @@ class AriQuizControllerQuestion extends AriController
 		if (!$quizStorage->isAvailable() || !$quizStorage->get('CanStop') || $userId < 1)
 			return $result;
 		
-		$ticketId = $quizStorage->getTicketId();
-		$sid = $quizStorage->get('StatisticsInfoId');
+		$ticketId = $quizStorage->getTicketId();		
 		$userQuizModel = $this->getModel('UserQuiz');
-		$page = $userQuizModel->getCurrentPage($sid, $userId);
-		$pageId = $this->input->getInt('pageId');
-		if ($page->PageId == $pageId)
-		{
-			foreach ($page->Questions as $question)
-			{
-				$questionVersion = $question->getBaseQuestionVersion();
-				$questionEntity = AriQuizQuestionFactory::getQuestion($questionVersion->QuestionType->ClassName);
-				$data = $questionEntity->getFrontXml($question->QuestionId);
-				$question->Data = $data;
-			}
-			
-			$userQuizModel->updatePageQuestions($page);
-		}
-		
-		$result = $userQuizModel->stopQuiz($sid, $userId);
+		$result = $userQuizModel->stopQuiz($quizStorage->get('StatisticsInfoId'), $userId);
 		if ($result)
 		{
 			$quizStorage->clear();
@@ -184,7 +154,7 @@ class AriQuizControllerQuestion extends AriController
 	{
 		$result = $this->_stopQuiz();
 		$msg = $result ? 'COM_ARIQUIZ_LABEL_QUIZSTOPPED' : 'COM_ARIQUIZ_LABEL_UNKNOWERROR';
-		$itemId = $this->input->getInt('Itemid');
+		$itemId = JRequest::getInt('Itemid');
 
 		$this->redirect(
 			JRoute::_('index.php?option=com_ariquiz&view=message&msg=' . $msg . ($itemId > 0 ? '&Itemid=' . $itemId : ''), false)
@@ -222,21 +192,12 @@ class AriQuizControllerQuestion extends AriController
 	
 	function terminate()
 	{
-		$quizStorage = $this->_getQuizStorage();
-		$quizId = $quizStorage->get('QuizId');
-		$itemId = $this->input->getInt('Itemid');
-
 		$result = $this->_terminateQuizSession();
-		if (!$result)
-		{
-			$this->redirect(
-				JRoute::_('index.php?option=com_ariquiz&view=message&msg=COM_ARIQUIZ_LABEL_UNKNOWERROR' . ($itemId > 0 ? '&Itemid=' . $itemId : ''), false)
-			);
-			exit();
-		}
+		$msg = $result ? 'COM_ARIQUIZ_LABEL_QUIZTERMINATED' : 'COM_ARIQUIZ_LABEL_UNKNOWERROR';
+		$itemId = JRequest::getInt('Itemid');
 
 		$this->redirect(
-			JRoute::_('index.php?option=com_ariquiz&view=terminate&quizId=' . $quizId . ($itemId > 0 ? '&Itemid=' . $itemId : ''), false)
+			JRoute::_('index.php?option=com_ariquiz&view=message&msg=' . $msg . ($itemId > 0 ? '&Itemid=' . $itemId : ''), false)
 		);
 		exit();
 	}
@@ -316,7 +277,7 @@ class AriQuizControllerQuestion extends AriController
 			AriKernel::import('Web.Request');
 
 			$startDate = AriDateUtility::getDbUtcDate();
-			$page->IpAddress = ip2long(AriRequest::getIP()) || 1;
+			$page->IpAddress = AriRequest::getIP();
 			$page->StartDate = $startDate;
 
 			$userQuizModel->updateNewQuestionPage($page);					
@@ -347,7 +308,7 @@ class AriQuizControllerQuestion extends AriController
 		if (!$quizStorage->isAvailable() || !$quizStorage->get('CanSkip'))
 			return $retResult;
 
-		$pageId = $this->input->getInt('pageId');
+		$pageId = JRequest::getInt('pageId');
 		$sid = $quizStorage->get('StatisticsInfoId');
 		$user =& JFactory::getUser();
 		$userId = $user->get('id');
@@ -390,7 +351,7 @@ class AriQuizControllerQuestion extends AriController
 		if (!$quizStorage->isAvailable() || !$quizStorage->get('CanBack'))
 			return $retResult;
 
-		$pageId = $this->input->getInt('pageId');
+		$pageId = JRequest::getInt('pageId');
 		$sid = $quizStorage->get('StatisticsInfoId');
 		$user =& JFactory::getUser();
 		$userId = $user->get('id');
@@ -429,65 +390,6 @@ class AriQuizControllerQuestion extends AriController
 		return $retResult;
 	}
 
-    function ajaxGoToPage()
-    {
-        $retResult = false;
-        $quizStorage = $this->_getQuizStorage();
-        if (!$quizStorage->isAvailable())
-            return $retResult;
-
-        $newPageNum = $this->input->getInt('pageNum');
-        if ($newPageNum < 0)
-            return $retResult;
-
-        $pageId = $this->input->getInt('pageId');
-        $sid = $quizStorage->get('StatisticsInfoId');
-        $user = JFactory::getUser();
-        $userId = $user->get('id');
-        $userQuizModel = $this->getModel('UserQuiz');
-        $page = $userQuizModel->getCurrentPage($sid, $userId);
-        if (empty($page->PageId) || $page->PageId != $pageId)
-            return $retResult;
-
-        if ($page->PageNumber == $newPageNum)
-            return true;
-
-        $pagesStatus = $userQuizModel->getPagesStatus($sid);
-        if (!isset($pagesStatus[$newPageNum]))
-            return $retResult;
-
-        $newPageStatus = $pagesStatus[$newPageNum];
-        if ($newPageStatus->Completed)
-            return $retResult;
-
-        foreach ($page->Questions as $question)
-        {
-            $questionVersion = $question->getBaseQuestionVersion();
-            $questionEntity = AriQuizQuestionFactory::getQuestion($questionVersion->QuestionType->ClassName);
-            $data = $questionEntity->getFrontXml($question->QuestionId);
-            $question->Data = $data;
-        }
-
-        $skipDate = AriDateUtility::getDbUtcDate();
-        if ($userQuizModel->goToPage($newPageNum, $page, $skipDate))
-        {
-            AriEventController::raiseEvent(
-                'onGoToPage',
-                array(
-                    'QuizId' => $quizStorage->get('QuizId'),
-                    'TicketId' => $quizStorage->getTicketId(),
-                    'UserId' => $userId,
-                    'Page' => $page,
-                    'PageNum' => $newPageNum
-                )
-            );
-
-            $retResult = true;
-        }
-
-        return $retResult;
-    }
-
 	function ajaxSavePage()
 	{
 		$retResult = array(
@@ -498,18 +400,15 @@ class AriQuizControllerQuestion extends AriController
 			'questionId' => 0
 		);
 		$quizStorage = $this->_getQuizStorage();
-
 		if (!$quizStorage->isAvailable())
 			return $retResult;
 
-        $skipTimeOver = false;
-		$pageId = $this->input->getInt('pageId');
+		$pageId = JRequest::getInt('pageId');
 		$sid = $quizStorage->get('StatisticsInfoId');
 		$user = JFactory::getUser();
 		$userId = $user->get('id');
-		$timeOver = $this->input->getBool('timeOver');
+		$timeOver = JRequest::getBool('timeOver');
 		$userQuizModel = $this->getModel('UserQuiz');
-
 		$statistics = $timeOver
 			? $userQuizModel->getPage($pageId, $sid)
 			: $userQuizModel->getCurrentPage($sid, $userId);
@@ -523,8 +422,7 @@ class AriQuizControllerQuestion extends AriController
 		foreach ($statistics->Questions as $question)
 		{
 			$questionVersion = $question->Question->QuestionVersion;
-			$baseQuestionVersion = $question->getBaseQuestionVersion();
-			$questionEntity = AriQuizQuestionFactory::getQuestion($baseQuestionVersion->QuestionType->ClassName);
+			$questionEntity = AriQuizQuestionFactory::getQuestion($questionVersion->QuestionType->ClassName);
 			
 			if ($questionEntity->hasCorrectAnswer())
 				$showExplanation = true;
@@ -532,9 +430,10 @@ class AriQuizControllerQuestion extends AriController
 			if ($question->Completed)
 				continue ;
 
+			$baseQuestionVersion = $question->getBaseQuestionVersion();
 			$maxScore = $questionVersion->Score != 0 ? $questionVersion->Score : $baseQuestionVersion->Score;
 			$penalty = $questionVersion->Penalty != 0 ? $questionVersion->Penalty : $baseQuestionVersion->Penalty;
-			$data = ($skipTimeOver || !$timeOver)
+			$data = !$timeOver 
 				? $questionEntity->getFrontXml($question->QuestionId)
 				: null;
 			$score = $questionEntity->getScore(
@@ -548,10 +447,10 @@ class AriQuizControllerQuestion extends AriController
 
 			$updateQuestion = true;
 			++$question->AttemptCount;
-			if (($skipTimeOver || !$timeOver) && $baseQuestionVersion->OnlyCorrectAnswer)
+			if (!$timeOver && $baseQuestionVersion->OnlyCorrectAnswer)
 			{
 				$isCorrect = $questionEntity->isCorrect($data, $baseQuestionVersion->Data, $question->getOverrideData());
-				if (!$isCorrect && ($baseQuestionVersion->AttemptCount == 0 || $question->AttemptCount < $baseQuestionVersion->AttemptCount))
+				if ($score != $maxScore && ($baseQuestionVersion->AttemptCount == 0 || $question->AttemptCount < $baseQuestionVersion->AttemptCount))
 				{
 					$attempts[$question->StatisticsId] = $data; 
 
@@ -586,20 +485,6 @@ class AriQuizControllerQuestion extends AriController
 			$retResult['moveToNext'] = true;
 			$retResult['showExplanation'] = $showExplanation && $quizStorage->get('ShowExplanation');
 		}
-		
-		AriEventController::raiseEvent(
-			'onSaveQuestion', 
-			array(
-				'QuizStorage' => $quizStorage,
-				'QuizId' => $quizStorage->get('QuizId'), 
-				'QuizSessionId' => $quizStorage->get('StatisticsInfoId'),
-				'TicketId' => $quizStorage->getTicketId(), 
-				'UserId' => $userId,
-				'Page' => $statistics,
-				'Attempts' => $attempts,
-				'IsTimeOver' => $timeOver
-			)
-		);
 
 		return $retResult;
 	}
@@ -613,7 +498,7 @@ class AriQuizControllerQuestion extends AriController
 
 		$userQuizModel = $this->getModel('UserQuiz');
 		$sid = $quizStorage->get('StatisticsInfoId');
-		$questionId = $this->input->getInt('qid');
+		$questionId = JRequest::getInt('qid');
 		$user = JFactory::getUser();
 		$userId = $user->get('id');
 
@@ -635,12 +520,12 @@ class AriQuizControllerQuestion extends AriController
 			return $retResult;
 		
 		$frontXml = $questionEntity->getFrontXml($question->QuestionId);
-
+				
 		$retResult = new stdClass();
 		$retResult->QuestionId = $question->QuestionId;
 		$retResult->TicketId = $quizStorage->getTicketId();
 		$retResult->QuestionClassName = $className;
-		$retResult->QuestionData = $questionEntity->getDataFromXml($baseQuestionVersion->Data, false, null, $question->InitData ? @unserialize($question->InitData) : null);
+		$retResult->QuestionData = $questionEntity->getDataFromXml($baseQuestionVersion->Data, false);
 		$retResult->UserData = $questionEntity->getDataFromXml($frontXml);
 		$retResult->MaxScore = $maxScore;
 		$retResult->UserScore = $questionEntity->getScore($frontXml, $baseQuestionVersion->Data, $maxScore, $penalty, null, $quizStorage->get('NoPenaltyForEmptyAnswer'));
@@ -659,7 +544,7 @@ class AriQuizControllerQuestion extends AriController
 			
 		$userQuizModel = $this->getModel('UserQuiz');
 		$sid = $quizStorage->get('StatisticsInfoId');
-		$pageId = $this->input->getInt('pageId');
+		$pageId = JRequest::getInt('pageId');
 		$user =& JFactory::getUser();
 		$userId = $user->get('id');
 
@@ -680,9 +565,9 @@ class AriQuizControllerQuestion extends AriController
 			$question->QuestionId = $pageQuestion->QuestionId;
 			$question->TicketId = $quizStorage->getTicketId();
 			$question->QuestionClassName = $className;
-			$question->QuestionData = $questionEntity->getDataFromXml($questionVersion->Data, false, null, $pageQuestion->InitData ? @unserialize($pageQuestion->InitData) : null);
+			$question->QuestionData = $questionEntity->getDataFromXml($questionVersion->Data, false);
 			$question->UserData = $questionEntity->getDataFromXml($pageQuestion->Data);
-			$question->ClientData = $questionEntity->getClientDataFromXml($questionVersion->Data, $pageQuestion->Data, false, $pageQuestion->InitData ? @unserialize($pageQuestion->InitData) : null);
+			$question->ClientData = $questionEntity->getClientDataFromXml($questionVersion->Data, $pageQuestion->Data);
 			$question->MaxScore = $questionVersion->Score;
 			$question->UserScore = $pageQuestion->Score;
 			$question->IsCorrect = $questionEntity->isCorrect($pageQuestion->Data, $questionVersion->Data);
@@ -718,8 +603,8 @@ class AriQuizControllerQuestion extends AriController
 		if (!$quizStorage->isAvailable())
 			exit();
 
-		$questionId = $this->input->getInt('questionId');
-		$alias = $this->input->getString('alias');	
+		$questionId = JRequest::getInt('questionId');
+		$alias = JRequest::getString('alias');	
 		$file = $quizStorage->getFile($questionId, $alias);
 		if (empty($file))
 		{

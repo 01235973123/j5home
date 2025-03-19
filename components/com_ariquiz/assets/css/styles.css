@@ -18,17 +18,10 @@
 	height: 12px;
 }
 
-DIV.aq-hotspot-marker,
-DIV.aq-hotspot-marker-img {
+DIV.aq-hotspot-marker {
 	width: 9px;
 	height: 9px;
-}
-
-DIV.aq-hotspot-marker-img {
 	background: transparent url(../images/circle.gif) no-repeat center center;
-	position: relative;
-	left: -50%;
-	top: -50%;
 }
 
 .aq-dt-results .yui-dt>TABLE {
@@ -90,7 +83,6 @@ DIV.aq-cat-quizzes DIV.aq-cat-name {
 	font-weight: bold;
 }
 
-DIV#ariQuizContainer SELECT,
 .yui-skin-sam SELECT,
 DIV.ari-quiz-container SELECT,
 DIV.ari-quiz-container INPUT {
@@ -107,11 +99,4 @@ DIV.ari-quiz-container INPUT {
 
 DIV.ari-quiz-container .ui-btn-hidden {
 	width: 100% !important;
-}
-
-@media print {
-	.aq-no-print,
-	.aq-no-print * {
-		display: none !important;
-	}
 }

@@ -16,15 +16,10 @@ require_once dirname(__FILE__) . DS . '..' . DS . 'view.php';
 
 class AriQuizViewCategory extends AriQuizView 
 {
-	function displayView($category, $quizzes, $statusList, $tpl = null) 
+	function display($category, $quizzes, $tpl = null) 
 	{
-		$user = JFactory::getUser();
-		$userId = $user->get('id');
-		
 		$this->assignRef('category', $category);
 		$this->assignRef('quizzes', $quizzes);
-		$this->assign('statusList', $statusList);
-		$this->assign('userId', $userId);
 		$this->assign('itemId', AriMenuHelper::getActiveItemId());
 		
 		$this->_prepareDocument($category);

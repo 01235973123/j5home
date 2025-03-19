@@ -23,6 +23,6 @@ class AriQuizThemeLoader_Default extends AriQuizThemeLoader
 		$theme = $this->getName();
 		$themeUri = JURI::root(true) . '/components/com_ariquiz/themes/' . $theme . '/';
 		
-		$doc->addStyleSheet($themeUri . 'css/bootstrap.styles.css?v=' . ARIQUIZ_VERSION);
+		$doc->addStyleSheet($themeUri . 'css/buttons.css?v=' . ARIQUIZ_VERSION);
 	}	
 }

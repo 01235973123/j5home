@@ -23,12 +23,12 @@ class AriQuizControllerQuiz extends AriController
 		parent::__construct($config);
 	}
 
-	function display($cachable = false, $urlparams = []) 
+	function display() 
 	{
 		$model =& $this->getModel('Quiz');
 		$userQuizModel = $this->getModel('UserQuiz');
 
-		$quizId = $this->input->getInt('quizId');
+		$quizId = JRequest::getInt('quizId');
 		$quiz = $model->getQuiz($quizId);
 		if (empty($quiz))
 		{
@@ -47,21 +47,21 @@ class AriQuizControllerQuiz extends AriController
 		}
 
 		$formView = null;
-		if ($user->get('id') == 0 && $quiz->Anonymous != 'Yes')
+		if (/*$user->get('id') == 0 && */$quiz->Anonymous != 'Yes')
 		{
 			$formView = $this->getSubView('guestform', 'quizform');
 		}
 
 		$view =& $this->getView();
-		$view->displayView($quiz, $errorCode, $formView);
+		$view->display($quiz, $errorCode, $formView);
 	}
 	
 	function takeQuiz()
 	{
 		$user =& JFactory::getUser();
 		$userId = $user->get('id');
-		$quizId = $this->input->getInt('quizId');
-		$extraData = $this->input->getVar('extraData', array(), 'default', 'none', JREQUEST_ALLOWRAW);
+		$quizId = JRequest::getInt('quizId');
+		$extraData = JRequest::getVar('extraData', array(), 'default', 'none', JREQUEST_ALLOWRAW);
 
 		AriEventController::raiseEvent(
 			'onBeforeStartQuiz', 
@@ -71,15 +71,15 @@ class AriQuizControllerQuiz extends AriController
 				'UserId' => $userId
 			)
 		);
-
+		
 		$questionCount = -1;
 		$ticketId = ($userId > 0)
-			? $this->_takeMemberQuiz($userId, $quizId, $questionCount)
+			? $this->_takeMemberQuiz($userId, $quizId, $extraData, $questionCount)
 			: $this->_takeGuestQuiz($quizId, $extraData, $questionCount);
 
 		if (!empty($ticketId))
 		{
-			$itemId = $this->input->getInt('Itemid');
+			$itemId = JRequest::getInt('Itemid');
 			$this->redirect(
 				JRoute::_('index.php?option=com_ariquiz&view=question&quizId=' . $quizId . '&ticketId=' . $ticketId . ($itemId > 0 ? '&Itemid=' . $itemId : ''), false)
 			);
@@ -132,7 +132,7 @@ class AriQuizControllerQuiz extends AriController
 		return $ticketId;
 	}
 
-	function _takeMemberQuiz($userId, $quizId, &$rQuestionCount)
+	function _takeMemberQuiz($userId, $quizId, $extraData, &$rQuestionCount)
 	{
 		$ticketId = null;
 		$userQuizModel = $this->getModel('UserQuiz');
@@ -146,7 +146,6 @@ class AriQuizControllerQuiz extends AriController
 		}
 		else
 		{
-			$extraData = $this->input->getVar('extraData', array(), 'default', 'none', JREQUEST_ALLOWRAW);
 			$ticketId = $userQuizModel->composeUserQuiz($quizId, $userId, $extraData, $rQuestionCount);
 		}
 

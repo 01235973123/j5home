@@ -16,7 +16,7 @@ AriKernel::import('Utils.Utils');
 
 class AriQuizSubViewQuizFormGuestForm extends AriSubView 
 {
-	function displayView($quiz, $tpl = null)
+	function display($quiz, $tpl = null)
 	{
 		$userQuizModel = AriModel::getInstance('Userquiz', 'AriQuizModel');
 		$ticketId = $userQuizModel->getGuestTicketId($quiz->QuizId);

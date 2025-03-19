@@ -11,27 +11,16 @@
 (defined('_JEXEC') && defined('ARI_FRAMEWORK_LOADED')) or die;
 
 AriKernel::import('Joomla.Views.View');
-AriKernel::import('Joomla.Menu.MenuHelper');
-
-use Joomla\CMS\Factory;
 
 function AriQuizFixBaseUrlHandler()
 {
-	$app = Factory::getApplication();
-	$body = $app->getBody();
-	
-	$uri = JURI::getInstance();
-	$protocol = strtolower($uri->toString(array('scheme')));
-
-	$baseUrl = JURI::base();
-	if ($protocol == 'https://')
-		$baseUrl = str_replace('http://', 'https://', $baseUrl);
+	$body = JResponse::getBody();
 	
 	if (preg_match('/<base[^>]+>/i', $body))
-		$app->setBody(preg_replace('/<base[^>]+>/i', '<base href="' . $baseUrl  . '" />', $body));
+		JResponse::setBody(preg_replace('/<base[^>]+>/i', '<base href="' . JURI::base() . '" />', $body));
 	else
-		$app->setBody(
-			preg_replace('/(<\/head\s*>)/i', '<base href="' . $baseUrl  . '" />' . '$1', $body, 1)
+		JResponse::setBody(
+			preg_replace('/(<\/head\s*>)/i', '<base href="' . JURI::base() . '" />' . '$1', $body, 1)
 		);
 }
 
@@ -60,18 +49,15 @@ class AriQuizView extends AriView
 	{
 		return $this->_task;
 	}
-
-	private function isAdmin() {
-		return Factory::getApplication()->isClient('administrator');
-	}
 	
 	function fixBaseUrl()
 	{
-		if ($this->isAdmin())
+		$mainframe =& JFactory::getApplication();
+
+		if ($mainframe->isAdmin())
 			return;
-	
-		$app = Factory::getApplication();
-		$app->registerEvent('onAfterRender', 'AriQuizFixBaseUrlHandler');
+			
+		$mainframe->registerEvent('onAfterRender', 'AriQuizFixBaseUrlHandler');
 	}
 	
 	function loadTemplate($tpl = null) 
@@ -89,10 +75,10 @@ class AriQuizView extends AriView
 		if ($cfgFixBaseUrl)
 			$this->fixBaseUrl();
 
-		// if (!J1_5) JHtml::_('behavior.framework');
+		if (!J1_5)
+			JHtml::_('behavior.framework');
 			
 		$v = ARIQUIZ_VERSION;
-		$itemId = AriMenuHelper::getActiveItemId();
 
 		$assetsUri = JURI::root(true) . '/components/com_ariquiz/assets/';
 		$doc =& JFactory::getDocument();
@@ -109,24 +95,20 @@ class AriQuizView extends AriView
 		$doc->addScriptDeclaration(
 			sprintf(';YAHOO.util.Event.onDOMReady(function(){ YAHOO.util.Dom.addClass(document.body, "yui-skin-sam"); });initPageController("%1$s", "quizForm", "com_ariquiz", %2$s, false);',
 				JURI::root(true),
-				'false'
+				J1_5 ? 'true' : 'false'
 			)
 		);
 
 		$this->_loadTheme();
 
 		$tpl = parent::loadTemplate($tpl);
-		if (class_exists('JError') && JError::isError($tpl)) 
+		if (JError::isError($tpl)) 
 			return $tpl;
-
-		if ($this->_isFormView) {
-			$actionUrl = 'index.php';
-			if ($itemId)
-				$actionUrl .= '?Itemid=' . $itemId;
-
+			
+		if ($this->_isFormView)
 			$tpl = sprintf('<div class="ari-quiz-container" id="ariQuizContainer">
 				<div id="ariInfoMessage" class="message" style="display:none;"></div>
-				<form action="%5$s" enctype="multipart/form-data" method="post" name="quizForm" id="quizForm">
+				<form action="index.php" enctype="multipart/form-data" method="post" name="quizForm" id="quizForm">
 				%1$s
 				<input type="hidden" name="option" value="com_ariquiz" />
 				<input type="hidden" name="view" value="%2$s" />
@@ -137,10 +119,7 @@ class AriQuizView extends AriView
 				$tpl,
 				$this->getName(),
 				JHTML::_('form.token'),
-				$this->getTask(),
-				JRoute::_($actionUrl)
-			);
-		}
+				$this->getTask());
 
 		return $tpl;
 	}

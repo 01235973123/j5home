@@ -16,8 +16,8 @@ $tmpl = JRequest::getString('tmpl');
 <h1 class="aq-quiz-title aq-header"><?php echo $this->quiz->QuizName; ?></h1>
 <br/>
 <?php
-	if (empty($this->isError) && $this->formView):
-		$this->formView->displayView($this->quiz); 
+	if ($this->formView):
+		$this->formView->display($this->quiz); 
 ?>
 <br/><br/>
 <?php
@@ -39,13 +39,14 @@ $tmpl = JRequest::getString('tmpl');
 <?php
 	else: 
 ?>
-	<div class="aq-message-error"><?php echo $this->errorMessage; ?></div>
+	<div class="aq-message-error"><?php echo JText::_($this->errorMessage); ?></div>
 	<br/><br/>
 <?php
 	endif; 
 ?>
 
 <input type="hidden" name="quizId" value="<?php echo $this->quiz->QuizId; ?>" />
+<input type="hidden" name="Itemid" value="<?php echo $this->itemId ? $this->itemId : '0'; ?>" />
 <?php
 	if ($tmpl): 
 ?>

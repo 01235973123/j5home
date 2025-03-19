@@ -17,10 +17,6 @@ AriKernel::import('Web.Controls.Data.MultiPageDataTable');
 AriKernel::import('Data.DataFilter');
 AriKernel::import('Joomla.Mail.Mailer');
 AriKernel::import('Web.Response');
-AriKernel::import('SimpleTemplate.SimpleTemplate');
-AriKernel::import('Web.HtmlHelper');
-
-jimport('joomla.plugin.helper');
 
 class AriQuizControllerQuizcomplete extends AriController 
 {
@@ -48,7 +44,7 @@ class AriQuizControllerQuizcomplete extends AriController
 		}
 	}
 
-	function display($cachable = false, $urlparams = [])
+	function display()
 	{
 		$userQuizModel = $this->getModel('UserQuiz');
 		
@@ -95,11 +91,8 @@ class AriQuizControllerQuizcomplete extends AriController
 		if (!empty($quizParams->ParsePluginTag))
 			$questions = $userQuizModel->getQuizQuestions($resultInfo['StatisticsInfoId']);
 
-        $config = AriQuizHelper::getConfig();
-        $socialMessage = AriSimpleTemplate::parse($config->get('social_message'), $this->_getResultInfo());
-
 		$view =& $this->getView();
-		$view->displayView(
+		$view->display(
 			array(
 				'isDetailedResultsAvailable' => $this->isDetailedResultsAvailable(),
 				'ticketId' => $ticketId,
@@ -108,10 +101,7 @@ class AriQuizControllerQuizcomplete extends AriController
 				'btnEmailVisible' => $emailVisible,
 				'btnPrintVisible' => $printVisible,
 				'btnCertificateVisible' => $certificateVisible,
-				'questions' => $questions,
-				'quizParams' => $quizParams,
-                'socialMessage' => $socialMessage,
-                'isOwnResult' => $this->_isOwnResult()
+				'questions' => $questions
 			)
 		);
 	}
@@ -142,39 +132,6 @@ class AriQuizControllerQuizcomplete extends AriController
 		}
 
 		$isPassed = (bool)$resultInfo['_Passed'];
-		if (($isPassed && $fullStatisticsOnSuccess == 'OnlyCorrect') ||
-			(!$isPassed && $fullStatisticsOnFail == 'OnlyCorrect'))
-		{
-			$quizResultModel = $this->getModel('QuizResult');
-		
-			$filter = new AriDataFilter(
-				array(
-					'filter' => array(
-						'ResultsFilter' => 'OnlyCorrect'
-					)
-				)
-			);
-
-			if ($quizResultModel->getQuestionCount($resultInfo['StatisticsInfoId'], $filter) == 0)
-				return false;			
-		}
-		else if (($isPassed && $fullStatisticsOnSuccess == 'OnlyIncorrect') ||
-			(!$isPassed && $fullStatisticsOnFail == 'OnlyIncorrect'))
-		{
-			$quizResultModel = $this->getModel('QuizResult');
-		
-			$filter = new AriDataFilter(
-				array(
-					'filter' => array(
-						'ResultsFilter' => 'OnlyIncorrect'
-					)
-				)
-			);
-
-			if ($quizResultModel->getQuestionCount($resultInfo['StatisticsInfoId'], $filter) == 0)
-				return false;
-		}
-		
 		if ($fullStatistics == 'Always' || 
 			($fullStatistics == 'OnSuccess' && $isPassed) || 
 			($fullStatistics == 'OnFail' && !$isPassed)
@@ -222,33 +179,13 @@ class AriQuizControllerQuizcomplete extends AriController
 		if (!$this->_isQuizFinished(true))
 			return ;
 
-		$userQuizModel = $this->getModel('UserQuiz');
 		$resultInfo = $this->_getResultInfo();
 		$isPassed = !empty($resultInfo['_Passed']);
 		$templateKey = $isPassed 
 			? ARIQUIZ_TEXTTEMPLATE_PRINTSUCCESSFUL 
 			: ARIQUIZ_TEXTTEMPLATE_PRINTFAILED;
 			
-		$ticketId = $this->_getTicketId();
-		$quizParams = $resultInfo['ExtraParams'];
-		
-		$questions = null;
-		$quizParams = $resultInfo['ExtraParams'];
-		if (!empty($quizParams->ParsePluginTag))
-			$questions = $userQuizModel->getQuizQuestions($resultInfo['StatisticsInfoId']);
-			
-		$content = $this->_getResultText($templateKey);
-		$view =& $this->getView();
-		$view->displayPrint(
-			array(
-				'content' => $content,
-				'isDetailedResultsAvailable' => $this->isDetailedResultsAvailable(),
-				'ticketId' => $ticketId,
-				'resultInfo' => $resultInfo,
-				'quizParams' => $quizParams,
-				'questions' => $questions
-			)
-		);
+		echo $this->_getResultText($templateKey);
 	}
 	
 	function certificate()
@@ -308,7 +245,7 @@ class AriQuizControllerQuizcomplete extends AriController
 		if (!$this->_isVisibleCtrl($templateKey)) 
 			return false;
 
-		$resultText = $this->_getResultText($templateKey, true, true);
+		$resultText = $this->_getResultText($templateKey);
 		if (empty($resultText))
 			return false;
 
@@ -317,8 +254,6 @@ class AriQuizControllerQuizcomplete extends AriController
 		$subject = AriUtils::getParam($mailTemplate, 'Subject', '');
 		if (empty($subject)) 
 			$subject = JText::_('COM_ARIQUIZ_LABEL_QUIZRESULTS');
-
-        $subject = AriSimpleTemplate::parse($subject, $this->_getResultInfo());
 
 		if (!empty($result['MailGroupList']))
 		{
@@ -333,8 +268,6 @@ class AriQuizControllerQuizcomplete extends AriController
 				$email = trim($email, ';');
 			}
 		}
-
-        $resultText = $this->_relativeToAbs($resultText);
 
 		$isSend = AriMailer::send(
 			AriUtils::getParam($mailTemplate, 'From', ''),
@@ -374,20 +307,16 @@ class AriQuizControllerQuizcomplete extends AriController
 			: ARIQUIZ_TEXTTEMPLATE_EMAILFAILED;
 		if (!$this->_isVisibleCtrl($templateKey)) 
 			return false;
-
-		$resultText = $this->_getResultText($templateKey, true, true);
+		
+		$resultText = $this->_getResultText($templateKey);
 		if (empty($resultText))
 			return false;
-
-        $resultText = $this->_relativeToAbs($resultText);
 
 		$attachments = $this->getAttachmentsForMail($resultText);
 		$mailTemplate = $this->_getMailTemplate($templateKey);
 		$subject = AriUtils::getParam($mailTemplate, 'Subject', '');
 		if (empty($subject)) 
 			$subject = JText::_('COM_ARIQUIZ_LABEL_EMAILQUIZRESULT');
-
-        $subject = AriSimpleTemplate::parse($subject, $this->_getResultInfo());
 
 		$isSend = AriMailer::send(
 			AriUtils::getParam($mailTemplate, 'From', ''),
@@ -417,7 +346,7 @@ class AriQuizControllerQuizcomplete extends AriController
 		if ($resultInfo['ResultScaleId'] && $resultInfo['ResultTemplateType'] == 'scale')
 		{
 			$resultScaleModel = $this->getModel('Resultscale');
-			$scaleItem = $resultScaleModel->getScaleItemByScore($resultInfo['ResultScaleId'], $resultInfo['PercentScore'], $resultInfo['UserScore']);
+			$scaleItem = $resultScaleModel->getScaleItemByScore($resultInfo['ResultScaleId'], $resultInfo['PercentScore']);
 			if ($scaleItem)
 			{
 				if ($scaleItem->TextTemplateId)
@@ -471,7 +400,7 @@ class AriQuizControllerQuizcomplete extends AriController
 		return $mailTemplate;
 	}
 
-	function _getResultText($templateKey, $cleanDirective = true, $resolveImagePath = false)
+	function _getResultText($templateKey)
 	{
 		$resultInfo = $this->_getResultInfo();
 		$templates = $this->_getTemplates();
@@ -488,53 +417,8 @@ class AriQuizControllerQuizcomplete extends AriController
 				$resultInfo['SummaryByCategories'] = $this->_getSummaryByCategories();
 			
 			$resultText = $template->parse($resultInfo);
-			if ($cleanDirective)
-				$resultText = $this->_cleanDirectives($resultText);
 		}
 		
-		AriKernel::import('Application.ARIQuiz.Plugin.TemplatePlugin');
-		JPluginHelper::importPlugin('ariquiztemplate', null, false);
-
-		$plugins = JPluginHelper::getPlugin('ariquiztemplate', null);
-		if (is_array($plugins) && count($plugins) > 0)
-		{
-			$dispatcher = JDispatcher::getInstance();
-			foreach ($plugins as $plugin)
-			{
-				$className = 'plg' . $plugin->type . $plugin->name;
-				if (class_exists($className))
-				{
-					if (!isset($plugin->params))
-						$plugin = JPluginHelper::getPlugin($plugin->type, $plugin->name);
-	
-					$plg = new $className($dispatcher, (array) ($plugin));
-					$resultText = $plg->execute($resultText, $templateKey, $resultInfo);
-				}
-			}
-		}
-
-        if ($resolveImagePath)
-        {
-            $resultText = preg_replace_callback(
-                '/<img .*?>/i',
-                function($matches)
-                {
-                    $match = $matches[0];
-
-                    $attrs = AriHtmlHelper::extractAttrs($match);
-                    $src = AriUtils::getParam($attrs, 'src', '');
-
-                    if (empty($src) || preg_match('/[^:?]*:/i', $match))
-                        return $match;
-
-                    $attrs['src'] = JURI::root() . $src;
-
-                    return '<img' . AriHtmlHelper::getAttrStr($attrs) . '/>';
-                },
-                $resultText
-            );
-        }
-
 		return $resultText;
 	}
 	
@@ -622,7 +506,7 @@ class AriQuizControllerQuizcomplete extends AriController
 			$ticketId = $this->_getTicketId();
 			$quizModel = $this->getModel('Quiz');
 			$quiz = $quizModel->getQuizByTicketId($ticketId);
-			$itemId = $this->input->getInt('Itemid');
+			$itemId = JRequest::getInt('Itemid');
 			$this->redirect(
 				JRoute::_('index.php?option=com_ariquiz&view=question&ticketId=' . $ticketId . '&quizId=' . $quiz->QuizId . ($itemId > 0 ? '&Itemid=' . $itemId : ''), false)
 			);
@@ -634,7 +518,7 @@ class AriQuizControllerQuizcomplete extends AriController
 	function _getTicketId()
 	{
 		if (is_null($this->_ticketId))
-			$this->_ticketId = $this->input->getString('ticketId');
+			$this->_ticketId = JRequest::getString('ticketId');
 		
 		return $this->_ticketId;
 	}
@@ -644,13 +528,11 @@ class AriQuizControllerQuizcomplete extends AriController
 		$type = $this->getDetailedResultsType();
 		$model =& $this->getModel('QuizResult');
 		$model->setTimePeriods(AriQuizHelper::getShortPeriods());
-		
-		$isPrint = $this->input->getBool('print');
 
 		$filter = new AriDataFilter(
 			array(
 				'startOffset' => 0, 
-				'limit' => $isPrint ? 9999 : 10,
+				'limit' => 10,
 				'sortField' => 'QuestionIndex', 
 				'dir' => 'asc',
 				'filter' => array(
@@ -671,14 +553,14 @@ class AriQuizControllerQuizcomplete extends AriController
 			return AriMultiPageDataTableControl::createDataInfo(null, $filter, $totalCnt);;
 		}
 
-		$sid = $this->input->getInt('sid');
+		$sid = JRequest::getInt('sid');
 
 		$totalCnt = $model->getQuestionCount($sid, $filter);
 		if ($totalCnt < $filter->getConfigValue('limit'))
 			$filter->setConfigValue('limit', $totalCnt);
 		
 		$filter->fixFilter($totalCnt);
-		$parseTag = $this->input->getBool('parseTag');
+		$parseTag = JRequest::getBool('parseTag');
 
 		$results = $model->getJsonQuestionList($sid, $filter, $parseTag, false, JText::_('COM_ARIQUIZ_QUESTIONSUMMARY'));
 		
@@ -697,35 +579,27 @@ class AriQuizControllerQuizcomplete extends AriController
 		if (!is_null($this->_certificateFilePath))
 			return $this->_certificateFilePath;
 		
-		AriKernel::import('PDF.DOMPDF');
+		AriKernel::import('PDF.DOMPDF.DOMPDF');
 		
 		$resultInfo = $this->_getResultInfo();
 		$isPassed = !empty($resultInfo['_Passed']);
 		$templateKey = $isPassed 
 			? ARIQUIZ_TEXTTEMPLATE_CERTIFICATESUCCESSFUL 
 			: ARIQUIZ_TEXTTEMPLATE_CERTIFICATEFAILED;
-		$content = $this->_getResultText($templateKey, false);
+		$content = $this->_getResultText($templateKey);
 		if (empty($content))
 			return null;
-			
-		$paperFormat = $this->_extractPaperFormat($content);
-		$content = $this->_cleanDirectives($content);
 	
-		$html = sprintf('<html><head><meta http-equiv="content-type" content="text/html; charset=utf-8" /></head><body>%1$s</body></html>',
+		$html = sprintf('<html><head></head><body>%1$s</body></html>',
 			$content
 		);
 
-		$domPdf = new Dompdf\Dompdf(array(
-			'isRemoteEnabled'         => true,
-			'isHtml5ParserEnabled'    => true,
-		));
-		$domPdf->getOptions()->setChroot(JPATH_ROOT);
-  		$domPdf->loadHtml($html);
-  		$domPdf->setPaper($paperFormat['size'], $paperFormat['orientation']);
+		$domPdf = new DOMPDF();
+  		$domPdf->load_html($html);
   		$domPdf->render();
 
 		$pdf = $domPdf->output();
-		
+
 		$certificateFilePath = JPATH_ROOT . '/tmp/' . uniqid('certificate_', false) . '.pdf';
 
 		if (!JFile::write($certificateFilePath, $pdf))
@@ -735,66 +609,4 @@ class AriQuizControllerQuizcomplete extends AriController
 			
 		return $this->_certificateFilePath;
 	}
-	
-	function _extractPaperFormat($content)
-	{
-		$format = array(
-			'orientation' => 'portrait',
-			'size' => defined('DOMPDF_DEFAULT_PAPER_SIZE') ? DOMPDF_DEFAULT_PAPER_SIZE : 'letter'
-		);
-		@preg_match_all('/\{\@doc_format\:([^}]+)}/si', $content, $matches, PREG_SET_ORDER);
-
-		if (empty($matches[0]) || empty($matches[0][1]))
-			return $format;
-			
-		$params = explode(':', $matches[0][1]);
-		
-		if (!empty($params[1]))
-			$format['size'] = $params[1];
-			
-		if (!empty($params[0]))
-			$format['orientation'] = $params[0];
-
-		return $format;
-	}
-	
-	function _cleanDirectives($content)
-	{
-		$content = preg_replace('/\{\@[^}]+\}/i', '', $content);
-
-		return $content;
-	}
-
-    function _isOwnResult()
-    {
-        $user = JFactory::getUser();
-        $userId = $user->get('id');
-        $resultInfo = $this->_getResultInfo();
-
-        return ($resultInfo['UserId'] == $userId);
-    }
-
-    function _relativeToAbs($content)
-    {
-        $content = preg_replace_callback(
-            '/<a .*?>/i',
-            function($matches)
-            {
-                $match = $matches[0];
-
-                $attrs = AriHtmlHelper::extractAttrs($match);
-                $src = AriUtils::getParam($attrs, 'href', '');
-
-                if (empty($src) || preg_match('/[^:?]*:/i', $match))
-                    return $match;
-
-                $attrs['href'] = JURI::root() . $src;
-
-                return '<a' . AriHtmlHelper::getAttrStr($attrs) . '>';
-            },
-            $content
-        );
-
-        return $content;
-    }
 }

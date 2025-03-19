@@ -10,7 +10,6 @@
 
 (defined('_JEXEC') && defined('ARI_FRAMEWORK_LOADED')) or die;
 
-$config = AriQuizHelper::getConfig();
 $quizInfo = $this->quizInfo;
 $quizStorage = $this->quizStorage;
 $ticketId = $quizStorage->getTicketId();
@@ -19,12 +18,11 @@ $tmpl = JRequest::getCmd('tmpl');
 $user = JFactory::getUser();
 $isGuest = $user->get('id') < 1;
 $isCanStop = (!$isGuest && $quizStorage->get('CanStop'));
-$showPaging = $quizStorage->get('ShowPaging');
 ?>
 
 <a name="quiz_top" id="aqTop"></a>
 <h2 class="aq-header"><?php echo $quizInfo->QuizName; ?></h2>
-<div id="ariQueMainAnsContainer" class="aq-loading aq-quizsession-container<?php if (1 == $quizInfo->PageCount): ?> aq-one-page-quiz<?php endif; ?>">
+<div id="ariQueMainAnsContainer" class="aq-loading aq-quizsession-container">
 	<div class="aq-loading-message">
 		<div class="ari-loading"><?php echo JText::_('COM_ARIQUIZ_LABEL_LOADING', true); ?></div>
 	</div>
@@ -92,32 +90,6 @@ $showPaging = $quizStorage->get('ShowPaging');
 		<div class="aq-questions aq-hidden-onloading" id="ariQuestions">
 		</div>
 	</div>
-    
-    <?php
-        if ($showPaging && $quizInfo->PageCount > 1):
-    ?>
-    <div class="aq-navbutton-panel pagination">
-        <div style=""><?php echo JText::_('COM_ARIQUIZ_LABEL_NAVTOPAGE'); ?></div>
-        <br />
-        <ul>
-        <?php
-            for ($pageIdx = 0; $pageIdx < $quizInfo->PageCount; $pageIdx++):
-                $pageDisabled = false;
-                if (isset($quizInfo->PagesStatus[$pageIdx]))
-                {
-                    $pageStatus = $quizInfo->PagesStatus[$pageIdx];
-                    $pageDisabled = !!$pageStatus->Completed;
-                }
-        ?>
-            <li class="aq-navbutton-page<?php echo $pageIdx; ?><?php if ($pageDisabled): ?> disabled<?php endif; ?>"><a href="#" class="disable-onsubmit" onclick="if (YAHOO.util.Dom.hasClass(this, 'disabled') || YAHOO.util.Dom.hasClass(this.parentNode, 'disabled') || YAHOO.util.Dom.hasClass(this.parentNode, 'active')) return false; ariQuizQueManager.goToPage(<?php echo $pageIdx; ?>); return false;"><?php echo $pageIdx + 1; ?></a></li>
-        <?php
-            endfor;
-        ?>
-        </ul>
-    </div>
-    <?php
-        endif;
-    ?>
 
 	<div class="aq-button-panel">
 		<a href="#" class="btn btn-primary disable-onsubmit" onclick="if (YAHOO.util.Dom.hasClass(this, 'disabled')) return false; if (ariQuizQueManager.validate()) ariQuizQueManager.savePage(); return false;"><i class="icon-pencil"></i> <?php echo JText::_('COM_ARIQUIZ_LABEL_SAVE'); ?></a>
@@ -184,11 +156,11 @@ $showPaging = $quizStorage->get('ShowPaging');
 <input type="hidden" name="pageId" id="hidPageId" value="" />
 <input type="hidden" name="ticketId" value="<?php echo $ticketId; ?>" />
 <input type="hidden" name="timeOver" id="timeOver" value="0" /> 
+<input type="hidden" name="Itemid" value="<?php echo $this->itemId ? $this->itemId : '0'; ?>" />
 
 <script type="text/javascript">
 YAHOO.util.Event.onDOMReady(function() {
 	ariQuizQueManager = new YAHOO.ARISoft.ariQuiz.questionManager({
-		autoScroll: <?php echo json_encode((bool)$config->get('AutoScroll')); ?>,
 		containerId: 'ariQuestions',
 		mainContainerId: 'ariQueMainAnsContainer',
 		explanationId: 'ariQuizExplanation',

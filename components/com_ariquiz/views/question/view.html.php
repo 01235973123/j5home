@@ -18,7 +18,7 @@ class AriQuizViewQuestion extends AriQuizView
 {
 	var $_isFormView = true;
 	
-	function displayView($quizStorage, $quizInfo, $questions, $tpl = null) 
+	function display($quizStorage, $quizInfo, $questions, $tpl = null) 
 	{		
 		$this->assign('itemId', AriMenuHelper::getActiveItemId());
 		$this->assignRef('quizStorage', $quizStorage);
@@ -105,10 +105,5 @@ class AriQuizViewQuestion extends AriQuizView
 
 		if (!empty($metaKeywords))
 			$document->setMetadata('keywords', $metaKeywords);
-
-		$v = ARIQUIZ_VERSION;
-		$assetsUri = JURI::root(true) . '/components/com_ariquiz/assets/';
-
-		$document->addScript($assetsUri . 'js/touch_fix.js?v=' . $v);
 	}
 }

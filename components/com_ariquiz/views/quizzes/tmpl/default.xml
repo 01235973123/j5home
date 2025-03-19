@@ -22,10 +22,6 @@
 			    <option value="0">COM_ARIQUIZ_LABEL_NO</option>
 				<option value="1">COM_ARIQUIZ_LABEL_YES</option>
 			</param>
-            <param name="hideNotPermittedQuizzes" type="list" default="0" label="QUIZ_CATEGORY_LAYOUT_SHOW_HIDENOTPERMITTEDQUIZ" description="QUIZ_CATEGORY_LAYOUT_SHOW_HIDENOTPERMITTEDQUIZ_DESCR">
-                <option value="0">COM_ARIQUIZ_LABEL_NO</option>
-                <option value="1">COM_ARIQUIZ_LABEL_YES</option>
-            </param>
 		</params>
 	</state>
 	<fields name="request">
@@ -47,10 +43,6 @@
 			    <option value="0">COM_ARIQUIZ_LABEL_NO</option>
 				<option value="1">COM_ARIQUIZ_LABEL_YES</option>
 			</field>
-            <field name="hideNotPermittedQuizzes" type="list" default="0" label="QUIZ_CATEGORY_LAYOUT_SHOW_HIDENOTPERMITTEDQUIZ" description="QUIZ_CATEGORY_LAYOUT_SHOW_HIDENOTPERMITTEDQUIZ_DESCR">
-                <option value="0">COM_ARIQUIZ_LABEL_NO</option>
-                <option value="1">COM_ARIQUIZ_LABEL_YES</option>
-            </field>
-        </fieldset>
+		</fieldset>
 	</fields>
 </metadata>

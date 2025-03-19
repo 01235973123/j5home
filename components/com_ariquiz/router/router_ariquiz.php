@@ -18,9 +18,8 @@ require_once JPATH_ADMINISTRATOR . '/components/com_ariquiz/models/quiz.php';
 require_once JPATH_ADMINISTRATOR . '/components/com_ariquiz/tables/quiz.php';
 
 AriKernel::import('Utils.Utils');
-AriKernel::import('Joomla.Compat.Application');
 
-class AriQuizRouterInt
+class AriQuizRouter
 {
 	var $COMPONENT = 'com_ariquiz';
 	var $DEFAULT_TASK = 'quizzes';
@@ -32,19 +31,18 @@ class AriQuizRouterInt
 		'quizresults' => 'Quizzes_Results',
 		'category' => 'Categories_Quizzes',
 		'message' => 'Quiz_Warning',
-		'terminate' => 'Quiz_Terminated'
 	);
 
 	var $TASK_INHERIT = array(
-		'quizzes' => array('quiz', 'message', 'terminate'),
-		'quiz' => array('question', 'quizcomplete', 'message', 'terminate'),
-		'category' => array('quiz', 'message', 'terminate'),
+		'quizzes' => array('quiz', 'message'),
+		'quiz' => array('question', 'quizcomplete', 'message'),
+		'category' => array('quiz', 'message'),
 		'quizresults' => array('quizresults', 'quiz', 'quizcomplete'),
 	);
 	
 	var $IGNORE_TASK = array(
 	);
-	
+
 	function getTaskAlias($task)
 	{
 		return array_key_exists($task, $this->TASK_ALIAS)
@@ -58,8 +56,7 @@ class AriQuizRouterInt
 		if (empty($itemId))
 			return $task;
 
-		$app = JFactory::getApplication();
-		$menu =& $app->getMenu('site');
+		$menu =& JSite::getMenu();
 		$menuItem = &$menu->getItem($itemId);
 		if (isset($menuItem->query['option']) && 
 			$menuItem->query['option'] == $this->COMPONENT)
@@ -81,8 +78,7 @@ class AriQuizRouterInt
 			$task = $query['view'];
 		else if (!empty($query['Itemid']))
 		{
-			$app = JFactory::getApplication();
-			$menu =& $app->getMenu('site');
+			$menu = &JSite::getMenu();
 			$menuItem = &$menu->getItem($query['Itemid']);
 			if (!empty($menuItem->query['view']))
 				$task = $menuItem->query['view'];
@@ -102,8 +98,7 @@ class AriQuizRouterInt
 		}
 		else 
 		{
-			$app = JFactory::getApplication();
-			$menu =& $app->getMenu('site');
+			$menu = &JSite::getMenu();
 			$menuItem = &$menu->getItem($query['Itemid']);
 			if ($menuItem && isset($menuItem->query['view']) && $menuItem->query['view'] != $task)
 				$forceTask = true;
@@ -146,11 +141,6 @@ class AriQuizRouterInt
 			);
 		}
 
-		for ($i = 0; $i < count($updatedSegments); $i++)
-		{
-			$updatedSegments[$i] = str_replace(':', '-', $updatedSegments[$i]);
-		}
-
 		return $updatedSegments;
 	}
 	
@@ -180,8 +170,7 @@ class AriQuizRouterInt
 		{
 			if (!empty($query['Itemid']))
 			{
-				$app = JFactory::getApplication();
-				$menu =& $app->getMenu('site');
+				$menu = &JSite::getMenu();
 				$menuItem = &$menu->getItem($query['Itemid']);
 				if (!empty($menuItem->query['view']) && $menuItem->query['view'] == 'quiz')
 					$forceTask = false;
@@ -203,8 +192,7 @@ class AriQuizRouterInt
 		{
 			if (!empty($query['Itemid']))
 			{
-				$app = JFactory::getApplication();
-				$menu =& $app->getMenu('site');
+				$menu = &JSite::getMenu();
 				$menuItem = &$menu->getItem($query['Itemid']);
 				if (!empty($menuItem->query['view']) && ($menuItem->query['view'] == 'quizresults' || $menuItem->query['view'] == 'quiz'))
 					$forceTask = false;
@@ -241,32 +229,21 @@ class AriQuizRouterInt
 			$segments[] = $this->getTaskAlias('message');
 	}
 
-	function buildTask_terminate(&$query, &$segments, $forceTask)
-	{
-		if ($forceTask)
-			$segments[] = $this->getTaskAlias('terminate');
-	}
-	
-	function parse(&$segments)
+	function parse($segments)
 	{
 		$vars = array();
 		if (!is_array($segments) || count($segments) == 0)
 			return $vars;
 
-		for ($i = 0; $i < count($segments); $i++) {
-			$segments[$i] = str_replace(':', '-', $segments[$i]);
-		}
-
 		$offset = 0;
 		$count = count($segments);
 		$forceTask = false;
-		$app = AriApplication::getApplication();
-		$menu =& $app->getMenu('site');
+		$menu =& JSite::getMenu();
 		$taskInherit = $this->TASK_INHERIT;
 		$activeMenuItem =& $menu->getActive();
 		if (empty($activeMenuItem))
 		{
-			$itemId = AriApplication::getInput()->getInt('Itemid');
+			$itemId = JRequest::getInt('Itemid');
 			if ($itemId)
 			{
 				$menu->setActive($itemId);
@@ -297,7 +274,7 @@ class AriQuizRouterInt
 			}
 			else
 			{
-				list($task) = explode('-', $segments[$offset]);
+				list($task) = explode(':', $segments[$offset]);
 				if (array_key_exists($task, $flipAlias))
 					$task = $flipAlias[$task];
 			}
@@ -315,7 +292,7 @@ class AriQuizRouterInt
 					$subTask = $taskInherit[$task];
 					if (is_array($subTask))
 					{
-						list($sTask) = explode('-', $segment);
+						list($sTask) = explode(':', $segment);
 						if (array_key_exists($sTask, $flipAlias))
 							$sTask = $flipAlias[$sTask];
 							
@@ -334,15 +311,8 @@ class AriQuizRouterInt
 		if ($task)
 		{		
 			$taskHandler = 'parseTask_' . $task;
-			if (method_exists($this, $taskHandler)) {
-				$segment = $segments[$count - 1];
-				$aliasPrefix = $this->getTaskAlias($task) . '-';
-				if (strpos($segment, $aliasPrefix) === 0) {
-					$segment = substr($segment, strlen($aliasPrefix));
-				}
-
-				$this->$taskHandler($segment, $vars);
-			}
+			if (method_exists($this, $taskHandler))
+				$this->$taskHandler($segments[$count - 1], $vars);
 		}
 
 		$vars['view'] = $task;
@@ -352,14 +322,15 @@ class AriQuizRouterInt
 
 	function parseTask_quiz($page, &$vars)
 	{
-		@list($quizId) = explode('-', $page);
+		@list($quizId) = explode(':', $page);
 
 		$vars['quizId'] = $quizId;
 	}
 	
 	function parseTask_question($page, &$vars)
 	{
-		@list($quizId, $ticketId) = explode('-', $page);
+		$params = explode(':', $page);
+		@list($quizId, $ticketId) = explode('-', $params[1]);
 
 		$vars['ticketId'] = $ticketId;
 		$vars['quizId'] = $quizId;
@@ -367,7 +338,7 @@ class AriQuizRouterInt
 	
 	function parseTask_quizcomplete($page, &$vars)
 	{
-		$ticketId = explode('-', $page);
+		$ticketId = explode(':', $page);
 		if (is_array($ticketId))
 			$ticketId = $ticketId[count($ticketId) - 1];
 
@@ -375,34 +346,14 @@ class AriQuizRouterInt
 	}
 }
 
-class AriQuizRouter extends JComponentRouterBase
-{
-	public function build(&$query)
-	{
-		$router = new AriQuizRouterInt();
-
-		return $router->build($query);
-	}
-
-	public function parse(&$segments)
-	{
-		$router = new AriQuizRouterInt();
-
-		$vars = $router->parse($segments);
-		$segments = array();
-
-		return $vars;
-	}
-}
-
-function ariquizBuildRoute(&$query)
+function AriquizBuildRoute(&$query)
 {
 	$router = new AriQuizRouter();
 
 	return $router->build($query);
 }
 
-function ariquizParseRoute($segments)
+function AriquizParseRoute($segments)
 {
 	$router = new AriQuizRouter();
 	

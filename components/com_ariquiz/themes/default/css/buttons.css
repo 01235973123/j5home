@@ -1,0 +1,888 @@
+/*!
+ * Bootstrap v2.3.2
+ *
+ * Copyright 2012 Twitter, Inc
+ * Licensed under the Apache License v2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Designed and built with all the love in the world @twitter by @mdo and @fat.
+ */
+#ariQuizContainer .btn {text-decoration: none !important;} #ariQuizContainer {
+  /* White icons with optional class, or on hover/focus/active states of certain elements */
+
+}
+#ariQuizContainer .clearfix {
+  *zoom: 1;
+}
+#ariQuizContainer .clearfix:before,
+#ariQuizContainer .clearfix:after {
+  display: table;
+  content: "";
+  line-height: 0;
+}
+#ariQuizContainer .clearfix:after {
+  clear: both;
+}
+#ariQuizContainer .hide-text {
+  font: 0/0 a;
+  color: transparent;
+  text-shadow: none;
+  background-color: transparent;
+  border: 0;
+}
+#ariQuizContainer .input-block-level {
+  display: block;
+  width: 100%;
+  min-height: 30px;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#ariQuizContainer .btn {
+  display: inline-block;
+  *display: inline;
+  /* IE7 inline-block hack */
+
+  *zoom: 1;
+  padding: 4px 12px;
+  margin-bottom: 0;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  color: #333333;
+  text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
+  background-color: #f5f5f5;
+  background-image: -moz-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ffffff), to(#e6e6e6));
+  background-image: -webkit-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: -o-linear-gradient(top, #ffffff, #e6e6e6);
+  background-image: linear-gradient(to bottom, #ffffff, #e6e6e6);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffe6e6e6', GradientType=0);
+  border-color: #e6e6e6 #e6e6e6 #bfbfbf;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #e6e6e6;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+  border: 1px solid #cccccc;
+  *border: 0;
+  border-bottom-color: #b3b3b3;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
+  *margin-left: .3em;
+  -webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+  -moz-box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.2), 0 1px 2px rgba(0,0,0,.05);
+}
+#ariQuizContainer .btn:hover,
+#ariQuizContainer .btn:focus,
+#ariQuizContainer .btn:active,
+#ariQuizContainer .btn.active,
+#ariQuizContainer .btn.disabled,
+#ariQuizContainer .btn[disabled] {
+  color: #333333;
+  background-color: #e6e6e6;
+  *background-color: #d9d9d9;
+}
+#ariQuizContainer .btn:active,
+#ariQuizContainer .btn.active {
+  background-color: #cccccc \9;
+}
+#ariQuizContainer .btn:first-child {
+  *margin-left: 0;
+}
+#ariQuizContainer .btn:hover,
+#ariQuizContainer .btn:focus {
+  color: #333333;
+  text-decoration: none;
+  background-position: 0 -15px;
+  -webkit-transition: background-position 0.1s linear;
+  -moz-transition: background-position 0.1s linear;
+  -o-transition: background-position 0.1s linear;
+  transition: background-position 0.1s linear;
+}
+#ariQuizContainer .btn:focus {
+  outline: thin dotted #333;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+#ariQuizContainer .btn.active,
+#ariQuizContainer .btn:active {
+  background-image: none;
+  outline: 0;
+  -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+  -moz-box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+  box-shadow: inset 0 2px 4px rgba(0,0,0,.15), 0 1px 2px rgba(0,0,0,.05);
+}
+#ariQuizContainer .btn.disabled,
+#ariQuizContainer .btn[disabled] {
+  cursor: default;
+  background-image: none;
+  opacity: 0.65;
+  filter: alpha(opacity=65);
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+#ariQuizContainer .btn-large {
+  padding: 11px 19px;
+  font-size: 17.5px;
+  -webkit-border-radius: 6px;
+  -moz-border-radius: 6px;
+  border-radius: 6px;
+}
+#ariQuizContainer .btn-large [class^="icon-"],
+#ariQuizContainer .btn-large [class*=" icon-"] {
+  margin-top: 4px;
+}
+#ariQuizContainer .btn-small {
+  padding: 2px 10px;
+  font-size: 11.9px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+#ariQuizContainer .btn-small [class^="icon-"],
+#ariQuizContainer .btn-small [class*=" icon-"] {
+  margin-top: 0;
+}
+#ariQuizContainer .btn-mini [class^="icon-"],
+#ariQuizContainer .btn-mini [class*=" icon-"] {
+  margin-top: -1px;
+}
+#ariQuizContainer .btn-mini {
+  padding: 0 6px;
+  font-size: 10.5px;
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+}
+#ariQuizContainer .btn-block {
+  display: block;
+  width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+#ariQuizContainer .btn-block + .btn-block {
+  margin-top: 5px;
+}
+#ariQuizContainer input[type="submit"].btn-block,
+#ariQuizContainer input[type="reset"].btn-block,
+#ariQuizContainer input[type="button"].btn-block {
+  width: 100%;
+}
+#ariQuizContainer .btn-primary.active,
+#ariQuizContainer .btn-warning.active,
+#ariQuizContainer .btn-danger.active,
+#ariQuizContainer .btn-success.active,
+#ariQuizContainer .btn-info.active,
+#ariQuizContainer .btn-inverse.active {
+  color: rgba(255, 255, 255, 0.75);
+}
+#ariQuizContainer .btn-primary {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #006dcc;
+  background-image: -moz-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0088cc), to(#0044cc));
+  background-image: -webkit-linear-gradient(top, #0088cc, #0044cc);
+  background-image: -o-linear-gradient(top, #0088cc, #0044cc);
+  background-image: linear-gradient(to bottom, #0088cc, #0044cc);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0044cc', GradientType=0);
+  border-color: #0044cc #0044cc #002a80;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #0044cc;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+#ariQuizContainer .btn-primary:hover,
+#ariQuizContainer .btn-primary:focus,
+#ariQuizContainer .btn-primary:active,
+#ariQuizContainer .btn-primary.active,
+#ariQuizContainer .btn-primary.disabled,
+#ariQuizContainer .btn-primary[disabled] {
+  color: #ffffff;
+  background-color: #0044cc;
+  *background-color: #003bb3;
+}
+#ariQuizContainer .btn-primary:active,
+#ariQuizContainer .btn-primary.active {
+  background-color: #003399 \9;
+}
+#ariQuizContainer .btn-warning {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #faa732;
+  background-image: -moz-linear-gradient(top, #fbb450, #f89406);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
+  background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
+  background-image: -o-linear-gradient(top, #fbb450, #f89406);
+  background-image: linear-gradient(to bottom, #fbb450, #f89406);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fff89406', GradientType=0);
+  border-color: #f89406 #f89406 #ad6704;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #f89406;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+#ariQuizContainer .btn-warning:hover,
+#ariQuizContainer .btn-warning:focus,
+#ariQuizContainer .btn-warning:active,
+#ariQuizContainer .btn-warning.active,
+#ariQuizContainer .btn-warning.disabled,
+#ariQuizContainer .btn-warning[disabled] {
+  color: #ffffff;
+  background-color: #f89406;
+  *background-color: #df8505;
+}
+#ariQuizContainer .btn-warning:active,
+#ariQuizContainer .btn-warning.active {
+  background-color: #c67605 \9;
+}
+#ariQuizContainer .btn-danger {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #da4f49;
+  background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+  background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: linear-gradient(to bottom, #ee5f5b, #bd362f);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffee5f5b', endColorstr='#ffbd362f', GradientType=0);
+  border-color: #bd362f #bd362f #802420;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #bd362f;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+#ariQuizContainer .btn-danger:hover,
+#ariQuizContainer .btn-danger:focus,
+#ariQuizContainer .btn-danger:active,
+#ariQuizContainer .btn-danger.active,
+#ariQuizContainer .btn-danger.disabled,
+#ariQuizContainer .btn-danger[disabled] {
+  color: #ffffff;
+  background-color: #bd362f;
+  *background-color: #a9302a;
+}
+#ariQuizContainer .btn-danger:active,
+#ariQuizContainer .btn-danger.active {
+  background-color: #942a25 \9;
+}
+#ariQuizContainer .btn-success {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #5bb75b;
+  background-image: -moz-linear-gradient(top, #62c462, #51a351);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#62c462), to(#51a351));
+  background-image: -webkit-linear-gradient(top, #62c462, #51a351);
+  background-image: -o-linear-gradient(top, #62c462, #51a351);
+  background-image: linear-gradient(to bottom, #62c462, #51a351);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff62c462', endColorstr='#ff51a351', GradientType=0);
+  border-color: #51a351 #51a351 #387038;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #51a351;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+#ariQuizContainer .btn-success:hover,
+#ariQuizContainer .btn-success:focus,
+#ariQuizContainer .btn-success:active,
+#ariQuizContainer .btn-success.active,
+#ariQuizContainer .btn-success.disabled,
+#ariQuizContainer .btn-success[disabled] {
+  color: #ffffff;
+  background-color: #51a351;
+  *background-color: #499249;
+}
+#ariQuizContainer .btn-success:active,
+#ariQuizContainer .btn-success.active {
+  background-color: #408140 \9;
+}
+#ariQuizContainer .btn-info {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #49afcd;
+  background-image: -moz-linear-gradient(top, #5bc0de, #2f96b4);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#5bc0de), to(#2f96b4));
+  background-image: -webkit-linear-gradient(top, #5bc0de, #2f96b4);
+  background-image: -o-linear-gradient(top, #5bc0de, #2f96b4);
+  background-image: linear-gradient(to bottom, #5bc0de, #2f96b4);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5bc0de', endColorstr='#ff2f96b4', GradientType=0);
+  border-color: #2f96b4 #2f96b4 #1f6377;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #2f96b4;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+#ariQuizContainer .btn-info:hover,
+#ariQuizContainer .btn-info:focus,
+#ariQuizContainer .btn-info:active,
+#ariQuizContainer .btn-info.active,
+#ariQuizContainer .btn-info.disabled,
+#ariQuizContainer .btn-info[disabled] {
+  color: #ffffff;
+  background-color: #2f96b4;
+  *background-color: #2a85a0;
+}
+#ariQuizContainer .btn-info:active,
+#ariQuizContainer .btn-info.active {
+  background-color: #24748c \9;
+}
+#ariQuizContainer .btn-inverse {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #363636;
+  background-image: -moz-linear-gradient(top, #444444, #222222);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#444444), to(#222222));
+  background-image: -webkit-linear-gradient(top, #444444, #222222);
+  background-image: -o-linear-gradient(top, #444444, #222222);
+  background-image: linear-gradient(to bottom, #444444, #222222);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff444444', endColorstr='#ff222222', GradientType=0);
+  border-color: #222222 #222222 #000000;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #222222;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+#ariQuizContainer .btn-inverse:hover,
+#ariQuizContainer .btn-inverse:focus,
+#ariQuizContainer .btn-inverse:active,
+#ariQuizContainer .btn-inverse.active,
+#ariQuizContainer .btn-inverse.disabled,
+#ariQuizContainer .btn-inverse[disabled] {
+  color: #ffffff;
+  background-color: #222222;
+  *background-color: #151515;
+}
+#ariQuizContainer .btn-inverse:active,
+#ariQuizContainer .btn-inverse.active {
+  background-color: #080808 \9;
+}
+#ariQuizContainer button.btn,
+#ariQuizContainer input[type="submit"].btn {
+  *padding-top: 3px;
+  *padding-bottom: 3px;
+}
+#ariQuizContainer button.btn::-moz-focus-inner,
+#ariQuizContainer input[type="submit"].btn::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+#ariQuizContainer button.btn.btn-large,
+#ariQuizContainer input[type="submit"].btn.btn-large {
+  *padding-top: 7px;
+  *padding-bottom: 7px;
+}
+#ariQuizContainer button.btn.btn-small,
+#ariQuizContainer input[type="submit"].btn.btn-small {
+  *padding-top: 3px;
+  *padding-bottom: 3px;
+}
+#ariQuizContainer button.btn.btn-mini,
+#ariQuizContainer input[type="submit"].btn.btn-mini {
+  *padding-top: 1px;
+  *padding-bottom: 1px;
+}
+#ariQuizContainer .btn-link,
+#ariQuizContainer .btn-link:active,
+#ariQuizContainer .btn-link[disabled] {
+  background-color: transparent;
+  background-image: none;
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+#ariQuizContainer .btn-link {
+  border-color: transparent;
+  cursor: pointer;
+  color: #0088cc;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+}
+#ariQuizContainer .btn-link:hover,
+#ariQuizContainer .btn-link:focus {
+  color: #005580;
+  text-decoration: underline;
+  background-color: transparent;
+}
+#ariQuizContainer .btn-link[disabled]:hover,
+#ariQuizContainer .btn-link[disabled]:focus {
+  color: #333333;
+  text-decoration: none;
+}
+#ariQuizContainer [class^="icon-"],
+#ariQuizContainer [class*=" icon-"] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("../img/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+  margin-top: 1px;
+}
+#ariQuizContainer .icon-white,
+#ariQuizContainer .nav-pills > .active > a > [class^="icon-"],
+#ariQuizContainer .nav-pills > .active > a > [class*=" icon-"],
+#ariQuizContainer .nav-list > .active > a > [class^="icon-"],
+#ariQuizContainer .nav-list > .active > a > [class*=" icon-"],
+#ariQuizContainer .navbar-inverse .nav > .active > a > [class^="icon-"],
+#ariQuizContainer .navbar-inverse .nav > .active > a > [class*=" icon-"],
+#ariQuizContainer .dropdown-menu > li > a:hover > [class^="icon-"],
+#ariQuizContainer .dropdown-menu > li > a:focus > [class^="icon-"],
+#ariQuizContainer .dropdown-menu > li > a:hover > [class*=" icon-"],
+#ariQuizContainer .dropdown-menu > li > a:focus > [class*=" icon-"],
+#ariQuizContainer .dropdown-menu > .active > a > [class^="icon-"],
+#ariQuizContainer .dropdown-menu > .active > a > [class*=" icon-"],
+#ariQuizContainer .dropdown-submenu:hover > a > [class^="icon-"],
+#ariQuizContainer .dropdown-submenu:focus > a > [class^="icon-"],
+#ariQuizContainer .dropdown-submenu:hover > a > [class*=" icon-"],
+#ariQuizContainer .dropdown-submenu:focus > a > [class*=" icon-"] {
+  background-image: url("../img/glyphicons-halflings-white.png");
+}
+#ariQuizContainer .icon-glass {
+  background-position: 0      0;
+}
+#ariQuizContainer .icon-music {
+  background-position: -24px 0;
+}
+#ariQuizContainer .icon-search {
+  background-position: -48px 0;
+}
+#ariQuizContainer .icon-envelope {
+  background-position: -72px 0;
+}
+#ariQuizContainer .icon-heart {
+  background-position: -96px 0;
+}
+#ariQuizContainer .icon-star {
+  background-position: -120px 0;
+}
+#ariQuizContainer .icon-star-empty {
+  background-position: -144px 0;
+}
+#ariQuizContainer .icon-user {
+  background-position: -168px 0;
+}
+#ariQuizContainer .icon-film {
+  background-position: -192px 0;
+}
+#ariQuizContainer .icon-th-large {
+  background-position: -216px 0;
+}
+#ariQuizContainer .icon-th {
+  background-position: -240px 0;
+}
+#ariQuizContainer .icon-th-list {
+  background-position: -264px 0;
+}
+#ariQuizContainer .icon-ok {
+  background-position: -288px 0;
+}
+#ariQuizContainer .icon-remove {
+  background-position: -312px 0;
+}
+#ariQuizContainer .icon-zoom-in {
+  background-position: -336px 0;
+}
+#ariQuizContainer .icon-zoom-out {
+  background-position: -360px 0;
+}
+#ariQuizContainer .icon-off {
+  background-position: -384px 0;
+}
+#ariQuizContainer .icon-signal {
+  background-position: -408px 0;
+}
+#ariQuizContainer .icon-cog {
+  background-position: -432px 0;
+}
+#ariQuizContainer .icon-trash {
+  background-position: -456px 0;
+}
+#ariQuizContainer .icon-home {
+  background-position: 0 -24px;
+}
+#ariQuizContainer .icon-file {
+  background-position: -24px -24px;
+}
+#ariQuizContainer .icon-time {
+  background-position: -48px -24px;
+}
+#ariQuizContainer .icon-road {
+  background-position: -72px -24px;
+}
+#ariQuizContainer .icon-download-alt {
+  background-position: -96px -24px;
+}
+#ariQuizContainer .icon-download {
+  background-position: -120px -24px;
+}
+#ariQuizContainer .icon-upload {
+  background-position: -144px -24px;
+}
+#ariQuizContainer .icon-inbox {
+  background-position: -168px -24px;
+}
+#ariQuizContainer .icon-play-circle {
+  background-position: -192px -24px;
+}
+#ariQuizContainer .icon-repeat {
+  background-position: -216px -24px;
+}
+#ariQuizContainer .icon-refresh {
+  background-position: -240px -24px;
+}
+#ariQuizContainer .icon-list-alt {
+  background-position: -264px -24px;
+}
+#ariQuizContainer .icon-lock {
+  background-position: -287px -24px;
+}
+#ariQuizContainer .icon-flag {
+  background-position: -312px -24px;
+}
+#ariQuizContainer .icon-headphones {
+  background-position: -336px -24px;
+}
+#ariQuizContainer .icon-volume-off {
+  background-position: -360px -24px;
+}
+#ariQuizContainer .icon-volume-down {
+  background-position: -384px -24px;
+}
+#ariQuizContainer .icon-volume-up {
+  background-position: -408px -24px;
+}
+#ariQuizContainer .icon-qrcode {
+  background-position: -432px -24px;
+}
+#ariQuizContainer .icon-barcode {
+  background-position: -456px -24px;
+}
+#ariQuizContainer .icon-tag {
+  background-position: 0 -48px;
+}
+#ariQuizContainer .icon-tags {
+  background-position: -25px -48px;
+}
+#ariQuizContainer .icon-book {
+  background-position: -48px -48px;
+}
+#ariQuizContainer .icon-bookmark {
+  background-position: -72px -48px;
+}
+#ariQuizContainer .icon-print {
+  background-position: -96px -48px;
+}
+#ariQuizContainer .icon-camera {
+  background-position: -120px -48px;
+}
+#ariQuizContainer .icon-font {
+  background-position: -144px -48px;
+}
+#ariQuizContainer .icon-bold {
+  background-position: -167px -48px;
+}
+#ariQuizContainer .icon-italic {
+  background-position: -192px -48px;
+}
+#ariQuizContainer .icon-text-height {
+  background-position: -216px -48px;
+}
+#ariQuizContainer .icon-text-width {
+  background-position: -240px -48px;
+}
+#ariQuizContainer .icon-align-left {
+  background-position: -264px -48px;
+}
+#ariQuizContainer .icon-align-center {
+  background-position: -288px -48px;
+}
+#ariQuizContainer .icon-align-right {
+  background-position: -312px -48px;
+}
+#ariQuizContainer .icon-align-justify {
+  background-position: -336px -48px;
+}
+#ariQuizContainer .icon-list {
+  background-position: -360px -48px;
+}
+#ariQuizContainer .icon-indent-left {
+  background-position: -384px -48px;
+}
+#ariQuizContainer .icon-indent-right {
+  background-position: -408px -48px;
+}
+#ariQuizContainer .icon-facetime-video {
+  background-position: -432px -48px;
+}
+#ariQuizContainer .icon-picture {
+  background-position: -456px -48px;
+}
+#ariQuizContainer .icon-pencil {
+  background-position: 0 -72px;
+}
+#ariQuizContainer .icon-map-marker {
+  background-position: -24px -72px;
+}
+#ariQuizContainer .icon-adjust {
+  background-position: -48px -72px;
+}
+#ariQuizContainer .icon-tint {
+  background-position: -72px -72px;
+}
+#ariQuizContainer .icon-edit {
+  background-position: -96px -72px;
+}
+#ariQuizContainer .icon-share {
+  background-position: -120px -72px;
+}
+#ariQuizContainer .icon-check {
+  background-position: -144px -72px;
+}
+#ariQuizContainer .icon-move {
+  background-position: -168px -72px;
+}
+#ariQuizContainer .icon-step-backward {
+  background-position: -192px -72px;
+}
+#ariQuizContainer .icon-fast-backward {
+  background-position: -216px -72px;
+}
+#ariQuizContainer .icon-backward {
+  background-position: -240px -72px;
+}
+#ariQuizContainer .icon-play {
+  background-position: -264px -72px;
+}
+#ariQuizContainer .icon-pause {
+  background-position: -288px -72px;
+}
+#ariQuizContainer .icon-stop {
+  background-position: -312px -72px;
+}
+#ariQuizContainer .icon-forward {
+  background-position: -336px -72px;
+}
+#ariQuizContainer .icon-fast-forward {
+  background-position: -360px -72px;
+}
+#ariQuizContainer .icon-step-forward {
+  background-position: -384px -72px;
+}
+#ariQuizContainer .icon-eject {
+  background-position: -408px -72px;
+}
+#ariQuizContainer .icon-chevron-left {
+  background-position: -432px -72px;
+}
+#ariQuizContainer .icon-chevron-right {
+  background-position: -456px -72px;
+}
+#ariQuizContainer .icon-plus-sign {
+  background-position: 0 -96px;
+}
+#ariQuizContainer .icon-minus-sign {
+  background-position: -24px -96px;
+}
+#ariQuizContainer .icon-remove-sign {
+  background-position: -48px -96px;
+}
+#ariQuizContainer .icon-ok-sign {
+  background-position: -72px -96px;
+}
+#ariQuizContainer .icon-question-sign {
+  background-position: -96px -96px;
+}
+#ariQuizContainer .icon-info-sign {
+  background-position: -120px -96px;
+}
+#ariQuizContainer .icon-screenshot {
+  background-position: -144px -96px;
+}
+#ariQuizContainer .icon-remove-circle {
+  background-position: -168px -96px;
+}
+#ariQuizContainer .icon-ok-circle {
+  background-position: -192px -96px;
+}
+#ariQuizContainer .icon-ban-circle {
+  background-position: -216px -96px;
+}
+#ariQuizContainer .icon-arrow-left {
+  background-position: -240px -96px;
+}
+#ariQuizContainer .icon-arrow-right {
+  background-position: -264px -96px;
+}
+#ariQuizContainer .icon-arrow-up {
+  background-position: -289px -96px;
+}
+#ariQuizContainer .icon-arrow-down {
+  background-position: -312px -96px;
+}
+#ariQuizContainer .icon-share-alt {
+  background-position: -336px -96px;
+}
+#ariQuizContainer .icon-resize-full {
+  background-position: -360px -96px;
+}
+#ariQuizContainer .icon-resize-small {
+  background-position: -384px -96px;
+}
+#ariQuizContainer .icon-plus {
+  background-position: -408px -96px;
+}
+#ariQuizContainer .icon-minus {
+  background-position: -433px -96px;
+}
+#ariQuizContainer .icon-asterisk {
+  background-position: -456px -96px;
+}
+#ariQuizContainer .icon-exclamation-sign {
+  background-position: 0 -120px;
+}
+#ariQuizContainer .icon-gift {
+  background-position: -24px -120px;
+}
+#ariQuizContainer .icon-leaf {
+  background-position: -48px -120px;
+}
+#ariQuizContainer .icon-fire {
+  background-position: -72px -120px;
+}
+#ariQuizContainer .icon-eye-open {
+  background-position: -96px -120px;
+}
+#ariQuizContainer .icon-eye-close {
+  background-position: -120px -120px;
+}
+#ariQuizContainer .icon-warning-sign {
+  background-position: -144px -120px;
+}
+#ariQuizContainer .icon-plane {
+  background-position: -168px -120px;
+}
+#ariQuizContainer .icon-calendar {
+  background-position: -192px -120px;
+}
+#ariQuizContainer .icon-random {
+  background-position: -216px -120px;
+  width: 16px;
+}
+#ariQuizContainer .icon-comment {
+  background-position: -240px -120px;
+}
+#ariQuizContainer .icon-magnet {
+  background-position: -264px -120px;
+}
+#ariQuizContainer .icon-chevron-up {
+  background-position: -288px -120px;
+}
+#ariQuizContainer .icon-chevron-down {
+  background-position: -313px -119px;
+}
+#ariQuizContainer .icon-retweet {
+  background-position: -336px -120px;
+}
+#ariQuizContainer .icon-shopping-cart {
+  background-position: -360px -120px;
+}
+#ariQuizContainer .icon-folder-close {
+  background-position: -384px -120px;
+  width: 16px;
+}
+#ariQuizContainer .icon-folder-open {
+  background-position: -408px -120px;
+  width: 16px;
+}
+#ariQuizContainer .icon-resize-vertical {
+  background-position: -432px -119px;
+}
+#ariQuizContainer .icon-resize-horizontal {
+  background-position: -456px -118px;
+}
+#ariQuizContainer .icon-hdd {
+  background-position: 0 -144px;
+}
+#ariQuizContainer .icon-bullhorn {
+  background-position: -24px -144px;
+}
+#ariQuizContainer .icon-bell {
+  background-position: -48px -144px;
+}
+#ariQuizContainer .icon-certificate {
+  background-position: -72px -144px;
+}
+#ariQuizContainer .icon-thumbs-up {
+  background-position: -96px -144px;
+}
+#ariQuizContainer .icon-thumbs-down {
+  background-position: -120px -144px;
+}
+#ariQuizContainer .icon-hand-right {
+  background-position: -144px -144px;
+}
+#ariQuizContainer .icon-hand-left {
+  background-position: -168px -144px;
+}
+#ariQuizContainer .icon-hand-up {
+  background-position: -192px -144px;
+}
+#ariQuizContainer .icon-hand-down {
+  background-position: -216px -144px;
+}
+#ariQuizContainer .icon-circle-arrow-right {
+  background-position: -240px -144px;
+}
+#ariQuizContainer .icon-circle-arrow-left {
+  background-position: -264px -144px;
+}
+#ariQuizContainer .icon-circle-arrow-up {
+  background-position: -288px -144px;
+}
+#ariQuizContainer .icon-circle-arrow-down {
+  background-position: -312px -144px;
+}
+#ariQuizContainer .icon-globe {
+  background-position: -336px -144px;
+}
+#ariQuizContainer .icon-wrench {
+  background-position: -360px -144px;
+}
+#ariQuizContainer .icon-tasks {
+  background-position: -384px -144px;
+}
+#ariQuizContainer .icon-filter {
+  background-position: -408px -144px;
+}
+#ariQuizContainer .icon-briefcase {
+  background-position: -432px -144px;
+}
+#ariQuizContainer .icon-fullscreen {
+  background-position: -456px -144px;
+}

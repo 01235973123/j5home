@@ -81,7 +81,7 @@
 #ariQuizContainer .aq-time {
 	background-color: #F7F7F7;
 	color: #727272;
-	width: 30px;
+	width: 17px;
 	padding: 2px 3px;
 	margin: 0 1px;
 	border: 1px solid #E0E0E0;
@@ -107,7 +107,7 @@
 #ariQuizContainer .aq-quizsession-container {
 	position: relative; 
 	width: 100%;
-	min-width: 240px;
+	min-width: 420px;
 }
 
 #ariQuizContainer .aq-status-panel H4 {
@@ -150,7 +150,7 @@
 	display: block;
 	background-color: #0000FF;
 	color: #FFF;
-	width: 100px;
+	width: 80px;
 	text-align: center;
 	padding: 2px;
 	font-weight: bold;
@@ -163,7 +163,7 @@
 }
 
 #ariQuizContainer .aq-question-content {
-	padding: 2px 0 0 110px;
+	padding: 2px 0 0 90px;
 	line-height: 1.2em;
 }
 

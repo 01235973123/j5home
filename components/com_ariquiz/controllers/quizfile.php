@@ -24,9 +24,9 @@ class AriQuizControllerQuizfile extends AriController
 	
 	function showFile()
 	{
-		$alias = $this->input->getString('alias');
-		$ticketId = $this->input->getString('ticketId');
-		$questionId = $this->input->getInt('questionId');
+		$alias = JRequest::getString('alias');
+		$ticketId = JRequest::getString('ticketId');
+		$questionId = JRequest::getInt('questionId');
 
 		$userQuizModel =& $this->getModel('Userquiz');
 		$file = $userQuizModel->getFile($ticketId, $questionId, $alias);

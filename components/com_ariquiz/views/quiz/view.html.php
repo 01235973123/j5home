@@ -18,24 +18,17 @@ class AriQuizViewQuiz extends AriQuizView
 {
 	var $_isFormView = true;
 	
-	function displayView($quiz, $errorCode, $formView, $tpl = null) 
+	function display($quiz, $errorCode, $formView, $tpl = null) 
 	{
 		$this->setTask('takeQuiz');
 		
 		if ($errorCode != ARIQUIZ_TAKEQUIZERROR_NONE)
 		{
 			$this->assign('isError', true);
-
-            $errorMessage = JText::_(AriQuizHelper::getQuizAccessError($errorCode));
-            if ($errorCode == ARIQUIZ_TAKEQUIZERROR_PREVQUIZ)
-            {
-                $tmpl = JRequest::getString('tmpl');
-                $errorMessage = JText::sprintf('COM_ARIQUIZ_ACCESSERROR_PREVQUIZ2', JRoute::_('index.php?option=com_ariquiz&view=quiz&quizId=' . $quiz->PrevQuizId . ($tmpl ? '&tmpl=' . $tmpl : '') . '&Itemid=' . AriMenuHelper::getActiveItemId()));
-            }
-
-			$this->assign('errorMessage', $errorMessage);
+			$this->assign('errorMessage', AriQuizHelper::getQuizAccessError($errorCode));
 		}
-
+		
+		$this->assign('itemId', AriMenuHelper::getActiveItemId());
 		$this->assignRef('quiz', $quiz);
 		$this->assignRef('formView', $formView);
 		
