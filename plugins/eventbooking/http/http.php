@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -44,10 +44,9 @@ class plgEventbookingHttp extends CMSPlugin implements SubscriberInterface
 	public static function getSubscribedEvents(): array
 	{
 		return [
-			'onEditEvent'            => 'onEditEvent',
-			'onAfterSaveEvent'       => 'onAfterSaveEvent',
-			'onAfterStoreRegistrant' => 'onAfterStoreRegistrant',
-			'onAfterPaymentSuccess'  => 'onAfterPaymentSuccess',
+			'onEditEvent'           => 'onEditEvent',
+			'onAfterSaveEvent'      => 'onAfterSaveEvent',
+			'onAfterPaymentSuccess' => 'onAfterPaymentSuccess',
 		];
 	}
 
@@ -110,24 +109,6 @@ class plgEventbookingHttp extends CMSPlugin implements SubscriberInterface
 	}
 
 	/**
-	 * Process sending webhook when someone registers for event using offline payment method
-	 *
-	 * @param   Event  $eventObj
-	 *
-	 * @return void
-	 */
-	public function onAfterStoreRegistrant(Event $eventObj): void
-	{
-		/* @var EventbookingTableRegistrant $row */
-		[$row] = array_values($eventObj->getArguments());
-
-		if ($this->params->get('send_webhook_for_pending_registration') && str_contains($row->payment_method, 'os_offline'))
-		{
-			$this->processWebhook($row);
-		}
-	}
-
-	/**
 	 * Subscription Active
 	 *
 	 * @param   Event  $eventObj
@@ -139,17 +120,6 @@ class plgEventbookingHttp extends CMSPlugin implements SubscriberInterface
 		/* @var EventbookingTableRegistrant $row */
 		[$row] = array_values($eventObj->getArguments());
 
-		$this->processWebhook($row);
-	}
-
-	/**
-	 * @param   EventbookingTableRegistrant  $row
-	 *
-	 * @return void
-	 * @throws Exception
-	 */
-	private function processWebhook($row)
-	{
 		$event  = EventbookingHelperDatabase::getEvent($row->event_id);
 		$params = new Registry($event->params);
 
@@ -177,6 +147,7 @@ class plgEventbookingHttp extends CMSPlugin implements SubscriberInterface
 		/* @var \Joomla\Database\DatabaseDriver $db */
 		$db    = $this->db;
 		$query = $db->getQuery(true);
+
 
 		// Get custom fields data
 		$data = EventbookingHelperRegistration::getRegistrantData($row);

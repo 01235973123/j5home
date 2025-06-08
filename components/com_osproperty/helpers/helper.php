@@ -4,7 +4,7 @@
 # helper.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -48,14 +48,14 @@ class OSPHelper
 			$db = Factory::getDbo();
 			$db->setQuery("Select * from #__osrs_configuration");
 			$configs = $db->loadObjectList();
-			$configClass = array();
+			$configClass = [];
 			foreach ($configs as $config) {
 				$configClass[$config->fieldname] = $config->fieldvalue;
 			}
 
 			$curr = $configClass['general_currency_default'];
-			$arrCode = array();
-			$arrSymbol = array();
+			$arrCode = [];
+			$arrSymbol = [];
 
 			$db->setQuery("Select * from #__osrs_currencies where id = '$curr'");
 			$currency = $db->loadObject();
@@ -69,15 +69,6 @@ class OSPHelper
         return $configClass;
     }
 
-	static function getInstalledVersion(){
-		if(file_exists(JPATH_ROOT."/components/com_osproperty/version.txt")){												
-			$fh = fopen(JPATH_ROOT."/components/com_osproperty/version.txt","r");
-			$version = fread($fh,filesize(JPATH_ROOT."/components/com_osproperty/version.txt"));
-			@fclose($fh);
-			return trim($version);
-		}
-		return '';
-	}
     /**
      * This function is used to check to see whether we need to update the database to support multilingual or not
      *
@@ -449,7 +440,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_states");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -471,7 +462,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_cities");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -494,7 +485,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_countries");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -516,7 +507,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_tags");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -540,7 +531,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_emails");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -568,7 +559,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_categories");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -601,7 +592,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_amenities");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -623,7 +614,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_fieldgroups");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -645,7 +636,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_extra_fields");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -673,7 +664,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_extra_field_options");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -695,7 +686,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_property_field_value");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -717,7 +708,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_types");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -745,7 +736,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_properties");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -818,7 +809,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_agents");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -841,7 +832,7 @@ class OSPHelper
             $db->setQuery("SHOW COLUMNS FROM #__osrs_companies");
             $fields = $db->loadObjectList();
             if (count($fields) > 0) {
-                $fieldArr = array();
+                $fieldArr = [];
                 for ($i = 0; $i < count($fields); $i++) {
                     $field = $fields[$i];
                     $fieldname = $field->Field;
@@ -1093,8 +1084,9 @@ class OSPHelper
             } else {
                 $document->addStyleSheet(Uri::root() . 'media/com_osproperty/assets/js/chosen/chosen.css');
                 ?>
-                <script src="<?php echo Uri::root() . "media/com_osproperty/assets/js/chosen/chosen.jquery.js"; ?>" type="text/javascript"></script>
-            <?php
+<script src="<?php echo Uri::root() . "media/com_osproperty/assets/js/chosen/chosen.jquery.js"; ?>"
+    type="text/javascript"></script>
+<?php
             }
             $document->addScriptDeclaration(
                 "jQuery(document).ready(function(){
@@ -1107,7 +1099,8 @@ class OSPHelper
     /**
      * Load Google JS API file
      */
-    public static function loadGoogleJS($suffix = ""){
+    public static function loadGoogleJS($suffix = "")
+	{
 		global $configClass;
         static $loadGoogleJs;
         if($loadGoogleJs == false){
@@ -1308,6 +1301,9 @@ class OSPHelper
             case "gif":
                 $p = imagecreatefromgif(JPATH_ROOT ."/images/". $tempPhoto);
                 break;
+               case "webp": // ✅ THÊM DÒNG NÀY
+        $p = imagecreatefromwebp(JPATH_ROOT ."/images/". $tempPhoto);
+        break;
         }
         
         list($width, $height) = getimagesize($SourceFile);
@@ -1324,6 +1320,9 @@ class OSPHelper
             case "gif":
                 $image = imagecreatefromgif($SourceFile);
                 break;
+             case "webp": // ✅ THÊM DÒNG NÀY
+        $image = imagecreatefromwebp($SourceFile);
+        break;
         }
 
 		$image_p = imagecreatetruecolor($width, $height);
@@ -1377,32 +1376,42 @@ class OSPHelper
 
         imagecopy($image_p, $p, $w, $h, 0, 0, $sw, $sh);
 		imagesavealpha($image_p, true);
-		switch ($source_ext) {
-            case "jpg":
-                if ($DestinationFile != "") {
-					imagejpeg($image_p, $DestinationFile, 100);
-				} else {
-					header('Content-Type: image/jpeg');
-					imagejpeg($image_p, null, 100);
-				};
-                break;
-            case "png":
-                if ($DestinationFile != "") {
-					imagejpeg($image_p, $DestinationFile, 100);
-				} else {
-					header('Content-Type: image/jpeg');
-					imagejpeg($image_p, null, 100);
-				};
-                break;
-            case "gif":
-                if ($DestinationFile != "") {
-					imagejpeg($image_p, $DestinationFile);
-				} else {
-					header('Content-Type: image/gif');
-					imagegif($image_p, null, 100);
-				};
-                break;
+	switch ($source_ext) {
+    case "jpg":
+    case "jpeg":
+        if ($DestinationFile != "") {
+            imagejpeg($image_p, $DestinationFile, 100);
+        } else {
+            header('Content-Type: image/jpeg');
+            imagejpeg($image_p, null, 100);
         }
+        break;
+    case "png":
+        if ($DestinationFile != "") {
+            imagepng($image_p, $DestinationFile);
+        } else {
+            header('Content-Type: image/png');
+            imagepng($image_p);
+        }
+        break;
+    case "gif":
+        if ($DestinationFile != "") {
+            imagegif($image_p, $DestinationFile);
+        } else {
+            header('Content-Type: image/gif');
+            imagegif($image_p);
+        }
+        break;
+    case "webp": // ✅ THÊM MỚI
+        if ($DestinationFile != "") {
+            imagewebp($image_p, $DestinationFile, 100);
+        } else {
+            header('Content-Type: image/webp');
+            imagewebp($image_p, null, 100);
+        }
+        break;
+}
+
 	
         imagedestroy($image);
         imagedestroy($image_p);
@@ -1435,6 +1444,9 @@ class OSPHelper
                 break;
             case "gif":
                 $image = imagecreatefromgif($SourceFile);
+                break;
+			case "webp":
+                $image = imagecreatefromwebp($SourceFile);
                 break;
         }
 		
@@ -1505,7 +1517,23 @@ class OSPHelper
         imagettftext($image_p, $font_size, 0, $w, $h, $text_color, $font, $WaterMarkText);
         if ($DestinationFile != "") 
 		{
+            switch ($source_ext) {
+        case 'jpg':
+        case 'jpeg':
             imagejpeg($image_p, $DestinationFile, $configClass['images_quality']);
+            break;
+        case 'png':
+            imagepng($image_p, $DestinationFile);
+            break;
+        case 'gif':
+            imagegif($image_p, $DestinationFile);
+            break;
+        case 'webp':
+            imagewebp($image_p, $DestinationFile, $configClass['images_quality']);
+            break;
+        default:
+            imagejpeg($image_p, $DestinationFile, $configClass['images_quality']);
+    }
         } 
 		else 
 		{
@@ -1526,7 +1554,7 @@ class OSPHelper
     {
         global $mainframe, $configClass;
         $configClass = OSPHelper::loadConfig();
-        $address = array();
+        $address = [];
         $languages = self::getLanguages();
         $translatable = Multilanguage::isEnabled() && count($languages);
         if($translatable)
@@ -1548,8 +1576,23 @@ class OSPHelper
 		{
             $address[0] = "";
         }
-        $address[1] = self::loadCityName($property->city);
-        $address[2] = self::loadSateCode($property->state);
+		if(property_exists($property, 'city_name') && $property->city_name != '')
+		{
+			$address[1] = $property->city_name;
+		}
+		else
+		{
+			
+			$address[1] = self::loadCityName($property->city);
+		}
+		if(property_exists($property, 'state_name') &&  $property->state_name != '')
+		{
+			$address[2] = $property->state_name;
+		}
+		else
+		{
+			$address[2] = self::loadSateCode($property->state);
+		}
         $address[3] = $region;
         $address[4] = $property->postcode;
 
@@ -1559,7 +1602,7 @@ class OSPHelper
         }
         //echo $address_format;
         //echo $address_format;
-        $returnAddress = array();
+        $returnAddress = [];
         $address_formatArr = explode(",", $address_format);
         for ($i = 0; $i < count($address_formatArr); $i++) {
             $item = $address_formatArr[$i];
@@ -1586,13 +1629,17 @@ class OSPHelper
         $lgs = self::getLanguages();
         $translatable = Multilanguage::isEnabled() && count($lgs);
 		$app = Factory::getApplication();
-		if((!$city_id_value) || ($city_id_value != $city_id)){
+		if(!$city_id_value || $city_id_value != $city_id)
+		{
 			$city_id_value = $city_id;
-			if (($translatable) and (!$app->isClient('administrator'))){
+			if (($translatable) && (!$app->isClient('administrator')))
+			{
 				$suffix = self::getFieldSuffix();
 				$db->setQuery("Select city" . $suffix . " from #__osrs_cities where id = '$city_id_value'");
 				$city_value = $db->loadResult();
-			} else {
+			} 
+			else 
+			{
 				$db->setQuery("Select city from #__osrs_cities where id = '$city_id_value'");
 				$city_value = $db->loadResult();
 			}
@@ -1624,7 +1671,7 @@ class OSPHelper
 		$app = Factory::getApplication();
 		if((!$state_id_value) || ($state_id_value != $state_id)){
 			$state_id_value = $state_id;
-			if (($translatable) and (!$app->isClient('administrator'))){
+			if (($translatable) && (!$app->isClient('administrator'))){
 				$suffix = self::getFieldSuffix();
 				$db->setQuery("Select state_name" . $suffix . " from #__osrs_states where id = '$state_id_value'");
 				$state_value = $db->loadResult();
@@ -1659,6 +1706,7 @@ class OSPHelper
     public static function resizePhoto($dest, $width, $height)
     {
         global $configClass;
+		
         $custom_thumbnail_photo = $configClass['custom_thumbnail_photo'];
         list($width_orig, $height_orig) = getimagesize($dest);
         if ($width_orig != $width || $height_orig != $height) 
@@ -1681,6 +1729,117 @@ class OSPHelper
             }
         }
     }
+
+	public static function adjustPhotoOriginal($image_path)
+	{
+
+		$info			= getimagesize($image_path);
+		$width			= $info[0];
+		$height			= $info[1];
+		$type			= str_replace('image/', '', $info['mime']);
+		$exif			= exif_read_data($image_path);
+
+		$adjust			= 0;
+		if ($exif && isset($exif['Orientation'])) 
+		{
+			$orientation = $exif['Orientation'];
+
+			// Create an image resource from the file
+			//$image = imagecreatefromjpeg($imagePath);
+			switch ($type) 
+			{
+				case 'jpeg':
+				case 'jpg':
+					$image = imagecreatefromjpeg($image_path);
+					break;
+
+				case 'png':
+					$image = imagecreatefrompng($image_path);
+					break;
+
+				case 'bmp':
+					$image = imagecreatefrombmp($image_path);
+					break;
+
+				case 'gif':
+					$image = imagecreatefromgif($image_path);
+					break;
+
+				case 'vnd.wap.wbmp':
+					$image = imagecreatefromwbmp($image_path);
+					break;
+
+				case 'webp':
+					$image = imagecreatefromxbm($image_path);
+					break;
+
+				default:
+					$image = imagecreatefromjpeg($image_path);
+				break;
+			}
+
+
+			switch ($orientation) 
+			{
+				case 3: // 180 degrees
+					$adjust = 1;
+					$image = imagerotate($image, 180, 0);
+					break;
+				case 6: // 90 degrees counter-clockwise
+					$adjust = 1;
+					$image = imagerotate($image, 270, 0);
+					break;
+				case 8: // 90 degrees clockwise
+					$adjust = 1;
+					$image = imagerotate($image, 90, 0);
+					break;
+				default:
+					// No rotation needed for orientation 1 (Normal)
+					break;
+			}
+
+			// Save the rotated image
+			//imagejpeg($image, $image_path);
+			if($adjust == 1)
+			{
+				switch ($type) 
+				{
+					case 'jpeg':
+					case 'jpg':
+						imagejpeg($image, $image_path);
+						break;
+
+					case 'png':
+						imagepng($image, $image_path);
+						break;
+
+					case 'bmp':
+						imagebmp($image, $image_path);
+						break;
+
+					case 'gif':
+						imagegif($image, $image_path);
+						break;
+
+					case 'vnd.wap.wbmp':
+						imagebmp($image, $image_path);
+						break;
+
+					case 'webp':
+						imagexbm($image, $image_path);
+						break;
+
+					default:
+						imagejpeg($image, $image_path);
+						break;
+				}
+			}
+
+			// Free up memory
+			imagedestroy($image);
+			
+		}
+	}
 
     public static function useBootstrapSlide()
     {
@@ -1720,12 +1879,12 @@ class OSPHelper
 			{
 				if($title != ""){
 					?>
-					<h1 class="componentheading">
-						<?php
+<h1 class="componentheading">
+    <?php
 						echo $title;
 						?>
-					</h1>
-                    <?php
+</h1>
+<?php
 				}
 			}
 		}
@@ -1775,28 +1934,28 @@ class OSPHelper
                 if ($show_page_heading == 1) {
                     if ($page_heading != "") {
                         ?>
-                        <h1 class="componentheading">
-                            <?php
+<h1 class="componentheading">
+    <?php
                             echo $page_heading;
                             ?>
-                        </h1>
-                    <?php
+</h1>
+<?php
                     } elseif ($menu->title != "") {
                         ?>
-                        <h1 class="componentheading">
-                            <?php
+<h1 class="componentheading">
+    <?php
                             echo $menu->title;
                             ?>
-                        </h1>
-                    <?php
+</h1>
+<?php
                     } else {
                         ?>
-                        <h1 class="componentheading">
-                            <?php
+<h1 class="componentheading">
+    <?php
                             echo $title;
                             ?>
-                        </h1>
-                    <?php
+</h1>
+<?php
                     }
                 }
             }
@@ -1813,12 +1972,12 @@ class OSPHelper
 				$document->setTitle($title);
             } else {
                 ?>
-                <h1 class="componentheading">
-                    <?php
+<h1 class="componentheading">
+    <?php
                     echo $title;
                     ?>
-                </h1>
-            <?php
+</h1>
+<?php
             }
         }
     }
@@ -1925,21 +2084,21 @@ class OSPHelper
         if ($image != "") {
             if (file_exists(JPATH_ROOT . '/images/osproperty/properties/' . $pid . '/' . $image_folder . $image)) {
                 ?>
-                <img
-                    src="<?php echo $photourl; ?>" data-original="<?php echo Uri::root() ?>images/osproperty/properties/<?php echo $pid . '/' . $image_folder . $image; ?>"
-                    class="<?php echo $class ?> oslazy" style="<?php echo $style ?>" <?php echo $js ?>  alt="<?php echo $alt; ?>" />
-            <?php
+<img src="<?php echo $photourl; ?>"
+    data-original="<?php echo Uri::root() ?>images/osproperty/properties/<?php echo $pid . '/' . $image_folder . $image; ?>"
+    class="<?php echo $class ?> oslazy" style="<?php echo $style ?>" <?php echo $js ?> alt="<?php echo $alt; ?>" />
+<?php
             } else {
                 ?>
-                <img src="<?php echo Uri::root() ?>media/com_osproperty/assets/images/nopropertyphoto.png"
-                     class="<?php echo $class ?>" style="<?php echo $style ?>"/>
-            <?php
+<img src="<?php echo Uri::root() ?>media/com_osproperty/assets/images/nopropertyphoto.png" class="<?php echo $class ?>"
+    style="<?php echo $style ?>" />
+<?php
             }
         } else {
             ?>
-            <img src="<?php echo Uri::root() ?>media/com_osproperty/assets/images/nopropertyphoto.png"
-                 class="<?php echo $class ?>" style="<?php echo $style ?>"/>
-        <?php
+<img src="<?php echo Uri::root() ?>media/com_osproperty/assets/images/nopropertyphoto.png" class="<?php echo $class ?>"
+    style="<?php echo $style ?>" />
+<?php
         }
     }
 
@@ -1953,7 +2112,7 @@ class OSPHelper
         $mime = getimagesize($image);
         $mime = $mime ['mime'];
 
-        $extensions = array('jpg','jpeg','png','gif');
+        $extensions = array('jpg','jpeg','png','gif','webp');
         $extension = strtolower(pathinfo($image, PATHINFO_EXTENSION));
 
         if (in_array($extension, $extensions) and in_array($mime, $mimes))
@@ -1966,8 +2125,8 @@ class OSPHelper
 
     public static function getImages($folder)
     {
-        $files = array();
-        $images = array();
+        $files = [];
+        $images = [];
 
         // check if directory exists
         if (is_dir($folder)) {
@@ -2370,7 +2529,7 @@ class OSPHelper
     public static function listCategoriesInMultiple($category_ids, $onChangeScript)
     {
         global $mainframe;
-        $parentArr = array();
+        $parentArr = [];
         $parentArr = self::loadCategoryOptions($category_ids, $onChangeScript, 0);
         $output = HTMLHelper::_('select.genericlist', $parentArr, 'category_ids[]', 'multiple class="input-large chosen categorydropdown" ' . $onChangeScript, 'value', 'text', $category_ids);
         return $output;
@@ -2382,9 +2541,9 @@ class OSPHelper
     public static function listCategories($category_id, $onChangeScript)
     {
         global $mainframe;
-        $parentArr = array();
+        $parentArr = [];
         $parentArr = self::loadCategoryOptions($category_id, $onChangeScript, 1);
-        $output = HTMLHelper::_('select.genericlist', $parentArr, 'category_id', 'class="input-medium" ' . $onChangeScript, 'value', 'text', $category_id);
+        $output = HTMLHelper::_('select.genericlist', $parentArr, 'category_id', 'class="form-select" ' . $onChangeScript, 'value', 'text', $category_id);
         return $output;
     }
 
@@ -2409,7 +2568,7 @@ class OSPHelper
         $db->setQuery($query);
         $mitems = $db->loadObjectList();
         // establish the hierarchy of the menu
-        $children = array();
+        $children = [];
         if ($mitems) {
             // first pass - collect children
             foreach ($mitems as $v) {
@@ -2429,7 +2588,7 @@ class OSPHelper
         // second pass - get an indent list of the items
         $list = HTMLHelper::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0);
         // assemble menu items to the array
-        $parentArr = array();
+        $parentArr = [];
         if ($hasFirstOption == 1) {
             $parentArr[] = HTMLHelper::_('select.option', '', Text::_('OS_ALL_CATEGORIES'));
         }
@@ -2465,11 +2624,11 @@ class OSPHelper
         $parentArr = self::loadCategoryBoxes($categoryArr);
         ob_start();
         ?>
-        <input type="checkbox" name="check_all_cats" id="check_all_cats" value="1" checked
-               onclick="javascript:checkCats()"/>&nbsp;&nbsp;<strong><?php echo Text::_('OS_CATEGORIES')?></strong>
-        <input type="hidden" name="count_categories" id="count_categories" value="<?php echo $count_categories?>"/>
-        <BR/>
-        <?php
+<input type="checkbox" name="check_all_cats" id="check_all_cats" value="1" checked
+    onclick="javascript:checkCats()" />&nbsp;&nbsp;<strong><?php echo Text::_('OS_CATEGORIES')?></strong>
+<input type="hidden" name="count_categories" id="count_categories" value="<?php echo $count_categories?>" />
+<BR />
+<?php
         for ($i = 0; $i < count($parentArr); $i++) {
             echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' . $parentArr[$i];
             echo "<BR />";
@@ -2479,7 +2638,7 @@ class OSPHelper
         return $output;
     }
 
-    public static function loadCategoryBoxes($categoryArr)
+    public static function loadCategoryBoxes($categoryArr, $name = 'categoryArr')
     {
         global $mainframe, $lang_suffix;
         $db = Factory::getDBO();
@@ -2498,24 +2657,25 @@ class OSPHelper
         $mitems = $db->loadObjectList();
 
         // establish the hierarchy of the menu
-        $children = array();
+        $children = [];
 
         if ($mitems) {
             // first pass - collect children
             foreach ($mitems as $v) {
                 $pt = $v->parent_id;
-                $list = @$children[$pt] ? $children[$pt] : array();
+                $list = @$children[$pt] ? $children[$pt] : [];
                 array_push($list, $v);
                 $children[$pt] = $list;
             }
         }
 
         // second pass - get an indent list of the items
-        $list = HTMLHelper::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0);
+        $list = HTMLHelper::_('menu.treerecurse', 0, '',[], $children, 9999, 0, 0);
         // assemble menu items to the array
-        $parentArr = array();
+        $parentArr = [];
 
-        foreach ($list as $item) {
+        foreach ($list as $item) 
+		{
             $checked = "";
             if ($item->treename != "") {
                 $item->treename = str_replace("&nbsp;", "", $item->treename);
@@ -2533,7 +2693,7 @@ class OSPHelper
                     $checked = "checked";
                 }
             }
-            $parentArr[] = '<input type="checkbox" id="all_categories' . $item->value . '" name="categoryArr[]" ' . $checked . ' value="' . $item->value . '" />&nbsp;&nbsp;' . $text . '';
+            $parentArr[] = '<input type="checkbox" id="all_categories' . $item->value . '" name="'.$name.'[]" ' . $checked . ' value="' . $item->value . '" data-value="'.$item->category_name.'" />&nbsp;&nbsp;' . $text . '';
         }
         return $parentArr;
     }
@@ -2584,7 +2744,7 @@ class OSPHelper
 		$configClass = self::loadConfig();
 		$user_types = $configClass['user_types'];
 		$user_types = explode(",",$user_types);
-        $optionArr = array();
+        $optionArr = [];
 		if(in_array(0,$user_types)){
 			$optionArr[] = HTMLHelper::_('select.option', '0', Text::_('OS_AGENT'));
 		}
@@ -2617,7 +2777,7 @@ class OSPHelper
 		$user_types = $configClass['user_types'];
 		$user_types = explode(",",$user_types);
 
-        $optionArr = array();
+        $optionArr = [];
 		$optionArr[] = HTMLHelper::_('select.option', '-1', Text::_('OS_SELECT_USER_TYPE'));
         if(in_array(0,$user_types)){
 			$optionArr[] = HTMLHelper::_('select.option', '0', Text::_('OS_AGENT'));
@@ -2815,69 +2975,78 @@ class OSPHelper
             $document->addStyleSheet("//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css");
 			//$document->addStyleSheet("//code.jquery.com/ui/1.10.4/themes/smoothness/jquery.ui.slider-rtl.css");
             ?>
-            <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>			
-            <script src="<?php echo Uri::root() ?>media/com_osproperty/assets/js/jquery.ui.touch-punch.js" type="text/javascript" defer="defer"></script>
-			<script src="<?php echo Uri::root() ?>media/com_osproperty/assets/js/autoNumeric.js" type="text/javascript" defer="defer"></script>
-            <div id="<?php echo $prefix; ?>sliderange"></div>
-            <div class="clearfix"></div>
-            <script>
-                jQuery.ui.slider.prototype.widgetEventPrefix = 'slider';
-                jQuery(function () {
-					jQuery("#<?php echo $prefix;?>sliderange")[0].slide = null;
-                    jQuery("#<?php echo $prefix;?>sliderange").slider({
-						//isRTL: true,
-                        range: true,
-                        min: <?php echo intval($min_price_value);?>,
-                        step: <?php echo $price_step_amount;?>,
-                        max: <?php echo intval($max_price_value);?>,
-                        values: [<?php echo intval($min_price);?>, <?php echo intval($max_price);?>],
-                        slide: function (event, ui) {
-                            var price_from = ui.values[0];
-                            var price_to = ui.values[1];
-                            jQuery("#<?php echo $prefix;?>price_from_input1").val(price_from);
-                            jQuery("#<?php echo $prefix;?>price_to_input1").val(price_to);
+<script src="//code.jquery.com/ui/1.10.4/jquery-ui.js" type="text/javascript"></script>
+<script src="<?php echo Uri::root() ?>media/com_osproperty/assets/js/jquery.ui.touch-punch.js" type="text/javascript"
+    defer="defer"></script>
+<script src="<?php echo Uri::root() ?>media/com_osproperty/assets/js/autoNumeric.js" type="text/javascript"
+    defer="defer"></script>
+<div id="<?php echo $prefix; ?>sliderange"></div>
+<div class="clearfix"></div>
+<script>
+jQuery.ui.slider.prototype.widgetEventPrefix = 'slider';
+jQuery(function() {
+    jQuery("#<?php echo $prefix;?>sliderange")[0].slide = null;
+    jQuery("#<?php echo $prefix;?>sliderange").slider({
+        //isRTL: true,
+        range: true,
+        min: <?php echo intval($min_price_value);?>,
+        step: <?php echo $price_step_amount;?>,
+        max: <?php echo intval($max_price_value);?>,
+        values: [<?php echo intval($min_price);?>, <?php echo intval($max_price);?>],
+        slide: function(event, ui) {
+            var price_from = ui.values[0];
+            var price_to = ui.values[1];
+            jQuery("#<?php echo $prefix;?>price_from_input1").val(price_from);
+            jQuery("#<?php echo $prefix;?>price_to_input1").val(price_to);
 
-                            price_from = price_from.formatMoney(0, '<?php echo isset($configClass["thounsands_separator"])? $configClass["thounsands_separator"]:"."; ?>', '<?php echo isset($configClass["decimals_separator"])? $configClass["decimals_separator"]:","; ?>');
-                            price_to = price_to.formatMoney(0, '<?php echo isset($configClass["thounsands_separator"])? $configClass["thounsands_separator"]:"."; ?>', '<?php echo isset($configClass["decimals_separator"])? $configClass["decimals_separator"]:","; ?>');
+            price_from = price_from.formatMoney(0,
+                '<?php echo isset($configClass["thounsands_separator"])? $configClass["thounsands_separator"]:"."; ?>',
+                '<?php echo isset($configClass["decimals_separator"])? $configClass["decimals_separator"]:","; ?>'
+                );
+            price_to = price_to.formatMoney(0,
+                '<?php echo isset($configClass["thounsands_separator"])? $configClass["thounsands_separator"]:"."; ?>',
+                '<?php echo isset($configClass["decimals_separator"])? $configClass["decimals_separator"]:","; ?>'
+                );
 
-                            jQuery("#<?php echo $prefix;?>price_from_input").text(price_from);
-                            jQuery("#<?php echo $prefix;?>price_to_input").text(price_to);
-                        }
-                    });
+            jQuery("#<?php echo $prefix;?>price_from_input").text(price_from);
+            jQuery("#<?php echo $prefix;?>price_to_input").text(price_to);
+        }
+    });
 
-					jQuery("#<?php echo $prefix;?>price_from_input1").change(function(){
-						  var value1=jQuery("#<?php echo $prefix;?>price_from_input1").val();
-						  var value2=jQuery("#<?php echo $prefix;?>price_to_input1").val();
-						  if(parseInt(value1) > parseInt(value2)){
-							value1 = value2;
-							jQuery(".#<?php echo $prefix;?>price_from_input1").val(value1);
-						  }
-						  jQuery("#<?php echo $prefix;?>sliderange").slider("values",0,value1);
-					});
-						  
-					jQuery("#<?php echo $prefix;?>price_to_input1").change(function(){
-						  var value1=jQuery("#<?php echo $prefix;?>price_from_input1").val();
-						  var value2=jQuery("#<?php echo $prefix;?>price_to_input1").val();
-						  if(parseInt(value1) > parseInt(value2)){
-							value2 = value1;
-							jQuery("#<?php echo $prefix;?>price_to_input1").val(value2);
-						  }
-						  jQuery("#<?php echo $prefix;?>sliderange").slider("values",1,value2);
-					});
-                });
-                Number.prototype.formatMoney = function (decPlaces, thouSeparator, decSeparator) {
-                    var n = this,
-                        decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-                        decSeparator = decSeparator == undefined ? "." : decSeparator,
-                        thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
-                        sign = n < 0 ? "-" : "",
-                        i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-                        j = (j = i.length) > 3 ? j % 3 : 0;
-                    return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
-                };
-            </script>
+    jQuery("#<?php echo $prefix;?>price_from_input1").change(function() {
+        var value1 = jQuery("#<?php echo $prefix;?>price_from_input1").val();
+        var value2 = jQuery("#<?php echo $prefix;?>price_to_input1").val();
+        if (parseInt(value1) > parseInt(value2)) {
+            value1 = value2;
+            jQuery(".#<?php echo $prefix;?>price_from_input1").val(value1);
+        }
+        jQuery("#<?php echo $prefix;?>sliderange").slider("values", 0, value1);
+    });
 
-            <?php
+    jQuery("#<?php echo $prefix;?>price_to_input1").change(function() {
+        var value1 = jQuery("#<?php echo $prefix;?>price_from_input1").val();
+        var value2 = jQuery("#<?php echo $prefix;?>price_to_input1").val();
+        if (parseInt(value1) > parseInt(value2)) {
+            value2 = value1;
+            jQuery("#<?php echo $prefix;?>price_to_input1").val(value2);
+        }
+        jQuery("#<?php echo $prefix;?>sliderange").slider("values", 1, value2);
+    });
+});
+Number.prototype.formatMoney = function(decPlaces, thouSeparator, decSeparator) {
+    var n = this,
+        decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
+        decSeparator = decSeparator == undefined ? "." : decSeparator,
+        thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
+        sign = n < 0 ? "-" : "",
+        i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" +
+        thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
+};
+</script>
+
+<?php
             if ((strpos($prefix, "adv") === FALSE) and (strpos($prefix, "list") === FALSE)) {
                 $span = $bootstrapHelper->getClassMapping('span6');//"span6";
                 $style = "margin-top:10px;margin-left:0px;";
@@ -2892,28 +3061,28 @@ class OSPHelper
                 $input_class_name = "input-small";
             }
             ?>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                <div class="<?php echo $span ?>" style="<?php echo $style; ?><?php echo $style1 ?>">
-                    <?php if ((strpos($prefix, "adv") !== FALSE) or (strpos($prefix, "list") !== FALSE)) { ?>
-                        <?php echo Text::_('OS_MIN') ?>
-                    <?php } ?>
-                    (<?php echo HelperOspropertyCommon::loadCurrency(0); ?>).
-                    <span
-                        id="<?php echo $prefix; ?>price_from_input"><?php echo number_format($min_price, 0, $configClass['decimals_separator'], $configClass['thounsands_separator']); ?></span>
-                    <input type="hidden" name="min_price" id="<?php echo $prefix; ?>price_from_input1"
-                           value="<?php echo $min_price; ?>"/>
-                </div>
-                <div class="<?php echo $span ?>" style="<?php echo $style; ?><?php echo $style2 ?>">
-                    <?php if ((strpos($prefix, "adv") !== FALSE) or (strpos($prefix, "list") !== FALSE)) { ?>
-                        <?php echo Text::_('OS_MAX') ?>
-                    <?php } ?>
-                    (<?php echo HelperOspropertyCommon::loadCurrency(0); ?>).
-                    <span
-                        id="<?php echo $prefix; ?>price_to_input"><?php echo number_format($max_price, 0, $configClass['decimals_separator'], $configClass['thounsands_separator']); ?></span>
-                    <input type="hidden" name="max_price" id="<?php echo $prefix; ?>price_to_input1"
-                           value="<?php echo $max_price; ?>"/>
-                </div>
-            </div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $span ?>" style="<?php echo $style; ?><?php echo $style1 ?>">
+        <?php if ((strpos($prefix, "adv") !== FALSE) or (strpos($prefix, "list") !== FALSE)) { ?>
+        <?php echo Text::_('OS_MIN') ?>
+        <?php } ?>
+        (<?php echo HelperOspropertyCommon::loadCurrency(0); ?>).
+        <span
+            id="<?php echo $prefix; ?>price_from_input"><?php echo number_format($min_price, 0, $configClass['decimals_separator'], $configClass['thounsands_separator']); ?></span>
+        <input type="hidden" name="min_price" id="<?php echo $prefix; ?>price_from_input1"
+            value="<?php echo $min_price; ?>" />
+    </div>
+    <div class="<?php echo $span ?>" style="<?php echo $style; ?><?php echo $style2 ?>">
+        <?php if ((strpos($prefix, "adv") !== FALSE) or (strpos($prefix, "list") !== FALSE)) { ?>
+        <?php echo Text::_('OS_MAX') ?>
+        <?php } ?>
+        (<?php echo HelperOspropertyCommon::loadCurrency(0); ?>).
+        <span
+            id="<?php echo $prefix; ?>price_to_input"><?php echo number_format($max_price, 0, $configClass['decimals_separator'], $configClass['thounsands_separator']); ?></span>
+        <input type="hidden" name="max_price" id="<?php echo $prefix; ?>price_to_input1"
+            value="<?php echo $max_price; ?>" />
+    </div>
+</div>
 <?php
         } else {
             echo HelperOspropertyCommon::generatePriceList($property_type, $option_id, $style);
@@ -2929,30 +3098,36 @@ class OSPHelper
 			$property_types = $db->loadObjectList();
 		}
 		?>
-		<input type="hidden" name="min" id="min" value="<?php echo $configClass['min_price_slider'];?>" />
-		<input type="hidden" name="max" id="max" value="<?php echo $configClass['max_price_slider'];?>" />
-		<input type="hidden" name="step" id="step" value="<?php echo $configClass['price_step_amount'];?>" />
-		<?php
+<input type="hidden" name="min" id="min" value="<?php echo $configClass['min_price_slider'];?>" />
+<input type="hidden" name="max" id="max" value="<?php echo $configClass['max_price_slider'];?>" />
+<input type="hidden" name="step" id="step" value="<?php echo $configClass['price_step_amount'];?>" />
+<?php
         for($i=0;$i<count($property_types);$i++) {
             $property_type = $property_types[$i];
             $type = $configClass['type'.$property_type->id];
             if($type == "1"){
                 ?>
-                <input type="hidden" name="min<?php echo $property_type->id;?>" id="min<?php echo $property_type->id;?>" value="<?php echo $configClass['min_price_slider'];?>" />
-                <input type="hidden" name="max<?php echo $property_type->id;?>" id="max<?php echo $property_type->id;?>" value="<?php echo $configClass['max_price_slider'];?>" />
-                <input type="hidden" name="step<?php echo $property_type->id;?>" id="step<?php echo $property_type->id;?>" value="<?php echo $configClass['price_step_amount'];?>" />
-                <?php
+<input type="hidden" name="min<?php echo $property_type->id;?>" id="min<?php echo $property_type->id;?>"
+    value="<?php echo $configClass['min_price_slider'];?>" />
+<input type="hidden" name="max<?php echo $property_type->id;?>" id="max<?php echo $property_type->id;?>"
+    value="<?php echo $configClass['max_price_slider'];?>" />
+<input type="hidden" name="step<?php echo $property_type->id;?>" id="step<?php echo $property_type->id;?>"
+    value="<?php echo $configClass['price_step_amount'];?>" />
+<?php
             }else{
-                $valueArr = array();
+                $valueArr = [];
                 $valueArr = explode("|",$type);
                 $min_price_slider  = $valueArr[1];
                 $max_price_slider  = $valueArr[2];
                 $price_step_amount = $valueArr[3];
                 ?>
-                    <input type="hidden" name="min<?php echo $property_type->id;?>" id="min<?php echo $property_type->id;?>" value="<?php echo $min_price_slider;?>" />
-                    <input type="hidden" name="max<?php echo $property_type->id;?>" id="max<?php echo $property_type->id;?>" value="<?php echo $max_price_slider;?>" />
-                    <input type="hidden" name="step<?php echo $property_type->id;?>" id="step<?php echo $property_type->id;?>" value="<?php echo $price_step_amount;?>" />
-                <?php
+<input type="hidden" name="min<?php echo $property_type->id;?>" id="min<?php echo $property_type->id;?>"
+    value="<?php echo $min_price_slider;?>" />
+<input type="hidden" name="max<?php echo $property_type->id;?>" id="max<?php echo $property_type->id;?>"
+    value="<?php echo $max_price_slider;?>" />
+<input type="hidden" name="step<?php echo $property_type->id;?>" id="step<?php echo $property_type->id;?>"
+    value="<?php echo $price_step_amount;?>" />
+<?php
             }
         }
     }
@@ -3053,7 +3228,7 @@ class OSPHelper
 			/*
 			$db->setQuery("Select * from #__osrs_configuration");
 			$configs = $db->loadObjectList();
-			$configClass = array();
+			$configClass = [];
 			foreach ($configs as $config) {
 				$configClass[$config->fieldname] = $config->fieldvalue;
 			}
@@ -3061,8 +3236,8 @@ class OSPHelper
 			$configClass = self::loadConfig();
 
 			$curr = $configClass['general_currency_default'];
-			$arrCode = array();
-			$arrSymbol = array();
+			$arrCode = [];
+			$arrSymbol = [];
 
 			$db->setQuery("Select * from #__osrs_currencies where id = '$curr'");
 			$currency = $db->loadObject();
@@ -3080,7 +3255,7 @@ class OSPHelper
     public static function dropdropBath($name, $bath, $class, $jsScript, $firstOption)
     {
         $configClass = self::loadConfig();
-        $bathArr = array();
+        $bathArr = [];
         $bathArr[] = HTMLHelper::_('select.option', '', Text::_($firstOption));
         for ($i = 1; $i <= 10; $i++) {
             $bathArr[] = HTMLHelper::_('select.option', $i.'.00', $i);
@@ -3095,7 +3270,7 @@ class OSPHelper
 
     public static function dropdropBed($name, $bed, $class, $jsScript, $firstOption)
     {
-        $bedArr = array();
+        $bedArr = [];
         $bedArr[] = HTMLHelper::_('select.option', '', Text::_($firstOption));
         for ($i = 1; $i <= 20; $i++) {
             $bedArr[] = HTMLHelper::_('select.option', $i, $i);
@@ -3105,7 +3280,7 @@ class OSPHelper
 
     public static function dropdropRoom($name, $room, $class, $jsScript, $firstOption)
     {
-        $roomArr = array();
+        $roomArr = [];
         $roomArr[] = HTMLHelper::_('select.option', '', Text::_($firstOption));
         for ($i = 1; $i <= 20; $i++) {
             $roomArr[] = HTMLHelper::_('select.option', $i, $i);
@@ -3115,7 +3290,7 @@ class OSPHelper
 
     public static function dropdropFloor($name, $room, $class, $jsScript, $firstOption)
     {
-        $roomArr = array();
+        $roomArr = [];
         $roomArr[] = HTMLHelper::_('select.option', '', Text::_($firstOption));
         for ($i = 1; $i <= 20; $i++) {
             $roomArr[] = HTMLHelper::_('select.option', $i, $i);
@@ -3129,7 +3304,7 @@ class OSPHelper
         $db = Factory::getDbo();
         $db->setQuery("Select * from #__osrs_categories where published = '1' order by ordering");
         $rows = $db->loadObjectList();
-        $tempArr = array();
+        $tempArr = [];
         if (count($rows) > 0) {
             foreach ($rows as $row) {
                 if (in_array($row->id, $catArr)) {
@@ -3171,7 +3346,7 @@ class OSPHelper
         $db->setQuery($query);
         $mitems = $db->loadObjectList();
         // establish the hierarchy of the menu
-        $children = array();
+        $children = [];
         if ($mitems) {
             // first pass - collect children
             foreach ($mitems as $v) {
@@ -3191,7 +3366,7 @@ class OSPHelper
         // second pass - get an indent list of the items
         $list = HTMLHelper::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0);
         // assemble menu items to the array
-        $parentArr = array();
+        $parentArr = [];
         foreach ($list as $item) {
             //if($item->treename != ""){
             //$item->treename = str_replace("&nbsp;","*",$item->treename);
@@ -3214,11 +3389,17 @@ class OSPHelper
 
     public static function getCategoryIdsOfProperty($pid)
     {
-        $db = Factory::getDbo();
-        $query = $db->getQuery(true);
-        $query->select('category_id')->from('#__osrs_property_categories')->where('pid="' . $pid . '"');
-        $db->setQuery($query);
-        $categoryIds = $db->loadColumn(0);
+		static $propertyId;
+		static $categoryIds;
+		if((int)$propertyId == 0 || ((int)$propertyId > 0 && (int)$propertyId != $pid))
+		{
+			$propertyId = $pid;
+			$db = Factory::getDbo();
+			$query = $db->getQuery(true);
+			$query->select('category_id')->from('#__osrs_property_categories')->where('pid="' . $pid . '"');
+			$db->setQuery($query);
+			$categoryIds = $db->loadColumn(0);
+		}
         return $categoryIds;
     }
 
@@ -3262,9 +3443,9 @@ class OSPHelper
         $query->select('id, category_name' . $lang_suffix . ' as category_name')->from('#__osrs_categories')->where($permission . ' and id in (Select category_id from #__osrs_property_categories where pid ="' . $pid . '")');
         $db->setQuery($query);
         $categories = $db->loadObjectList();
-        $categoryArr = array();
+        $categoryArr = [];
         if (count($categories) > 0) {
-            $needs = array();
+            $needs = [];
             $needs[] = "category_listing";
             $needs[] = "lcategory";
             $itemid = OSPRoute::getItemid($needs);
@@ -3330,7 +3511,7 @@ class OSPHelper
 
     public static function checkPermissionOfCategories($catArr)
     {
-        $returnArr = array();
+        $returnArr = [];
         $user = Factory::getUser();
         $permission = "";
         $permission .= ' and `access` IN (' . implode(',', Factory::getUser()->getAuthorisedViewLevels()) . ')';
@@ -3441,51 +3622,79 @@ class OSPHelper
         $activate_language = explode("-",$activate_language);
         $activate_language = $activate_language[0];
         ?>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> margintop10">
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-bank"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SCHOOLS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SCHOOLS');?> </a>		</div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-restaurant"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_RESTAURANTS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_RESTAURANTS');?> </a>		</div>
-		</div>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-hospital"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_DOCTORS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_DOCTORS');?> </a>		</div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-hospital"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_HOSPITALS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_HOSPITALS');?> </a>		</div>
-        </div>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-parking"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_RAILWAY');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_RAILWAY');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-parking"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_AIRPORTS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_AIRPORTS');?> </a>
-            </div>
-		</div>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-market"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SUPER_MARKET');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SUPER_MARKET');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-cinema"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_THEATRE');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_THEATRE');?> </a>
-            </div>
-        </div>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-bank"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_UNIVERSITIES');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_UNIVERSITIES');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-nursery"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_PARKS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_PARKS');?> </a>
-            </div>
-		</div>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-sport"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_KINDERGARTEN');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_KINDERGARTEN');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
-                <i class="icon-detail-maps icon-market"></i> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SHOPPING_MALL');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SHOPPING_MALL');?> </a>
-            </div>
-        </div>
-        <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> margintop10">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-bank"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SCHOOLS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SCHOOLS');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-restaurant"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_RESTAURANTS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_RESTAURANTS');?> </a>
+    </div>
+</div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-hospital"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_DOCTORS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_DOCTORS');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-hospital"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_HOSPITALS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_HOSPITALS');?> </a>
+    </div>
+</div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-parking"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_RAILWAY');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_RAILWAY');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-parking"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_AIRPORTS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_AIRPORTS');?> </a>
+    </div>
+</div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-market"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SUPER_MARKET');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SUPER_MARKET');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-cinema"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_THEATRE');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_THEATRE');?> </a>
+    </div>
+</div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-bank"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_UNIVERSITIES');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_UNIVERSITIES');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-nursery"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_PARKS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_PARKS');?> </a>
+    </div>
+</div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-sport"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_KINDERGARTEN');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_KINDERGARTEN');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?> marginleft10 paddingleft30 relateditem">
+        <i class="icon-detail-maps icon-market"></i> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SHOPPING_MALL');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SHOPPING_MALL');?> </a>
+    </div>
+</div>
+<?php
 	}
 
     /**
@@ -3500,69 +3709,121 @@ class OSPHelper
         $activate_language = explode("-",$activate_language);
         $activate_language = $activate_language[0];
         ?>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> margintop10">
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SCHOOLS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SCHOOLS');?> </a>		</div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_RESTAURANTS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_RESTAURANTS');?> </a>		</div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_DOCTORS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_DOCTORS');?> </a>		</div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_HOSPITALS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_HOSPITALS');?> </a>		</div>
-        </div>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_RAILWAY');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_RAILWAY');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_AIRPORTS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_AIRPORTS');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SUPER_MARKET');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SUPER_MARKET');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_THEATRE');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_THEATRE');?> </a>
-            </div>
-        </div>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_UNIVERSITIES');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_UNIVERSITIES');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_PARKS');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_PARKS');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_KINDERGARTEN');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_KINDERGARTEN');?> </a>
-            </div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo" viewBox="0 0 16 16">
-  <path fill-rule="evenodd" d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z"/>
-</svg> <a href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SHOPPING_MALL');?>&amp;om=1&amp;near=<?php echo $address;?>" class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SHOPPING_MALL');?> </a>
-            </div>
-        </div>
-        <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> margintop10 hidden-phone">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SCHOOLS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SCHOOLS');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_RESTAURANTS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_RESTAURANTS');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_DOCTORS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_DOCTORS');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_HOSPITALS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_HOSPITALS');?> </a>
+    </div>
+</div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> hidden-phone">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_RAILWAY');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_RAILWAY');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_AIRPORTS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_AIRPORTS');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SUPER_MARKET');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SUPER_MARKET');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_THEATRE');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_THEATRE');?> </a>
+    </div>
+</div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> hidden-phone">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_UNIVERSITIES');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_UNIVERSITIES');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_PARKS');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_PARKS');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_KINDERGARTEN');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_KINDERGARTEN');?> </a>
+    </div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> marginleft10">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo"
+            viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 1a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999zm2.493 8.574a.5.5 0 0 1-.411.575c-.712.118-1.28.295-1.655.493a1.319 1.319 0 0 0-.37.265.301.301 0 0 0-.057.09V14l.002.008a.147.147 0 0 0 .016.033.617.617 0 0 0 .145.15c.165.13.435.27.813.395.751.25 1.82.414 3.024.414s2.273-.163 3.024-.414c.378-.126.648-.265.813-.395a.619.619 0 0 0 .146-.15.148.148 0 0 0 .015-.033L12 14v-.004a.301.301 0 0 0-.057-.09 1.318 1.318 0 0 0-.37-.264c-.376-.198-.943-.375-1.655-.493a.5.5 0 1 1 .164-.986c.77.127 1.452.328 1.957.594C12.5 13 13 13.4 13 14c0 .426-.26.752-.544.977-.29.228-.68.413-1.116.558-.878.293-2.059.465-3.34.465-1.281 0-2.462-.172-3.34-.465-.436-.145-.826-.33-1.116-.558C3.26 14.752 3 14.426 3 14c0-.599.5-1 .961-1.243.505-.266 1.187-.467 1.957-.594a.5.5 0 0 1 .575.411z" />
+        </svg> <a
+            href="https://local.google.com/local?f=l&amp;hl=<?php echo $activate_language;?>&amp;q=category:+<?php echo Text::_('OS_SHOPPING_MALL');?>&amp;om=1&amp;near=<?php echo $address;?>"
+            class="category" rel="nofollow" target="_blank"><?php echo Text::_('OS_SHOPPING_MALL');?> </a>
+    </div>
+</div>
+<?php
     }
 
     public static function isSoldProperty($row,$configClass){
@@ -3629,7 +3890,7 @@ class OSPHelper
         require JPATH_ROOT.'/components/com_osproperty/helpers/inc/facebook.php';
         require_once JPATH_ROOT.'/components/com_osproperty/helpers/route.php';
         $configClass = self::loadConfig();
-        $needs = array();
+        $needs = [];
         $needs[] = "property_details";
         $needs[] = $property->id;
         $itemid  = OSPRoute::getItemid($needs);
@@ -3728,7 +3989,7 @@ class OSPHelper
         require JPATH_ROOT.'/components/com_osproperty/helpers/tw/TwitterAPIExchange.php';
         require_once JPATH_ROOT.'/components/com_osproperty/helpers/route.php';
         $configClass = self::loadConfig();
-        $needs = array();
+        $needs = [];
         $needs[] = "property_details";
         $needs[] = $property->id;
         $itemid  = OSPRoute::getItemid($needs);
@@ -3856,7 +4117,7 @@ class OSPHelper
 		{
 			$msg[] = Text::_('COM_USERS_REGISTRATION_SAVE_SUCCESS');
 		}
-		$return			= array();
+		$return			= [];
 		$tmp			= new stdClass();
 		$db    = Factory::getDbo();
 		$query = $db->getQuery(true);
@@ -3879,7 +4140,7 @@ class OSPHelper
     public static function registrationOldVersion($data,$usertype = 0)
     {
         $mainframe = Factory::getApplication();
-        $msg = array();
+        $msg = [];
         $language = Factory::getLanguage();
         $current_language = $language->getTag();
         $extension = 'com_users';
@@ -3889,7 +4150,7 @@ class OSPHelper
         // Initialise the table with JUser.
         $user = new User;
         $new_usertype = $params->get('new_usertype', '2');
-        $groups = array();
+        $groups = [];
         $groups[0] = $new_usertype;
         $data['groups'] = $groups;
         $useractivation = $params->get('useractivation');
@@ -3913,7 +4174,7 @@ class OSPHelper
 		{
 			if($usertype	== 0)
 			{
-				$needs		= array();
+				$needs		= [];
 				$needs[]	= "agent_register";
 				$needs[]	= "aagentregistration";
 				$itemid		= OSPRoute::getItemid($needs);
@@ -3921,7 +4182,7 @@ class OSPHelper
 			}
 			else
 			{
-				$needs		= array();
+				$needs		= [];
 				$needs[]	= "company_register";
 				$needs[]	= "ccompanyregistration";
 				$itemid		= OSPRoute::getItemid($needs);
@@ -3936,7 +4197,7 @@ class OSPHelper
 		{
             if($usertype	== 0)
 			{
-				$needs		= array();
+				$needs		= [];
 				$needs[]	= "agent_register";
 				$needs[]	= "aagentregistration";
 				$itemid		= OSPRoute::getItemid($needs);
@@ -3944,7 +4205,7 @@ class OSPHelper
 			}
 			else
 			{
-				$needs		= array();
+				$needs		= [];
 				$needs[]	= "company_register";
 				$needs[]	= "ccompanyregistration";
 				$itemid		= OSPRoute::getItemid($needs);
@@ -4178,7 +4439,7 @@ class OSPHelper
 		{
 			$msg[] = Text::_('COM_USERS_REGISTRATION_SAVE_SUCCESS');
 		}
-		$return = array();
+		$return = [];
 		$tmp = new stdClass();
 		$tmp->user = $user;
 		$tmp->message = $msg;
@@ -4335,7 +4596,7 @@ class OSPHelper
         // Initialise the table with JUser.
         $user = new User;
         $new_usertype = $params->get('new_usertype', '2');
-        $groups = array();
+        $groups = [];
         $groups[0] = $new_usertype;
         $data['groups'] = $groups;
         $useractivation = $params->get('useractivation');
@@ -4580,11 +4841,11 @@ class OSPHelper
         if($useractivation == 0){
             $data['return'] = base64_decode($data['return_url']);
             // Get the log in options.
-            $options = array();
+            $options = [];
             $options['remember']      = 0;
             $options['return']        = $data['return'];
             // Get the log in credentials.
-            $credentials = array();
+            $credentials = [];
             $credentials['username']  = $data['username'];
             $credentials['password']  = $data['password'];
             // Perform the log in.
@@ -4899,13 +5160,15 @@ class OSPHelper
     /**
      * Get Using Theme
      */
-    public static function getThemeName(){
-		static $default_theme,$jinput;
+    public static function getThemeName()
+	{
+		static $default_theme,$jinput, $configClass;
         $jinput = Factory::getApplication()->input;
         $db = Factory::getDbo();
         $itemid = $jinput->getInt('Itemid',0);
         $theme_id = 0;
-        if($itemid > 0){
+        if($itemid > 0)
+		{
             $menus = Factory::getApplication()->getMenu();
             $menu = $menus->getActive();
             if (is_object($menu)) {
@@ -4916,10 +5179,16 @@ class OSPHelper
                 }
             }
         }
-		if($default_theme == ""){
+		if($default_theme == "")
+		{
 			$db->setQuery("Select * from #__osrs_themes where published = '1'");
 			$default_theme = $db->loadObject();
 		}
+		if($configClass['property_details_theme'] != "")
+		{
+			$default_theme = $configClass['property_details_theme'];
+		}
+
         $default_themename = ($default_theme->name != "") ? $default_theme->name : "default";
 
         if($theme_id > 0){
@@ -4943,78 +5212,88 @@ class OSPHelper
         if(($configClass['use_rooms'] == 1 && $row->rooms > 0) || ($configClass['use_bedrooms'] == 1 && $row->bed_room > 0) || ($configClass['use_bathrooms'] == 1 && $row->bath_room > 0) || ((float)$row->square_feet > 0)){
             ob_start();
             ?>
-            <div class="clearfix"></div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="baseFieldHeading">
-                <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                    <h4>
-                        <?php echo Text::_('OS_BASE_INFORMATION');?>
-                    </h4>
-                </div>
-            </div>
-            <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="baseFieldHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_BASE_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
             if(($configClass['use_rooms'] == 1) and ($row->rooms > 0)){ ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_ROOMS').": ".$row->rooms;?>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_ROOMS').": ".$row->rooms;?>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             if(($configClass['use_bedrooms'] == 1) and ($row->bed_room > 0)){?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_BED').": ".$row->bed_room;?>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_BED').": ".$row->bed_room;?>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             if(($configClass['use_bathrooms'] == 1) and ($row->bath_room > 0)){ ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_BATH').": ".self::showBath($row->bath_room);?>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_BATH').": ".self::showBath($row->bath_room);?>
+    </div>
+</div>
+<?php
             }
 			if($configClass['more_bath_infor']== 1 && $configClass['use_bathrooms']== 1 && self::isBathroomInformation($row->id))
 			{
 			?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_BATHROOM_INFORMATION')?>:
-						 <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_BATHROOM_INFORMATION')?>:
+        <?php
 						 self::showBathroomInformation($row->id);
 						 ?>
-                    </div>
-                </div>
-            <?php
+    </div>
+</div>
+<?php
 			}
             ?>
-            <?php
+<?php
             if((float)$row->square_feet > 0){ ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo OSPHelper::showSquareLabels().": ".$row->square_feet;?>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo OSPHelper::showSquareLabels().": ".$row->square_feet;?>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             $body = ob_get_contents();
             ob_end_clean();
         }
@@ -5031,39 +5310,43 @@ class OSPHelper
         if(($configClass['use_parking'] == 1) and (($row->parking > 0) or ($row->garage_description != ""))){
             ob_start();
             ?>
-            <div class="clearfix"></div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="parkingHeading">
-                <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                    <h4>
-                        <?php echo Text::_('OS_PARKING_INFORMATION');?>
-                    </h4>
-                </div>
-            </div>
-            <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="parkingHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_PARKING_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
             if($row->parking > 0){ ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_PARKING').": ".$row->parking;?>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_PARKING').": ".$row->parking;?>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             if($row->garage_description != ""){?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_GARAGE_DESCRIPTION').": ".$row->garage_description;?>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_GARAGE_DESCRIPTION').": ".$row->garage_description;?>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             $body = ob_get_contents();
             ob_end_clean();
         }
@@ -5101,58 +5384,64 @@ class OSPHelper
             if($show == 1) {
                 ob_start();
                 ?>
-                <div class="clearfix"></div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="buildingInformationHeading">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <h4>
-                            <?php echo Text::_('OS_BUILDING_INFORMATION');?>
-                        </h4>
-                    </div>
-                </div>
-                <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="buildingInformationHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_BUILDING_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
                 foreach($textFieldsArr as $textfield){
                     if($row->{$textfield} != ""){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_'.strtoupper($textfield)) . ": " . $row->{$textfield};?>
-                            </div>
-                        </div>
-                    <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_'.strtoupper($textfield)) . ": " . $row->{$textfield};?>
+    </div>
+</div>
+<?php
                     }
                 }
 				foreach($intFieldArr as $numfield){
                     if($row->{$numfield}  > 0){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_'.strtoupper($numfield)) . ": " . $row->{$numfield};?>
-                            </div>
-                        </div>
-                        <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_'.strtoupper($numfield)) . ": " . $row->{$numfield};?>
+    </div>
+</div>
+<?php
                     }
                 }
                 foreach($numberFieldArr as $numfield){
                     if($row->{$numfield}  > 0){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_'.strtoupper($numfield)) . ": " . self::showBath($row->{$numfield});?>
-                            </div>
-							<?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_'.strtoupper($numfield)) . ": " . self::showBath($row->{$numfield});?>
+    </div>
+    <?php
 							if($numfield != "number_of_floors")
 							{
 								echo " ".self::showSquareSymbol();
 							}
 							?>
-                        </div>
-                        <?php
+</div>
+<?php
                     }
                 }
 				$body = ob_get_contents();
@@ -5174,51 +5463,57 @@ class OSPHelper
         if(($configClass['basement_foundation'] == 1) and (($row->basement_size > 0) or ($row->basement_foundation != "") or ($row->percent_finished != ""))){
             ob_start();
             ?>
-            <div class="clearfix"></div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="basementFoundationHeading">
-                <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                    <h4>
-                        <?php echo Text::_('OS_BASEMENT_FOUNDATION');?>
-                    </h4>
-                </div>
-            </div>
-            <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="basementFoundationHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_BASEMENT_FOUNDATION');?>
+        </h4>
+    </div>
+</div>
+<?php
             if($row->basement_foundation != ""){ ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_BASEMENT_FOUNDATION').": ".$row->basement_foundation;?>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_BASEMENT_FOUNDATION').": ".$row->basement_foundation;?>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             if($row->basement_size > 0){?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_BASEMENT_SIZE').": ".self::showBath($row->basement_size);?>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_BASEMENT_SIZE').": ".self::showBath($row->basement_size);?>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             if($row->percent_finished != ""){ ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_PERCENT_FINISH').": ".$row->percent_finished;?>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_PERCENT_FINISH').": ".$row->percent_finished;?>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             $body = ob_get_contents();
             ob_end_clean();
         }
@@ -5250,38 +5545,42 @@ class OSPHelper
             if($show == 1) {
                 ob_start();
                 ?>
-                <div class="clearfix"></div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="landgInformationHeading">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <h4>
-                            <?php echo Text::_('OS_LAND_INFORMATION');?>
-                        </h4>
-                    </div>
-                </div>
-                <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="landgInformationHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_LAND_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
                 foreach($textFieldsArr as $textfield){
                     if($row->{$textfield} != ""){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_'.strtoupper($textfield)) . ": " . $row->{$textfield};?>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_'.strtoupper($textfield)) . ": " . $row->{$textfield};?>
 
-                            </div>
-                        </div>
-                    <?php
+    </div>
+</div>
+<?php
                     }
                 }
                 foreach($numberFieldArr as $numfield){
                     if($row->{$numfield}  > 0){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_'.strtoupper($numfield)) . ": " . self::showBath($row->{$numfield});?>
-                                <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_'.strtoupper($numfield)) . ": " . self::showBath($row->{$numfield});?>
+        <?php
                                 switch($numfield){
                                     case "square_feet":
                                     case "lot_size":
@@ -5292,9 +5591,9 @@ class OSPHelper
                                         break;
                                 }
                                 ?>
-                            </div>
-                        </div>
-                    <?php
+    </div>
+</div>
+<?php
                     }
                 }
 				$body = ob_get_contents();
@@ -5324,27 +5623,29 @@ class OSPHelper
             if($show == 1) {
                 ob_start();
                 ?>
-                <div class="clearfix"></div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="businessInformationHeading">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <h4>
-                            <?php echo Text::_('OS_BUSINESS_INFORMATION');?>
-                        </h4>
-                    </div>
-                </div>
-                <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="businessInformationHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_BUSINESS_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
                 foreach($textFieldsArr as $textfield){
                     if($row->{$textfield} != ""){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_'.strtoupper($textfield)) . ": " . $row->{$textfield};?>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_'.strtoupper($textfield)) . ": " . $row->{$textfield};?>
 
-                            </div>
-                        </div>
-                    <?php
+    </div>
+</div>
+<?php
                     }
                 }
 				$body = ob_get_contents();
@@ -5374,27 +5675,29 @@ class OSPHelper
             if($show == 1) {
                 ob_start();
                 ?>
-                <div class="clearfix"></div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="ruralInformationHeading">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <h4>
-                            <?php echo Text::_('OS_RURAL_INFORMATION');?>
-                        </h4>
-                    </div>
-                </div>
-                <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="ruralInformationHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_RURAL_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
                 foreach($textFieldsArr as $textfield){
                     if($row->{$textfield} != ""){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-</svg> <?php echo Text::_('OS_'.strtoupper($textfield)) . ": " . $row->{$textfield};?>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2"
+            viewBox="0 0 16 16">
+            <path
+                d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z" />
+        </svg> <?php echo Text::_('OS_'.strtoupper($textfield)) . ": " . $row->{$textfield};?>
 
-                            </div>
-                        </div>
-                    <?php
+    </div>
+</div>
+<?php
                     }
                 }
 				$body = ob_get_contents();
@@ -5406,7 +5709,7 @@ class OSPHelper
 
     public static function showCoreFields($property){
 		global $bootstrapHelper;
-        $tmpArray                   = array();
+        $tmpArray                   = [];
         $tmpArray[]			        = OSPHelper::showBaseFields($property);
         $tmpArray[]				    = OSPHelper::showGarage($property);
         $tmpArray[]                 = OSPHelper::buildingInfo($property);
@@ -5416,17 +5719,17 @@ class OSPHelper
         $tmpArray[]	                = OSPHelper::ruralInformation($property);
         ob_start();
         ?>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <?php
             $i = 0;
             foreach($tmpArray as $tmp){
                 if($tmp != ""){
                     $i++;
                     ?>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
-                        <?php echo $tmp; ?>
-                    </div>
-                    <?php
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
+        <?php echo $tmp; ?>
+    </div>
+    <?php
                     if($i == 3){
                         $i = 0;
                         echo "</div><div class='amenitygroup ".$bootstrapHelper->getClassMapping('row-fluid')."'></div><div class='".$bootstrapHelper->getClassMapping('row-fluid')."'>";
@@ -5434,8 +5737,8 @@ class OSPHelper
                 }
             }
             ?>
-        </div>
-        <?php
+</div>
+<?php
         $body = ob_get_contents();
         ob_end_clean();
         return $body;
@@ -5453,94 +5756,94 @@ class OSPHelper
         {
             ob_start();
             ?>
-            <div class="clearfix"></div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="baseFieldHeading">
-                <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                    <h4>
-                        <?php echo Text::_('OS_BASE_INFORMATION');?>
-                    </h4>
-                </div>
-            </div>
-            <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="baseFieldHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_BASE_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
             if(($configClass['use_rooms'] == 1) and ($row->rooms > 0))
             {
                 ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> ">
-						<div class="fieldlabel">
-							<?php echo Text::_('OS_ROOMS')?>
-						</div>
-						<div class="fieldvalue">
-							<?php echo $row->rooms;?>
-						</div>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> ">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_ROOMS')?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->rooms;?>
+        </div>
+    </div>
+</div>
+<?php
             }
             if(($configClass['use_bedrooms'] == 1) and ($row->bed_room > 0))
             {
                 ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="fieldlabel">
-							<?php echo Text::_('OS_BED')?>
-						</div>
-						<div class="fieldvalue">
-							<?php echo $row->bed_room;?>
-						</div>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_BED')?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->bed_room;?>
+        </div>
+    </div>
+</div>
+<?php
             }
             if(($configClass['use_bathrooms'] == 1) and ($row->bath_room > 0))
             {
             ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="fieldlabel">
-							<?php echo Text::_('OS_BATH')?>
-						</div>
-						<div class="fieldvalue">
-							<?php echo self::showBath($row->bath_room);?>
-						</div>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_BATH')?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo self::showBath($row->bath_room);?>
+        </div>
+    </div>
+</div>
+<?php
             }
 			if($configClass['more_bath_infor']== 1 && $configClass['use_bathrooms']== 1 && self::isBathroomInformation($row->id))
 			{
 			?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="fieldlabel">
-							<?php echo Text::_('OS_BATHROOM_INFORMATION')?>
-						</div>
-						<div class="fieldvalue">
-							<?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_BATHROOM_INFORMATION')?>
+        </div>
+        <div class="fieldvalue">
+            <?php
 							self::showBathroomInformation($row->id);
 							?>
-						</div>
-                    </div>
-                </div>
-            <?php
+        </div>
+    </div>
+</div>
+<?php
 			}
 			if((float)$row->square_feet > 0)
             {
             ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="fieldlabel">
-							<?php echo OSPHelper::showSquareLabels()?>
-						</div>
-						<div class="fieldvalue">
-							<?php echo $row->square_feet;?> <?php echo self::showSquareSymbol();?>
-						</div>
-					</div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo OSPHelper::showSquareLabels()?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->square_feet;?> <?php echo self::showSquareSymbol();?>
+        </div>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             $body = ob_get_contents();
             ob_end_clean();
         }
@@ -5557,45 +5860,45 @@ class OSPHelper
         if(($configClass['use_parking'] == 1) and (($row->parking > 0) or ($row->garage_description != ""))){
             ob_start();
             ?>
-            <div class="clearfix"></div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="parkingHeading">
-                <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                    <h4>
-                        <?php echo Text::_('OS_PARKING_INFORMATION');?>
-                    </h4>
-                </div>
-            </div>
-            <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="parkingHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_PARKING_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
             if($row->parking > 0){ ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="fieldlabel">
-							<?php echo Text::_('OS_PARKING')?>
-						</div>
-						<div class="fieldvalue">
-							<?php echo $row->parking;?>
-						</div>
-					</div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_PARKING')?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->parking;?>
+        </div>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             if($row->garage_description != ""){?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="fieldlabel">
-							<?php echo Text::_('OS_GARAGE_DESCRIPTION')?>
-						</div>
-						<div class="fieldvalue">
-							<?php echo $row->garage_description;?>
-						</div>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_GARAGE_DESCRIPTION')?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->garage_description;?>
+        </div>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             $body = ob_get_contents();
             ob_end_clean();
         }
@@ -5633,67 +5936,67 @@ class OSPHelper
             if($show == 1) {
                 ob_start();
                 ?>
-                <div class="clearfix"></div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="buildingInfoHeading">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <h4>
-                            <?php echo Text::_('OS_BUILDING_INFORMATION');?>
-                        </h4>
-                    </div>
-                </div>
-                <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="buildingInfoHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_BUILDING_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
                 foreach($textFieldsArr as $textfield){
                     if($row->{$textfield} != ""){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-								<div class="fieldlabel">
-									<?php echo Text::_('OS_'.strtoupper($textfield)); ?>
-								</div>
-								<div class="fieldvalue">
-									<?php echo $row->{$textfield};?>
-								</div>
-                            </div>
-                        </div>
-                    <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_'.strtoupper($textfield)); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->{$textfield};?>
+        </div>
+    </div>
+</div>
+<?php
                     }
                 }
 				foreach($intFieldArr as $numfield){
                     if($row->{$numfield}  > 0){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-								<div class="fieldlabel">
-									<?php echo Text::_('OS_'.strtoupper($numfield)); ?>
-								</div>
-								<div class="fieldvalue">
-									<?php echo $row->{$numfield};?>
-								</div>
-                            </div>
-                        </div>
-                        <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_'.strtoupper($numfield)); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->{$numfield};?>
+        </div>
+    </div>
+</div>
+<?php
                     }
                 }
                 foreach($numberFieldArr as $numfield){
                     if($row->{$numfield}  > 0){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-								<div class="fieldlabel">
-									<?php echo Text::_('OS_'.strtoupper($numfield)); ?>
-								</div>
-								<div class="fieldvalue">
-									<?php 
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_'.strtoupper($numfield)); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php 
 									echo self::showBath($row->{$numfield});
 									if($numfield != "number_of_floors")
 									{
 										echo " ".self::showSquareSymbol();
 									}
 									?>
-								</div>
-                            </div>
-                        </div>
-                        <?php
+        </div>
+    </div>
+</div>
+<?php
                     }
                 }
 				$body = ob_get_contents();
@@ -5715,60 +6018,60 @@ class OSPHelper
         if(($configClass['basement_foundation'] == 1) and (($row->basement_size > 0) or ($row->basement_foundation != "") or ($row->percent_finished != ""))){
             ob_start();
             ?>
-            <div class="clearfix"></div>
-            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="basementFoundationHeading">
-                <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                    <h4>
-                        <?php echo Text::_('OS_BASEMENT_FOUNDATION');?>
-                    </h4>
-                </div>
-            </div>
-            <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="basementFoundationHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_BASEMENT_FOUNDATION');?>
+        </h4>
+    </div>
+</div>
+<?php
             if($row->basement_foundation != ""){ ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="fieldlabel">
-							<?php echo Text::_('OS_BASEMENT_FOUNDATION'); ?>
-						</div>
-						<div class="fieldvalue">
-							<?php echo $row->basement_foundation;?>
-						</div>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_BASEMENT_FOUNDATION'); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->basement_foundation;?>
+        </div>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             if($row->basement_size > 0){?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="fieldlabel">
-							<?php echo Text::_('OS_BASEMENT_SIZE'); ?>
-						</div>
-						<div class="fieldvalue">
-							<?php echo self::showBath($row->basement_size);?>
-						</div>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_BASEMENT_SIZE'); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo self::showBath($row->basement_size);?>
+        </div>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             if($row->percent_finished != ""){ ?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="fieldlabel">
-							<?php echo Text::_('OS_PERCENT_FINISH'); ?>
-						</div>
-						<div class="fieldvalue">
-							<?php echo $row->percent_finished;?>
-						</div>
-                    </div>
-                </div>
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_PERCENT_FINISH'); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->percent_finished;?>
+        </div>
+    </div>
+</div>
+<?php
             }
             ?>
-            <?php
+<?php
             $body = ob_get_contents();
             ob_end_clean();
         }
@@ -5800,42 +6103,42 @@ class OSPHelper
             if($show == 1) {
                 ob_start();
                 ?>
-                <div class="clearfix"></div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="landInformationHeading">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <h4>
-                            <?php echo Text::_('OS_LAND_INFORMATION');?>
-                        </h4>
-                    </div>
-                </div>
-                <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="landInformationHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_LAND_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
                 foreach($textFieldsArr as $textfield){
                     if($row->{$textfield} != ""){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <div class="fieldlabel">
-									<?php echo Text::_('OS_'.strtoupper($textfield)); ?>
-								</div>
-								<div class="fieldvalue">
-									<?php echo $row->{$textfield};?>
-								</div>
-                            </div>
-                        </div>
-                    <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_'.strtoupper($textfield)); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->{$textfield};?>
+        </div>
+    </div>
+</div>
+<?php
                     }
                 }
                 foreach($numberFieldArr as $numfield){
                     if($row->{$numfield}  > 0){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-								<div class="fieldlabel">
-									<?php echo Text::_('OS_'.strtoupper($numfield)); ?>
-								</div>
-								<div class="fieldvalue">
-									<?php echo self::showBath($row->{$numfield});?>
-									<?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_'.strtoupper($numfield)); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo self::showBath($row->{$numfield});?>
+            <?php
 									switch($numfield)
 									{
 										case "square_feet":
@@ -5847,10 +6150,10 @@ class OSPHelper
 											break;
 									}
                                 ?>
-								</div>
-                            </div>
-                        </div>
-                    <?php
+        </div>
+    </div>
+</div>
+<?php
                     }
                 }
 				$body = ob_get_contents();
@@ -5880,29 +6183,29 @@ class OSPHelper
             if($show == 1) {
                 ob_start();
                 ?>
-                <div class="clearfix"></div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="businessInformationHeading">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <h4>
-                            <?php echo Text::_('OS_BUSINESS_INFORMATION');?>
-                        </h4>
-                    </div>
-                </div>
-                <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="businessInformationHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_BUSINESS_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
                 foreach($textFieldsArr as $textfield){
                     if($row->{$textfield} != ""){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <div class="fieldlabel">
-									<?php echo Text::_('OS_'.strtoupper($textfield)); ?>
-								</div>
-								<div class="fieldvalue">
-									<?php echo $row->{$textfield};?>
-								</div>
-                            </div>
-                        </div>
-                    <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_'.strtoupper($textfield)); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->{$textfield};?>
+        </div>
+    </div>
+</div>
+<?php
                     }
                 }
 				$body = ob_get_contents();
@@ -5932,29 +6235,29 @@ class OSPHelper
             if($show == 1) {
                 ob_start();
                 ?>
-                <div class="clearfix"></div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="ruralInformationHeading">
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                        <h4>
-                            <?php echo Text::_('OS_RURAL_INFORMATION');?>
-                        </h4>
-                    </div>
-                </div>
-                <?php
+<div class="clearfix"></div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="ruralInformationHeading">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <h4>
+            <?php echo Text::_('OS_RURAL_INFORMATION');?>
+        </h4>
+    </div>
+</div>
+<?php
                 foreach($textFieldsArr as $textfield){
                     if($row->{$textfield} != ""){
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                                <div class="fieldlabel">
-									<?php echo Text::_('OS_'.strtoupper($textfield)); ?>
-								</div>
-								<div class="fieldvalue">
-									<?php echo $row->{$textfield};?>
-								</div>
-                            </div>
-                        </div>
-                    <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="fieldlabel">
+            <?php echo Text::_('OS_'.strtoupper($textfield)); ?>
+        </div>
+        <div class="fieldvalue">
+            <?php echo $row->{$textfield};?>
+        </div>
+    </div>
+</div>
+<?php
                     }
                 }
 				$body = ob_get_contents();
@@ -5966,7 +6269,7 @@ class OSPHelper
 
 	public static function showCoreFields1($property){
 		global $bootstrapHelper;
-        $tmpArray                   = array();
+        $tmpArray                   = [];
         $tmpArray[]			        = OSPHelper::showBaseFields1($property);
         $tmpArray[]				    = OSPHelper::showGarage1($property);
         $tmpArray[]                 = OSPHelper::buildingInfo1($property);
@@ -5976,17 +6279,17 @@ class OSPHelper
         $tmpArray[]	                = OSPHelper::ruralInformation1($property);
         ob_start();
         ?>
-        <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-            <?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <?php
             $i = 0;
             foreach($tmpArray as $tmp){
                 if($tmp != ""){
                     $i++;
                     ?>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
-                        <?php echo $tmp; ?>
-                    </div>
-                    <?php
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
+        <?php echo $tmp; ?>
+    </div>
+    <?php
                     if($i == 2){
                         $i = 0;
                         echo "</div><div class='".$bootstrapHelper->getClassMapping('row-fluid')."'></div><div class='".$bootstrapHelper->getClassMapping('row-fluid')."'>";
@@ -5994,8 +6297,8 @@ class OSPHelper
                 }
             }
             ?>
-        </div>
-        <?php
+</div>
+<?php
         $body = ob_get_contents();
         ob_end_clean();
         return $body;
@@ -6058,15 +6361,15 @@ class OSPHelper
 		$rate = round($rate);
 		for($i=0;$i<$rate;$i++){
 			?>
-			<i class="osicon-star" style="color:<?php echo $color;?>;"></i>
-			<?php
+<i class="osicon-star" style="color:<?php echo $color;?>;"></i>
+<?php
 		}
 		$i = $rate;
 		if($i < 5){
 			for($j=$i;$j<5;$j++){
 				?>
-				<i class="osicon-star stars"></i>
-				<?php
+<i class="osicon-star stars"></i>
+<?php
 			}
 		}
 	}
@@ -6145,7 +6448,7 @@ class OSPHelper
 
 	static function findGoogleDuplication($rows){
 		//process data
-		$tempArr = array();
+		$tempArr = [];
 		$i = 0;
 		foreach($rows as $row){
 			if($row->show_address == 1 && $row->lat_add != "" && $row->long_add != "")
@@ -6158,7 +6461,7 @@ class OSPHelper
 			}
 		}
 
-		$duplicate = array();
+		$duplicate = [];
 		for($i=0;$i<count($tempArr)-1;$i++){
 			for($j=1;$j<count($tempArr);$j++){
 				if(($tempArr[$i]->id != $tempArr[$j]->id) and ($tempArr[$i]->lat_add == $tempArr[$j]->lat_add) and ($tempArr[$i]->long_add == $tempArr[$j]->long_add))
@@ -6241,7 +6544,7 @@ class OSPHelper
 	static function socialsharing($pid)
 	{
 		$configClass = self::loadConfig();
-		$needs = array();
+		$needs = [];
 		$needs[] = "property_details";
 		$needs[] = $pid;
 		$itemid = OSPRoute::getItemid($needs);
@@ -6384,7 +6687,7 @@ class OSPHelper
 	static function getDpeClassDropdownlist($type,$value){
 		global $configClass;
 		$configClass = self::loadConfig();
-		$optionArr = array();
+		$optionArr = [];
 		if($type == 0){
 			$optionArr[] = HTMLHelper::_('select.option','',Text::_('OS_ENERGY_CLASS'));
 			$energy_class = $configClass['energy_class'];
@@ -6423,7 +6726,7 @@ class OSPHelper
         $configClass = self::loadConfig();
         $market_status 		= $configClass['active_market_status'];
         if($market_status == 1){
-            $marketArr			= array();
+            $marketArr			= [];
             $marketArr[]		= HTMLHelper::_('select.option',0,Text::_('OS_MARKET_STATUS'));
             $market_status 		= $configClass['market_status'];
             if($market_status != ""){
@@ -6850,7 +7153,7 @@ class OSPHelper
     static function generateRelatedProperties($id){
         $config     = self::loadConfig();
         $categories = self::getCategoryIdsOfProperty($id);
-        $return     = array();
+        $return     = [];
         if(count($categories) > 0){
             foreach($categories as $categoryId){
                 if($config['price_from_'.$categoryId] != '' && $config['price_to_'.$categoryId] != ''){
@@ -6925,7 +7228,7 @@ class OSPHelper
 	public static function getJSObject(array $array = array())
 	{
 
-		$elements = array();
+		$elements = [];
 
 		foreach ($array as $k => $v)
 		{
@@ -6992,8 +7295,8 @@ class OSPHelper
 		{
 			$bathLabelArray = array('OS_FULL','OS_THREE_QUARTER','OS_HALF','OS_QUARTER','OS_ENSUITE');
 			?>
-				<table width="100%" class="bathinforTable">
-					<?php
+<table width="100%" class="bathinforTable">
+    <?php
 					foreach($bathLabelArray as $label)
 					{
 						$db->setQuery("Select `bath_value` from #__osrs_property_bath_values where pid = '$pid' and bath_label like '$label'");
@@ -7001,24 +7304,24 @@ class OSPHelper
 						if($bath_value > 0)
 						{
 							?>
-							<tr>
-								<td width="30%">
-									<?php 
+    <tr>
+        <td width="30%">
+            <?php 
 									echo Text::_($label);
 									?>
-								</td>
-								<td>
-									<?php
+        </td>
+        <td>
+            <?php
 									echo $bath_value;	
 									?>
-								</td>
-							</tr>
-							<?php
+        </td>
+    </tr>
+    <?php
 						}
 					}
 					?>
-				</table>
-			<?php
+</table>
+<?php
 		}
 	}
 
@@ -7366,6 +7669,51 @@ class OSPHelper
             return false;
         }
     }
+
+	public static function generateCaptcha()
+	{
+		$captchaPlugin = Factory::getApplication()->getParams()->get('captcha', Factory::getConfig()->get('captcha'));
+		if ($captchaPlugin)
+		{
+			$googlecaptcha = 1;
+			echo Captcha::getInstance($captchaPlugin)->display('dynamic_recaptcha_1', 'dynamic_recaptcha_1', 'required');
+		}
+		else
+		{
+			Factory::getApplication()->enqueueMessage(Text::_('OS_CAPTCHA_NOT_ACTIVATED_IN_YOUR_SITE'), 'error');
+		}
+	}
+
+	public static function generateJDCaptcha()
+	{
+		$captchaPlugin = 'jdcaptcha';
+		if ($captchaPlugin)
+		{
+			echo Captcha::getInstance($captchaPlugin)->display('dynamic_recaptcha_1', 'dynamic_recaptcha_1', 'required');
+		}
+	}
+
+	public static function checkJDCaptcha()
+	{
+		global $jinput;
+		$captchaPlugin = 'jdcaptcha';
+		return Captcha::getInstance($captchaPlugin)->checkAnswer($jinput->post->get('recaptcha_response_field', '', 'string'));
+	}
+
+	public static function convertToEmbedLink($watch_url) 
+	{
+		// Extract video ID using regex
+		if (preg_match('/v=([a-zA-Z0-9_-]+)/', $watch_url, $matches)) {
+			// Return embed link
+			return "https://www.youtube.com/embed/" . $matches[1];
+		}
+		return false; // Return false if the URL format is invalid
+	}
+
+	public static function getInstalledVersion()
+	{
+		return '4.0.0';
+	}
 
 	public static function currentUrl()
 	{

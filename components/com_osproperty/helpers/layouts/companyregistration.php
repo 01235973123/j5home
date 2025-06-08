@@ -249,16 +249,7 @@ $inputMediumClass	= $bootstrapHelper->getClassMapping('input-medium');
 		<?php
 		if($configClass['show_company_captcha'] == 1)
 		{
-			$captchaPlugin = Factory::getApplication()->getParams()->get('captcha', Factory::getConfig()->get('captcha'));
-			if ($captchaPlugin)
-			{
-				$showCaptcha = 1;
-				echo Captcha::getInstance($captchaPlugin)->display('dynamic_recaptcha_1', 'dynamic_recaptcha_1', 'required');
-			}
-			else
-			{
-				Factory::getApplication()->enqueueMessage(Text::_('OS_CAPTCHA_NOT_ACTIVATED_IN_YOUR_SITE'), 'error');
-			}
+			OSPHelper::generateCaptcha();
 		}
         OSPHelperJquery::colorbox('a.osmodal');
 		if($configClass['company_term_condition'] == 1){
@@ -467,26 +458,6 @@ function submitForm(task){
             alert(" <?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR')?>");
             document.getElementById('agree_privacy_policy').focus();
             return false;
-		}else if(captcha_company_register.value == 1){
-			var comment_security_code = form.security_code;
-			var captcha_str	= form.captcha_str;
-			if(comment_security_code.value != captcha_str.value){
-				alert(" <?php echo Text::_('OS_SECURITY_CODE_IS_WRONG')?>");
-				comment_security_code.focus();
-			<?php
-			if($configClass['company_term_condition'] == 1){
-				?>
-			} else if(document.getElementById('termcondition').checked == false){
-				alert(" <?php echo Text::_('OS_PLEASE_AGREE_WITH_OUT_TERM_AND_CONDITION')?>");
-				document.getElementById('termcondition').focus();
-				return false;
-				<?php
-			}
-			?>
-			}else{
-				form.task.value = task;
-				form.submit();
-			}
 		<?php
 		if($configClass['company_term_condition'] == 1){
 			?>
@@ -516,16 +487,6 @@ function submitForm(task){
 			alert("<?php echo Text::_('OS_PLEASE_ENTER_ADDRESS')?>");
 			address.focus();
 			return false;
-		}else if(captcha_company_register.value == 1){
-			var comment_security_code = form.security_code;
-			var captcha_str	= form.captcha_str;
-			if(comment_security_code.value != captcha_str.value){
-				alert(" <?php echo Text::_('OS_SECURITY_CODE_IS_WRONG')?>");
-				comment_security_code.focus();
-			}else{
-				form.task.value = task;
-				form.submit();
-			}
 		}else{
 			form.task.value = task;
 			form.submit();

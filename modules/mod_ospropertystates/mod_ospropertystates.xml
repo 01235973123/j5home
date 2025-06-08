@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.21.0" type="module" method="upgrade" client="site">
+	<name>OS Property - States and Cities</name>
+	<author>Dang Thuc Dam</author>
+	<creationDate>April 2012</creationDate>
+	<copyright>Copyright (C) 2023 Ossolution Co.LTD. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomservices.com</authorUrl>
+	<version>3.21.0</version>
+	<description>Displays a list of countries/states/cities in OS Property system</description>
+	<files>
+		<filename module="mod_ospropertystates">mod_ospropertystates.php</filename>
+		<filename>index.html</filename>
+		<filename>helper.php</filename>
+        <folder>tmpl</folder>
+		<folder>elements</folder>
+		<filename>elements/propertycountry.php</filename>
+		<filename>elements/index.html</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.mod_ospropertystates.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic" addfieldpath="/modules/mod_ospropertystates/elements">
+				<field name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="A suffix to be applied to the css class of the module (table.moduletable or div.moduletable), this allows individual module styling" />
+				<field name="list_type" type="list" default="0" label="List type (Countries/States/Cities)" description="Please select data type that the module will list. States or Cities" class="input-medium">
+					<option value="0">States</option>
+					<option value="1">Cities</option>
+					<option value="2">Countries</option>
+				</field>
+				<field name="num_cols" class="input-mini" type="text" default="4" label="Number columns" description="The number of columns will be shown" />
+				<field name="country" type="propertycountry" default="" label="Select country" description="Select country that states of it will be shown in the module" />
+				<field name="hasproperties" type="radio" default="0" label="List states/ cities that have properties already" description="Do you want to show states that have properties are belong to it" class="btn-group">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="stateIds" type="text" default="" label="State IDs" description="In case you want to show Cities, please enter State IDs - separated by colon. For example: 1,2,3,4. StateIDs can be found at Back-End > OS Property > Manage States" />
+				<field name="itemid" type="text" default="" label="ItemID" description="Please enter Menu Item ID that will be used in links" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

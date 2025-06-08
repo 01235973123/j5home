@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Toolbar\ToolbarHelper;
+use Joomla\CMS\Uri\Uri;
 
 class EventbookingViewRegistrantHtml extends RADViewHtml
 {
@@ -90,17 +91,17 @@ class EventbookingViewRegistrantHtml extends RADViewHtml
 	{
 		parent::prepareView();
 
-		$app  = Factory::getApplication();
-		$wa   = $app->getDocument()->getWebAssetManager();
-		$user = $app->getIdentity();
+		$rootUri  = Uri::root(true);
+		$app      = Factory::getApplication();
+		$document = $app->getDocument();
+		$user     = $app->getIdentity();
 
 		$item       = $this->model->getData();
 		$this->item = $item;
 
 		// Add scripts
 		EventbookingHelper::addLangLinkForAjax();
-
-		$wa->addInlineScript('var siteUrl="' . EventbookingHelper::getSiteUrl() . '";');
+		$document->addScriptDeclaration('var siteUrl="' . EventbookingHelper::getSiteUrl() . '";');
 
 		EventbookingHelperJquery::loadjQuery();
 		EventbookingHelperHtml::addOverridableScript(
@@ -112,7 +113,7 @@ class EventbookingViewRegistrantHtml extends RADViewHtml
 
 		if (file_exists($customJSFile) && filesize($customJSFile) > 0)
 		{
-			$wa->registerAndUseScript('com_eventbooking.custom', 'media/com_eventbooking/assets/js/custom.js');
+			$document->addScript($rootUri . '/media/com_eventbooking/assets/js/custom.js');
 		}
 
 		$disableEdit = false;

@@ -1,3 +1,7 @@
+form.form-horizontal div.control-label {
+    width: 25% !important;
+}
+
 .eb-ticket-types-container table th:nth-child(2), .eb-ticket-types-container table th:nth-child(6) {
     width: 15%;
 }
@@ -362,10 +366,4 @@ joomla-field-fancy-select {
 {
     padding-left: 10px;
     padding-right: 10px;
-}
-
-.eb-uploaded-image-thumb
-{
-    width: 100px;
-    height: 100px;
 }

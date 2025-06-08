@@ -1,0 +1,69 @@
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.eb-report-events {
+    /*margin: 75.6px 75.6px 56.7px 75.6px;*/
+    margin: 75.5px 18.89px 0 18.89px;
+    padding-bottom: 0;
+}
+
+.eb-report-title {
+    font-family: 'Times New Roman';
+    font-size: 16px;
+}
+
+.page-number {
+    font-family: 'Times New Roman';
+    font-size: 14px;
+    text-align: right;
+}
+
+.eb-report-msg {
+    padding-top: 15px;
+}
+
+.eb-report-msg-text {
+    font-style: italic;
+}
+
+.eb-report-event {
+    /* padding-top: 15px; */
+    /* margin-bottom: 1.5em; */
+}
+
+.eb-report-content {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.eb-report-content-title {
+    font-size: 13px;
+}
+
+.font-italic {
+    font-style: normal;
+        font-size: 13px;
+}
+
+.email-link a {
+    text-decoration: underline;
+}
+
+.email-link {
+    cursor: not-allowed;
+}
+
+.eb-report-desc {
+    /* padding-top: 15px; */
+}
+
+.text-desc p {
+    margin: 0;
+       font-size: 13px;
+}
+
+.eb-report-info-start p, .eb-report-info-end p {
+     font-size: 13px;
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension
+	type="module"
+	version="3.21.0"
+	client="site" 
+	method="upgrade">
+	<name>Quick Search Real Homes</name>
+	<author>Dang Thuc Dam</author>
+	<creationDate>20-08-2015</creationDate>
+	<copyright>Ossolution team.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>3.21.0</version>
+	<description></description>
+	<files>
+		<filename module="mod_osquicksearchrealhomes">mod_osquicksearchrealhomes.php</filename>
+		<folder>tmpl</folder>
+		<folder>asset</folder>
+		<folder>elements</folder>
+		<filename>index.html</filename>
+		<filename>helper.php</filename>
+		<filename>mod_osquicksearchrealhomes.xml</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.mod_osquicksearchrealhomes.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="widthsize" type="text" default="715" label="Width size of Search box (px)" description="Please adjust the width size of Search box" class="input-mini" />
+				<field name="show_advancesearchform" class="btn-group" type="radio" default="0" label="Show Search form in results" description="After selecting the search criteria, you will be redirected to advance search page. In the top of this page, do you want to show the search form.">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+				<field name="show_category" class="btn-group" type="radio" default="0" label="Show Category" description="Do you want to show Category filter field in Search module">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+			</fieldset>
+			<fieldset name="source_setting" label="Source Setting"
+				addfieldpath="/modules/mod_osquicksearchrealhomes/elements">
+				<field name="osp_type" type="ospmultipropertytypes" 
+					default="" size="10" multiple="multiple" label="Property types"
+					description="Select Property Types that you want to show" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

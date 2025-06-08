@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -356,16 +356,8 @@ class plgEventBookingAcym extends CMSPlugin implements SubscriberInterface
 		$db    = $this->db;
 		$query = $db->getQuery(true);
 
-		if (class_exists(\AcyMailing\Classes\UserClass::class))
-		{
-			$userClass = new \AcyMailing\Classes\UserClass();
-		}
-		else
-		{
-			/* @var acymUserClass $userClass */
-			$userClass = acym_get('class.user');
-		}
-
+		/* @var acymuserClass $userClass */
+		$userClass               = acym_get('class.user');
 		$userClass->checkVisitor = false;
 
 		if (method_exists($userClass, 'getOneByEmail'))
@@ -478,16 +470,8 @@ class plgEventBookingAcym extends CMSPlugin implements SubscriberInterface
 
 		require_once JPATH_ADMINISTRATOR . '/components/com_acym/helpers/helper.php';
 
-		if (class_exists(\AcyMailing\Classes\UserClass::class))
-		{
-			$userClass = new \AcyMailing\Classes\UserClass();
-		}
-		else
-		{
-			/* @var acymUserClass $userClass */
-			$userClass = acym_get('class.user');
-		}
-
+		/* @var acymuserClass $userClass */
+		$userClass               = acym_get('class.user');
 		$userClass->checkVisitor = false;
 
 		if (method_exists($userClass, 'getOneByEmail'))
@@ -535,17 +519,9 @@ class plgEventBookingAcym extends CMSPlugin implements SubscriberInterface
 			$listIds = [];
 		}
 
-		if (class_exists(\AcyMailing\Classes\ListClass::class))
-		{
-			$listClass = new \AcyMailing\Classes\ListClass();
-		}
-		else
-		{
-			/* @var acymlistClass $listClass */
-			$listClass = acym_get('class.list');
-		}
-
-		$allLists = $listClass->getAllWithIdName();
+		/* @var acymlistClass $listClass */
+		$listClass = acym_get('class.list');
+		$allLists  = $listClass->getAllWithIdName();
 
 		require PluginHelper::getLayoutPath($this->_type, $this->_name, 'form');
 	}

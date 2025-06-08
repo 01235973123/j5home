@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -16,13 +16,11 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
 
+HTMLHelper::_('behavior.core') ;
+
 $document = Factory::getApplication()->getDocument();
-$wa       = $document->getWebAssetManager()
-	->useScript('core');
 $rootUri  = Uri::root(true);
-
-$wa->registerAndUseScript('com_eventbooking.eventbookingjq', 'media/com_eventbooking/assets/js/eventbookingjq.min.js');
-
+$document->addScript($rootUri . '/media/com_eventbooking/assets/js/eventbookingjq.min.js');
 EventbookingHelperJquery::validateForm();
 
 /* @var EventbookingHelperBootstrap $bootstrapHelper */
@@ -66,10 +64,9 @@ else
 	}
 }
 
-$wa->registerAndUseScript('com_eventbooking.googlemapapi', 'https://maps.google.com/maps/api/js?key=' . $mapApiKey . '&v=quarterly')
-	->registerAndUseScript('com_eventbooking.admin-location-popup', 'media/com_eventbooking/js/admin-location-popup.min.js');
-
-$document->addScriptOptions('coordinates', explode(',', $coordinates))
+$document->addScript('https://maps.google.com/maps/api/js?key=' . $mapApiKey . '&v=quarterly')
+	->addScript($rootUri . '/media/com_eventbooking/js/admin-location-popup.min.js')
+	->addScriptOptions('coordinates', explode(',', $coordinates))
 	->addScriptOptions('zoomLevel', $zoomLevel)
 	->addScriptOptions('baseUri', Uri::base(true));
 ?>

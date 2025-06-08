@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 use Valitron\Validator;
 
 /**
@@ -48,7 +49,6 @@ class RADForm
 	public function __construct($fields, $config = [])
 	{
 		$hasInputMask = false;
-
 		foreach ($fields as $field) {
 			if ($field->input_mask) {
 				$hasInputMask = true;
@@ -69,10 +69,7 @@ class RADForm
 		}
 
 		if ($hasInputMask) {
-			Factory::getApplication()
-				->getDocument()
-				->getWebAssetManager()
-				->registerAndUseScript('com_eventbooking.imask', 'media/com_eventbooking/assets/js/imask/imask.min.js');
+			Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/assets/js/imask/imask.min.js');
 		}
 	}
 
@@ -101,23 +98,11 @@ class RADForm
 	 *
 	 * @param   string  $name
 	 *
-	 * @return ?RADFormField
+	 * @return RADFormField
 	 */
 	public function getField($name)
 	{
-		return $this->fields[$name] ?? null;
-	}
-
-	/**
-	 * Remove give field from form
-	 *
-	 * @param   string  $name
-	 *
-	 * @return void
-	 */
-	public function removeField(string $name)
-	{
-		unset($this->fields[$name]);
+		return $this->fields[$name];
 	}
 
 	/**
@@ -130,7 +115,6 @@ class RADForm
 	 */
 	public function bind($data, $useDefault = false)
 	{
-
 		foreach ($this->fields as $field) {
 			if ($field->type == 'State') {
 				$fieldName = $field->name;

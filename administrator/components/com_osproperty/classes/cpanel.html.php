@@ -89,8 +89,11 @@ class HTML_OspropertyCpanel
 										<tr>
 											<td width="100%">
 												<?php
-												$yesimg = "<img src='".Uri::root()."media/com_osproperty/assets/images/tick.png'>";
-												$noimg  = "<img src='".Uri::root()."media/com_osproperty/assets/images/publish_x.png'>";
+												$yesimg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>';
+												$noimg  = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="red" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
+  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+</svg>';
 												
 
 												?>
@@ -125,7 +128,7 @@ class HTML_OspropertyCpanel
 															?>
 															<tr>
 																<td align="left" class="padding5" style="vertical-align:middle;">
-																	<b><?php echo Text::_('Current version')?></b>
+																	<b><?php echo Text::_('OS_CURRENT_VERSION')?></b>
 																</td>
 																<td class="padding5 fontbold center" style="vertical-align:middle;">
 																	<?php
@@ -154,6 +157,7 @@ class HTML_OspropertyCpanel
 															<?php
 															}
 															?>
+															<!--
 															<tr>
 																<td align="left" class="padding5">
 																	<b><?php echo Text::_('OS_OSPROPERTY_CRONJOB_PLUGIN')?></b>
@@ -173,7 +177,7 @@ class HTML_OspropertyCpanel
 																	?>
 																</TD>
 															</tr>
-															
+															-->
 															<tr>
 																<td align="left" class="padding5">
 																	<b><?php echo Text::_('OS_GD_LIB')?></b>

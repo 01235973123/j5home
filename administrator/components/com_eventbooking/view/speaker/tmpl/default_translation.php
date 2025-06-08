@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -35,7 +35,7 @@ foreach ($this->languages as $language)
 			<?php echo Text::_('EB_NAME'); ?>
 		</div>
 		<div class="controls">
-			<input class="form-control" type="text" name="name_<?php echo $sef; ?>" id="name_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'name_' . $sef}; ?>"/>
+			<input class="input-xlarge form-control" type="text" name="name_<?php echo $sef; ?>" id="name_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'name_' . $sef}; ?>"/>
 		</div>
 	</div>
 	<div class="control-group">
@@ -43,7 +43,7 @@ foreach ($this->languages as $language)
 			<?php echo Text::_('EB_TITLE'); ?>
 		</div>
 		<div class="controls">
-			<input class="form-control" type="text" name="title_<?php echo $sef; ?>" id="title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'title_' . $sef}; ?>"/>
+			<input class="input-xlarge form-control" type="text" name="title_<?php echo $sef; ?>" id="title_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'title_' . $sef}; ?>"/>
 		</div>
 	</div>
 	<div class="control-group">
@@ -51,7 +51,7 @@ foreach ($this->languages as $language)
 			<?php echo Text::_('EB_URL'); ?>
 		</div>
 		<div class="controls">
-			<input class="form-control" type="url" name="url_<?php echo $sef; ?>" id="url_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'url_' . $sef}; ?>"/>
+			<input class="input-xlarge form-control" type="url" name="url_<?php echo $sef; ?>" id="url_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'url_' . $sef}; ?>"/>
 		</div>
 	</div>
 	<div class="control-group">

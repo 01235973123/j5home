@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <extension type="package" version="3.21.6" method="upgrade">
+	 <name>OS Property Package</name>
+	  <packagename>osproperty</packagename>
+	  <creationDate>September 2011</creationDate>
+	  <author>Dang Thuc Dam</author>
+	  <authorEmail>damdt@joomservices.=.com</authorEmail>
+	  <authorUrl>http://www.joomdonation.com</authorUrl>
+	  <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+	  <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	  <version>3.21.6</version>
+	  <scriptfile>script.php</scriptfile>
+	 <files folder="packages">
+	   <file type="module" id="osproperty" client="site">mod_oscategorymenu.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_featuredagents.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_osproperty_tagcloud.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_ospropertyloancal.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_ospropertymap.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_ospropertymortgage.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_ospropertysearch.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_ospropertystates.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_ospslideshow.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_osquicksearchrealhomes.zip</file>
+	   <file type="module" id="osproperty" client="administrator">mod_osquickicons.zip</file>
+	   <file type="module" id="osproperty" client="site">mod_ospropertyrandom.zip</file>
+	   <file type="plugin" id="osproperty" group="acymailing">plg_acymailing_osproperty.zip</file>
+	   <file type="plugin" id="osproperty" group="system">plg_cronjobs_osproperty.zip</file>
+	   <file type="plugin" id="osproperty" group="system">plg_system_ospimportcsv.zip</file>
+	   <file type="plugin" id="osproperty" group="system">plg_system_ospcrontask.zip</file>
+	   <file type="plugin" id="osproperty" group="osproperty">plg_ospnavigation.zip</file>
+	   <file type="plugin" id="osproperty" group="osmembership">plg_osmembership_osproperty.zip</file>
+	   <file type="plugin" id="osproperty" group="installer">plg_installer_osproperty.zip</file>
+	   <file type="plugin" id="osproperty" group="search">plg_osproperty_searchbot.zip</file>
+	   <file type="plugin" id="osproperty" group="user">plg_user_osproperty.zip</file>
+	   <file type="plugin" id="osproperty" group="socialbacklinks">plg_socialbacklink_osproperty.zip</file>
+	   <file type="plugin" id="osproperty" group="finder">plg_finder_osproperty.zip</file>
+	   <file type="component" id="osproperty" >com_osproperty.zip</file>
+	   <file type="library" id="osproperty">lib_omnipay.zip</file>
+	 </files>
+	 <updateservers>	
+		<server type="extension" priority="1" name="OS Property Extension">https://www.joomdonation.com/updates/osproperty.xml</server>
+	 </updateservers>
+ </extension>

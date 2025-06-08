@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -289,7 +289,7 @@ $layoutData = [
 	}
 	?>
 	<div class="form-actions">
-		<input type="button" class="<?php echo $btnPrimary; ?>" name="btnBack" value="<?php echo  Text::_('EB_BACK') ;?>" onclick="window.history.back();">
+		<input type="button" class="<?php echo $btnPrimary; ?>" name="btnBack" value="<?php echo  Text::_('EB_BACK') ;?>" onclick="window.history.go(-1);">
 		<input type="submit" class="<?php echo $btnPrimary; ?>" name="btn-submit" id="btn-submit" value="<?php echo Text::_('EB_PROCESS_REGISTRATION');?>">
 		<img id="ajax-loading-animation" alt="<?php echo Text::_('EB_PROCESSING'); ?>" src="<?php echo Uri::base(true);?>/media/com_eventbooking/ajax-loadding-animation.gif" style="display: none;"/>
 	</div>

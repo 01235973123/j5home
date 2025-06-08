@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -99,12 +99,6 @@ class EventbookingHelperTicket
 				->where('group_id = ' . $row->id);
 			$db->setQuery($query);
 			$rowMembers = $db->loadObjectList();
-
-			// If members information not being collected, we just generate single ticket for whole group base on billing datass
-			if (count($rowMembers) === 0)
-			{
-				$rowMembers = [$row];
-			}
 		}
 		else
 		{
@@ -356,23 +350,15 @@ class EventbookingHelperTicket
 				$ticketLayout = str_ireplace('[TICKET_NUMBER_QRCODE]', $imgTag, $ticketLayout);
 			}
 
-			if ($row->is_group_billing)
-			{
-				$fileName = 'ticket_' . str_pad($row->id, 5, '0', STR_PAD_LEFT) . '.pdf';
-				$filePath = JPATH_ROOT . '/media/com_eventbooking/tickets/' . $fileName;
-			}
-			else
-			{
-				$ticketFileName = File::makeSafe($replaces['ticket_number'] . '.pdf');
+			$ticketFileName = File::makeSafe($replaces['ticket_number'] . '.pdf');
 
-				// Append ID of the registration to the ticket Filename to make sure it is unique
-				if ($config->multiple_booking && in_array($ticketFileName, $ticketFileNames))
-				{
-					$ticketFileName = $row->id . '_' . $ticketFileName;
-				}
-
-				$filePath = JPATH_ROOT . '/media/com_eventbooking/tickets/' . $ticketFileName;
+			// Append ID of the registration to the ticket Filename to make sure it is unique
+			if ($config->multiple_booking && in_array($ticketFileName, $ticketFileNames))
+			{
+				$ticketFileName = $row->id . '_' . $ticketFileName;
 			}
+
+			$filePath = JPATH_ROOT . '/media/com_eventbooking/tickets/' . $ticketFileName;
 
 			$ticketLayout = EventbookingHelperHtml::processConditionalText($ticketLayout);
 

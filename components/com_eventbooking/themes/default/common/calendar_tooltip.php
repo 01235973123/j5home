@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -129,10 +129,7 @@ use Joomla\CMS\Language\Text;
 		<?php
 		}
 
-
-		if ($config->show_registered
-			&& ((int) $item->total_registrants >= (int) $config->get('show_registered_if_greater_than_or_equal', 0))
-			&& $item->registration_type != 3)
+		if ($config->show_registered && $item->registration_type != 3)
 		{
 		?>
 			<tr>

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -144,7 +144,7 @@ else
 	$style = 'style = "display:none"';
 }
 ?>
-<div class="<?php echo $controlGroupClass;  ?> payment_information eb-credit-card-input" id="tr_card_number" <?php echo $style; ?>>
+<div class="<?php echo $controlGroupClass;  ?> payment_information" id="tr_card_number" <?php echo $style; ?>>
 	<div class="<?php echo $controlLabelClass; ?>">
 		<?php echo Text::_('AUTH_CARD_NUMBER'); ?><span class="required">*</span>
 	</div>
@@ -155,7 +155,7 @@ else
 			   value="<?php echo $this->escape($this->input->getAlnum('x_card_num')); ?>" onchange="removeSpace(this);"/>
 	</div>
 </div>
-<div class="<?php echo $controlGroupClass;  ?> payment_information eb-credit-card-input" id="tr_exp_date" <?php echo $style; ?>>
+<div class="<?php echo $controlGroupClass;  ?> payment_information" id="tr_exp_date" <?php echo $style; ?>>
 	<div class="<?php echo $controlLabelClass; ?>">
 		<?php echo Text::_('AUTH_CARD_EXPIRY_DATE'); ?><span class="required">*</span>
 	</div>
@@ -163,7 +163,7 @@ else
 		<?php echo $this->lists['exp_month'] . '  /  ' . $this->lists['exp_year']; ?>
 	</div>
 </div>
-<div class="<?php echo $controlGroupClass;  ?> payment_information eb-credit-card-input" id="tr_cvv_code" <?php echo $style; ?>>
+<div class="<?php echo $controlGroupClass;  ?> payment_information" id="tr_cvv_code" <?php echo $style; ?>>
 	<div class="<?php echo $controlLabelClass; ?>">
 		<?php echo Text::_('AUTH_CVV_CODE'); ?><span class="required">*</span>
 	</div>
@@ -193,7 +193,7 @@ else
 	$style = ' style = "display:none;" ';
 }
 ?>
-<div class="<?php echo $controlGroupClass;  ?> payment_information eb-credit-card-input" id="tr_card_holder_name" <?php echo $style; ?>>
+<div class="<?php echo $controlGroupClass;  ?> payment_information" id="tr_card_holder_name" <?php echo $style; ?>>
 	<div class="<?php echo $controlLabelClass; ?>">
 		<?php echo Text::_('EB_CARD_HOLDER_NAME'); ?><span class="required">*</span>
 	</div>
@@ -256,13 +256,4 @@ if ($hasSquareCard)
     <input type="hidden" name="square_card_token" value="" />
     <input type="hidden" name="square_card_verification_token" value="" />
 <?php
-}
-
-// Allow payment plugin to render it own fields to collect payment information
-foreach ($this->methods as $paymentMethodObj)
-{
-	if (is_callable([$paymentMethodObj, 'renderCollectPaymentInformation']))
-	{
-		$paymentMethodObj->renderCollectPaymentInformation($method);
-	}
 }

@@ -64,11 +64,6 @@
                 <option value="0">No</option>
                 <option value="1">Yes</option>
             </field>
-            <field name="show_filter_bar" type="list" default="0" label="Show Filter Bar"
-                   description="If set to Yes, the filter will be displayed at the top to allow filter events in calendar by keyword, category, location.">
-                <option value="0">No</option>
-                <option value="1">Yes</option>
-            </field>
             <field name="menu_item_id" type="ebitemid"
                    label="Override Menu Item ID"
                    description="If you want the system to use different menu item to generate links from this page, enter ID of that menu item here. In most case, leave it empty"

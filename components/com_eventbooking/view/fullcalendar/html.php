@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -13,68 +13,45 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 
 class EventbookingViewFullcalendarHtml extends RADViewHtml
 {
-	/**
-	 * Model state
-	 *
-	 * @var RADModelState
-	 */
-	protected $state;
-
-	/**
-	 * Store list of filter array
-	 *
-	 * @var array
-	 */
-	protected $lists = [];
-
-	/**
-	 * Display full calendar
-	 *
-	 * @return void
-	 * @throws Exception
-	 */
 	public function display()
 	{
-		$config = EventbookingHelper::getConfig();
+		HTMLHelper::_('behavior.core');
 
-		$app = Factory::getApplication();
-
-		$wa = $app->getDocument()
-			->addScriptOptions('calendarOptions', $this->getCalendarOptions())
-			->addScriptOptions('displayEventInTooltip', (bool) $config->display_event_in_tooltip)
-			->addScriptOptions('showFilterBar', (bool) $this->params->get('show_filter_bar', 0))
-			->getWebAssetManager()
-			->useScript('core');
+		$config  = EventbookingHelper::getConfig();
+		$rootUri = Uri::root(true);
 
 		// Full calendar tooltip needs jQuery, so we need to load it
 		if ($config->display_event_in_tooltip)
 		{
-			$wa->useScript('jquery')
-				->useScript('jquery-noconflict');
+			HTMLHelper::_('jquery.framework');
 		}
+
+		$app = Factory::getApplication();
+
+		$document = $app->getDocument();
 
 		if ($app->getLanguage()->getTag() !== 'en-GB')
 		{
-			$wa->registerAndUseScript(
-				'com_eventbooking.fullcalendar.moment-with-locales',
-				'media/com_eventbooking/fullcalendar/moment-with-locales.min.js'
-			);
+			$document->addScript($rootUri . '/media/com_eventbooking/fullcalendar/moment-with-locales.min.js');
 		}
 		else
 		{
-			$wa->registerAndUseScript('com_eventbooking.fullcalendar.moment', 'media/com_eventbooking/fullcalendar/moment.min.js');
+			$document->addScript($rootUri . '/media/com_eventbooking/fullcalendar/moment.min.js');
 		}
 
-		$wa->registerAndUseScript('com_eventbooking.fullcalendar.main', 'media/com_eventbooking/fullcalendar/main.min.js')
-			->registerAndUseScript('com_eventbooking.fullcalendar.main.global', 'media/com_eventbooking/fullcalendar/main.global.min.js');
+		$document->addScript($rootUri . '/media/com_eventbooking/fullcalendar/main.min.js')
+			->addScript($rootUri . '/media/com_eventbooking/fullcalendar/main.global.min.js');
 
 		EventbookingHelperHtml::addOverridableScript('media/com_eventbooking/js/site-fullcalendar-default.min.js');
 
-		$wa->registerAndUseStyle('com_eventbooking.fullcalendar.main', 'media/com_eventbooking/fullcalendar/main.min.css');
+		$document->addScriptOptions('calendarOptions', $this->getCalendarOptions())
+			->addScriptOptions('displayEventInTooltip', (bool) $config->display_event_in_tooltip)
+			->addStyleSheet($rootUri . '/media/com_eventbooking/fullcalendar/main.min.css');
 
 		if ($this->params->get('menu_item_id') > 0)
 		{
@@ -82,66 +59,6 @@ class EventbookingViewFullcalendarHtml extends RADViewHtml
 		}
 
 		$this->setDocumentMetadata();
-
-		if ($this->params->get('show_filter_bar'))
-		{
-			if (!$this->model->getState('id'))
-			{
-				$filters = [];
-
-				$categoryIds        = array_filter(ArrayHelper::toInteger($this->params->get('category_ids', [])));
-				$excludeCategoryIds = array_filter(ArrayHelper::toInteger($this->params->get('exclude_category_ids', [])));
-
-				$filters[] = '`access` IN (' . implode(',', Factory::getApplication()->getIdentity()->getAuthorisedViewLevels()) . ')';
-
-				if (count($categoryIds))
-				{
-					$filters[] = 'id IN (' . implode(',', $categoryIds) . ')';
-				}
-
-				if (count($excludeCategoryIds))
-				{
-					$filters[] = 'id NOT IN (' . implode(',', $excludeCategoryIds) . ')';
-				}
-
-				$this->lists['filter_category_id'] = EventbookingHelperHtml::getCategoryListDropdown(
-					'filter_category_id',
-					0,
-					'class="input-large form-select"',
-					EventbookingHelper::getFieldSuffix(),
-					$filters
-				);
-			}
-
-			if (!$this->params->get('location_id'))
-			{
-				// Check locations
-				$locations = EventbookingHelperDatabase::getAllLocations();
-
-				if (count($locations) > 1)
-				{
-					$options   = [];
-					$options[] = HTMLHelper::_('select.option', 0, Text::_('EB_ALL_LOCATIONS'), 'id', 'name');
-
-					foreach ($locations as $location)
-					{
-						$options[] = HTMLHelper::_('select.option', $location->id, $location->name, 'id', 'name');
-					}
-
-					$this->lists['filter_location_id'] = HTMLHelper::_(
-						'select.genericlist',
-						$options,
-						'filter_location_id',
-						' class="input-large form-select" onchange="submit();" ',
-						'id',
-						'name',
-						0
-					);
-				}
-			}
-		}
-
-		$this->state = $this->model->getState();
 
 		parent::display();
 	}

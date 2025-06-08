@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="4.2.0" type="plugin" group="eventbooking" method="upgrade">
+    <name>Events Booking - Auto Published Event</name>
+    <author>Tuan Pham Ngoc</author>
+    <creationDate>March 2018</creationDate>
+    <author>Tuan Pham Ngoc</author>
+    <authorEmail>tuanpn@joomdonation.com</authorEmail>
+    <authorUrl>https://joomdonation.com</authorUrl>
+    <copyright>Copyright (C) 2010 - 2025 Ossolution Team</copyright>
+    <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <version>5.0.4</version>
+    <description></description>
+    <files>
+        <filename plugin="autopublishedevent">autopublishedevent.php</filename>
+    </files>
+</extension>

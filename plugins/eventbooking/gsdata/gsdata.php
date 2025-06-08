@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -148,10 +148,7 @@ class plgEventBookingGsdata extends CMSPlugin implements SubscriberInterface
 		// Add structure data to script
 		if (count($output))
 		{
-			$this->app
-				->getDocument()
-				->getWebAssetManager()
-				->addInlineScript(json_encode($output, JSON_UNESCAPED_UNICODE), [], ['type' => 'application/ld+json']);
+			$this->app->getDocument()->addScriptDeclaration(json_encode($output, JSON_UNESCAPED_UNICODE), 'application/ld+json');
 		}
 	}
 }

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -52,13 +52,14 @@ abstract class EventbookingHelperJquery
 	{
 		static $loaded = false;
 
-		$wa = Factory::getApplication()->getDocument()->getWebAssetManager();
+		$document = Factory::getApplication()->getDocument();
 
 		if (!$loaded)
 		{
 			self::loadjQuery();
-			$wa->registerAndUseStyle('com_eventbooking.colorbox', 'media/com_eventbooking/assets/js/colorbox/colorbox.min.css')
-				->registerAndUseScript('com_eventbooking.colorbox', 'media/com_eventbooking/assets/js/colorbox/jquery.colorbox.min.js');
+			$rootUri = Uri::root(true);
+			$document->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/colorbox/colorbox.min.css');
+			$document->addScript($rootUri . '/media/com_eventbooking/assets/js/colorbox/jquery.colorbox.min.js');
 
 			$activeLanguageTag   = Factory::getApplication()->getLanguage()->getTag();
 			$allowedLanguageTags = [
@@ -99,10 +100,7 @@ abstract class EventbookingHelperJquery
 			// English is bundled into the source therefore we don't have to load it.
 			if (in_array($activeLanguageTag, $allowedLanguageTags))
 			{
-				$wa->registerAndUseScript(
-					'com_eventbooking.colorbox.' . $activeLanguageTag,
-					'media/com_eventbooking/assets/js/colorbox/i18n/jquery.colorbox-' . $activeLanguageTag . '.js'
-				);
+				$document->addScript($rootUri . '/media/com_eventbooking/assets/js/colorbox/i18n/jquery.colorbox-' . $activeLanguageTag . '.js');
 			}
 
 			$loaded = true;
@@ -129,7 +127,7 @@ abstract class EventbookingHelperJquery
 			$script  = 'Eb.jQuery(document).ready(function($){$(".' . $class . '").colorbox(' . self::getJSObject($options) . ');});';
 		}
 
-		$wa->addInlineScript($script);
+		$document->addScriptDeclaration($script);
 	}
 
 	/**
@@ -209,11 +207,7 @@ abstract class EventbookingHelperJquery
 		{
 			$rootUri  = Uri::root(true);
 			$document = Factory::getApplication()->getDocument();
-			$wa       = $document->getWebAssetManager();
-			$wa->registerAndUseStyle(
-				'com_eventbooking.validationEngine',
-				'media/com_eventbooking/assets/js/validate/css/validationEngine.jquery.min.css'
-			);
+			$document->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/validate/css/validationEngine.jquery.min.css');
 
 			$languageItems = [
 				'EB_VALIDATION_FIELD_REQUIRED',
@@ -297,7 +291,7 @@ abstract class EventbookingHelperJquery
 			$regex = str_replace('Y', '(\d{4})', $regex);
 			$regex = str_replace('m', '(0?[1-9]|1[012])', $regex);
 
-			$wa->addInlineScript(
+			$document->addScriptDeclaration(
 				"
 				var yearPartIndex = $yearIndex;
 				var monthPartIndex = $monthIndex;
@@ -313,7 +307,7 @@ abstract class EventbookingHelperJquery
 
 			if (File::exists(JPATH_ROOT . '/media/com_eventbooking/js/custom_validation_rules.js'))
 			{
-				$wa->registerAndUseScript('com_eventbooking.validationEngine.custom_rules', 'media/com_eventbooking/js/custom_validation_rules.js');
+				$document->addScript($rootUri . '/media/com_eventbooking/js/custom_validation_rules.js');
 			}
 
 			$files = [

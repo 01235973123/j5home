@@ -479,7 +479,8 @@ class OspropertyListing
 	 *
 	 * @param unknown_type $id
 	 */
-	static function showRequestMoreDetails($id){
+	static function showRequestMoreDetails($id)
+	{
 		global $bootstrapHelper, $mainframe,$configClass,$jinput;
         $jinput = Factory::getApplication()->input;
 		$captcha_value = $jinput->getString('c','');
@@ -529,31 +530,22 @@ class OspropertyListing
 		}
 
         $passcaptcha        = 0;
-        if($configClass['pass_captcha_with_logged_user'] == 1 && $user->id > 0){
+        if($configClass['pass_captcha_with_logged_user'] == 1 && $user->id > 0)
+		{
             $passcaptcha    = 1;
         }
         if($configClass['captcha_in_request_more_details'] == 1 && $passcaptcha == 0) 
 		{
-            if($configClass['user_recaptcha_in_request_more_details'] == 1)
+            
+			$captchaPlugin = Factory::getApplication()->getParams()->get('captcha', Factory::getConfig()->get('captcha'));
+			$res           = Captcha::getInstance($captchaPlugin)->checkAnswer($jinput->post->get('recaptcha_response_field', '', 'string'));
+			if (!$res)
 			{
-                $captchaPlugin = Factory::getApplication()->getParams()->get('captcha', Factory::getConfig()->get('captcha'));
-                $res           = Captcha::getInstance($captchaPlugin)->checkAnswer($jinput->post->get('recaptcha_response_field', '', 'string'));
-                if (!$res)
-                {
-                    $msg = Text::_('OS_YOU_SHOULD_PASS_SECURITY_STEP_FIRST');
-                    $url = Route::_('index.php?option=com_osproperty&task=property_details&id=' . $id . '&Itemid=' . $itemid);
-                    OSPHelper::redirect($url, $msg);
-                }
-            }
-			else 
-			{
-                if (!OSPHelper::checkJDCaptcha()) 
-				{
-                    $msg = Text::_('OS_SECURITY_CODE_IS_WRONG');
-                    $url = Route::_('index.php?option=com_osproperty&task=property_details&id=' . $id . '&Itemid=' . $itemid);
-                    OSPHelper::redirect($url, $msg);
-                }
-            }
+				$msg = Text::_('OS_YOU_SHOULD_PASS_SECURITY_STEP_FIRST');
+				$url = Route::_('index.php?option=com_osproperty&task=property_details&id=' . $id . '&Itemid=' . $itemid);
+				OSPHelper::redirect($url, $msg);
+			}
+			
         }
 
         $session = Factory::getSession();
@@ -6958,7 +6950,8 @@ class OspropertyListing
 		echo OspropertyListing::propertyDetails($id);
 	}
 	
-	static  function showSharingForm($id){
+	static  function showSharingForm($id)
+	{
 		global $bootstrapHelper, $mainframe,$configClass,$jinput;
 		$captcha_value = $jinput->getString('c','');
 		$db = Factory::getDbo();
@@ -7010,23 +7003,28 @@ class OspropertyListing
         }
 		if($captcha == 1) 
 		{
-            $captcha_str = $_POST['captcha_str'];
-            $sharing_security_code = $jinput->getString('sharing_security_code', '');
-            if (!OSPHelper::checkJDCaptcha()) 
+			$captchaPlugin = Factory::getApplication()->getParams()->get('captcha', Factory::getConfig()->get('captcha'));
+			$plugin		   = PluginHelper::getPlugin('captcha', $captchaPlugin);
+			if ($plugin)
 			{
-                $msg = Text::_('OS_SECURITY_CODE_IS_WRONG');
-                $url = Route::_('index.php?option=com_osproperty&task=property_details&id=' . $id . '&Itemid=' . $itemid);
-                OSPHelper::redirect($url, $msg);
-            }
+
+				try
+				{
+					$res   = Captcha::getInstance($captchaPlugin)->checkAnswer($jinput->post->get('recaptcha_response_field', '', 'string'));
+					if (!$res)
+					{
+						OSPHelper::redirect(Route::_('index.php?option=com_osproperty&task=property_details&id=' . $id . '&Itemid=' . $itemid),Text::_('OS_SECURITY_CODE_IS_WRONG'));
+					}
+				}
+				catch (Exception $e)
+				{
+					//do the same with case !$res
+					OSPHelper::redirect(Route::_('index.php?option=com_osproperty&task=property_details&id=' . $id . '&Itemid=' . $itemid),Text::_('OS_SECURITY_CODE_IS_WRONG'));
+				}
+			}
         }
 
-		if($configClass['integrate_stopspamforum'] == 1){
-			if(OSPHelper::spamChecking()){
-				$msg = Text::_('OS_EMAIL_CANT_BE_SENT');
-				$url = Route::_('index.php?option=com_osproperty&task=property_details&id='.$id.'&Itemid='.$itemid);
-				OSPHelper::redirect($url,$msg);
-			}
-		}
+		
 
         $session = Factory::getSession();
         $pid = $session->get('pid',0);
@@ -8403,9 +8401,12 @@ class OspropertyListing
 		$your_email = OSPHelper::getStringRequest('your_email','','');
 		$item_type = $jinput->getInt('item_type',0);
 		$itemid = $jinput->getInt('Itemid',0);
-		if($report_reason == ""){
+		if($report_reason == "")
+		{
 			OspropertyListing::reportForm($id);
-		}else{
+		}
+		else
+		{
 			$row = Table::getInstance('Report','OspropertyTable');
 			$row->id = 0;
 			$row->item_type = $item_type;
@@ -8713,7 +8714,8 @@ class OspropertyListing
     /**
      * Edit Comment
      */
-    public static function submitEditComment(){
+    public static function submitEditComment()
+	{
         global $bootstrapHelper, $configClass,$mainframe,$jinput;
         $id = $jinput->getInt('id',0);
         $db = Factory::getDbo();

@@ -3,15 +3,16 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
 
@@ -97,10 +98,7 @@ class plgEventBookingMap extends CMSPlugin implements SubscriberInterface
 
 		ob_start();
 
-		Factory::getApplication()
-			->getDocument()
-			->getWebAssetManager()
-			->useScript('core');
+		HTMLHelper::_('behavior.core');
 
 		$config = EventbookingHelper::getConfig();
 
@@ -135,6 +133,7 @@ class plgEventBookingMap extends CMSPlugin implements SubscriberInterface
 	private function drawMap($location): void
 	{
 		$config           = EventbookingHelper::getConfig();
+		$rootUri          = Uri::root(true);
 		$zoomLevel        = (int) $config->zoom_level ?: 14;
 		$disableZoom      = $this->params->get('disable_zoom', 1) == 1 ? 'false' : 'true';
 		$mapHeight        = $this->params->def('map_height', 500);
@@ -151,16 +150,12 @@ class plgEventBookingMap extends CMSPlugin implements SubscriberInterface
 HTML;
 
 		$this->app->getDocument()
+			->addScript('https://maps.googleapis.com/maps/api/js?key=' . $config->get('map_api_key', '') . '&v=quarterly')
+			->addScript($rootUri . '/media/com_eventbooking/js/plg-eventbooking-map-googlemap.min.js')
 			->addScriptOptions('mapZoomLevel', $zoomLevel)
 			->addScriptOptions('mapLocation', $location)
 			->addScriptOptions('scrollwheel', (bool) $disableZoom)
-			->addScriptOptions('bubbleText', $bubbleText)
-			->getWebAssetManager()
-			->registerAndUseScript(
-				'com_eventbooking.googlemapapi',
-				'https://maps.googleapis.com/maps/api/js?key=' . $config->get('map_api_key', '') . '&v=quarterly'
-			)
-			->registerAndUseScript('plg-eventbooking-map-googlemap', 'media/com_eventbooking/js/plg-eventbooking-map-googlemap.min.js');
+			->addScriptOptions('bubbleText', $bubbleText);
 		?>
 		<div id="mapform">
 			<div id="map_canvas" style="width: 100%; height: <?php
@@ -178,6 +173,7 @@ HTML;
 	 */
 	private function drawOpenStreetMap($location): void
 	{
+		$rootUri   = Uri::root(true);
 		$config    = EventbookingHelper::getConfig();
 		$zoomLevel = (int) $config->zoom_level ?: 14;
 		$mapHeight = $this->params->def('map_height', 500);
@@ -188,12 +184,11 @@ HTML;
 		$location->popupContent = implode('', $popupContent);
 
 		$this->app->getDocument()
+			->addScript($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.js')
+			->addScript($rootUri . '/media/com_eventbooking/js/plg-eventbooking-map-openstreetmap.min.js')
+			->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.css')
 			->addScriptOptions('mapZoomLevel', $zoomLevel)
-			->addScriptOptions('mapLocation', $location)
-			->getWebAssetManager()
-			->registerAndUseScript('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.js')
-			->registerAndUseStyle('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.css')
-			->registerAndUseScript('plg-eventbooking-map-openstreetmap', 'media/com_eventbooking/js/plg-eventbooking-map-openstreetmap.min.js');
+			->addScriptOptions('mapLocation', $location);
 		?>
 		<div id="mapform">
 			<div id="map_canvas" style="width: 100%; height: <?php

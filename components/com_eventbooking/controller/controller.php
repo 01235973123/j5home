@@ -1,14 +1,16 @@
 <?php
+
 /**
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filesystem\Folder;
@@ -32,8 +34,7 @@ class EventbookingController extends RADController
 
 		$task = $this->getTask();
 
-		switch ($task)
-		{
+		switch ($task) {
 			case 'view_category':
 				$this->input->set('view', 'category');
 				break;
@@ -62,8 +63,7 @@ class EventbookingController extends RADController
 			default:
 				$view = $this->input->getCmd('view');
 
-				if (!$view)
-				{
+				if (!$view) {
 					$this->input->set('view', 'categories');
 					$this->input->set('layout', 'default');
 				}
@@ -79,28 +79,18 @@ class EventbookingController extends RADController
 	 */
 	public function download_file()
 	{
-		$inline   = (int) $this->input->getInt('inline', 0);
 		$fileName = basename($this->input->getString('file_name'));
 		$filePath = JPATH_ROOT . '/media/com_eventbooking/files/' . $fileName;
 
-		if (!EventbookingHelper::isImageFilename($fileName))
-		{
-			$inline = false;
-		}
-
-		if (file_exists($filePath))
-		{
+		if (file_exists($filePath)) {
 			// Check permission
 			$canDownload = false;
 			$user        = $this->app->getIdentity();
 
-			if ($user->authorise('eventbooking.registrantsmanagement', 'com_eventbooking'))
-			{
+			if ($user->authorise('eventbooking.registrantsmanagement', 'com_eventbooking')) {
 				// Users with registrants management is allowed to download file
 				$canDownload = true;
-			}
-			elseif ($user->id)
-			{
+			} elseif ($user->id) {
 				// User can only download the file uploaded by himself
 				/* @var \Joomla\Database\DatabaseDriver $db */
 				$db = Factory::getContainer()->get('db');
@@ -113,8 +103,7 @@ class EventbookingController extends RADController
 				$db->setQuery($query);
 				$fieldIds = $db->loadColumn();
 
-				if (count($fieldIds))
-				{
+				if (count($fieldIds)) {
 					$query->clear()
 						->select('COUNT(*)')
 						->from('#__eb_registrants AS a')
@@ -125,25 +114,21 @@ class EventbookingController extends RADController
 					$db->setQuery($query);
 					$total = (int) $db->loadResult();
 
-					if ($total)
-					{
+					if ($total) {
 						$canDownload = true;
 					}
 				}
 			}
 
-			if (!$canDownload)
-			{
+			if (!$canDownload) {
 				$this->app->enqueueMessage(Text::_('You do not have permission to download this file'), 'error');
 				$this->app->redirect(Uri::root(), 403);
 
 				return;
 			}
 
-			$this->processDownloadFile($filePath, $fileName, $inline);
-		}
-		else
-		{
+			$this->processDownloadFile($filePath);
+		} else {
 			$this->app->enqueueMessage(Text::_('File does not exist'), 'error');
 			$this->app->redirect(Uri::root(), 404);
 		}
@@ -170,63 +155,51 @@ class EventbookingController extends RADController
 
 		$url = new Uri('index.php?option=com_eventbooking&view=search');
 
-		if ($categoryId)
-		{
+		if ($categoryId) {
 			$url .= '&category_id=' . $categoryId;
 		}
 
-		if ($locationId)
-		{
+		if ($locationId) {
 			$url .= '&location_id=' . $locationId;
 		}
 
-		if ($search)
-		{
+		if ($search) {
 			$url .= '&search=' . $search;
 		}
 
-		if ($filterState)
-		{
+		if ($filterState) {
 			$url .= '&filter_state=' . $filterState;
 		}
 
-		if ($filterCity)
-		{
+		if ($filterCity) {
 			$url .= '&filter_city=' . $filterCity;
 		}
 
-		if ($fromDate)
-		{
+		if ($fromDate) {
 			$url .= '&filter_from_date=' . $fromDate;
 		}
 
-		if ($toDate)
-		{
+		if ($toDate) {
 			$url .= '&filter_to_date=' . $toDate;
 		}
 
-		if ($filterAddress)
-		{
+		if ($filterAddress) {
 			$url .= '&filter_address=' . $filterAddress;
 		}
 
-		if ($filterDistance)
-		{
+		if ($filterDistance) {
 			$url .= '&filter_distance=' . $filterDistance;
 		}
 
-		if ($layout && ($layout != 'default'))
-		{
+		if ($layout && ($layout != 'default')) {
 			$url .= '&layout=' . $layout;
 		}
 
-		if ($filterOrder)
-		{
+		if ($filterOrder) {
 			$url .= '&filter_order=' . $filterOrder;
 		}
 
-		if ($filterOrderDir)
-		{
+		if ($filterOrderDir) {
 			$url .= '&filter_order_Dir=' . $filterOrderDir;
 		}
 
@@ -254,12 +227,9 @@ class EventbookingController extends RADController
 		$arrayToJs    = [];
 		$arrayToJs[0] = $validateId;
 
-		if ($total)
-		{
+		if ($total) {
 			$arrayToJs[1] = false;
-		}
-		else
-		{
+		} else {
 			$arrayToJs[1] = true;
 		}
 
@@ -277,44 +247,96 @@ class EventbookingController extends RADController
 		$db           = Factory::getContainer()->get('db');
 		$user         = $this->app->getIdentity();
 		$config       = EventbookingHelper::getConfig();
+		$query        = $db->getQuery(true);
 		$email        = $this->input->get('fieldValue', '', 'string');
 		$eventId      = $this->input->getInt('event_id', 0);
 		$validateId   = $this->input->get('fieldId', '', 'none');
 		$arrayToJs    = [];
 		$arrayToJs[0] = $validateId;
 
-		if (!$config->multiple_booking
-			&& !EventbookingHelperValidator::validateDuplicateRegistration($eventId, $user->id, $email))
-		{
-			$arrayToJs[1] = false;
-			$arrayToJs[2] = Text::_('EB_EMAIL_REGISTER_FOR_EVENT_ALREADY');
+		if (!$config->multiple_booking) {
+			$event = EventbookingHelperDatabase::getEvent($eventId);
+			EventbookingHelper::overrideGlobalConfig($config, $event);
+
+			if ($event->prevent_duplicate_registration === '') {
+				$preventDuplicateRegistration = $config->prevent_duplicate_registration;
+			} else {
+				$preventDuplicateRegistration = $event->prevent_duplicate_registration;
+			}
+
+			if ($preventDuplicateRegistration) {
+				$query->select('COUNT(id)')
+					->from('#__eb_registrants')
+					->where('event_id = ' . $eventId)
+					->where('email = ' . $db->quote($email))
+					->where('(published = 1 OR (published = 0 AND payment_method LIKE "os_offline%"))');
+				$db->setQuery($query);
+				$total = $db->loadResult();
+
+				if ($total) {
+					$arrayToJs[1] = false;
+					$arrayToJs[2] = Text::_('EB_EMAIL_REGISTER_FOR_EVENT_ALREADY');
+				}
+			}
 		}
 
-		/**
-		 * If user registration is enabled and user is not logged in,
-		 * make sure email is not used by any existing user yet
-		 */
-		if (!isset($arrayToJs[1])
-			&& $config->user_registration
-			&& !$user->id
-			&& EventbookingHelperValidator::emailAlreadyTaken($email))
-		{
-			$arrayToJs[1] = false;
-			$arrayToJs[2] = Text::_('EB_EMAIL_USED_BY_OTHER_CUSTOMER');
+		if (!isset($arrayToJs[1])) {
+			$query->clear()
+				->select('COUNT(*)')
+				->from('#__users')
+				->where('email = ' . $db->quote($email));
+			$db->setQuery($query);
+			$total = $db->loadResult();
+
+			if (!$total || $user->id || !$config->user_registration) {
+				$arrayToJs[1] = true;
+			} else {
+				$arrayToJs[1] = false;
+				$arrayToJs[2] = Text::_('EB_EMAIL_USED_BY_OTHER_CUSTOMER');
+			}
 		}
 
-		if (!isset($arrayToJs[1])
-			&& !EventbookingHelperValidator::validateEmailDomain($email))
-		{
-			$emailDomain  = explode('@', $email);
-			$emailDomain  = $emailDomain[1];
-			$arrayToJs[1] = false;
-			$arrayToJs[2] = Text::sprintf('JGLOBAL_EMAIL_DOMAIN_NOT_ALLOWED', $emailDomain);
-		}
+		if (!isset($arrayToJs[1])) {
+			$domains = ComponentHelper::getParams('com_users')->get('domains');
 
-		if (!isset($arrayToJs[1]))
-		{
-			$arrayToJs[1] = true;
+			if ($domains) {
+				$emailDomain = explode('@', $email);
+				$emailDomain = $emailDomain[1];
+				$emailParts  = array_reverse(explode('.', $emailDomain));
+				$emailCount  = count($emailParts);
+				$allowed     = true;
+
+				foreach ($domains as $domain) {
+					$domainParts = array_reverse(explode('.', $domain->name));
+					$status      = 0;
+
+					// Don't run if the email has less segments than the rule.
+					if ($emailCount < count($domainParts)) {
+						continue;
+					}
+
+					foreach ($emailParts as $key => $emailPart) {
+						if (!isset($domainParts[$key]) || $domainParts[$key] == $emailPart || $domainParts[$key] == '*') {
+							$status++;
+						}
+					}
+
+					// All segments match, check whether to allow the domain or not.
+					if ($status === $emailCount) {
+						if ($domain->rule == 0) {
+							$allowed = false;
+						} else {
+							$allowed = true;
+						}
+					}
+				}
+
+				// If domain is not allowed, fail validation. Otherwise continue.
+				if (!$allowed) {
+					$arrayToJs[1] = false;
+					$arrayToJs[2] = Text::sprintf('JGLOBAL_EMAIL_DOMAIN_NOT_ALLOWED', $emailDomain);
+				}
+			}
 		}
 
 		echo json_encode($arrayToJs);
@@ -332,8 +354,7 @@ class EventbookingController extends RADController
 		$fieldName       = $this->input->getString('field_name', 'state');
 		$stateName       = $this->input->getString('state_name', '');
 
-		if (!$countryName)
-		{
+		if (!$countryName) {
 			$config      = EventbookingHelper::getConfig();
 			$countryName = $config->default_country;
 		}
@@ -349,26 +370,19 @@ class EventbookingController extends RADController
 
 		$cssClasses = [];
 
-		if ($row->css_class)
-		{
+		if ($row->css_class) {
 			$cssClasses[] = $row->css_class;
 		}
 
-		if ($row->validation_rules)
-		{
+		if ($row->validation_rules) {
 			$cssClasses[] = $row->validation_rules;
 		}
 
-		if ($bootstrapHelper->getFrameworkClass('uk-select'))
-		{
+		if ($bootstrapHelper->getFrameworkClass('uk-select')) {
 			$cssClasses[] = 'uk-select';
-		}
-		elseif ($bootstrapHelper->getFrameworkClass('form-select'))
-		{
+		} elseif ($bootstrapHelper->getFrameworkClass('form-select')) {
 			$cssClasses[] = 'form-select';
-		}
-		elseif ($bootstrapHelper->getFrameworkClass('form-control'))
-		{
+		} elseif ($bootstrapHelper->getFrameworkClass('form-control')) {
 			$cssClasses[] = 'form-control';
 		}
 
@@ -383,22 +397,16 @@ class EventbookingController extends RADController
 		$states  = $db->loadObjectList();
 		$options = [];
 
-		if (count($states))
-		{
+		if (count($states)) {
 			$options[] = HTMLHelper::_('select.option', '', Text::_('EB_SELECT_STATE'));
 			$options   = array_merge($options, $states);
-		}
-		else
-		{
+		} else {
 			$options[] = HTMLHelper::_('select.option', 'N/A', Text::_('EB_NA'));
 		}
 
-		if (count($cssClasses))
-		{
+		if (count($cssClasses)) {
 			$attributes = 'id="' . $fieldName . '" class="' . implode(' ', $cssClasses) . '"';
-		}
-		else
-		{
+		} else {
 			$attributes = 'id="' . $fieldName . '"';
 		}
 
@@ -438,8 +446,7 @@ class EventbookingController extends RADController
 			->whereIn('id', $allFieldIds)
 			->order('ordering');
 
-		if ($languageSuffix)
-		{
+		if ($languageSuffix) {
 			EventbookingHelperDatabase::getMultilingualFields($query, ['title', 'depend_on_options'], $languageSuffix);
 		}
 
@@ -448,10 +455,8 @@ class EventbookingController extends RADController
 		$masterFields = [];
 		$fieldsAssoc  = [];
 
-		foreach ($rowFields as $rowField)
-		{
-			if ($rowField->depend_on_field_id)
-			{
+		foreach ($rowFields as $rowField) {
+			if ($rowField->depend_on_field_id) {
 				$masterFields[] = $rowField->depend_on_field_id;
 			}
 
@@ -460,45 +465,32 @@ class EventbookingController extends RADController
 
 		$masterFields = array_unique($masterFields);
 
-		if (count($masterFields))
-		{
+		if (count($masterFields)) {
 			$hiddenFields = [];
 
-			foreach ($rowFields as $rowField)
-			{
-				if ($rowField->depend_on_field_id && isset($fieldsAssoc[$rowField->depend_on_field_id]))
-				{
+			foreach ($rowFields as $rowField) {
+				if ($rowField->depend_on_field_id && isset($fieldsAssoc[$rowField->depend_on_field_id])) {
 					// If master field is hided, then children field should be hided, too
-					if (in_array($rowField->depend_on_field_id, $hiddenFields))
-					{
+					if (in_array($rowField->depend_on_field_id, $hiddenFields)) {
 						$hiddenFields[] = $rowField->id;
-					}
-					else
-					{
-						if ($fieldSuffix)
-						{
+					} else {
+						if ($fieldSuffix) {
 							$fieldName = $fieldsAssoc[$rowField->depend_on_field_id]->name . '_' . $fieldSuffix;
-						}
-						else
-						{
+						} else {
 							$fieldName = $fieldsAssoc[$rowField->depend_on_field_id]->name;
 						}
 
 						$masterFieldValues = $input->get($fieldName, '', 'none');
 
-						if (is_array($masterFieldValues))
-						{
+						if (is_array($masterFieldValues)) {
 							$selectedOptions = $masterFieldValues;
-						}
-						else
-						{
+						} else {
 							$selectedOptions = [$masterFieldValues];
 						}
 
 						$dependOnOptions = json_decode($rowField->depend_on_options);
 
-						if (!count(array_intersect($selectedOptions, $dependOnOptions)))
-						{
+						if (!count(array_intersect($selectedOptions, $dependOnOptions))) {
 							$hiddenFields[] = $rowField->id;
 						}
 					}
@@ -509,14 +501,10 @@ class EventbookingController extends RADController
 		$showFields = [];
 		$hideFields = [];
 
-		foreach ($rowFields as $rowField)
-		{
-			if (in_array($rowField->id, $hiddenFields))
-			{
+		foreach ($rowFields as $rowField) {
+			if (in_array($rowField->id, $hiddenFields)) {
 				$hideFields[] = 'field_' . $rowField->name . ($fieldSuffix ? '_' . $fieldSuffix : '');
-			}
-			else
-			{
+			} else {
 				$showFields[] = 'field_' . $rowField->name . ($fieldSuffix ? '_' . $fieldSuffix : '');
 			}
 		}
@@ -546,8 +534,7 @@ class EventbookingController extends RADController
 		$json       = [];
 		$pathUpload = JPATH_ROOT . '/media/com_eventbooking/files';
 
-		if (!Folder::exists($pathUpload))
-		{
+		if (!Folder::exists($pathUpload)) {
 			Folder::create($pathUpload);
 		}
 
@@ -557,31 +544,24 @@ class EventbookingController extends RADController
 		$fileName = $file['name'];
 		$fileExt  = File::getExt($fileName);
 
-		if (in_array(strtolower($fileExt), $allowedExtensions))
-		{
+		if (in_array(strtolower($fileExt), $allowedExtensions)) {
 			$canUpload = true;
 
-			if ($config->upload_max_file_size > 0)
-			{
+			if ($config->upload_max_file_size > 0) {
 				$maxFileSizeInByte = $config->upload_max_file_size * 1024 * 1024;
 
-				if ($file['size'] > $maxFileSizeInByte)
-				{
+				if ($file['size'] > $maxFileSizeInByte) {
 					$json['error'] = Text::sprintf('EB_FILE_SIZE_TOO_LARGE', $config->upload_max_file_size . 'MB');
 					$canUpload     = false;
 				}
 			}
 
-			if ($canUpload)
-			{
+			if ($canUpload) {
 				$fileName = File::makeSafe($fileName);
 
-				if (File::exists($pathUpload . '/' . $fileName))
-				{
+				if (File::exists($pathUpload . '/' . $fileName)) {
 					$targetFileName = time() . '_' . $fileName;
-				}
-				else
-				{
+				} else {
 					$targetFileName = $fileName;
 				}
 
@@ -590,9 +570,7 @@ class EventbookingController extends RADController
 				$json['success'] = Text::sprintf('EB_FILE_UPLOADED', $fileName);
 				$json['file']    = $targetFileName;
 			}
-		}
-		else
-		{
+		} else {
 			$json['error'] = Text::sprintf('EB_FILE_NOT_ALLOWED', $fileExt, implode(', ', $allowedExtensions));
 		}
 
@@ -611,14 +589,12 @@ class EventbookingController extends RADController
 		$eventId = $input->getInt('event_id', 0);
 		$data    = [];
 
-		if ($userId && $eventId)
-		{
+		if ($userId && $eventId) {
 			$rowFields = EventbookingHelperRegistration::getFormFields($eventId, 0);
 			$data      = EventbookingHelperRegistration::getFormData($rowFields, $eventId, $userId);
 		}
 
-		if ($userId && !isset($data['first_name']))
-		{
+		if ($userId && !isset($data['first_name'])) {
 			//Load the name from Joomla default name
 
 			/* @var \Joomla\CMS\User\User $user */
@@ -626,8 +602,7 @@ class EventbookingController extends RADController
 
 			$name = $user->name;
 
-			if ($name)
-			{
+			if ($name) {
 				[$firstName, $lastName] = EventbookingHelper::callOverridableHelperMethod(
 					'Registration',
 					'detectFirstAndLastNameFromFullName',
@@ -639,10 +614,8 @@ class EventbookingController extends RADController
 			}
 		}
 
-		if ($userId && !isset($data['email']))
-		{
-			if (empty($user))
-			{
+		if ($userId && !isset($data['email'])) {
+			if (empty($user)) {
 				/* @var \Joomla\CMS\User\User $user */
 				$user = Factory::getContainer()->get(UserFactoryInterface::class)->loadUserById((int) $userId);
 			}
@@ -673,8 +646,7 @@ class EventbookingController extends RADController
 		$paths[] = JPATH_THEMES . '/' . $this->app->getTemplate() . '/html/com_eventbooking/' . $name;
 		$paths[] = JPATH_ROOT . '/components/com_eventbooking/themes/' . $theme->name . '/' . $name;
 
-		if ($theme->name != 'default')
-		{
+		if ($theme->name != 'default') {
 			$paths[] = JPATH_ROOT . '/components/com_eventbooking/themes/default/' . $name;
 		}
 

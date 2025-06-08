@@ -432,8 +432,11 @@ HelperOspropertyCommon::filterForm($lists);
 							</li>
 						<?php
 						}
-					}elseif($ncolumns == 2){
-						for($i=0;$i<count($rows);$i++){
+					}
+					elseif($ncolumns == 2)
+					{
+						for($i=0;$i<count($rows);$i++)
+						{
 							$row = $rows[$i];
 							$needs = array();
 							$needs[] = "property_details";

@@ -3,7 +3,7 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
@@ -14,7 +14,9 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Uri\Uri;
 
+JHtml::_('behavior.core');
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
 $app      = Factory::getApplication();
@@ -26,9 +28,7 @@ $ordering  = $this->state->filter_order == 'tbl.ordering';
 
 $app->getDocument()->addScriptOptions('EBEditor', $editor)
 	->addScriptOptions('isJoomla4', true)
-	->getWebAssetManager()
-	->useScript('core')
-	->registerAndUseScript('com_eventbooking.admin-events-modal', 'media/com_eventbooking/js/admin-events-modal.min.js');
+	->addScript(Uri::root(true) . '/media/com_eventbooking/js/admin-events-modal.min.js');
 ?>
 <form action="<?php echo Route::_('index.php?option=com_eventbooking&view=events&layout=modal&tmpl=component&function=' . $function . '&' . Session::getFormToken() . '=1'); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container">
@@ -53,7 +53,7 @@ $app->getDocument()->addScriptOptions('EBEditor', $editor)
 			</div>
 		</div>
 		<div class="clearfix"></div>
-		<table class="table itemList table-striped">
+		<table class="adminlist table table-striped">
 			<thead>
 				<tr>
 					<th class="title">
@@ -113,7 +113,7 @@ $app->getDocument()->addScriptOptions('EBEditor', $editor)
 						<?php echo $row->event_capacity; ?>
 					</td>
 					<td class="center">
-						<a class="tbody-icon"><span class="<?php echo $row->published ? $iconPublish : $iconUnPublish; ?>"></span></a>
+						<a class="tbody-icon"><span class="<?php echo $row->required ? $iconPublish : $iconUnPublish; ?>"></span></a>
 					</td>
 					<td class="center">
 						<?php echo $row->id; ?>

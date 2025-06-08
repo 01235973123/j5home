@@ -101,14 +101,18 @@ if ($showCategory)
 		->where('published = 1')
 		->whereIn('access', $user->getAuthorisedViewLevels())
 		->order($config->get('category_dropdown_ordering', 'name'));
-
-	if ($categoryIds = $params->get('category_ids', []))
-	{
-		$query->whereIn('id', $categoryIds);
-	}
-	
 	$db->setQuery($query);
 	$rows = $db->loadObjectList();
+
+	for ($i = 0, $n = count($rows); $i < $n; $i++)
+	{
+		$row = $rows[$i];
+
+		if (!EventbookingHelper::getTotalEvent($row->id))
+		{
+			unset($rows[$i]);
+		}
+	}
 
 	$children = [];
 

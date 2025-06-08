@@ -102,7 +102,7 @@
                 <option value="4">4</option>
                 <option value="6">6</option>
             </field>
-            <field name="image_lazy_loading" type="list" default="0" label="Image Lazy Loading">
+            <field name="image_lazy_loading" type="list" default="lazy" label="Image Lazy Loading">
                 <option value="0">Disable</option>
                 <option value="lazy">Lazy</option>
             </field>

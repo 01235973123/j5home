@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -540,29 +540,6 @@ class plgEventbookingSystem extends CMSPlugin implements SubscriberInterface
 	 */
 	private function deleteWaitingListEntries($row): void
 	{
-		$config = EventbookingHelper::getConfig();
-
-		$event = EventbookingHelperDatabase::getEvent($row->event_id);
-
-		if ($event->prevent_duplicate_registration === '')
-		{
-			$preventDuplicateRegistration = $config->prevent_duplicate_registration;
-		}
-		else
-		{
-			$preventDuplicateRegistration = $event->prevent_duplicate_registration;
-		}
-
-		if (!$preventDuplicateRegistration)
-		{
-			return;
-		}
-
-		if (!$row->user_id && !$row->email)
-		{
-			return;
-		}
-
 		$db    = $this->db;
 		$query = $db->getQuery(true)
 			->delete('#__eb_registrants')
@@ -572,14 +549,7 @@ class plgEventbookingSystem extends CMSPlugin implements SubscriberInterface
 
 		if ($row->user_id > 0)
 		{
-			if ($row->email)
-			{
-				$query->where('(user_id = ' . $row->user_id . ' OR email = ' . $db->quote($row->email) . ')');
-			}
-			else
-			{
-				$query->where('user_id = ' . $row->user_id);
-			}
+			$query->where('(user_id = ' . $row->user_id . ' OR email = ' . $db->quote($row->email) . ')');
 		}
 		else
 		{

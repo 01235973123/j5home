@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -34,13 +34,10 @@ require_once dirname(__FILE__) . '/helper.php';
 EventbookingHelper::loadLanguage();
 
 $document = Factory::getApplication()->getDocument();
-$wa       = $document->getWebAssetManager();
 $rootUri  = Uri::root(true);
 
 // Load css
-$document->getWebAssetManager()
-	->registerAndUseStyle('mod_eb_googlemap.style', 'media/mod_eb_googlemap/asset/style.css');
-
+$document->addStyleSheet($rootUri . '/media/mod_eb_googlemap/asset/style.css');
 EventbookingHelper::loadComponentCssForModules();
 
 $config = EventbookingHelper::getConfig();
@@ -103,15 +100,15 @@ if (empty($homeCoordinates))
 if ($config->get('map_provider', 'googlemap') == 'googlemap')
 {
 	$layout = 'default';
-	$wa->registerAndUseScript('com_eventbooking.googlemapapi', 'https://maps.googleapis.com/maps/api/js?key=' . $config->get('map_api_key', '') . '&v=quarterly')
-		->registerAndUseScript('mod-eb-googlemap', 'media/com_eventbooking/js/mod-eb-googlemap.min.js');
+	$document->addScript('https://maps.googleapis.com/maps/api/js?key=' . $config->get('map_api_key', '') . '&v=quarterly')
+		->addScript($rootUri . '/media/com_eventbooking/js/mod-eb-googlemap.min.js');
 }
 else
 {
 	$layout = 'openstreetmap';
-	$wa->registerAndUseScript('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.js')
-		->registerAndUseStyle('com_eventbooking.leaflet', 'media/com_eventbooking/assets/js/leaflet/leaflet.css')
-		->registerAndUseScript('com_eventbooking.mod-eb-openstreetmap', 'media/com_eventbooking/js/mod-eb-openstreetmap.min.js');
+	$document->addScript($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.js')
+		->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/leaflet/leaflet.css')
+		->addScript($rootUri . '/media/com_eventbooking/js/mod-eb-openstreetmap.min.js');
 }
 
 $document->addScriptOptions('mapLocations', $locations)

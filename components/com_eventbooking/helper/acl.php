@@ -95,15 +95,21 @@ class EventbookingHelperAcl
 	{
 		/* @var \Joomla\Database\DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
-		$query = $db->getQuery(true)
-			->select('COUNT(*)')
+		$query = $db->getQuery(true);
+		$query->select('COUNT(*)')
 			->from('#__eb_events')
 			->where('id = ' . $eventId)
 			->where(' enable_cancel_registration = 1')
-			->where('(DATEDIFF(cancel_before_date, NOW()) >= 0)');
+			->where('(DATEDIFF(cancel_before_date, NOW()) >=0)');
 		$db->setQuery($query);
+		$total = $db->loadResult();
 
-		return $db->loadResult() > 0;
+		if ($total)
+		{
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -128,8 +134,8 @@ class EventbookingHelperAcl
 
 			/* @var \Joomla\Database\DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
-			$query = $db->getQuery(true)
-				->select('created_by')
+			$query = $db->getQuery(true);
+			$query->select('created_by')
 				->from('#__eb_events')
 				->where('id = ' . (int) $eventId);
 			$db->setQuery($query);
@@ -176,8 +182,8 @@ class EventbookingHelperAcl
 
 			/* @var \Joomla\Database\DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
-			$query = $db->getQuery(true)
-				->select('created_by')
+			$query = $db->getQuery(true);
+			$query->select('created_by')
 				->from('#__eb_events')
 				->where('id = ' . (int) $eventId);
 			$db->setQuery($query);
@@ -203,6 +209,7 @@ class EventbookingHelperAcl
 	{
 		/* @var \Joomla\Database\DatabaseDriver $db */
 		$db     = Factory::getContainer()->get('db');
+		$query  = $db->getQuery(true);
 		$user   = Factory::getApplication()->getIdentity();
 		$userId = $user->id;
 		$email  = $user->email;
@@ -212,8 +219,7 @@ class EventbookingHelperAcl
 			return false;
 		}
 
-		$query = $db->getQuery(true)
-			->select('id')
+		$query->select('id')
 			->from('#__eb_registrants')
 			->where('event_id = ' . $eventId)
 			->where('(user_id = ' . $userId . ' OR email = ' . $db->quote($email) . ')')
@@ -327,8 +333,8 @@ class EventbookingHelperAcl
 
 			/* @var \Joomla\Database\DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
-			$query = $db->getQuery(true)
-				->select('b.created_by')
+			$query = $db->getQuery(true);
+			$query->select('b.created_by')
 				->from('#__eb_registrants AS a')
 				->innerJoin('#__eb_events AS b ON a.event_id = b.id')
 				->where('a.id = ' . $id);

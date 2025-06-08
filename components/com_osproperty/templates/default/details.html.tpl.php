@@ -252,7 +252,7 @@ if(count($topPlugin) > 0)
                         <div id="slider1" class="favslider1 margin0">
                             <div class="property_type">
                                 <?php
-											 $needs = array();
+											 $needs = [];
 											 $needs[] = "property_type";
 											 $needs[] = "ltype";
 											 $needs[] = "type_id=".$row->pro_type;
@@ -396,11 +396,9 @@ if(count($topPlugin) > 0)
 							{
 								?>
                     <?php echo HTMLHelper::_('bootstrap.addTab', 'propertyDetailsTab', 'tabgoogle', Text::_('OS_MAP')); ?>
-                    <div class="tab-pane">
-                        <div id="map_canvas"
-                            style="height: <?php echo $configClass['property_map_height'] ?>px; width: <?php echo $mapwidth ?>px;">
-                        </div>
-                    </div>
+                    <!-- <div class="tab-pane">
+										<div id="map_canvas" style="height: <?php echo $configClass['property_map_height'] ?>px; width: <?php echo $mapwidth ?>px;"></div>
+									</div> -->
                     <?php echo HTMLHelper::_('bootstrap.endTab') ?>
                     <?php
 								if($configClass['map_type'] == 0)
@@ -558,7 +556,7 @@ if(count($topPlugin) > 0)
                         <div id="slider1" class="favslider1 margin0">
                             <div class="property_type">
                                 <?php
-                                     $needs = array();
+                                     $needs = [];
                                      $needs[] = "property_type";
                                      $needs[] = "ltype";
                                      $needs[] = "type_id=".$row->pro_type;
@@ -761,27 +759,14 @@ if(count($topPlugin) > 0)
                                         }
                                         ?>
                             <script type="text/javascript">
-                            jQuery("#phone_number").text('<?php echo $row->agentdetails->phone;?>');
+                            jQuery(".headerphone").click(function() {
+                                jQuery("#phone_number").text('<?php echo $row->agentdetails->phone;?>');
+                            });
                             </script>
                         </div>
                     </div>
-                    <?php
-								$db->setQuery("Select a.company_name from #__osrs_companies as a inner join #__osrs_agents as b on b.company_id = a.id where b.id = '$row->agent_id'");
-								$company_name = $db->loadResult();
-								if($company_name != ""){
-								?>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-buildings" viewBox="0 0 16 16">
-                        <path
-                            d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z" />
-                        <path
-                            d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z" />
-                    </svg>
-                    <strong><?php echo $company_name; } ?></strong>
-
                 </div>
                 <?php
-
                         }
                         ?>
             </div>
@@ -815,10 +800,7 @@ if(count($topPlugin) > 0)
             <ul class="pf-sharebar-icons">
                 <li>
                     <?php
-                            $needs = [];
-							$needs[] = "property_details";
-							$needs[] = $row->id;
-							$itemid  = OSPRoute::getItemid($needs);
+							$itemid = Factory::getApplication()->input->getInt('Itemid');
                             $url = Route::_("index.php?option=com_osproperty&task=property_details&id=$row->id&Itemid=".$itemid);
                             $url = Uri::getInstance()->toString(array('scheme', 'user', 'pass', 'host')).$url;
                             ?>
@@ -1481,11 +1463,11 @@ if(count($topPlugin) > 0)
                         <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> margintop10">
                             <?php
 									echo $row->comments;
+									if(($owner == 0) and ($can_add_cmt == 1)){
 										HelperOspropertyCommon::reviewForm($row,$itemid,$configClass);
 									}
 									?>
                         </div>
-                    </div>
                 </div>
                 <?php
 						echo HTMLHelper::_('bootstrap.endTab');

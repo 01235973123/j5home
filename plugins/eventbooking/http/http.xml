@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="4.2.0" type="plugin" group="eventbooking" method="upgrade">
+<extension version="3.9.0" type="plugin" group="eventbooking" method="upgrade">
 	<name>Events Booking - Webhook</name>
 	<author>Tuan Pham Ngoc</author>
 	<authorEmail>tuanpn@joomdonation.com</authorEmail>
 	<authorUrl>http://www.joomdonation.com</authorUrl>
-	<copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
+	<copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
 	<license>GNU General Public License version 3, or later</license>
 	<creationDate>December 2023</creationDate>
-	<version>5.0.4</version>
-	<description>This plugin will make a POST request to configured URL when a users register for your event. This allows you to transfer registrants data to external system</description>
+	<version>5.0.0</version>
+	<description>This plugin will make a POST request to configured URL when a registration record is Paid/Active. This allows you to transfer registrants data to external system</description>
 	<files>
 		<filename plugin="http">http.php</filename>
 		<folder>tmpl</folder>
@@ -20,17 +20,6 @@
 				<field name="content_type" type="list" label="Content Type" default="application/json">
 					<option value="application/json">application/json</option>
 					<option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
-				</field>
-				<field
-						name="send_webhook_for_pending_registration"
-						type="radio"
-						label="Send Webhook For Pending Registration"
-						description="If set to Yes, the plugin will also send webhook for pending registration records use offline payment method"
-						class="btn-group btn-group-yesno"
-						default="0"
-				>
-					<option value="1">JYES</option>
-					<option value="0">JNO</option>
 				</field>
 				<field
 						name="show_on_frontend"

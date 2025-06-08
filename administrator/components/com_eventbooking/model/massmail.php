@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -229,7 +229,6 @@ class EventbookingModelMassmail extends RADModel
 				$message = EventbookingHelperRegistration::processQRCODE($row, $message);
 				$message = EventbookingHelper::convertImgTags($message);
 				$message = EventbookingHelperHtml::loadSharedLayout('emailtemplates/tmpl/email.php', ['body' => $message, 'subject' => $subject]);
-				$message = EventbookingHelper::callOverridableHelperMethod('Html', 'processConditionalText', [$message]);
 
 				$mailer->addRecipient($email);
 				$mailer->setSubject($subject)

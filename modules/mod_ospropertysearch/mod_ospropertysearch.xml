@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.21.3" position="left" method="upgrade" client="site">
+    <name>Search properties</name>
+    <author>Dam Dang Thuc</author>
+    <authorEmail>damdt@joomservices.com</authorEmail>
+    <authorUrl>http://www.joomservices.com</authorUrl>
+    <version>3.21.3</version>
+    <creationDate>Feb 2012</creationDate>
+    <copyright>2024 http://www.joomdonation.com</copyright>
+    <license>http://www.joomdonation.com</license>
+    <description>Display Advanced Search Form of OS Property component</description>
+    <files>
+        <filename module="mod_ospropertysearch">mod_ospropertysearch.php</filename>
+        <filename>helper.php</filename>
+        <filename>index.html</filename>
+		<folder>tmpl</folder>
+		<folder>elements</folder>
+		<folder>asset</folder>
+    </files>
+	<languages>
+		<language tag="en-GB">languages/en-GB.mod_ospropertysearch.ini</language>
+		<language tag="de-DE">languages/de-DE.mod_ospropertysearch.ini</language>
+		<language tag="el-GR">languages/el-GR.mod_ospropertysearch.ini</language>
+		<language tag="es-ES">languages/es-ES.mod_ospropertysearch.ini</language>
+		<language tag="fr-FR">languages/fr-FR.mod_ospropertysearch.ini</language>
+		<language tag="it-IT">languages/it-IT.mod_ospropertysearch.ini</language>
+		<language tag="nl-NL">languages/nl-NL.mod_ospropertysearch.ini</language>
+		<language tag="pt-PT">languages/pt-PT.mod_ospropertysearch.ini</language>
+		<language tag="ru-RU">languages/ru-RU.mod_ospropertysearch.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic" addfieldpath="/modules/mod_ospropertysearch/elements">
+				<field
+					name="moduleclass_sfx"
+					type="text"
+					label="Module class suffix"
+					description="" />
+				<field name="layout" class="btn-group" type="radio" default="0" label="Layout of Search module" description="Please select the layout of Search module you want to have. The Horizontal layout will have fixed number of Search fields">
+					<option value="0">Vertical</option>
+					<option value="1">Horizontal</option>
+				</field>
+				<field name="show_basic_slide" class="btn-group" type="radio" default="0" label="Show Basic filter form" description="Do you want to show the basic details search form with fields Category, Property type and Price">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_details_slide" class="btn-group" type="radio" default="0" label="Show Details filter form" description="Do you want to show the details search form with fields like Bathrooms, Bedrooms v.v.">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_address_slide" class="btn-group" type="radio" default="0" label="Show Address filter form" description="Do you want to show the address search form">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_amenity_slide" class="btn-group" type="radio" default="0" label="Show Amenities filter form" description="Do you want to show the amenities search form">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_ordering_slide" class="btn-group" type="radio" default="0" label="Show Ordering form" description="Do you want to show the ordering search form">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_other_slide" class="btn-group" type="radio" default="0" label="Show Other filter form" description="Do you want to show the other search form with fields like Keyword, Feature filter">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+
+				<field name="show_agenttype" class="btn-group" type="radio" default="0" label="Show User filter field" description="Do you want to show User filter field.">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_keyword" class="btn-group" type="radio" default="0" label="OS_SEARCH_SHOW_KEYWORD" description="OS_SEARCH_SHOW_KEYWORD_EXPLAIN">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_category" class="btn-group" type="radio" default="0" label="OS_SEARCH_SHOW_CATEGORY" description="OS_SEARCH_SHOW_CATEGORY_EXPLAIN">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_type" class="btn-group" type="radio" default="0" label="OS_SEARCH_SHOW_PROPERTY_TYPE" description="OS_SEARCH_SHOW_PROPERTY_TYPE_EXPLAIN">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="property_type" type="propertytype" size="3" default="" label="Use Property type" description="Choose the property type which you want to display in search module" />
+				<field name="show_price" type="radio" class="btn-group" default="0" label="Show price filter" description="Do you want to show price filter">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_customfields" class="btn-group" type="radio" default="0" label="Show custom fields filter" description="Do you want to show groups and custom fields  filter">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="inputbox_width_site" type="text" class="input-mini" default="150" label="Inputbox width size (px)" description="Please enter the width size (pixel) of the inputobx" />
+				<field name="show_advancesearchform" class="btn-group" type="radio" default="0" label="Show Search form in results" description="After selecting the search criteria, you will be redirected to advance search page. In the top of this page, do you want to show the search form.">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="samepage" class="btn-group" type="radio" default="0" label="Results in current page" description="If you select Yes, the search result will be shown in the current page - with all modules in current page. If you select No, the search result will be shown in another page without modules in current page.">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="show_labels" class="btn-group" type="radio" default="1" label="Show Labels" description="Do you want to show Labels beside fields in Search module">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="labelinoneline" class="btn-group" type="radio" default="0" label="Labels and Fields in 2 lines" description="In case the width size of side bar position isn't enough, you can select to show Labels and Fields in different lines.">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="opengroups" class="btn-group" type="radio" default="0" label="Open all group" description="If you select Yes, all the fields of all groups in search module will be shown. If you select No, only fields of group Basic Information are shown.">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+				<field name="usechosen" class="btn-group" type="radio" default="1" label="Use Chosen style" description="Do you want to use chosen style">
+					<option value="1">OS_SEARCH_YES</option>
+					<option value="0">OS_SEARCH_NO</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

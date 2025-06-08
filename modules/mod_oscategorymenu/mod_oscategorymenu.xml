@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.21.0" method="upgrade" client="site">
+	<name>OS-Property Category Menu</name>
+	<author>Dang Thuc Dam</author>
+	<creationDate>November 2011</creationDate>
+	<copyright>Copyright (C) 2021 Ossolution Co.LTD. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomservices.com</authorUrl>
+	<version>3.21.0</version>
+	<description>Displays a list of OS Property categories and/or sub-categories in menu style.</description>
+	<files>
+		<filename module="mod_oscategorymenu">mod_oscategorymenu.php</filename>
+		<filename>index.html</filename>
+		<filename>helper.php</filename>
+        <folder>tmpl</folder>
+		<folder>css</folder>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="moduleclass_sfx" type="text" default=""
+					label="Module Class Suffix"
+					description="A suffix to be applied to the css class of the module (table.moduletable or div.moduletable), this allows individual module styling" />
+				<field name="menuclass_sfx" type="text" default=""
+					label="Menu Class Suffix"
+					description="A suffix to be applied to the css class of the menu items" />
+				<field name="ordering" type="list" default="l_asc" label="Ordering" description="Ordering options: list order is the order specified in the VM Category Tree">
+					<option value="ordering">List Order</option>
+					<option value="category_name">Alphabetical Order</option>
+				</field>
+				<field name="level_start" type="text" default="0"
+					label="Start Level"
+					description="Level to start rendering the categories at" />
+				<field name="level_end" type="text" default="0"
+						label="End Level"
+						description="Level to stop rendering the categories at (if set to 0, it is ignored)" />
+				<field name="show_arrow" type="radio" default="0" class="btn-group" label="Show Arrow" description="Do you want to show Arrow before Category Names">
+					<option value="1">Yes</option>
+					<option value="0">No</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

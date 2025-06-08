@@ -1,0 +1,28 @@
+.oscategorymenu ul li {
+    margin-bottom: 11px;
+    padding-bottom: 11px;
+    width: 100%;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.oscategorymenu ul {
+    margin: 0 !important;
+}
+
+.oscategorymenu ul .level0{
+	margin: 0 !important;
+}
+
+.oscategorymenu ul .level1{
+	margin: 0 0 10px 20px !important;
+}
+
+.oscategorymenu .rightarrow{
+	width: 0; 
+	height: 0; 
+	border-bottom: 5px solid transparent;  /* left arrow slant */
+	border-top: 5px solid transparent; /* right arrow slant */
+	border-left: 5px solid gray; /* bottom, add background color here */
+	font-size: 0;
+	line-height: 0;
+}

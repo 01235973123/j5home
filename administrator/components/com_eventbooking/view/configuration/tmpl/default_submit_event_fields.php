@@ -3,18 +3,13 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
 
 use Joomla\CMS\Language\Text;
 
-/**
- * Layout variable
- *
- * @var RADConfig $config
- */
 ?>
 <div class="control-group">
 	<div class="control-label">
@@ -294,14 +289,6 @@ use Joomla\CMS\Language\Text;
 	</div>
 	<div class="controls">
 		<?php echo EventbookingHelperHtml::getBooleanInput('fes_show_send_emails', $config->get('fes_show_send_emails', 0)); ?>
-	</div>
-</div>
-<div class="control-group">
-	<div class="control-label">
-		<?php echo EventbookingHelperHtml::getFieldLabel('fes_show_currency', Text::sprintf('EB_FES_SUBMIT_EVENT', Text::_('EB_CURRENCY'))); ?>
-	</div>
-	<div class="controls">
-		<?php echo EventbookingHelperHtml::getBooleanInput('fes_show_currency', $config->get('fes_show_currency', 0)); ?>
 	</div>
 </div>
 <div class="control-group">

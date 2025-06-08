@@ -3,7 +3,7 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
@@ -49,7 +49,6 @@ if (!$event->is_multiple_date
 			case 'duplicate_registration_waiting_list':
 				$msg = Text::_('EB_YOU_JOINED_WAITING_LIST_ALREADY');
 				break;
-			case 'all_ticket_types_are_full':
 			case 'event_is_full':
 				$msg = Text::_('EB_EVENT_IS_FULL');
 				break;

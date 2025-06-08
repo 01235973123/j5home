@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -354,15 +354,11 @@ class EventbookingModelCoupon extends RADModelAdmin
 			$data ['valid_to'] = '';
 		}
 
-		$data['used']                   = 0;
-		$data ['published']             = $input->getInt('published', 1);
-		$data['apply_to']               = $input->getInt('apply_to', 0);
-		$data['enable_for']             = $input->getInt('enable_for', 0);
-		$data['min_number_registrants'] = $input->getInt('min_number_registrants', 0);
-		$data['max_number_registrants'] = $input->getInt('max_number_registrants', 0);
-		$data['min_payment_amount']     = $input->getFloat('min_payment_amount', 0);
-		$data['max_payment_amount']     = $input->getFloat('max_payment_amount', 0);
-		$data['note']                   = $input->getString('note');
+		$data['used']       = 0;
+		$data ['published'] = $input->getInt('published', 1);
+		$data['apply_to']   = $input->getInt('apply_to', 0);
+		$data['enable_for'] = $input->getInt('enable_for', 0);
+		$data['note']       = $input->getString('note');
 
 		for ($i = 0; $i < $numberCoupon; $i++)
 		{

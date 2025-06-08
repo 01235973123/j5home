@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -104,7 +104,6 @@ class EventbookingControllerEvent extends EventbookingController
 			'short_description',
 			'description',
 			'event_password',
-			'free_event_registration_status',
 			'access',
 			'registration_access',
 			'featured',
@@ -253,7 +252,7 @@ class EventbookingControllerEvent extends EventbookingController
 
 			return false;
 		}
-
+		
 		return parent::allowDelete($id);
 	}
 }

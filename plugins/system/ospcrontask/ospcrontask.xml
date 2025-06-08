@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.21.0" type="plugin" group="system" method="upgrade">
+	<name>OS Property - Cron task - Alert notification</name>
+	<author>Ossolution</author>
+	<creationDate>2022-03-27</creationDate>
+	<copyright>Copyright (C) 2012 - 2023 Ossolution Team. All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
+	<authorEmail>tuanpn@joomdonation.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>3.21.0</version>
+	<description>This plugin is used send alert emails to agents</description>
+	<files>
+		<filename plugin="ospcrontask">ospcrontask.php</filename>
+		<filename>index.html</filename>
+	</files>	
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="last_run" label="Last Run Time" type="hidden" readonly="true" size="30" description="Store Last Run Time of the plugin" />
+				<field name="cache_time" label="Cache Time (Minutes)" type="number" min="0" step="1" default="20"/>
+				<field name="trigger_reminder_code" label="Trigger Reminder Code (Leave empty unless you are using cron job to send reminder)" type="text" size="30" default="OSPCRON" description="Enter a secret string here if you want to use cron job to trigger sending reminder. Refer to our documentation for more details" />
+			</fieldset>
+		</fields>
+	</config>	
+</extension>

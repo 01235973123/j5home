@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -12,7 +12,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Mail\Mail;
-use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Mail\MailHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
@@ -39,13 +38,12 @@ class EventbookingHelperMail
 	public static $fromEmail;
 
 	/**
-	 * Indicate that the email is sent to administrators
+	 * Mark email sent to admin
 	 */
 	public const SEND_TO_ADMIN = 1;
 
 	/**
-	 * Indicate that email is sent to registrants
-	 *
+	 * Mark email sent to registrant
 	 */
 	public const SEND_TO_REGISTRANT = 2;
 
@@ -67,7 +65,6 @@ class EventbookingHelperMail
 			['admin_email_body', 'user_email_body', 'user_email_body_offline', 'group_member_email_body'],
 			$fieldSuffix
 		);
-
 		EventbookingHelper::setEventStringsDataFromCategory($event, $category, ['user_email_subject', 'notification_emails'], $fieldSuffix);
 
 		if ($event->send_emails != -1)
@@ -219,11 +216,7 @@ class EventbookingHelperMail
 		$event       = EventbookingHelperDatabase::getEvent($row->event_id, null, $fieldSuffix);
 		$logEmails   = static::loggingEnabled('new_registration_emails', $config);
 
-		if ($fieldSuffix && strlen($event->{'user_email_subject' . $fieldSuffix}))
-		{
-			$subject = $event->{'user_email_subject' . $fieldSuffix};
-		}
-		elseif (strlen($event->user_email_subject))
+		if (strlen($event->user_email_subject))
 		{
 			$subject = $event->user_email_subject;
 		}
@@ -289,6 +282,7 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 		$body    = EventbookingHelperRegistration::processQRCODE($row, $body);
 
 		if ($config->send_invoice_to_customer && $invoiceFilePath)
@@ -312,16 +306,7 @@ class EventbookingHelperMail
 		}
 
 		//Generate and send ics file to registrants
-		if (!isset($event->send_ics_file) || $event->send_ics_file === '')
-		{
-			$sendIcsFile = $config->send_ics_file;
-		}
-		else
-		{
-			$sendIcsFile = $event->send_ics_file;
-		}
-
-		if ($sendIcsFile)
+		if ($config->send_ics_file)
 		{
 			$icFile = static::addRegistrationIcs($mailer, $row, $event, $config);
 
@@ -345,149 +330,11 @@ class EventbookingHelperMail
 				}
 			}
 
-			static::send($mailer, $sendTos, $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'new_registration_emails');
-
+			static::send($mailer, $sendTos, $subject, $body, $logEmails, 2, 'new_registration_emails');
 			$mailer->clearAllRecipients();
 		}
 
 		return $attachments;
-	}
-
-	/**
-	 * Send offline payment email to registrants
-	 *
-	 * @param   EventbookingTableRegistrant  $row
-	 * @param   RADConfig                    $config
-	 *
-	 * @return void
-	 */
-	public static function sendOfflinePaymentEmailToRegistrant($row, $config)
-	{
-		if (!MailHelper::isEmailAddress($row->email))
-		{
-			return;
-		}
-
-		$logEmails = static::loggingEnabled('new_registration_emails', $config);
-
-		EventbookingHelper::loadRegistrantLanguage($row);
-
-		$message     = EventbookingHelper::getMessages();
-		$fieldSuffix = EventbookingHelper::getFieldSuffix($row->language);
-		$event       = EventbookingHelperDatabase::getEvent($row->event_id, null, $fieldSuffix);
-		$category    = EventbookingHelperDatabase::getCategory($event->main_category_id);
-
-		EventbookingHelper::setEventMessagesDataFromCategory($event, $category, ['registration_approved_email_body'], $fieldSuffix);
-		EventbookingHelper::setEventStringsDataFromCategory($event, $category, ['notification_emails'], $fieldSuffix);
-
-		$mailer = static::getMailer($config, $event);
-
-		if ($config->multiple_booking)
-		{
-			$rowFields = EventbookingHelperRegistration::getFormFields($row->id, 4, $row->language);
-		}
-		elseif ($row->is_group_billing)
-		{
-			$rowFields = EventbookingHelperRegistration::getFormFields($row->event_id, 1, $row->language);
-		}
-		else
-		{
-			$rowFields = EventbookingHelperRegistration::getFormFields($row->event_id, 0, $row->language);
-		}
-
-		$form = new RADForm($rowFields);
-		$data = EventbookingHelperRegistration::getRegistrantData($row, $rowFields);
-		$form->bind($data);
-		$form->buildFieldsDependency();
-
-		$replaces = EventbookingHelper::callOverridableHelperMethod('Registration', 'buildTags', [$row, $form, $event, $config], 'Helper');
-
-		if ($fieldSuffix && strlen($event->{'user_email_subject' . $fieldSuffix}))
-		{
-			$subject = $event->{'user_email_subject' . $fieldSuffix};
-		}
-		elseif (strlen($event->user_email_subject))
-		{
-			$subject = $event->user_email_subject;
-		}
-		elseif ($fieldSuffix && strlen($message->{'user_email_subject' . $fieldSuffix}))
-		{
-			$subject = $message->{'user_email_subject' . $fieldSuffix};
-		}
-		else
-		{
-			$subject = $message->user_email_subject;
-		}
-
-		$offlineSuffix = str_replace('os_offline', '', $row->payment_method);
-
-		if ($offlineSuffix && $fieldSuffix && EventbookingHelper::isValidMessage(
-				$message->{'user_email_body_offline' . $offlineSuffix . $fieldSuffix}
-			))
-		{
-			$body = $message->{'user_email_body_offline' . $offlineSuffix . $fieldSuffix};
-		}
-		elseif ($offlineSuffix && EventbookingHelper::isValidMessage($message->{'user_email_body_offline' . $offlineSuffix}))
-		{
-			$body = $message->{'user_email_body_offline' . $offlineSuffix};
-		}
-		elseif ($fieldSuffix && EventbookingHelper::isValidMessage($event->{'user_email_body_offline' . $fieldSuffix}))
-		{
-			$body = $event->{'user_email_body_offline' . $fieldSuffix};
-		}
-		elseif ($fieldSuffix && EventbookingHelper::isValidMessage($message->{'user_email_body_offline' . $fieldSuffix}))
-		{
-			$body = $message->{'user_email_body_offline' . $fieldSuffix};
-		}
-		elseif (EventbookingHelper::isValidMessage($event->user_email_body_offline))
-		{
-			$body = $event->user_email_body_offline;
-		}
-		else
-		{
-			$body = $message->user_email_body_offline;
-		}
-
-		$subject = EventbookingHelper::replaceUpperCaseTags($subject, $replaces);
-		$body    = EventbookingHelper::replaceUpperCaseTags($body, $replaces);
-		$body    = EventbookingHelperRegistration::processQRCODE($row, $body);
-
-		if ($config->activate_invoice_feature
-			&& $config->send_invoice_to_customer
-			&& $row->invoice_number && !$row->group_id)
-		{
-			$invoiceFilePath = EventbookingHelper::callOverridableHelperMethod('Helper', 'generateInvoicePDF', [$row]);
-
-			if (!$invoiceFilePath)
-			{
-				$invoiceFilePath = JPATH_ROOT . '/media/com_eventbooking/invoices/' . EventbookingHelper::callOverridableHelperMethod(
-						'Helper',
-						'formatInvoiceNumber',
-						[$row->invoice_number, $config, $row]
-					) . '.pdf';
-			}
-
-			$mailer->addAttachment($invoiceFilePath);
-		}
-
-		$sendTos = [$row->email];
-
-		foreach ($rowFields as $rowField)
-		{
-			if ($rowField->receive_confirmation_email && !empty($replaces[$rowField->name]) && MailHelper::isEmailAddress(
-					$replaces[$rowField->name]
-				))
-			{
-				$sendTos[] = $replaces[$rowField->name];
-			}
-		}
-
-		if ($config->send_event_attachments == 2 && $row->published == 1)
-		{
-			static::addEventAttachments($mailer, $row, $event, $config);
-		}
-
-		static::send($mailer, $sendTos, $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'new_registration_emails');
 	}
 
 	/**
@@ -584,7 +431,6 @@ class EventbookingHelperMail
 		$memberReplaces['description']       = $replaces['short_description'];
 		$memberReplaces['location']          = $replaces['location'];
 		$memberReplaces['event_link']        = $replaces['event_link'];
-		$memberReplaces['register_date']     = $replaces['register_date'];
 
 		$memberReplaces['download_certificate_link'] = $replaces['download_certificate_link'];
 
@@ -640,25 +486,14 @@ class EventbookingHelperMail
 			$memberReplaces['id']     = $rowMember->id;
 			$memberReplaces['amount'] = EventbookingHelper::formatAmount($rowMember->amount, $config);
 
-			if ($rowMember->ticket_number > 0)
-			{
-				$memberReplaces['ticket_number'] = EventbookingHelperTicket::formatTicketNumber(
-					$event->ticket_prefix,
-					$rowMember->ticket_number,
-					$config
-				);
-			}
-			else
-			{
-				$memberReplaces['ticket_number'] = '';
-			}
-
 			$groupMemberEmailSubject = $subject;
 			$groupMemberEmailBody    = $body;
 
 			$groupMemberEmailSubject = EventbookingHelper::replaceCaseInsensitiveTags($groupMemberEmailSubject, $memberReplaces);
 			$groupMemberEmailBody    = EventbookingHelper::replaceCaseInsensitiveTags($groupMemberEmailBody, $memberReplaces);
-			$groupMemberEmailBody    = EventbookingHelperRegistration::processQRCODE($rowMember, $groupMemberEmailBody);
+
+			$groupMemberEmailBody = EventbookingHelper::convertImgTags($groupMemberEmailBody);
+			$groupMemberEmailBody = EventbookingHelperRegistration::processQRCODE($rowMember, $groupMemberEmailBody);
 
 			foreach ($attachments as $attachment)
 			{
@@ -691,15 +526,7 @@ class EventbookingHelperMail
 				}
 			}
 
-			static::send(
-				$mailer,
-				[$rowMember->email],
-				$groupMemberEmailSubject,
-				$groupMemberEmailBody,
-				$logEmails,
-				self::SEND_TO_REGISTRANT,
-				'new_registration_emails'
-			);
+			static::send($mailer, [$rowMember->email], $groupMemberEmailSubject, $groupMemberEmailBody, $logEmails, 2, 'new_registration_emails');
 			$mailer->clearAllRecipients();
 		}
 	}
@@ -770,13 +597,17 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
-		$body    = EventbookingHelperRegistration::processQRCODE($row, $body);
+
+
+		$body = EventbookingHelper::convertImgTags($body);
+		$body = EventbookingHelperRegistration::processQRCODE($row, $body);
 
 		if ($config->send_email_to_event_creator && $event->created_by)
 		{
 			$eventCreator = User::getInstance($event->created_by);
 
 			if (!empty($eventCreator->email)
+				&& !$eventCreator->authorise('core.admin')
 				&& MailHelper::isEmailAddress($eventCreator->email)
 				&& !in_array($eventCreator->email, $emails))
 			{
@@ -789,7 +620,7 @@ class EventbookingHelperMail
 			$mailer->addReplyTo($row->email);
 		}
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_ADMIN, 'new_registration_emails');
+		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'new_registration_emails');
 	}
 
 	/**
@@ -873,6 +704,7 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceUpperCaseTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceUpperCaseTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 		$body    = EventbookingHelperRegistration::processQRCODE($row, $body);
 
 		if (str_contains($body, '[QRCODE]'))
@@ -967,7 +799,7 @@ class EventbookingHelperMail
 			static::addEventAttachments($mailer, $row, $event, $config);
 		}
 
-		static::send($mailer, $sendTos, $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'registration_approved_emails');
+		static::send($mailer, $sendTos, $subject, $body, $logEmails, 2, 'registration_approved_emails');
 
 		if ($fieldSuffix && strlen($message->{'admin_registration_approved_email_subject' . $fieldSuffix}))
 		{
@@ -1035,7 +867,7 @@ class EventbookingHelperMail
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_ADMIN, 'registration_approved_emails');
+		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'registration_approved_emails');
 	}
 
 	/**
@@ -1115,8 +947,9 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceUpperCaseTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceUpperCaseTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
-		static::send($mailer, [$row->email], $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'registration_cancel_emails');
+		static::send($mailer, [$row->email], $subject, $body, $logEmails, 2, 'registration_cancel_emails');
 
 		// Send notification to administrator
 		if ($fieldSuffix && strlen($message->{'admin_cancel_registration_notification_email_subject' . $fieldSuffix}))
@@ -1173,8 +1006,9 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_ADMIN, 'registration_cancel_emails');
+		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'registration_cancel_emails');
 	}
 
 	/**
@@ -1222,6 +1056,7 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceUpperCaseTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceUpperCaseTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
 		if (MailHelper::isEmailAddress($row->email))
 		{
@@ -1253,7 +1088,7 @@ class EventbookingHelperMail
 				}
 			}
 
-			static::send($mailer, $sendTos, $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'waiting_list_emails');
+			static::send($mailer, $sendTos, $subject, $body, $logEmails, 2, 'waiting_list_emails');
 
 			$mailer->clearAllRecipients();
 		}
@@ -1265,6 +1100,7 @@ class EventbookingHelperMail
 			$eventCreator = User::getInstance($event->created_by);
 
 			if (!empty($eventCreator->email)
+				&& !$eventCreator->authorise('core.admin')
 				&& MailHelper::isEmailAddress($eventCreator->email)
 				&& !in_array($eventCreator->email, $emails))
 			{
@@ -1293,13 +1129,14 @@ class EventbookingHelperMail
 		$subject = str_ireplace('[EVENT_TITLE]', $event->title, $subject);
 		$subject = EventbookingHelper::replaceUpperCaseTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceUpperCaseTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
 		if (MailHelper::isEmailAddress($row->email))
 		{
 			$mailer->addReplyTo($row->email);
 		}
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_ADMIN, 'waiting_list_emails');
+		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'waiting_list_emails');
 	}
 
 	/**
@@ -1396,16 +1233,9 @@ class EventbookingHelperMail
 
 				$subject = EventbookingHelper::replaceUpperCaseTags($subject, $replaces);
 				$body    = EventbookingHelper::replaceUpperCaseTags($body, $replaces);
+				$body    = EventbookingHelper::convertImgTags($body);
 
-				static::send(
-					$mailer,
-					[$registrant->email],
-					$subject,
-					$body,
-					$logEmails,
-					self::SEND_TO_REGISTRANT,
-					'waiting_list_notification_emails'
-				);
+				static::send($mailer, [$registrant->email], $subject, $body, $logEmails, 2, 'waiting_list_notification_emails');
 
 				$mailer->clearAddresses();
 			}
@@ -1471,7 +1301,7 @@ class EventbookingHelperMail
 				$mailer->addAttachment($ticketFilePath);
 			}
 
-			static::send($mailer, [$row->email], $subject, $body, $logEmails, self::SEND_TO_REGISTRANT);
+			static::send($mailer, [$row->email], $subject, $body, $logEmails, 2);
 
 			$mailer->clearAttachments();
 			$mailer->clearAllRecipients();
@@ -1499,8 +1329,9 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_ADMIN);
+		static::send($mailer, $emails, $subject, $body, $logEmails, 1);
 	}
 
 	/**
@@ -1521,17 +1352,30 @@ class EventbookingHelperMail
 
 		$mailer = static::getMailer($config);
 
-		$replaces = EventbookingHelperRegistration::buildEventTags($row, $config, null, $Itemid);
+		$replaces = [
+			'user_id'     => $user->id,
+			'username'    => $user->username,
+			'name'        => $user->name,
+			'email'       => $user->email,
+			'event_id'    => $row->id,
+			'event_title' => $row->title,
+			'category'    => $category->name,
+			'event_date'  => HTMLHelper::_('date', $row->event_date, $config->event_date_format, null),
+			'event_link'  => Uri::root() . 'index.php?option=com_eventbooking&view=event&layout=form&id=' . $row->id . '&Itemid=' . $Itemid,
+		];
 
-		$replaces = array_merge($replaces, [
-			'user_id'    => $user->id,
-			'username'   => $user->username,
-			'name'       => $user->name,
-			'email'      => $user->email,
-			'category'   => $category->name,
-			'event_link' => Uri::root() . 'index.php?option=com_eventbooking&view=event&layout=form&id=' . $row->id . '&Itemid=' . $Itemid,
-		]);
-		
+		// Support event custom fields text
+		if ($config->event_custom_field
+			&& file_exists(JPATH_ROOT . '/components/com_eventbooking/fields.xml'))
+		{
+			EventbookingHelperData::prepareCustomFieldsData([$row]);
+
+			foreach ($row->paramData as $customFieldName => $param)
+			{
+				$replaces[strtoupper($customFieldName)] = $param['value'];
+			}
+		}
+
 		//Notification email send to user
 		if ($fieldSuffix && strlen($message->{'submit_event_user_email_subject' . $fieldSuffix}))
 		{
@@ -1555,10 +1399,11 @@ class EventbookingHelperMail
 		{
 			$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 			$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+			$body    = EventbookingHelper::convertImgTags($body);
 
 			if (MailHelper::isEmailAddress($user->email))
 			{
-				static::send($mailer, [$user->email], $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'new_event_notification_emails');
+				static::send($mailer, [$user->email], $subject, $body, $logEmails, 2, 'new_event_notification_emails');
 				$mailer->clearAllRecipients();
 			}
 		}
@@ -1601,8 +1446,9 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_ADMIN, 'new_event_notification_emails');
+		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'new_event_notification_emails');
 	}
 
 	/**
@@ -1665,8 +1511,9 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
-		static::send($mailer, [$eventCreator->email], $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'event_approved_emails');
+		static::send($mailer, [$eventCreator->email], $subject, $body, $logEmails, 2, 'event_approved_emails');
 	}
 
 	/**
@@ -1718,11 +1565,12 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
 		$emails = explode(',', $config->notification_emails);
 		$emails = array_map('trim', $emails);
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'event_update_emails');
+		static::send($mailer, $emails, $subject, $body, $logEmails, 2, 'event_update_emails');
 	}
 
 	/**
@@ -1936,9 +1784,10 @@ class EventbookingHelperMail
 
 			$replaces = EventbookingHelperRegistration::getRegistrationReplaces($row);
 
-			$emailSubject = EventbookingHelper::replaceCaseInsensitiveTags($emailSubject, $replaces);
-			$emailBody    = EventbookingHelper::replaceCaseInsensitiveTags($emailBody, $replaces);
+			$emailSubject = EventbookingHelper::replaceUpperCaseTags($emailSubject, $replaces);
+			$emailBody    = EventbookingHelper::replaceUpperCaseTags($emailBody, $replaces);
 			$emailBody    = EventbookingHelperRegistration::processQRCODE($row, $emailBody);
+			$emailBody    = EventbookingHelper::convertImgTags($emailBody);
 
 			if ($row->from_name && MailHelper::isEmailAddress($row->from_email))
 			{
@@ -1964,7 +1813,7 @@ class EventbookingHelperMail
 				$mailer->addAttachment($filePath, $fileName);
 			}
 
-			static::send($mailer, [$row->email], $emailSubject, $emailBody, $logEmails, self::SEND_TO_REGISTRANT, 'reminder_emails');
+			static::send($mailer, [$row->email], $emailSubject, $emailBody, $logEmails, 2, 'reminder_emails');
 
 			$mailer->clearAddresses();
 
@@ -2072,6 +1921,7 @@ class EventbookingHelperMail
 
 			$emailSubject = EventbookingHelper::replaceUpperCaseTags($emailSubject, $replaces);
 			$emailBody    = EventbookingHelper::replaceUpperCaseTags($emailBody, $replaces);
+			$emailBody    = EventbookingHelper::convertImgTags($emailBody);
 
 			if ($row->from_name && MailHelper::isEmailAddress($row->from_email))
 			{
@@ -2083,7 +1933,7 @@ class EventbookingHelperMail
 				$useEventSenderSetting = false;
 			}
 
-			static::send($mailer, [$row->email], $emailSubject, $emailBody, $logEmails, self::SEND_TO_REGISTRANT, 'deposit_payment_reminder_emails');
+			static::send($mailer, [$row->email], $emailSubject, $emailBody, $logEmails, 2, 'deposit_payment_reminder_emails');
 			$mailer->clearAddresses();
 
 			if ($useEventSenderSetting)
@@ -2193,6 +2043,7 @@ class EventbookingHelperMail
 
 			$emailSubject = EventbookingHelper::replaceUpperCaseTags($emailSubject, $replaces);
 			$emailBody    = EventbookingHelper::replaceUpperCaseTags($emailBody, $replaces);
+			$emailBody    = EventbookingHelper::convertImgTags($emailBody);
 
 			if ($row->from_name && MailHelper::isEmailAddress($row->from_email))
 			{
@@ -2204,7 +2055,7 @@ class EventbookingHelperMail
 				$useEventSenderSetting = false;
 			}
 
-			static::send($mailer, [$row->email], $emailSubject, $emailBody, $logEmails, self::SEND_TO_ADMIN, 'offline_payment_reminder_emails');
+			static::send($mailer, [$row->email], $emailSubject, $emailBody, $logEmails, 1, 'offline_payment_reminder_emails');
 			$mailer->clearAddresses();
 
 			if ($useEventSenderSetting)
@@ -2269,9 +2120,9 @@ class EventbookingHelperMail
 
 			$emailSubject = EventbookingHelper::replaceUpperCaseTags($emailSubject, $replaces);
 			$emailBody    = EventbookingHelper::replaceUpperCaseTags($emailBody, $replaces);
+			$emailBody    = EventbookingHelper::convertImgTags($emailBody);
 
-			static::send($mailer, [$row->email], $emailSubject, $emailBody, $logEmails, self::SEND_TO_ADMIN, 'event_cancel_emails');
-
+			static::send($mailer, [$row->email], $emailSubject, $emailBody, $logEmails, 1, 'event_cancel_emails');
 			$mailer->clearAddresses();
 		}
 	}
@@ -2286,14 +2137,7 @@ class EventbookingHelperMail
 	 */
 	public static function getMailer($config, $event = null)
 	{
-		if (version_compare(JVERSION, '4.4.0', 'ge'))
-		{
-			$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
-		}
-		else
-		{
-			$mailer = Factory::getMailer();
-		}
+		$mailer = Factory::getMailer();
 
 		if ($config->reply_to_email && MailHelper::isEmailAddress($config->reply_to_email))
 		{
@@ -2589,14 +2433,14 @@ class EventbookingHelperMail
 
 			$fileName = JPATH_ROOT . '/media/com_eventbooking/icsfiles/' . $row->id . '.ics';
 			EventbookingHelper::generateIcs($rowEvents, static::$fromEmail, static::$fromName, $fileName);
-			$mailer->addAttachment($fileName, 'Events.ics', 'base64', 'text/calendar');
+			$mailer->addAttachment($fileName, 'Events.ics');
 		}
 		else
 		{
 			$event->registrant_params = $row->params;
 			$fileName                 = JPATH_ROOT . '/media/com_eventbooking/icsfiles/' . $row->id . '.ics';
 			EventbookingHelper::generateIcs([$event], static::$fromEmail, static::$fromName, $fileName);
-			$mailer->addAttachment($fileName, ApplicationHelper::stringURLSafe($event->title) . '.ics', 'base64', 'text/calendar');
+			$mailer->addAttachment($fileName, ApplicationHelper::stringURLSafe($event->title) . '.ics');
 		}
 
 		return $icsFile;
@@ -2637,8 +2481,6 @@ class EventbookingHelperMail
 			return;
 		}
 
-		$emails = array_values($emails);
-
 		$email     = $emails[0];
 		$bccEmails = [];
 		$mailer->addRecipient($email);
@@ -2649,8 +2491,6 @@ class EventbookingHelperMail
 			$bccEmails = $emails;
 			$mailer->addBcc($bccEmails);
 		}
-
-		$body = EventbookingHelper::convertImgTags($body);
 
 		$emailBody = EventbookingHelperHtml::loadSharedLayout('emailtemplates/tmpl/email.php', ['body' => $body, 'subject' => $subject]);
 
@@ -2845,10 +2685,11 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
 		$logEmails = static::loggingEnabled('request_payment_emails', $config);
 
-		static::send($mailer, [$row->email], $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'request_payment_emails');
+		static::send($mailer, [$row->email], $subject, $body, $logEmails, 2, 'request_payment_emails');
 	}
 
 	/**
@@ -2921,6 +2762,7 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 		$body    = EventbookingHelperRegistration::processQRCODE($row, $body);
 
 		[$fileName, $filePath] = EventbookingHelper::callOverridableHelperMethod('Certificate', 'generateCertificates', [[$row], $config]);
@@ -3000,8 +2842,9 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
-		static::send($mailer, [$row->email], $subject, $body, $logEmails, self::SEND_TO_REGISTRANT, 'registration_cancel_emails');
+		static::send($mailer, [$row->email], $subject, $body, $logEmails, 2, 'registration_cancel_emails');
 
 		$mailer->clearAllRecipients();
 
@@ -3036,6 +2879,7 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
 		$category = EventbookingHelperDatabase::getCategory($event->main_category_id);
 
@@ -3066,7 +2910,7 @@ class EventbookingHelperMail
 			}
 		}
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_ADMIN, 'registration_cancel_emails');
+		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'registration_cancel_emails');
 	}
 
 	/**
@@ -3093,6 +2937,7 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
 		if (strlen(trim($event->notification_emails)) > 0)
 		{
@@ -3123,7 +2968,7 @@ class EventbookingHelperMail
 			$mailer->addAttachment($attachment);
 		}
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_ADMIN, 'registrants_list_email');
+		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'registrants_list_email');
 	}
 
 	/**
@@ -3173,8 +3018,9 @@ class EventbookingHelperMail
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$body    = EventbookingHelper::replaceCaseInsensitiveTags($body, $replaces);
+		$body    = EventbookingHelper::convertImgTags($body);
 
-		static::send($mailer, $emails, $subject, $body, $logEmails, self::SEND_TO_ADMIN, 'icpr_notify_email');
+		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'icpr_notify_email');
 	}
 
 	/**

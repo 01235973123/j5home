@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -628,13 +628,10 @@ $formHorizontalClass = $bootstrapHelper->getClassMapping('form form-horizontal')
 </div>
 
 <?php
-Factory::getApplication()
-	->getDocument()
-	->addScriptOptions('selectedState', $selectedState)
+HTMLHelper::_('behavior.core');
+Factory::getApplication()->getDocument()->addScriptOptions('selectedState', $selectedState)
 	->addScriptOptions('rootUri', Uri::root(true))
-	->getWebAssetManager()
-	->useScript('core')
-	->addInlineScript(' var siteUrl = "' . EventbookingHelper::getSiteUrl() . '";');
+	->addScriptDeclaration(' var siteUrl = "' . EventbookingHelper::getSiteUrl() . '";');
 
 EventbookingHelperHtml::addOverridableScript('media/com_eventbooking/js/site-registrant-default.min.js');
 

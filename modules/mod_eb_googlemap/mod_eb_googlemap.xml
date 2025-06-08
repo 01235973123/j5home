@@ -4,9 +4,9 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <version>5.0.4</version>
+    <version>5.0.0</version>
     <creationDate>Feb 2014</creationDate>
-    <copyright>Copyright (C) 2010 - 2025 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2010 - 2024 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <description>This module displays locations and it's events on a map</description>
     <media destination="mod_eb_googlemap">

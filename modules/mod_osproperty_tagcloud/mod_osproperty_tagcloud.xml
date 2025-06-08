@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.21.0" method="upgrade" client="site">
+    <name>OS Property Tag Cloud</name>
+	<author>Ossolution</author>
+	<creationDate>June 2012</creationDate>
+	<copyright>Copyright (C) 2021 Ossolution team. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>3.21.0</version>
+    <description>This module displays an automatically generated tag cloud from the content on your OS Property Property data.</description>
+    <files>
+        <filename module="mod_osproperty_tagcloud">mod_osproperty_tagcloud.php</filename>
+        <filename>helper.php</filename>
+    </files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">			
+				<field name="moduleclass_sfx" type="text" default="" label="Module Class" description="Module Class Suffix" />
+				<field name="minsize" type="text" size="25" default="10" label="Min Font Size (px)" description="The size of the smallest element in the list of tags in pixels. Default 10." />
+				<field name="maxsize" type="text" size="25" default="25" label="Max Font Size (px)" description="The size of the largest element in the list of tags in pixels. Default 25." />
+				<field name="tagcount" type="text" size="25" default="25" label="Word Count" description="The amount of words you would like to show in your tag cloud. Default 25." />
+				<field name="limit" type="text" size="25" default="10" label="Property Limit" description="If you have hundreds of properties, you probably want to limit the results being queried. Default 10." />        
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="excludelist" type="textarea" cols="25" label="Excluded Words" description="Write here words you would like to not be displayed in your tag cloud. (plurals will be excluded automatically, as will any word shorter than 3 chars.)" rows="3" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

@@ -3,13 +3,14 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 
 abstract class EventbookingHelperModal
 {
@@ -24,22 +25,19 @@ abstract class EventbookingHelperModal
 
 		static $loadedSelectors = [];
 
-		$wa = Factory::getApplication()
-			->getDocument()
-			->getWebAssetManager();
-
 		if ($scriptLoaded === false)
 		{
-			$wa->registerAndUseScript('com_eventbooking.tingle', 'media/com_eventbooking/assets/js/tingle/tingle.min.js')
-				->registerAndUseStyle('com_eventbooking.tingle', 'media/com_eventbooking/assets/js/tingle/tingle.min.css');
-
+			$document = Factory::getApplication()->getDocument();
+			$rootUri  = Uri::root(true);
+			$document->addScript($rootUri . '/media/com_eventbooking/assets/js/tingle/tingle.min.js')
+				->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/tingle/tingle.min.css');
 			$scriptLoaded = true;
 
 			$config = EventbookingHelper::getConfig();
 
 			if ($config->activate_transparent)
 			{
-				$wa->addInlineStyle('.tingle-modal-box {background-color: transparent;};');
+				$document->addStyleDeclaration('.tingle-modal-box {background-color: transparent;};');
 			}
 		}
 
@@ -72,7 +70,7 @@ abstract class EventbookingHelperModal
 		    });
 SCRIPT;
 
-		$wa->addInlineScript($script);
+		Factory::getApplication()->getDocument()->addScriptDeclaration($script);
 
 		$loadedSelectors[$selector] = true;
 	}

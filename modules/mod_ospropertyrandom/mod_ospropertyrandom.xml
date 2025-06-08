@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.21.2" client="site" position="left" method="upgrade">
+    <name>Random Properties</name>
+    <author>Dam Dang Thuc</author>
+    <authorEmail>damdt@joomservices.com</authorEmail>
+    <authorUrl>http://www.joomdonation.com</authorUrl>
+    <version>3.21.2</version>
+    <creationDate>Octorber 2011</creationDate>
+    <copyright>2024 http://www.joomdonation.com</copyright>
+    <license>http://www.joomservices.com</license>
+    <description>This module is used to show Properties in many ways with a lot of Configure Options. You can use this module to show Featured, Sold, Open or Recent Viewed properties</description>
+    <files>
+        <filename module="mod_ospropertyrandom">mod_ospropertyrandom.php</filename>
+        <filename>helper.php</filename>
+        <filename>index.html</filename>
+        <folder>elements</folder>
+		<folder>tmpl</folder>
+		<folder>asset</folder>
+    </files>
+	<languages>
+		<language tag="en-GB">en-GB.mod_ospropertyrandom.ini</language>
+		<language tag="de-DE">de-DE.mod_ospropertyrandom.ini</language>
+		<language tag="el-GR">el-GR.mod_ospropertyrandom.ini</language>
+		<language tag="es-ES">es-ES.mod_ospropertyrandom.ini</language>
+		<language tag="fr-FR">fr-FR.mod_ospropertyrandom.ini</language>
+		<language tag="it-IT">it-IT.mod_ospropertyrandom.ini</language>
+		<language tag="nl-NL">nl-NL.mod_ospropertyrandom.ini</language>
+		<language tag="pt-PT">pt-PT.mod_ospropertyrandom.ini</language>
+		<language tag="ru-RU">ru-RU.mod_ospropertyrandom.ini</language>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic" addfieldpath="/modules/mod_ospropertyrandom/elements">
+				<field name="moduleclass_sfx" type="text" default="" label="Module Class Suffix" description="PARAMMODULECLASSSUFFIX" />
+				<field name="modulelayout" type="list" default="0" class="chosen" label="Select Layout" description="Random Properties has 2 layouts: Default and Showcase. You can select one of 2 layouts for your module">
+					<option value="0">Default layout</option>
+					<option value="1">Showcase layout</option>
+				</field>
+				<field name="mstyle" type="radio" class="btn-group" default="0" label="Direction" description="Select direction of this module">
+					<option value="0">Vertical</option>
+					<option value="1">Horizontal</option>
+				</field>
+				<field name="properties_per_row" type="list" default="1" class="input-mini" label="Properties per row" description="Please enter number properties per row.">
+					<option value="1">1</option>
+					<option value="2">2</option>
+					<option value="3">3</option>
+					<option value="4">4</option>
+					<option value="6">6</option>
+				</field>
+				<field name="max_properties" type="text" default="" label="Max properties" description="Please enter max of properties to be shown Leave this field empty if you want to show them all" class="input-mini" />
+				<field name="enable_nav" type="radio" default="0" class="btn-group" label="Enable Page Navigation" description="Do you want to enable Page Navigation in Random Properties module">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="nproperties" type="text" default="" label="Number properties per page" description="In case you enabling Page Navigation, please enter number properties showing per page" class="input-mini" />
+				<field name="show_small_desc" type="radio" default="0" class="btn-group" label="OSPROPERTY_SHOW_SMALL_DESCRIPTION" description="ALLOW_SHOW_PROPERTY_SMALL_DESCRIPTION">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="show_price" type="radio" default="0" class="btn-group" label="OSPROPERTY_SHOW_PRICE" description="ALLOW_SHOW_PROPERTY_PRICE">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="show_address" type="radio" default="0" class="btn-group" label="OSPROPERTY_SHOW_ADDRESS" description="ALLOW_SHOW_PROPERTY_ADDRESS">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="show_marketstatus" type="radio" default="0" class="btn-group" label="Show Market Status" description="Do you want to show Market Status">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="show_bathrooms" type="radio" default="0" class="btn-group" label="Show bathrooms" description="Do you want to show bathrooms">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="show_bedrooms" type="radio" default="0" class="btn-group" label="Show bedrooms" description="Do you want to show bedrooms">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="show_parking" type="radio" default="0" class="btn-group" label="Show Parking" description="Do you want to show parking">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="show_square" type="radio" default="0" class="btn-group" label="Show Square field" description="Do you want to show square field">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="show_catgoryname" type="radio" class="btn-group" default="0" label="Show Category name" description="Do you want to show category name">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="show_typename" type="radio" default="0" class="btn-group" label="Show Property type name" description="Do you want to show property type name">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="limit_title_word" class="input-mini" type="text" default="0" label="LIMIT_TITLE_WORD_DESCRIPTION_PROPERTY" description="LENGHT_TITLE_WORD_DESCRIPTION_PROPERTY" />
+				<field name="limit_word" type="text" class="input-mini" default="0" label="LIMIT_WORD_DESCRIPTION_PROPERTY" description="LENGHT_WORD_DESCRIPTION_PROPERTY" />
+				
+				<field name="show_photo" type="radio" class="btn-group" default="1" label="Show photo" description="Do you want to show photo">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+
+				<field name="featured" type="radio" class="btn-group" default="0" label="OSPROPERTY_IS_FEATURE" description="ALLOW_SHOW_FEATURE_PROPERTY">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="sold" type="Propertymarketstatus" class="btn-group" default="0" label="Market status" description="Select Market status"/>
+				<field name="open_house" type="radio" class="btn-group" default="0" label="Open Properties" description="Do you want to show Open Properties">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="recent_properties" type="radio" class="btn-group" default="0" label="Recent Viewed Properties" description="Do you want to show Recent Viewed Properties">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="only_open" type="radio" class="btn-group" default="0" label="Show open houses only" description="Do you want to show open houses only">
+					<option value="1">OSPROPERTY_YES</option>
+					<option value="0">OSPROPERTY_NO</option>
+				</field>
+				<field name="open_from" type="calendar" default="" label="Open from" description="Select date for filter opening hours" class="input-small form-control" />
+				<field name="open_to" type="calendar" default="" label="Open to" description="Select date for filter opening hours" class="input-small form-control" />
+				<field name="agent_id" type="text" default="" label="Agent ID" description="Enter ID of agent that you want to show properties. Separated by commma." class="input-mini" />
+				<field name="company_id" type="text" default="" label="Company ID" description="Enter ID of company that you want to show properties. Separated by commma." class="input-mini" />
+				<field name="country_ids" type="text" default="" label="Country IDs" description="Enter ID numbers of countries that you want to show properties. Separated by commma." class="input-mini" />
+				<field name="state_ids" type="text" default="" label="State IDs" description="Enter ID numbers of states that you want to show properties. Separated by commma." class="input-mini" />
+				<field name="city_ids" type="text" default="" label="City IDs" description="Enter ID numbers of cities that you want to show properties" class="input-mini" />
+				<field name="category" type="propertycategory" default="" label="SHOWN_CATEGORY_PROPERTY" description="OSPROPERTY_SHOWN_CATETORY" />
+				<field name="type" type="propertytype" default="" label="SHOWN_TYPE_PROPERTY" description="OSPROPERTY_SHOWN_TYPE" />
+				<field name="property_ids" type="text" default="" label="Property IDs" description="Enter IDs of properties that you want to show. Separated by commma." />
+				<field name="exclude_property_ids" type="text" default="" label="Exclude Property IDs" description="Enter exclude property IDs. Separated by commma." />
+				<field name="orderby" type="radio" class="btn-group" default="p.created" label="Order by" description="Select Order by">
+					<option value="p.created">Created</option>
+					<option value="p.ref">Ref #</option>
+					<option value="p.pro_name">Title</option>
+					<option value="p.isFeatured">Featured</option>
+					<option value="p.soldOn">Sold On</option>
+					<option value="p.price">Price</option>
+					<option value="p.ordering">Ordering</option>
+					<option value="rand()">Random</option>
+				</field>
+				<field name="ordertype" type="radio" class="btn-group" default="desc" label="Order type" description="Select Type by">
+					<option value="desc">Descending</option>
+					<option value="asc">Ascending</option>
+				</field>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

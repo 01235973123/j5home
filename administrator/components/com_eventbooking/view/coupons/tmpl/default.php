@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -27,7 +27,7 @@ $this->includeTemplate('script');
 			</div>
 		</div>
 		<div class="clearfix"></div>
-		<table class="table itemList table-striped">
+		<table class="adminlist table table-striped">
 			<thead>
 			<tr>
 				<th width="20">
@@ -89,18 +89,7 @@ $this->includeTemplate('script');
 						</a>
 					</td>
 					<td class="center">
-						<?php
-							if ($row->coupon_type == 2)
-							{
-							?>
-								<span class="eb-voucher-used-amount"><?php echo EventbookingHelper::formatAmount($row->used_amount, $this->config); ?></span> / <?php echo EventbookingHelper::formatAmount($row->discount, $this->config).' '. Text::_('EB_USED'); ?>
-							<?php
-							}
-							else
-							{
-								echo EventbookingHelper::formatAmount($row->discount, $this->config) . $this->discountTypes[$row->coupon_type];
-							}
-						?>
+						<?php echo EventbookingHelper::formatAmount($row->discount, $this->config) . $this->discountTypes[$row->coupon_type]; ?>
 					</td>
 					<td class="center">
 						<?php echo $row->times; ?>

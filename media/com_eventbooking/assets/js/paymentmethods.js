@@ -320,14 +320,6 @@ EBMaskInputs = function (form) {
             return true;
         }
 
-        if (!document.dispatchEvent(new CustomEvent('EBPaymentCallbackHandle', {
-            detail: {
-                paymentMethod: paymentMethod
-            }
-        }))) {
-            return false;
-        }
-
         // Stripe payment method
         if (paymentMethod.indexOf('os_stripe') === 0) {
             // Old Stripe method

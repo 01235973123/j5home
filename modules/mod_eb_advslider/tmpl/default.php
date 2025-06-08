@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Events Booking
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright      Copyright (C) 2010 - 2024 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -23,19 +23,15 @@ use Joomla\CMS\Uri\Uri;
  * @var array                     $sliderSettings
  */
 
-Factory::getApplication()
-	->getDocument()
-	->getWebAssetManager()
-	->registerAndUseStyle(
-		'com_eventbooking.splide-theme',
-		'media/com_eventbooking/assets/js/splide/css/themes/' . $params->get('theme', 'splide-default.min.css')
-	)
-	->registerAndUseStyle('mod_eb_advslider.styles', 'media/mod_eb_advslider/assets/css/styles.css')
-	->registerAndUseScript('com_eventbooking.splide', 'media/com_eventbooking/assets/js/splide/js/splide.min.js');
+$rootUri  = Uri::root(true);
+$document = Factory::getApplication()->getDocument()
+	->addStyleSheet($rootUri . '/media/com_eventbooking/assets/js/splide/css/themes/' . $params->get('theme', 'splide-default.min.css'))
+	->addStyleSheet($rootUri . '/media/mod_eb_advslider/assets/css/styles.css')
+	->addScript($rootUri . '/media/com_eventbooking/assets/js/splide/js/splide.min.js');
 
 EventbookingHelper::loadComponentCssForModules();
 
-$config     = EventbookingHelper::getConfig();
+$config = EventbookingHelper::getConfig();
 $return     = base64_encode(Uri::getInstance()->toString());
 $timeFormat = $config->event_time_format ?: 'g:i a';
 $dateFormat = $config->date_format;

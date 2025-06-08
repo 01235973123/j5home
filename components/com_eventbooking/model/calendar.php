@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -102,12 +102,9 @@ class EventbookingModelCalendar extends EventbookingModelCommoncalendar
 		{
 			$rows = $db->loadObjectList();
 
-			if (count($rows) > 0)
-			{
-				$eventObj = new AfterReturnEventsFromDatabase(['rows' => $rows, 'context' => 'calendar']);
+			$eventObj = new AfterReturnEventsFromDatabase(['rows' => $rows, 'context' => 'calendar']);
 
-				$app->triggerEvent($eventObj->getName(), $eventObj);
-			}
+			$app->triggerEvent($eventObj->getName(), $eventObj);
 
 			$rowEvents = [];
 
@@ -149,12 +146,9 @@ class EventbookingModelCalendar extends EventbookingModelCommoncalendar
 
 		$rows = $db->loadObjectList();
 
-		if (count($rows) > 0)
-		{
-			$eventObj = new AfterReturnEventsFromDatabase(['rows' => $rows, 'context' => 'calendar']);
+		$eventObj = new AfterReturnEventsFromDatabase(['rows' => $rows, 'context' => 'calendar']);
 
-			$app->triggerEvent($eventObj->getName(), $eventObj);
-		}
+		$app->triggerEvent($eventObj->getName(), $eventObj);
 
 		return $rows;
 	}

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="4.2.0" type="plugin" group="eventbooking" method="upgrade">
+<extension version="3.9.0" type="plugin" group="eventbooking" method="upgrade">
     <name>Events Booking - Related Events</name>
     <author>Tuan Pham Ngoc</author>
     <creationDate>June 2023</creationDate>
-    <copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
+    <copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <version>5.0.4</version>
+    <version>5.0.0</version>
     <description>This plugin allows you to configure related events for the current event. When user see event details, they will see these related events.</description>
     <files>
         <filename plugin="relatedevents">relatedevents.php</filename>

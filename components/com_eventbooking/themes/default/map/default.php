@@ -3,7 +3,7 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
@@ -13,6 +13,8 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
+
+HTMLHelper::_('behavior.core');
 
 $getDirectionLink = 'https://maps.google.com/maps?daddr=' . urlencode($this->location->address);
 
@@ -41,15 +43,11 @@ else
 
 if ($showMap)
 {
-	Factory::getApplication()
-		->getDocument()
+	Factory::getApplication()->getDocument()->addScript('https://maps.google.com/maps/api/js?key=' . $config->get('map_api_key', '') . '&v=quarterly')
 		->addScriptOptions('lat', $this->location->lat)
 		->addScriptOptions('long', $this->location->long)
 		->addScriptOptions('zoomLevel', $zoomLevel)
-		->addScriptOptions('popupContent', $popupContent)
-		->getWebAssetManager()
-		->useScript('core')
-		->registerAndUseScript('com_eventbooking.googlemapapi', 'https://maps.google.com/maps/api/js?key=' . $config->get('map_api_key', '') . '&v=quarterly');
+		->addScriptOptions('popupContent', $popupContent);
 
 	EventbookingHelperHtml::addOverridableScript('media/com_eventbooking/js/site-map-default.min.js');
 }

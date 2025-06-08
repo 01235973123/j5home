@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.0" type="plugin" group="finder" method="upgrade">
+	<name>plg_finder_osproperty</name>
+	<author>Tuan Pham Ngoc</author>
+	<creationDate>2025-05-22</creationDate>
+	<copyright>Ossolution Team</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>contact@joomdonation.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>1.0</version>
+	<description>PLG_FINDER_OSPROPERTY_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
+	<files>
+		<file plugin="osproperty">osproperty.php</file>
+    	<filename>index.html</filename>
+	</files>
+	<languages>		
+		<language tag="en-GB">language/en-GB/en-GB.plg_finder_osproperty.ini</language>
+		<language tag="en-GB">language/en-GB/en-GB.plg_finder_osproperty.sys.ini</language>
+	</languages>
+</extension>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.5" type="plugin" group="osmembership" method="upgrade">
+	<name>OSMembership - OS Property plugin</name>
+	<author>Dang Thuc Dam</author>
+	<creationDate>May 2012</creationDate>
+	<copyright>Ossolution Team</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>1.0</version>
+	<description>This plugin is used to assign permission to upload properties to agents when they subscribe to a Subscription Plan in OS Membership</description>
+	<files>
+		<filename plugin="osproperty">osproperty.php</filename>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.plg_osmembership_osproperty.ini</language>		
+	</languages>		
+</extension>

@@ -47,10 +47,6 @@ img.eb-thumb-left {
   font-size: initial;
 }
 
-#eb-search-filters-reset-button {
-  margin-left: 5px;
-}
-
 .modal-body .form.form-horizontal {
   padding-left: 10px;
   padding-right: 10px;
@@ -1210,10 +1206,6 @@ i.eb-calendar-navigation:before {
 
 li[class*=eb-calendar-row-] {
   min-height: 100px;
-}
-
-#eb-fullcalendar-filter-container select, #eb-fullcalendar-filter-container #btn-apply-calendar-filter {
-  margin-left: 5px;
 }
 
 .extcal_minical .extcal_navbar {

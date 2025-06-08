@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -104,7 +104,7 @@ $btnPrimary        = $bootstrapHelper->getClassMapping('btn btn-primary');
 		?>
         <div class="form-actions">
             <input type="button" class="<?php echo $btnPrimary; ?>" name="btnBack"
-                   value="<?php echo Text::_('EB_BACK'); ?>" onclick="window.history.back();"/>
+                   value="<?php echo Text::_('EB_BACK'); ?>" onclick="window.history.go(-1);"/>
             <input type="submit" class="<?php echo $btnPrimary; ?>" name="btn-submit" id="btn-submit"
                    value="<?php echo Text::_('EB_PROCESS_PAYMENT'); ?>"/>
             <img id="ajax-loading-animation"

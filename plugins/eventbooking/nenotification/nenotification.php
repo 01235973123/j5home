@@ -111,6 +111,8 @@ class plgEventbookingNENotification extends CMSPlugin implements SubscriberInter
 			$message = str_ireplace("[$key]", $value, $message);
 		}
 
+		$message = EventbookingHelper::convertImgTags($message);
+
 		$mailer    = EventbookingHelperMail::getMailer($config);
 		$logEmails = EventbookingHelperMail::loggingEnabled('new_event_notification_emails', $config);
 

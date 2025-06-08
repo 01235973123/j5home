@@ -4,7 +4,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use CB\Database\Table\UserTable;
 use chillerlan\QRCode\QRCode;
 use chillerlan\QRCode\QROptions;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Form\Form;
@@ -223,10 +224,7 @@ class EventbookingHelperRegistration
 	 */
 	public static function passFieldPaymentMethodDataToJS($rowFields)
 	{
-		$document = Factory::getApplication()->getDocument();
-
-		$document->getWebAssetManager()
-			->useScript('core');
+		HTMLHelper::_('behavior.core');
 
 		$allFields           = [];
 		$paymentMethodFields = [];
@@ -240,6 +238,7 @@ class EventbookingHelperRegistration
 			$paymentMethodFields[$rowField->payment_method][] = $rowField->name;
 		}
 
+		$document = Factory::getApplication()->getDocument();
 		$document->addScriptOptions('all_payment_method_fields', $allFields);
 
 		foreach ($paymentMethodFields as $paymentMethod => $fields) {
@@ -256,10 +255,7 @@ class EventbookingHelperRegistration
 	 */
 	public static function passFieldTicketTypesDataToJS($rowFields)
 	{
-		$document = Factory::getApplication()->getDocument();
-
-		$document->getWebAssetManager()
-			->useScript('core');
+		HTMLHelper::_('behavior.core');
 
 		$ticketTypesFields = [];
 
@@ -279,6 +275,7 @@ class EventbookingHelperRegistration
 			}
 		}
 
+		$document = Factory::getApplication()->getDocument();
 
 		foreach ($ticketTypesFields as $ticketTypeId => $fields) {
 			$document->addScriptOptions('ticket_type_' . $ticketTypeId . '_fields', $fields);
@@ -860,10 +857,22 @@ class EventbookingHelperRegistration
 	 */
 	public static function getRegistrationReplaces($row, $rowEvent = null, $userId = 0, $enableShoppingCart = false, $loadCss = true)
 	{
+		static $cache = [];
+
 		$config = EventbookingHelper::getConfig();
 
 		if (!$userId) {
 			$userId = (int) $row->user_id;
+		}
+
+		if ($enableShoppingCart) {
+			$cacheKey = $row->id . '_' . $userId . '_true';
+		} else {
+			$cacheKey = $row->id . '_' . $userId . '_false';
+		}
+
+		if (isset($cache[$cacheKey])) {
+			return $cache[$cacheKey];
 		}
 
 		if ($rowEvent === null) {
@@ -905,10 +914,12 @@ class EventbookingHelperRegistration
 			'Helper'
 		);
 
+		$cache[$cacheKey] = $replaces;
+
 		// Restore $config->multiple_booking value
 		$config->multiple_booking = $multipleBooking;
 
-		return $replaces;
+		return $cache[$cacheKey];
 	}
 
 	/**
@@ -1079,7 +1090,7 @@ class EventbookingHelperRegistration
 			->where('(valid_to = ' . $db->quote($nullDate) . ' OR valid_to >= ' . $currentDate . ')')
 			->whereIn('user_id', [0, $user->id])
 			->where('(times = 0 OR times > used)')
-			->where('(coupon_type != 2 OR discount > used_amount)')
+			->where('discount > used_amount')
 			->order('id DESC');
 		$db->setQuery($query);
 		$coupon = $db->loadObject();
@@ -1141,7 +1152,7 @@ class EventbookingHelperRegistration
 			->where('(valid_from = ' . $db->quote($nullDate) . ' OR valid_from <= ' . $currentDate . ')')
 			->where('(valid_to = ' . $db->quote($nullDate) . ' OR valid_to >= ' . $currentDate . ')')
 			->where('(times = 0 OR times > used)')
-			->where('(coupon_type != 2 OR discount > used_amount)')
+			->where('discount > used_amount')
 			->whereIn('user_id', [0, $user->id])
 			->where('(' . implode(' OR ', $whereOrs) . ')')
 			->where('id NOT IN (SELECT coupon_id FROM #__eb_coupon_events WHERE event_id = ' . $negEventId . ')')
@@ -1300,11 +1311,7 @@ class EventbookingHelperRegistration
 
 		if ($config->activate_deposit_feature && $event->deposit_amount > 0) {
 			if ($event->deposit_type == 2) {
-				if ($event->deposit_amount_apply_for) {
-					$depositAmount = $event->deposit_amount;
-				} else {
-					$depositAmount = $numberRegistrants * $event->deposit_amount;
-				}
+				$depositAmount = $numberRegistrants * $event->deposit_amount;
 			} else {
 				$depositAmount = $event->deposit_amount * $amount / 100;
 			}
@@ -1533,8 +1540,6 @@ class EventbookingHelperRegistration
 
 		$couponDiscountAmount = 0;
 
-		$coupon = $fees['coupon'] ?? null;
-
 		if (!empty($coupon) && $coupon->coupon_type == 2) {
 			$couponAvailableAmount = $coupon->discount - $coupon->used_amount;
 
@@ -1639,10 +1644,6 @@ class EventbookingHelperRegistration
 			if ($event->discount_type == 1) {
 				$discountAmount += $totalAmount * $discountRate / 100;
 			} else {
-				if ($discountRate > $totalAmount) {
-					$discountRate = $totalAmount;
-				}
-
 				$discountAmount += $discountRate;
 			}
 		}
@@ -2004,12 +2005,14 @@ class EventbookingHelperRegistration
 
 		$couponDiscountAmount = 0;
 
-		$coupon = $fees['coupon'] ?? null;
-
 		if (!empty($coupon) && $coupon->coupon_type == 2) {
 			$couponAvailableAmount = $coupon->discount - $coupon->used_amount;
 
-			$couponDiscountAmount = min($couponAvailableAmount, $amount);
+			if ($couponAvailableAmount >= $amount) {
+				$couponDiscountAmount = $amount;
+			} else {
+				$couponDiscountAmount = $couponAvailableAmount;
+			}
 
 			$amount -= $couponDiscountAmount;
 
@@ -2558,7 +2561,7 @@ class EventbookingHelperRegistration
 					|| count(array_intersect($eventCategoryIds, $couponDiscountedCategoryIds)) > 0)
 				&& !in_array($eventId * -1, $couponDiscountedEventIds)
 			) {
-				$registrantDiscount += static::calculateRegistrantCouponDiscountForCart(
+				static::calculateRegistrantCouponDiscountForCart(
 					$coupon,
 					$event,
 					$registrantTotalAmount,
@@ -3213,24 +3216,6 @@ class EventbookingHelperRegistration
 	 */
 	public static function getRegistrantData($rowRegistrant, $rowFields = null)
 	{
-		static $cache = [];
-
-		$cacheKey = $rowRegistrant->id;
-
-		if ($rowFields) {
-			$fieldNames = [];
-
-			foreach ($rowFields as $rowField) {
-				$fieldNames[] = $rowField->name;
-			}
-
-			$cacheKey .= md5(implode('', $fieldNames));
-		}
-
-		if (isset($cache[$cacheKey])) {
-			return $cache[$cacheKey];
-		}
-
 		/* @var \Joomla\Database\DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
@@ -3253,14 +3238,9 @@ class EventbookingHelperRegistration
 			->from('#__eb_fields AS a')
 			->innerJoin('#__eb_field_values AS b ON a.id = b.field_id')
 			->where('b.registrant_id = ' . $rowRegistrant->id);
-		echo $query;
 		$db->setQuery($query);
 		$fieldValues = $db->loadObjectList('name');
 
-		echo '<pre>';
-		print_r($fieldValues);
-		echo '</pre>';
-		die();
 		foreach ($rowFields as $rowField) {
 			if ($rowField->is_core) {
 				$data[$rowField->name] = $rowRegistrant->{$rowField->name};
@@ -3275,9 +3255,7 @@ class EventbookingHelperRegistration
 			}
 		}
 
-		$cache[$cacheKey] = $data;
-
-		return $cache[$cacheKey];
+		return $data;
 	}
 
 	/**
@@ -3673,49 +3651,10 @@ class EventbookingHelperRegistration
 			$replaces['event_date_date']    = HTMLHelper::_('date', $event->event_date, $config->date_format, null);
 			$replaces['event_date_time']    = HTMLHelper::_('date', $event->event_date, $timeFormat, null);
 			$replaces['event_day']          = HTMLHelper::_('date', $event->event_date, 'd', null);
+			$replaces['event_month']        = HTMLHelper::_('date', $event->event_date, 'F', null);
+			$replaces['event_month_short']  = HTMLHelper::_('date', $event->event_date, 'M', null);
 			$replaces['event_month_number'] = HTMLHelper::_('date', $event->event_date, 'm', null);
 			$replaces['event_year']         = HTMLHelper::_('date', $event->event_date, 'Y', null);
-
-			if ($row && $row->language && $row->language != '*' && LanguageHelper::exists($row->language)) {
-				$language = Language::getInstance($row->language);
-			} else {
-				$language = Factory::getApplication()->getLanguage();
-			}
-
-			$monthNames = [
-				$language->_('JANUARY'),
-				$language->_('FEBRUARY'),
-				$language->_('MARCH'),
-				$language->_('APRIL'),
-				$language->_('MAY'),
-				$language->_('JUNE'),
-				$language->_('JULY'),
-				$language->_('AUGUST'),
-				$language->_('SEPTEMBER'),
-				$language->_('OCTOBER'),
-				$language->_('NOVEMBER'),
-				$language->_('DECEMBER'),
-			];
-
-			$monthNamesShort = [
-				$language->_('JANUARY_SHORT'),
-				$language->_('FEBRUARY_SHORT'),
-				$language->_('MARCH_SHORT'),
-				$language->_('APRIL_SHORT'),
-				$language->_('MAY_SHORT'),
-				$language->_('JUNE_SHORT'),
-				$language->_('JULY_SHORT'),
-				$language->_('AUGUST_SHORT'),
-				$language->_('SEPTEMBER_SHORT'),
-				$language->_('OCTOBER_SHORT'),
-				$language->_('NOVEMBER_SHORT'),
-				$language->_('DECEMBER_SHORT'),
-			];
-
-			$monthNumber = HTMLHelper::_('date', $event->event_date, 'n', null);
-
-			$replaces['event_month']       = $monthNames[$monthNumber - 1];
-			$replaces['event_month_short'] = $monthNamesShort[$monthNumber - 1];
 		}
 
 		if ((int) $event->event_end_date) {
@@ -3954,15 +3893,6 @@ class EventbookingHelperRegistration
 			$replaces['EVENT_IMAGE']     = '';
 		}
 
-		$replaces['save_to_google_calendar_link'] = EventbookingHelperHtml::getAddToGoogleCalendarUrl($event);
-		$replaces['save_to_yahoo_calendar_link']  = EventbookingHelperHtml::getAddToYahooCalendarUrl($event);
-		$replaces['download_ical_link']           = Route::_(
-			'index.php?option=com_eventbooking&task=event.download_ical&event_id=' . $event->id . '&Itemid=' . $defaultMenuId,
-			false,
-			Route::TLS_IGNORE,
-			true
-		);
-
 		return $replaces;
 	}
 
@@ -4163,44 +4093,34 @@ class EventbookingHelperRegistration
 			$replaces['username'] = $db->loadResult();
 		}
 
-		// Auto coupon code
-		$query->clear()
-			->select('auto_coupon_coupon_id')
-			->from('#__eb_registrants')
-			->where('(id = ' . $row->id . ' OR cart_id = ' . $row->id . ')')
-			->where('auto_coupon_coupon_id > 0');
-		$db->setQuery($query);
-		$couponIds = $db->loadColumn();
-
-		if (count($couponIds)) {
-			$query->clear()
-				->select($db->quoteName('code'))
-				->from('#__eb_coupons')
-				->whereIn('id', $couponIds);
-			$db->setQuery($query);
-			$replaces['AUTO_COUPON_CODES'] = implode(', ', $db->loadColumn());
-		} else {
-			$replaces['AUTO_COUPON_CODES'] = '';
-		}
-
 		if ($config->multiple_booking) {
+			//Amount calculation
 			$query->clear()
-				->select('SUM(total_amount) AS cart_total_amount')
-				->select('SUM(tax_amount) AS cart_tax_amount')
-				->select('SUM(discount_amount) AS cart_discount_amount')
-				->select('SUM(late_fee) AS cart_late_fee')
-				->select('SUM(payment_processing_fee) AS cart_payment_processing_fee')
-				->select('SUM(deposit_amount) AS cart_deposit_amount')
+				->select('SUM(total_amount)')
 				->from('#__eb_registrants')
 				->where("(id = $row->id OR cart_id = $row->id)");
 			$db->setQuery($query);
-			$rowCartAmount = $db->loadObject();
+			$totalAmount = $db->loadResult();
 
-			$totalAmount          = $rowCartAmount->cart_total_amount ?? 0;
-			$taxAmount            = $rowCartAmount->cart_tax_amount ?? 0;
-			$discountAmount       = $rowCartAmount->cart_discount_amount ?? 0;
-			$lateFee              = $rowCartAmount->cart_late_fee ?? 0;
-			$paymentProcessingFee = $rowCartAmount->cart_payment_processing_fee ?? 0;
+			$query->clear('select')
+				->select('SUM(tax_amount)');
+			$db->setQuery($query);
+			$taxAmount = $db->loadResult();
+
+			$query->clear('select')
+				->select('SUM(payment_processing_fee)');
+			$db->setQuery($query);
+			$paymentProcessingFee = $db->loadResult();
+
+			$query->clear('select')
+				->select('SUM(discount_amount)');
+			$db->setQuery($query);
+			$discountAmount = $db->loadResult();
+
+			$query->clear('select')
+				->select('SUM(late_fee)');
+			$db->setQuery($query);
+			$lateFee = $db->loadResult();
 
 			$amount = $totalAmount - $discountAmount + $paymentProcessingFee + $taxAmount + $lateFee;
 
@@ -4208,8 +4128,12 @@ class EventbookingHelperRegistration
 				$depositAmount = 0;
 				$dueAmount     = 0;
 			} else {
-				$depositAmount = $rowCartAmount->cart_deposit_amount ?? 0;
-				$dueAmount     = $amount - $depositAmount;
+				$query->clear('select')
+					->select('SUM(deposit_amount)');
+				$db->setQuery($query);
+				$depositAmount = $db->loadResult();
+
+				$dueAmount = $amount - $depositAmount;
 			}
 
 			$replaces['total_amount']                = EventbookingHelper::formatCurrency($totalAmount, $config, $event->currency_symbol);
@@ -4234,6 +4158,26 @@ class EventbookingHelperRegistration
 			$replaces['amt_payment_processing_fee'] = EventbookingHelper::roundAmount($paymentProcessingFee, $config);
 			$replaces['amt_deposit_amount']         = EventbookingHelper::roundAmount($depositAmount, $config);
 			$replaces['amt_due_amount']             = EventbookingHelper::roundAmount($dueAmount, $config);
+
+			// Auto coupon code
+			$query->clear()
+				->select('auto_coupon_coupon_id')
+				->from('#__eb_registrants')
+				->where('(id = ' . $row->id . ' OR cart_id = ' . $row->id . ')')
+				->where('auto_coupon_coupon_id > 0');
+			$db->setQuery($query);
+			$couponIds = $db->loadColumn();
+
+			if (count($couponIds)) {
+				$query->clear()
+					->select($db->quoteName('code'))
+					->from('#__eb_coupons')
+					->whereIn('id', $couponIds);
+				$db->setQuery($query);
+				$replaces['AUTO_COUPON_CODES'] = implode(', ', $db->loadColumn());
+			} else {
+				$replaces['AUTO_COUPON_CODES'] = '';
+			}
 		} else {
 			$replaces['total_amount']                = EventbookingHelper::formatCurrency($row->total_amount, $config, $event->currency_symbol);
 			$replaces['total_amount_minus_discount'] = EventbookingHelper::formatCurrency(
@@ -4766,26 +4710,38 @@ class EventbookingHelperRegistration
 			$rows = $db->loadObjectList();
 
 			$query->clear()
-				->select('SUM(total_amount) AS cart_total_amount')
-				->select('SUM(tax_amount) AS cart_tax_amount')
-				->select('SUM(discount_amount) AS cart_discount_amount')
-				->select('SUM(late_fee) AS cart_late_fee')
-				->select('SUM(payment_processing_fee) AS cart_payment_processing_fee')
-				->select('SUM(deposit_amount) AS cart_deposit_amount')
+				->select('SUM(total_amount)')
 				->from('#__eb_registrants')
 				->where("(id = $row->id OR cart_id = $row->id)");
 			$db->setQuery($query);
-			$rowCartAmount = $db->loadObject();
+			$totalAmount = $db->loadResult();
 
-			$totalAmount          = $rowCartAmount->cart_total_amount ?? 0;
-			$taxAmount            = $rowCartAmount->cart_tax_amount ?? 0;
-			$discountAmount       = $rowCartAmount->cart_discount_amount ?? 0;
-			$lateFee              = $rowCartAmount->cart_late_fee ?? 0;
-			$paymentProcessingFee = $rowCartAmount->cart_payment_processing_fee ?? 0;
+			$query->clear('select')
+				->select('SUM(tax_amount)');
+			$db->setQuery($query);
+			$taxAmount = $db->loadResult();
+
+			$query->clear('select')
+				->select('SUM(discount_amount)');
+			$db->setQuery($query);
+			$discountAmount = $db->loadResult();
+
+			$query->clear('select')
+				->select('SUM(late_fee)');
+			$db->setQuery($query);
+			$lateFee = $db->loadResult();
+
+			$query->clear('select')
+				->select('SUM(payment_processing_fee)');
+			$db->setQuery($query);
+			$paymentProcessingFee = $db->loadResult();
 
 			$amount = $totalAmount + $paymentProcessingFee - $discountAmount + $taxAmount + $lateFee;
 
-			$depositAmount = $rowCartAmount->cart_deposit_amount ?? 0;
+			$query->clear('select')
+				->select('SUM(deposit_amount)');
+			$db->setQuery($query);
+			$depositAmount = $db->loadResult();
 
 			//Added support for custom field feature
 			$data['discountAmount']       = $discountAmount;
@@ -5177,7 +5133,39 @@ class EventbookingHelperRegistration
 	 */
 	public static function validateUsername($username)
 	{
-		return EventbookingHelperValidator::validateUsername($username);
+		$filterInput = InputFilter::getInstance();
+
+		/* @var \Joomla\Database\DatabaseDriver $db */
+		$db     = Factory::getContainer()->get('db');
+		$query  = $db->getQuery(true);
+		$errors = [];
+
+		if (empty($username)) {
+			$errors[] = Text::sprintf('EB_FORM_FIELD_IS_REQURED', Text::_('EB_USERNAME'));
+		}
+
+		if ($filterInput->clean($username, 'TRIM') == '') {
+			$errors[] = Text::_('JLIB_DATABASE_ERROR_PLEASE_ENTER_A_USER_NAME');
+		}
+
+		if (
+			preg_match('#[<>"\'%;()&\\\\]|\\.\\./#', $username) || strlen(utf8_decode($username)) < 2
+			|| $filterInput->clean($username, 'TRIM') !== $username
+		) {
+			$errors[] = Text::sprintf('JLIB_DATABASE_ERROR_VALID_AZ09', 2);
+		}
+
+		$query->select('COUNT(*)')
+			->from('#__users')
+			->where('username = ' . $db->quote($username));
+		$db->setQuery($query);
+		$total = $db->loadResult();
+
+		if ($total) {
+			$errors[] = Text::_('EB_VALIDATION_INVALID_USERNAME');
+		}
+
+		return $errors;
 	}
 
 	/**
@@ -5189,7 +5177,60 @@ class EventbookingHelperRegistration
 	 */
 	public static function validatePassword($password)
 	{
-		return EventbookingHelperValidator::validatePassword($password);
+		$errors = [];
+
+		$params           = ComponentHelper::getParams('com_users');
+		$minimumIntegers  = $params->get('minimum_integers');
+		$minimumSymbols   = $params->get('minimum_symbols');
+		$minimumUppercase = $params->get('minimum_uppercase');
+		$minimumLowercase = $params->get('minimum_lowercase');
+		$minimumLength    = $params->get('minimum_length');
+
+		// We don't allow white space inside passwords
+		$valueTrim   = trim($password);
+		$valueLength = strlen($password);
+
+		if (strlen($valueTrim) !== $valueLength) {
+			$errors[] = Text::_('JFIELD_PASSWORD_SPACES_IN_PASSWORD');
+		}
+
+		if (!empty($minimumIntegers)) {
+			$nInts = preg_match_all('/[0-9]/', $password, $imatch);
+
+			if ($nInts < $minimumIntegers) {
+				$errors[] = Text::plural('JFIELD_PASSWORD_NOT_ENOUGH_INTEGERS_N', $minimumIntegers);
+			}
+		}
+
+		if (!empty($minimumSymbols)) {
+			$nsymbols = preg_match_all('[\W]', $password, $smatch);
+
+			if ($nsymbols < $minimumSymbols) {
+				$errors[] = Text::plural('JFIELD_PASSWORD_NOT_ENOUGH_SYMBOLS_N', $minimumSymbols);
+			}
+		}
+
+		if (!empty($minimumUppercase)) {
+			$nUppercase = preg_match_all('/[A-Z]/', $password, $umatch);
+
+			if ($nUppercase < $minimumUppercase) {
+				$errors[] = Text::plural('JFIELD_PASSWORD_NOT_ENOUGH_UPPERCASE_LETTERS_N', $minimumUppercase);
+			}
+		}
+
+		if (!empty($minimumLowercase)) {
+			$nLowercase = preg_match_all('/[a-z]/', $password, $lmatch);
+
+			if ($nLowercase < $minimumLowercase) {
+				$errors[] = Text::plural('JFIELD_PASSWORD_NOT_ENOUGH_LOWERCASE_LETTERS_N', $minimumLowercase);
+			}
+		}
+
+		if (!empty($minimumLength) && strlen((string) $password) < $minimumLength) {
+			$errors[] = Text::plural('JFIELD_PASSWORD_TOO_SHORT_N', $minimumLength);
+		}
+
+		return $errors;
 	}
 
 	/**

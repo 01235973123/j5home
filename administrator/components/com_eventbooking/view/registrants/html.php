@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -101,6 +101,50 @@ class EventbookingViewRegistrantsHtml extends RADViewList
 
 		/* @var DropdownButton $dropdown */
 		$dropdown = $bar->dropdownButton('status-group')
+			->text('EB_ACTION_EXPORT')
+			->toggleSplit(false)
+			->icon('icon-ellipsis-h')
+			->buttonClass('btn btn-action');
+
+		$childBar = $dropdown->getChildToolbar();
+
+		if (count($this->model->getExportTemplates()))
+		{
+			$childBar->popupButton('batch')
+				->text('EB_EXPORT_XLSX')
+				->selector('collapseModal_Export_Template');
+		}
+		else
+		{
+			$childBar->standardButton('export')
+				->text('EB_EXPORT_XLSX')
+				->icon('icon-download')
+				->task('export');
+		}
+
+		$childBar->standardButton('export_pdf')
+			->text('EB_EXPORT_PDF')
+			->icon('icon-download')
+			->task('export_pdf');
+
+		if ($config->activate_invoice_feature)
+		{
+			$childBar->standardButton('export_invoices')
+				->text('EB_EXPORT_INVOICES')
+				->icon('icon-download')
+				->task('export_invoices');
+		}
+
+		if ($config->activate_tickets_pdf)
+		{
+			$childBar->standardButton('export_tickets')
+				->text('EB_EXPORT_TICKETS')
+				->icon('icon-download')
+				->task('export_tickets');
+		}
+
+		/* @var DropdownButton $dropdown */
+		$dropdown = $bar->dropdownButton('status-group')
 			->text('JTOOLBAR_CHANGE_STATUS')
 			->toggleSplit(false)
 			->icon('icon-ellipsis-h')
@@ -165,50 +209,6 @@ class EventbookingViewRegistrantsHtml extends RADViewList
 			$childBar->standardButton('request_payment', 'EB_REQUEST_PAYMENT', 'request_payment')
 				->icon('icon-envelope')
 				->listCheck(true);
-		}
-
-		/* @var DropdownButton $dropdown */
-		$dropdown = $bar->dropdownButton('status-group')
-			->text('EB_ACTION_EXPORT')
-			->toggleSplit(false)
-			->icon('icon-ellipsis-h')
-			->buttonClass('btn btn-action');
-
-		$childBar = $dropdown->getChildToolbar();
-
-		if (count($this->model->getExportTemplates()))
-		{
-			$childBar->popupButton('batch')
-				->text('EB_EXPORT_XLSX')
-				->selector('collapseModal_Export_Template');
-		}
-		else
-		{
-			$childBar->standardButton('export')
-				->text('EB_EXPORT_XLSX')
-				->icon('icon-download')
-				->task('export');
-		}
-
-		$childBar->standardButton('export_pdf')
-			->text('EB_EXPORT_PDF')
-			->icon('icon-download')
-			->task('export_pdf');
-
-		if ($config->activate_invoice_feature)
-		{
-			$childBar->standardButton('export_invoices')
-				->text('EB_EXPORT_INVOICES')
-				->icon('icon-download')
-				->task('export_invoices');
-		}
-
-		if ($config->activate_tickets_pdf)
-		{
-			$childBar->standardButton('export_tickets')
-				->text('EB_EXPORT_TICKETS')
-				->icon('icon-download')
-				->task('export_tickets');
 		}
 	}
 }

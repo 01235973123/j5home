@@ -3,7 +3,7 @@
  * @package        	Joomla
  * @subpackage		Event Booking
  * @author  		Tuan Pham Ngoc
- * @copyright    	Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright    	Copyright (C) 2010 - 2024 Ossolution Team
  * @license        	GNU/GPL, see LICENSE.php
  */
 
@@ -14,14 +14,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
-Factory::getApplication()
-	->getDocument()
-	->getWebAssetManager()
-	->registerAndUseStyle(
-		'com_eventbooking.eventgrid',
-		'media/com_eventbooking/assets/css/eventgrid.min.css',
-		['version' => EventbookingHelper::getInstalledVersion()]
-	);
+Factory::getApplication()->getDocument()->addStyleSheet(
+	Uri::root(true) . '/media/com_eventbooking/assets/css/eventgrid.min.css',
+	['version' => EventbookingHelper::getInstalledVersion()]
+);
 ?>
 <div id="eb-search-result-grid-layout" class="eb-container">
 <h1 class="eb-page-heading"><?php echo $this->escape(Text::_('EB_SEARCH_RESULT')); ?></h1>

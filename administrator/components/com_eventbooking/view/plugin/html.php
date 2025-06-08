@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -36,7 +36,7 @@ class EventbookingViewPluginHtml extends RADViewItem
 		$data         = new stdClass();
 		$data->params = $registry->toArray();
 		$form         = Form::getInstance(
-			'ebpaymentplugin',
+			'pmform',
 			JPATH_ROOT . '/components/com_eventbooking/payments/' . $this->item->name . '.xml',
 			[],
 			false,

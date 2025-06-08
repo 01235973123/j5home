@@ -1536,7 +1536,7 @@ class HelperOspropertyFields{
 			//$optionArr = HelperOspropertyCommon::stripSpaceArrayOptions($optionArr);
 			//if(count($optionArr)){
 			?>
-			<select name="<?php echo $field->field_name?>" id="<?php echo $field->field_name?>" style="width:<?php echo $field->size?>px;" class="input-medium form-select ilarge" >
+			<select name="<?php echo $field->field_name?>" id="<?php echo $field->field_name?>" style="width:<?php echo $field->size?>px !important;" class="input-medium form-select ilarge" >
 			<option value=""><?php echo Text::_('OS_SELECT_VALUE')?></option>
 			<?php
 			for($i=0;$i<count($options);$i++){

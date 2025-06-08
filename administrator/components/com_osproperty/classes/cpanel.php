@@ -134,11 +134,9 @@ class OspropertyCpanel
 		$minimum_stability = $params->get('minimum_stability', Updater::STABILITY_STABLE, 'int');
 		BaseDatabaseModel::addIncludePath(JPATH_ADMINISTRATOR . '/components/com_installer/models');
 		/** @var InstallerModelUpdate $model */
-		//$model = JModelLegacy::getInstance('Update', 'InstallerModel');
-		if (version_compare(JVERSION, '4.0.0-dev', 'ge'))
+		if (OSPHelper::isJoomla4())
 		{
-			//$model = new \Joomla\Component\Joomlaupdate\Administrator\Model\UpdateModel;
-			$model = $mainframe->bootComponent('com_installer')->getMVCFactory()
+			$model = Factory::getApplication()->bootComponent('com_installer')->getMVCFactory()
 				->createModel('Update', 'Administrator', ['ignore_request' => true]);
 		}
 		else
@@ -156,7 +154,9 @@ class OspropertyCpanel
 			->where('`element` = "pkg_osproperty"');
 		$db->setQuery($query);
 		$eid = (int) $db->loadResult();
+
 		$result['status'] = 0;
+
 		if ($eid)
 		{
 			$ret = Updater::getInstance()->findUpdates($eid, $cache_timeout, $minimum_stability);

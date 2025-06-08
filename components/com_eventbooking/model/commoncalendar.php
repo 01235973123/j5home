@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -19,8 +19,6 @@ use Joomla\Utilities\ArrayHelper;
 
 class EventbookingModelCommoncalendar extends RADModel
 {
-	use EventbookingModelEventsfilter;
-
 	/**
 	 * Fields which will be returned from SQL query
 	 *
@@ -157,7 +155,7 @@ class EventbookingModelCommoncalendar extends RADModel
 			}
 		}
 
-		if ($categoryIds && !$categoryId)
+		if ($categoryIds)
 		{
 			$allCategoryIds = array_merge($allCategoryIds, $categoryIds);
 		}

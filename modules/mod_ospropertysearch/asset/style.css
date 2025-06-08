@@ -1,0 +1,159 @@
+@CHARSET "ISO-8859-1";
+
+.elementdiv{
+	padding:3px;
+}
+.elementlabel{
+	max-width:150px;
+}
+
+.mod_ossearch_left_col{
+	width:30%;
+	text-align:left;
+	padding-top:2px;
+	padding-bottom:2px;
+	vertical-align:top
+}
+
+.mod_ossearch_right_col{
+	width:100%;
+	padding-top:3px;
+	padding-bottom:3px;
+	padding-left:10px;
+}
+
+.ospsearch_ul{
+	background-color: #fff;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.067);
+    margin: 5px 0 0;
+    padding: 0;
+	width:100%;
+	list-style: outside none none;
+}
+
+.ospsearch_ul li {
+    line-height: 20px;
+}
+
+.ospsearch_ul > li:first-child > a {
+    border-radius: 6px 6px 0 0;
+}
+
+.ospsearch_ul > li:last-child {
+    border-radius: 0 0 6px 6px;
+	border: 1px solid #e5e5e5;
+}
+
+.ospsearch_ul > li > a {
+    border: 1px solid #e5e5e5;
+    display: block;
+    margin: 0 0 -1px;
+    padding: 8px 14px !important;
+	font-size:15px;
+}
+
+.ospsearch_div{
+	padding-top:10px;
+	padding-bottom:10px;
+	border-left:	1px solid #e5e5e5;
+	border-right:	1px solid #e5e5e5;
+	padding-left:5px;
+}
+
+.ospsearch_ul .icon-chevron-down, .ospsearch_ul .osicon-chevron-down,.ospsearch_ul .icon-chevron-up, .ospsearch_ul .osicon-chevron-up{
+    float: right;
+    margin-right: -6px;
+    margin-top: 2px;
+    opacity: 0.25;
+}
+
+.hiddendiv{
+	display:none;
+}
+
+.blockdiv{
+	display:block;
+}
+
+.ospsearch_submit{
+	padding:15px;
+}
+
+.advlink{
+	padding:0px !important;
+	margin:0px !important;
+	border:0px !important;
+	display:inline !important;
+}
+
+.ospsearch .module-inner .module-ct {
+	padding:0px !important;
+	border:0px !important;
+
+}
+
+.ospsearch .module-ct ul li::before {
+	content:"" !important;
+}
+
+.ospsearch .module-ct ul li {
+	border-bottom:0px !important;
+	margin-bottom:0px !important;
+	padding-bottom:0px !important;
+}
+
+.ospsearch .module-ct ul li.ospsearch_submit{
+	margin-bottom:11px !important;
+	padding-bottom:11px !important;
+}
+
+.se_geoloc_icon {
+    background: rgba(0, 0, 0, 0) url("icon_userlocation.png") no-repeat scroll left top;
+    cursor: pointer;
+    display: inline-block;
+    height: 20px;
+    margin-right: 10px !important;
+    width: 18px;
+}
+
+.horizontal_search{
+	padding: 10px;
+	background-color: rgba(0,0,0,.6);
+	left: 0;
+	margin: 0 auto;
+	position: absolute;
+	right: 0;
+	text-align: center;
+	width: 100%;
+	z-index: 999;
+	color: #fff;
+	border-radius: 3px;
+}
+
+.horizontal_search .ui-slider , .horizontal_search .horizontal_searchrowfluid select, .horizontal_search .horizontal_searchrowfluid input, .horizontal_search .horizontal_searchrowfluid select, .horizontal_search .horizontal_searchrowfluid .chzn-container-single, .horizontal_search .horizontal_searchrowfluid .chzn-container-multi{
+	width:100% !important;
+}
+
+.horizontal_search .hitem{
+	padding-bottom:10px;
+}
+
+.horizontal_search .center{
+	text-align:center;
+}
+
+
+.horizontal_search .horizontalsearchbutton{
+	width:200px;
+}
+
+.horizontal_search #moreoption{
+	text-decoration:none; 
+	color:#FFF;
+}
+
+#conveniencegroups {
+    text-align: left;
+	background-color:#000;
+}

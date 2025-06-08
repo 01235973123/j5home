@@ -3,13 +3,16 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
+use Composer\Autoload\ClassLoader;
 use Detection\MobileDetect;
+use Gumlet\ImageResize;
+use Gumlet\ImageResizeException;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
@@ -38,7 +41,7 @@ class EventbookingHelper
 	 */
 	public static function getInstalledVersion()
 	{
-		return '5.0.4';
+		return '5.0.0';
 	}
 
 	/**
@@ -425,20 +428,6 @@ class EventbookingHelper
 	}
 
 	/**
-	 * Method to check if the given filename is image
-	 *
-	 * @param   string  $filename
-	 *
-	 * @return bool
-	 */
-	public static function isImageFilename(string $filename): bool
-	{
-		$fileExt = File::getExt($filename);
-
-		return in_array($fileExt, ['png', 'jpg', 'jpeg', 'gif', 'webp']);
-	}
-
-	/**
 	 * Get duration
 	 *
 	 * @param   string  $duration
@@ -602,10 +591,10 @@ class EventbookingHelper
 
 		$fileExt = StringHelper::strtoupper(File::getExt($source));
 
-		// For SVG image, we do not need to resize, just copy from $source to description
-		if ($fileExt === 'SVG')
+		// For image file types not supported by Joomla core like WEBP, we use a new library to handle
+		if (!in_array($fileExt, ['PNG', 'GIF', 'JPG', 'JPEG']))
 		{
-			File::copy($source, $destination);
+			static::resizeImageUseNewLib($source, $destination, $width, $height);
 
 			return;
 		}
@@ -634,10 +623,6 @@ class EventbookingHelper
 				$options['quality'] = $config->get('resized_jpeg_image_quality');
 			}
 		}
-		elseif ($fileExt === 'WEBP')
-		{
-			$imageType = IMAGETYPE_WEBP;
-		}
 		else
 		{
 			$imageType = '';
@@ -654,6 +639,55 @@ class EventbookingHelper
 		{
 			$image->resize($width, $height, false)
 				->toFile($destination, $imageType, $options);
+		}
+	}
+
+	/**
+	 * Method to resize the given image using new library
+	 *
+	 * @param   string  $source
+	 * @param   string  $destination
+	 * @param   int     $width
+	 * @param   int     $height
+	 *
+	 * @return void
+	 * @throws ImageResizeException
+	 */
+	public static function resizeImageUseNewLib($source, $destination, $width, $height)
+	{
+		/** @var ClassLoader $autoLoader */
+		$autoLoader = include JPATH_LIBRARIES . '/vendor/autoload.php';
+		$autoLoader->setPsr4('Gumlet\\', JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/imageresize/lib');
+
+		$config = EventbookingHelper::getConfig();
+
+		$image = new ImageResize($source);
+
+		// Set quality for the image resizing
+		if ($config->get('resized_jpeg_image_quality', -1) != -1)
+		{
+			$image->quality_jpg = (int) $config->get('resized_jpeg_image_quality');
+		}
+
+		if ($config->get('resized_png_image_quality', -1) != -1)
+		{
+			$image->quality_png = (int) $config->get('resized_png_image_quality');
+		}
+
+		if ($config->get('resized_webp_image_quality', -1) != -1)
+		{
+			$image->quality_png = (int) $config->get('resized_webp_image_quality');
+		}
+
+		if ($config->get('resize_image_method') == 'crop_resize')
+		{
+			$image->crop($width, $height)
+				->save($destination);
+		}
+		else
+		{
+			$image->resizeToBestFit($width, $height)
+				->save($destination);
 		}
 	}
 
@@ -1189,7 +1223,7 @@ class EventbookingHelper
 	{
 		static $loaded = false;
 
-		if ($loaded)
+		if ($loaded == true)
 		{
 			return;
 		}
@@ -1201,32 +1235,30 @@ class EventbookingHelper
 			return;
 		}
 
-		$wa            = $app->getDocument()->getWebAssetManager();
+		$document      = $app->getDocument();
 		$config        = self::getConfig();
+		$rootUrl       = Uri::root(true);
 		$calendarTheme = $config->get('calendar_theme', 'default');
 
 		// Load twitter bootstrap css
-		if ($config->load_bootstrap_css_in_frontend
-			&& in_array($config->get('twitter_bootstrap_version', 5), [5]))
+		if ($config->load_bootstrap_css_in_frontend && in_array($config->get('twitter_bootstrap_version', 5), [5]))
 		{
-			$wa->useStyle('bootstrap.css');
+			HTMLHelper::_('bootstrap.loadCss');
 		}
 
 		// Load font-awesome
 		if ($config->get('load_font_awesome', '1'))
 		{
-			$wa->registerAndUseStyle('com_eventbooking.font-awesome', 'media/com_eventbooking/assets/css/font-awesome.min.css');
+			$document->addStyleSheet($rootUrl . '/media/com_eventbooking/assets/css/font-awesome.min.css');
 		}
 
 		// Load component css, module css can also be added here
-		$wa->registerAndUseStyle(
-			'com_eventbooking.style',
-			'media/com_eventbooking/assets/css/style.min.css',
+		$document->addStyleSheet(
+			$rootUrl . '/media/com_eventbooking/assets/css/style.min.css',
 			['version' => EventbookingHelper::getInstalledVersion()]
 		)
-			->registerAndUseStyle(
-				'com_eventbooking.calendar.theme',
-				'media/com_eventbooking/assets/css/themes/' . $calendarTheme . '.css',
+			->addStyleSheet(
+				$rootUrl . '/media/com_eventbooking/assets/css/themes/' . $calendarTheme . '.css',
 				['version' => EventbookingHelper::getInstalledVersion()]
 			);
 
@@ -1243,11 +1275,7 @@ class EventbookingHelper
 
 		if (file_exists($customCssFile) && filesize($customCssFile) > 0)
 		{
-			$wa->registerAndUseStyle(
-				'com_eventbooking.style.custom',
-				'media/com_eventbooking/assets/css/custom.css',
-				['version' => filemtime($customCssFile)]
-			);
+			$document->addStyleSheet($rootUrl . '/media/com_eventbooking/assets/css/custom.css', ['version' => filemtime($customCssFile)]);
 		}
 
 		// Mark it as loaded to avoid the code from running again from second call
@@ -1329,12 +1357,9 @@ class EventbookingHelper
 	 */
 	public static function addLangLinkForAjax()
 	{
-		Factory::getApplication()
-			->getDocument()
-			->getWebAssetManager()
-			->addInlineScript(
-				'var langLinkForAjax="' . self::getLangLink() . '";'
-			);
+		Factory::getApplication()->getDocument()->addScriptDeclaration(
+			'var langLinkForAjax="' . self::getLangLink() . '";'
+		);
 	}
 
 	/**
@@ -1665,7 +1690,6 @@ class EventbookingHelper
 						'meta_keywords',
 						'meta_description',
 						'price_text',
-						'user_email_subject',
 						'registration_handle_url',
 					];
 				}
@@ -1899,21 +1923,12 @@ class EventbookingHelper
 			'custom[email]',
 			'custom[url]',
 			'custom[phone]',
-			'custom[date]',
 			"custom[date],past[$dateNow]",
-			"custom[date],future[$dateNow]",
 			'custom[ipv4]',
-			'custom[ipv6]',
 			'minSize[6]',
 			'maxSize[12]',
 			'custom[integer],min[-5]',
 			'custom[integer],max[50]]',
-			'minCheckbox[2]',
-			'maxCheckbox[2]',
-			'custom[onlyNumberSp]',
-			'custom[onlyLetterSp]',
-			'custom[onlyLetterNumber]',
-			'equals[FIELD_NAME]',
 		];
 	}
 
@@ -2856,14 +2871,7 @@ class EventbookingHelper
 		$page          = new stdClass();
 		$page->content = $invoiceOutput;
 
-		$options = [
-			'title'                => 'Invoice',
-			'type'                 => 'invoice',
-			'PDF_PAGE_ORIENTATION' => $config->get('invoice_page_orientation', 'P'),
-			'PDF_PAGE_FORMAT'      => $config->get('invoice_page_format', 'A4'),
-		];
-
-		EventbookingHelperPdf::generatePDFFile([$page], $filePath, $options);
+		EventbookingHelperPdf::generatePDFFile([$page], $filePath, ['title' => 'Invoice', 'type' => 'invoice']);
 
 		return $filePath;
 	}
@@ -4245,15 +4253,5 @@ class EventbookingHelper
 		}
 
 		return true;
-	}
-
-	/**
-	 * Method to check if category custom fields is enabled
-	 *
-	 * @return bool
-	 */
-	public static function isCategoryCustomFieldsEnabled(): bool
-	{
-		return File::exists(JPATH_ROOT . '/components/com_eventbooking/category_fields.xml');
 	}
 }

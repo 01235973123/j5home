@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.21.2" client="site" method="upgrade">
+	<name>Featured agents</name>
+	<author>Dang Thuc Dam</author>
+	<creationDate>July 2013</creationDate>
+	<copyright>Copyright (C) 2012 - 2024 Ossolution. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>damdt@joomservices.org</authorEmail>
+	<authorUrl>www.joomdonation.com</authorUrl>
+	<version>3.21.2</version>
+	<description>List agents</description>
+	<files>
+		<filename module="mod_featuredagents">mod_featuredagents.php</filename>
+		<folder>tmpl</folder>
+		<folder>style</folder>
+		<filename>helper.php</filename>
+		<filename>index.html</filename>
+		<filename>mod_featuredagents.xml</filename>
+	</files>
+	<languages>
+	</languages>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="moduleclass_sfx" type="text"
+					label="Module class suffix"
+					description="Pleasse enter module class suffix" />
+				<field name="number_agents" type="text" class="input-mini" default="5"
+					label="Number agents/ owners" description="Please enter number of agents/ owners that will be shown at frontend of module." />
+				<field name="user_type" type="list" default="0" label="User type" description="Please select User type">
+                    <option value="-1">All user types</option>
+                    <option value="0">Agent</option>
+					<option value="1">Owner</option>
+					<option value="2">Realtor</option>
+					<option value="3">Broker</option>
+					<option value="4">Builder</option>
+					<option value="5">Landlord</option>
+					<option value="6">Seller</option>
+                </field>
+				<field name="show_featured" type="list" default="0" label="Show Featured agent only" description="Show featured or all agents">
+                    <option value="1">Yes</option>
+                    <option value="0">No</option>
+                </field>
+				<field name="sort_by" type="list" default="0" label="Sort by" description="Please select sort by">
+                    <option value="name">Agent/ Owner name</option>
+                    <option value="rand()">Random</option>
+                </field>
+				<field name="agent_ids" type="text" class="input-large" default=""
+					label="Agent ID(s)" description="Enter Agent ID(s) that you want to show at frontend of module. Separated by comma." />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

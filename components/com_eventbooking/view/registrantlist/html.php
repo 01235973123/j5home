@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -186,7 +186,7 @@ class EventbookingViewRegistrantlistHtml extends RADViewHtml
 		// Do not display anything in the plugin if there is no registrants data
 		if ($this->input->getInt('hmvc_call') && !count($this->items))
 		{
-			// return;
+			return;
 		}
 
 		$this->setLayout('default');

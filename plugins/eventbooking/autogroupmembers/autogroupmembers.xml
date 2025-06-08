@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="4.2.0" type="plugin" group="eventbooking" method="upgrade">
+<extension version="3.9.0" type="plugin" group="eventbooking" method="upgrade">
     <name>Events Booking - Auto Group Members Generator</name>
     <author>Tuan Pham Ngoc</author>
     <creationDate>Match 2018</creationDate>
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2010 - 2025 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2010 - 2024 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>5.0.4</version>
+    <version>5.0.0</version>
     <description>This plugin generate group members automatically for a group registration. It can be used in case you don't want to collect group members information but still want to generate different PDF tickets for that group registration</description>
     <files>
         <filename plugin="autogroupmembers">autogroupmembers.php</filename>

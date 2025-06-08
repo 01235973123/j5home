@@ -79,11 +79,11 @@ class RADPaymentOmnipay extends OmnipayPayment
 
 		if ($task == 'process')
 		{
-			$this->paymentFailureUrl = Route::_('index.php?option=com_eventbooking&view=failure&Itemid=' . $Itemid, false);
+			$this->paymentFailureUrl = Route::_('index.php?option=com_eventbooking&view=failure&Itemid=' . $Itemid, false, false);
 		}
 		else
 		{
-			$this->paymentFailureUrl = Route::_('index.php?option=com_eventbooking&view=failure&id=' . $id . '&Itemid=' . $Itemid, false);
+			$this->paymentFailureUrl = Route::_('index.php?option=com_eventbooking&view=failure&id=' . $id . '&Itemid=' . $Itemid, false, false);
 		}
 	}
 

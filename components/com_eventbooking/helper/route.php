@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -253,8 +253,8 @@ class EventbookingHelperRoute
 			$config = EventbookingHelper::getConfig();
 
 			/* @var \Joomla\Database\DatabaseDriver $db */
-			$db    = Factory::getContainer()->get('db');
-			$query = $db->getQuery(true)
+			$db     = Factory::getContainer()->get('db');
+			$query  = $db->getQuery(true)
 				->select($db->quoteName('alias' . $fieldSuffix, 'alias'))
 				->from('#__eb_events')
 				->where('id = ' . $id);
@@ -332,17 +332,6 @@ class EventbookingHelperRoute
 		{
 			if (isset($item->query['view']) && $item->query['view'] === $view)
 			{
-				// Ignore export registrants option when finding menu item link to registrants view
-				if ($view === 'registrants')
-				{
-					$layout = $item->query['layout'] ?? '';
-
-					if ($layout === 'export')
-					{
-						continue;
-					}
-				}
-
 				return $item->id;
 			}
 		}

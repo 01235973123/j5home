@@ -47,7 +47,7 @@ use Joomla\CMS\Uri\Uri;
 				</span>
 			</td>
 			<td colspan="2">
-				<input type="text" name="configuration[no_subscription_link]" value="<?php echo isset($configs['no_subscription_link'])? $configs['no_subscription_link']: Uri::root(); ?>" size="70">
+				<input type="text" name="configuration[no_subscription_link]" value="<?php echo isset($configs['no_subscription_link'])? $configs['no_subscription_link']: Uri::root(); ?>" size="70" class="form-control">
 			</td>
 		</tr>
 	</table>

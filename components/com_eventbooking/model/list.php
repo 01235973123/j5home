@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -12,7 +12,6 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Database\DatabaseQuery;
 use Joomla\Database\ParameterType;
 use Joomla\String\StringHelper;
@@ -21,8 +20,6 @@ use OSSolution\EventBooking\Admin\Event\Events\AfterReturnEventsFromDatabase;
 
 class EventbookingModelList extends RADModelList
 {
-	use EventbookingModelEventsfilter;
-
 	/**
 	 * Fields which will be returned from SQL query
 	 *
@@ -184,8 +181,7 @@ class EventbookingModelList extends RADModelList
 	/**
 	 * Method to get the current parent category
 	 *
-	 * @return ?stdClass
-	 *
+	 * @return stdClass|null
 	 * @throws Exception
 	 */
 	public function getCategory()
@@ -213,6 +209,11 @@ class EventbookingModelList extends RADModelList
 	 */
 	protected function beforeReturnData($rows)
 	{
+		if (empty($rows))
+		{
+			return;
+		}
+
 		foreach ($rows as $row)
 		{
 			if ($row->image)
@@ -222,8 +223,6 @@ class EventbookingModelList extends RADModelList
 
 			$row->tax_rate = EventbookingHelperRegistration::calculateEventTaxRate($row);
 		}
-
-		PluginHelper::importPlugin('eventbooking');
 
 		$eventObj = new AfterReturnEventsFromDatabase(['rows' => $rows, 'context' => 'list']);
 
@@ -322,6 +321,7 @@ class EventbookingModelList extends RADModelList
 		$categoryIds        = $this->params->get('category_ids', []);
 		$excludeCategoryIds = $this->params->get('exclude_category_ids', []);
 		$locationIds        = $this->params->get('location_ids', []);
+		$month              = $this->params->get('month', 0);
 		$fromDate           = trim($this->params->get('from_date', ''));
 		$toDate             = trim($this->params->get('to_date', ''));
 
@@ -441,14 +441,14 @@ class EventbookingModelList extends RADModelList
 			$toDate = $date->toSql(true);
 		}
 
-		if ((int) $fromDate)
+		if ($fromDate)
 		{
-			$query->where('tbl.event_date >= ' . $db->quote($fromDate));
+			$query->where('tbl.event_date >= ' . $this->getDbo()->quote($fromDate));
 		}
 
-		if ((int) $toDate)
+		if ($toDate)
 		{
-			$query->where('tbl.event_date <= ' . $db->quote($toDate));
+			$query->where('tbl.event_date <= ' . $this->getDbo()->quote($toDate));
 		}
 
 		// Apply duration filter
@@ -603,6 +603,71 @@ class EventbookingModelList extends RADModelList
 		}
 
 		$query->where('(' . implode(' OR ', $conditions) . ')');
+	}
+
+	/**
+	 * Method to apply keyword filter, make it easier to customize keyword search behavior
+	 *
+	 * @param   DatabaseQuery  $query
+	 */
+	protected function applyKeywordFilter(DatabaseQuery $query)
+	{
+		if (!$this->state->search)
+		{
+			return;
+		}
+
+		$db          = $this->getDbo();
+		$config      = EventbookingHelper::getConfig();
+		$fieldSuffix = EventbookingHelper::getFieldSuffix();
+
+		$searchFields = [];
+
+		foreach ($this->searchFields as $field)
+		{
+			if (in_array($field, static::$translatableFields))
+			{
+				$searchFields[] = $field . $fieldSuffix;
+			}
+			else
+			{
+				$searchFields[] = $field;
+			}
+		}
+
+		$searchFields = $db->quoteName($searchFields);
+
+		if ($config->get('search_events', 'exact') == 'exact')
+		{
+			$search = $db->quote('%' . $db->escape(StringHelper::strtolower($this->state->search), true) . '%', false);
+
+			$whereOr = [];
+
+			foreach ($searchFields as $searchField)
+			{
+				$whereOr[] = " LOWER($searchField) LIKE " . $search;
+			}
+
+			$query->where('(' . implode(' OR ', $whereOr) . ') ');
+		}
+		else
+		{
+			$words = explode(' ', $this->state->search);
+
+			$wheres = [];
+
+			foreach ($words as $word)
+			{
+				$word = $db->quote('%' . $db->escape(StringHelper::strtolower($word), true) . '%', false);
+
+				foreach ($searchFields as $searchField)
+				{
+					$wheres[] = " LOWER($searchField) LIKE " . $word;
+				}
+			}
+
+			$query->where('(' . implode(' OR ', $wheres) . ')');
+		}
 	}
 
 	/**

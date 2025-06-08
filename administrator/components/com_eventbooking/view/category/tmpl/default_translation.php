@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -35,7 +35,7 @@ foreach ($this->languages as $language)
 			<?php echo Text::_('EB_NAME'); ?>
 		</div>
 		<div class="controls">
-			<input class="form-control" type="text" name="name_<?php echo $sef; ?>" id="name_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'name_' . $sef}; ?>"/>
+			<input class="input-xlarge form-control" type="text" name="name_<?php echo $sef; ?>" id="name_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'name_' . $sef}; ?>"/>
 		</div>
 	</div>
 	<div class="control-group">
@@ -43,7 +43,7 @@ foreach ($this->languages as $language)
 			<?php echo Text::_('EB_ALIAS'); ?>
 		</div>
 		<div class="controls">
-			<input class="form-control" type="text" name="alias_<?php echo $sef; ?>" id="alias_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'alias_' . $sef}; ?>"/>
+			<input class="input-xlarge form-control" type="text" name="alias_<?php echo $sef; ?>" id="alias_<?php echo $sef; ?>" size="" maxlength="250" value="<?php echo $this->item->{'alias_' . $sef}; ?>"/>
 		</div>
 	</div>
 	<div class="control-group">
@@ -51,7 +51,7 @@ foreach ($this->languages as $language)
 			<?php echo Text::_('EB_CATEGORY_DETAIL_URL'); ?>
 		</div>
 		<div class="controls">
-			<input class="form-control" type="text" name="category_detail_url_<?php echo $sef; ?>" id="category_detail_url_<?php echo $sef; ?>" maxlength="250" value="<?php echo $this->item->{'category_detail_url_' . $sef}; ?>"/>
+			<input class="input-xlarge form-control" type="text" name="category_detail_url_<?php echo $sef; ?>" id="category_detail_url_<?php echo $sef; ?>" maxlength="250" value="<?php echo $this->item->{'category_detail_url_' . $sef}; ?>"/>
 		</div>
 	</div>
 	<div class="control-group">
@@ -59,7 +59,7 @@ foreach ($this->languages as $language)
 			<?php echo Text::_('EB_PAGE_TITLE'); ?>
 		</div>
 		<div class="controls">
-			<input class="form-control" type="text" name="page_title_<?php echo $sef; ?>" id="page_title_<?php echo $sef; ?>" maxlength="250" value="<?php echo $this->item->{'page_title_' . $sef}; ?>"/>
+			<input class="input-xlarge form-control" type="text" name="page_title_<?php echo $sef; ?>" id="page_title_<?php echo $sef; ?>" maxlength="250" value="<?php echo $this->item->{'page_title_' . $sef}; ?>"/>
 		</div>
 	</div>
 	<div class="control-group">
@@ -67,7 +67,7 @@ foreach ($this->languages as $language)
 			<?php echo Text::_('EB_PAGE_HEADING'); ?>
 		</div>
 		<div class="controls">
-			<input class="form-control" type="text" name="page_heading_<?php echo $sef; ?>" id="page_heading_<?php echo $sef; ?>" maxlength="250" value="<?php echo $this->item->{'page_heading_' . $sef}; ?>"/>
+			<input class="input-xlarge form-control" type="text" name="page_heading_<?php echo $sef; ?>" id="page_heading_<?php echo $sef; ?>" maxlength="250" value="<?php echo $this->item->{'page_heading_' . $sef}; ?>"/>
 		</div>
 	</div>
 	<div class="control-group">
@@ -75,7 +75,7 @@ foreach ($this->languages as $language)
 			<?php echo  Text::_('EB_META_KEYWORDS'); ?>
 		</div>
 		<div class="controls">
-			<textarea rows="5" cols="30" class="form-control" name="meta_keywords_<?php echo $sef; ?>"><?php echo $this->item->{'meta_keywords_' . $sef}; ?></textarea>
+			<textarea rows="5" cols="30" class="input-xlarge form-control" name="meta_keywords_<?php echo $sef; ?>"><?php echo $this->item->{'meta_keywords_' . $sef}; ?></textarea>
 		</div>
 	</div>
 	<div class="control-group">
@@ -83,7 +83,7 @@ foreach ($this->languages as $language)
 			<?php echo  Text::_('EB_META_DESCRIPTION'); ?>
 		</div>
 		<div class="controls">
-			<textarea rows="5" cols="30" class="form-control" name="meta_description_<?php echo $sef; ?>"><?php echo $this->item->{'meta_description_' . $sef}; ?></textarea>
+			<textarea rows="5" cols="30" class="input-xlarge form-control" name="meta_description_<?php echo $sef; ?>"><?php echo $this->item->{'meta_description_' . $sef}; ?></textarea>
 		</div>
 	</div>
 	<div class="control-group">

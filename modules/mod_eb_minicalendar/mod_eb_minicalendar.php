@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
@@ -35,19 +36,16 @@ $app      = Factory::getApplication();
 $document = $app->getDocument();
 $config   = EventbookingHelper::getConfig();
 
-$document
-	->getWebAssetManager()
-	->useScript('core')
-	->addInlineScript(
-		'var siteUrl = "' . EventbookingHelper::getSiteUrl() . '";'
-	);
+$document->addScriptDeclaration(
+	'var siteUrl = "' . EventbookingHelper::getSiteUrl() . '";'
+);
+
+HTMLHelper::_('behavior.core');
 
 $rootUri = Uri::root(true);
 
-$document
-	->addScriptOptions('siteUrl', $rootUri)
-	->getWebAssetManager()
-	->registerAndUseScript('mod-eb-minicalendar', 'media/com_eventbooking/js/mod-eb-minicalendar.min.js', [], ['defer' => true]);
+$document->addScript($rootUri . '/media/com_eventbooking/js/mod-eb-minicalendar.min.js', [], ['defer' => true])
+	->addScriptOptions('siteUrl', $rootUri);
 
 $currentDateData = EventbookingModelCalendar::getCurrentDateData();
 $year            = (int) $params->get('default_year', 0) ?: $currentDateData['year'];

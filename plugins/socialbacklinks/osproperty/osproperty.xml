@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.20.0" type="plugin" group="socialbacklinks" method="upgrade">
+	<name>PLG_SOCIALBACKLINKS_OSPROPERTY</name>
+	<creationDate>2021-09-01</creationDate>
+	<author>Joom Donation</author>
+	<authorEmail>services@joomdonation.com</authorEmail>
+	<authorUrl>https://www.joomdonation.com</authorUrl>
+	<copyright>(c) 2021 Joom Donation (https://www.joomdonation.com). All rights reserved.</copyright>
+	<license>GNU General Public License version 2 or later; http://www.gnu.org/licenses/gpl-2.0.html</license>
+    <version>1.20.0</version>
+	<description>PLG_SB_OSPROPERTY_XML_DESCRIPTION</description>
+	
+	<files>
+		<filename plugin="osproperty">osproperty.php</filename>
+		<filename>index.html</filename>
+		<folder>content</folder>
+	</files>
+	<languages>
+		<language tag="en-GB">en-GB.plg_socialbacklinks_osproperty.sys.ini</language>
+	</languages>
+</extension>

@@ -4,11 +4,11 @@
 	<title>Default Theme</title>
 	<author>Tuan Pham Ngoc</author>
 	<creationDate>08-06-2018</creationDate>
-	<copyright>Copyright (C) 2010 - 2025 Ossolution Team</copyright>
+	<copyright>Copyright (C) 2010 - 2024 Ossolution Team</copyright>
 	<license>https://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU/GPL version 2</license>
 	<authorEmail>tuanpn@joomdonation.com</authorEmail>
 	<authorUrl>https://joomdonation.com</authorUrl>
-	<version>5.0.4</version>
+	<version>5.0.0</version>
 	<description>Default theme For Events Booking Extension</description>
 	<config>	
 		<fields name="params">			

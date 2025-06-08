@@ -3,10 +3,10 @@
 <name>Events Booking - Latest Registrants</name>
 <author>Tuan Pham Ngoc</author>
 <creationDate>February 19 2019</creationDate>
-<copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
+<copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
 <authorEmail>tuanpn@joomdonation.com</authorEmail>
 <authorUrl>https://joomdonation.com</authorUrl>
-<version>5.0.4</version>
+<version>5.0.0</version>
 <description>Display Latest Registrants from Events Booking.</description>
 <files>
     <filename module="mod_eb_registrants">mod_eb_registrants.php</filename>

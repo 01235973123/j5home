@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="4.2.0" type="plugin" group="system" method="upgrade">
+<extension version="3.9.0" type="plugin" group="system" method="upgrade">
 	<name>System - Events Booking SMS</name>
 	<author>Tuan Pham Ngoc</author>
 	<creationDate>August 2020</creationDate>
-	<copyright>Copyright 2010 - 2025 Ossolution Team</copyright>
+	<copyright>Copyright 2010 - 2024 Ossolution Team</copyright>
 	<license>GNU General Public License version 2 or later; see LICENSE.txt</license>
 	<authorEmail>tuanpn@joomdonation.com</authorEmail>
 	<authorUrl>https://joomdonation.com</authorUrl>
-	<version>5.0.4</version>
+	<version>5.0.0</version>
 	<description>This plugin is used to send SMS reminder to registrants of your events. It also sends SMS notification to admin when someone registers for your events.</description>
 	<files>
 		<filename plugin="eventbookingsms">eventbookingsms.php</filename>

@@ -314,7 +314,7 @@ $inputSmallClass	= $bootstrapHelper->getClassMapping('input-small'). ' smallSize
 				<div class="<?php echo $controlsClass; ?>">
 					<?php
 					$category_layout_arr = array('One Column','Two Columns','Three Columns','Four Columns','Five Columns');
-					$option_category_layout = array();
+					$option_category_layout = [];
 					$number_columns = 100;
 					foreach ($category_layout_arr as $value => $text) {
 						$option_category_layout[] = HTMLHelper::_('select.option',$value + 1,TextOs::_($text));
@@ -442,12 +442,31 @@ $inputSmallClass	= $bootstrapHelper->getClassMapping('input-small'). ' smallSize
 		</fieldset>
 		<fieldset class="form-horizontal options-form">
 			<legend><?php echo TextOs::_('Property Details Settings')?></legend>
-			
 			<div class="<?php echo $controlGroupClass; ?>">
 				<div class="<?php echo $controlLabelClass; ?>">
-					<span class="editlinktip hasTip hasTooltip" title="<?php echo TextOs::_( 'Show request more details tab' );?>::<?php echo TextOs::_('Show request more details tab explain'); ?>">
+					<span class="editlinktip hasTip hasTooltip" title="<?php echo Text::_( 'OS_SELECT_THEME_FOR_PROPERTY_DETAILS_PAGE' );?>::<?php echo Text::_('OS_SELECT_THEME_FOR_PROPERTY_DETAILS_PAGE_EXPLAIN'); ?>">
 						<label for="checkbox_property_mail_to_friends">
-							<?php echo TextOs::_( 'Show request more details tab' ).':'; ?>
+							<?php echo Text::_( 'OS_SELECT_THEME_FOR_PROPERTY_DETAILS_PAGE' ).':'; ?>
+						</label>
+					</span>
+				</div>
+				<div class="<?php echo $controlsClass; ?>">
+					<?php
+					$db = Factory::getDbo();
+					$db->setQuery("Select name as value, title as text from #__osrs_themes");
+					$themes			= $db->loadObjectList();
+					$themeArr		= [];
+					$themeArr[]		= HTMLHelper::_('select.option','',Text::_('OS_INHERIT_FROM_GLOBAL_CONFIGURATION'));
+					$themeArr		= array_merge($themeArr, $themes);
+					echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist',$themeArr,'configuration[property_details_theme]','class=" imedium form-select"','value','text',(int)$configs['property_details_theme']));
+					?>
+				</div>
+			</div>
+			<div class="<?php echo $controlGroupClass; ?>">
+				<div class="<?php echo $controlLabelClass; ?>">
+					<span class="editlinktip hasTip hasTooltip" title="<?php echo Text::_( 'OS_SHOW_REQUEST_MORE_DETAILS_FORM' );?>::<?php echo TextOs::_('Show request more details tab explain'); ?>">
+						<label for="checkbox_property_mail_to_friends">
+							<?php echo Text::_( 'OS_SHOW_REQUEST_MORE_DETAILS_FORM' ).':'; ?>
 						</label>
 					</span>
 				</div>
@@ -469,11 +488,11 @@ $inputSmallClass	= $bootstrapHelper->getClassMapping('input-small'). ' smallSize
 					<?php
 					$allowed_subjects = $configs['allowed_subjects'];
 					$allowed_subjects = explode(",",$allowed_subjects);
-					$optionArr = array();
+					$optionArr = [];
 					for($i=1;$i<=7;$i++){
 						$optionArr[] = HTMLHelper::_('select.option',$i,Text::_('OS_REQUEST_'.$i));
 					}
-					echo HTMLHelper::_('select.genericlist',$optionArr,'allowed_subjects[]','multiple class="chosen"','value','text',$allowed_subjects);
+					echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist',$optionArr,'allowed_subjects[]','multiple class=" imedium"','value','text',$allowed_subjects));
 					?>
 				</div>
 			</div>
@@ -545,6 +564,7 @@ $inputSmallClass	= $bootstrapHelper->getClassMapping('input-small'). ' smallSize
 					?>
 				</div>
 			</div>
+			<!--
 			<div class="<?php echo $controlGroupClass; ?>">
 				<div class="<?php echo $controlLabelClass; ?>">
 					<span class="editlinktip hasTip hasTooltip" title="<?php echo Text::_( 'OS_USE_GOOGLE_RECAPTCHA_IN_REQUEST_MORE_DETAILS' );?>::<?php echo Text::_('OS_USE_GOOGLE_RECAPTCHA_IN_REQUEST_MORE_DETAILS_EXPLAIN'); ?>">
@@ -559,6 +579,7 @@ $inputSmallClass	= $bootstrapHelper->getClassMapping('input-small'). ' smallSize
 					?>
 				</div>
 			</div>
+			-->
 			<div class="<?php echo $controlGroupClass; ?>">
 				<div class="<?php echo $controlLabelClass; ?>">
 					<span class="editlinktip hasTip hasTooltip" title="<?php echo Text::_( 'OS_TURN_ON_TELL_FRIEND_FORM' );?>::<?php echo TextOs::_('MAIL_TO_FRIEND_EXPLAIN'); ?>">
@@ -726,7 +747,7 @@ $inputSmallClass	= $bootstrapHelper->getClassMapping('input-small'). ' smallSize
 				<div class="<?php echo $controlsClass; ?>">
 					<?php
 					$category_layout_arr = array('Two Columns','Three Columns');
-					$option_category_layout = array();
+					$option_category_layout = [];
 					foreach ($category_layout_arr as $value => $text) {
 						$option_category_layout[] = HTMLHelper::_('select.option',$value + 1,TextOs::_($text));
 					}

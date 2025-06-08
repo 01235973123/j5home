@@ -81,7 +81,10 @@ class RADFormFieldRadio extends RADFormField
 
 		$quantityValues = explode("\r\n", $this->row->quantity_values);
 
-		if ($this->row->quantity_field && count($values) && count($quantityValues) && $this->eventId)
+		if ($this->row->quantity_field && count($values) && count($quantityValues) && $this->eventId && !$user->authorise(
+				'eventbooking.registrantsmanagement',
+				'com_eventbooking'
+			))
 		{
 			$multilingualValues = [];
 
@@ -129,7 +132,10 @@ class RADFormFieldRadio extends RADFormField
 		{
 			$optionValue = trim($value);
 
-			if (!$config->show_available_number_for_each_quantity_option || empty($quantityValues[$optionValue]))
+			if (!$config->show_available_number_for_each_quantity_option || empty($quantityValues[$optionValue]) || $user->authorise(
+					'eventbooking.registrantsmanagement',
+					'com_eventbooking'
+				))
 			{
 				$optionText = $optionValue;
 			}

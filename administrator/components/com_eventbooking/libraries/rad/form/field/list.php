@@ -133,7 +133,10 @@ class RADFormFieldList extends RADFormField
 
 		$quantityValues = explode("\r\n", $this->row->quantity_values);
 
-		if ($this->row->quantity_field && count($values) && count($quantityValues) && $this->eventId)
+		if ($this->row->quantity_field && count($values) && count($quantityValues) && $this->eventId && !$user->authorise(
+				'eventbooking.registrantsmanagement',
+				'com_eventbooking'
+			))
 		{
 			$multilingualValues = [];
 

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -29,7 +29,7 @@ $config    = EventbookingHelper::getConfig();
 			</div>
 		</div>
 		<div class="clearfix"></div>
-		<table class="table itemList table-striped">
+		<table class="adminlist table table-striped">
 			<thead>
 				<tr>
 					<th width="20">

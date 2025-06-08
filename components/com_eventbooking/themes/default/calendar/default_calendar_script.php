@@ -3,13 +3,14 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
+use Joomla\CMS\Uri\Uri;
 
 /**
  * Layout variables
@@ -17,16 +18,9 @@ use Joomla\CMS\Factory;
  * @var   int $w
  */
 
-$wa = Factory::getApplication()
-	->getDocument()
-	->getWebAssetManager();
+$document = Factory::getApplication()->getDocument();
 
-$wa->registerAndUseScript(
-	'com_eventbooking.responsive-auto-height',
-	'media/com_eventbooking/assets/js/responsive-auto-height.min.js',
-	[],
-	['defer' => true]
-);
+$document->addScript(Uri::root(true) . '/media/com_eventbooking/assets/js/responsive-auto-height.min.js', [], ['defer' => true]);
 
 if ($this->config->show_thumb_in_calendar)
 {
@@ -37,19 +31,18 @@ else
 	$equalHeightScript[] = 'document.addEventListener("DOMContentLoaded", function() {';
 }
 
-for ($i = 0; $i < $w; $i++)
+for ($i = 0 ; $i < $w; $i++)
 {
 	$equalHeightScript[] = 'new ResponsiveAutoHeight("li.eb-calendar-row-' . $i . '");';
 }
 
 $equalHeightScript[] = '});';
 
-$wa->addInlineScript(implode("\r\n", $equalHeightScript));
+$document->addScriptDeclaration(implode("\r\n", $equalHeightScript));
 
 if ($this->config->display_event_in_tooltip)
 {
-	$wa->addInlineScript(
-		"
+	$document->addScriptDeclaration("
 		document.addEventListener('DOMContentLoaded', function () {
             var tooltipOptions = {'html' : true, 'sanitize': false};      
                 if (window.jQuery && window.jQuery().tooltip){
@@ -61,6 +54,5 @@ if ($this->config->display_event_in_tooltip)
 					});                                     
                 }     
         });      
-    "
-	);
+    ");
 }

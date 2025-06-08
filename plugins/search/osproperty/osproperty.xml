@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="3.0" type="plugin" group="search" method="upgrade">
+	<name>Search - OS Property</name>
+	<author>Dang Thuc Dam</author>
+	<creationDate>November 2016</creationDate>
+	<copyright>Copyright (C) 2016 Ossolution. All rights reserved.</copyright>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>www.joomdonation.net</authorUrl>
+	<version>3.0.4</version>
+	<description>Allows searching of OS Property Property Listings</description>
+	<files>
+		<filename plugin="osproperty">osproperty.php</filename>
+        <filename>index.html</filename>
+	</files>
+    <languages>
+        <language tag="en-GB">language/en-GB.plg_search_osproperty.ini</language>
+    </languages>
+	<config>
+		<fields name="params">
+            <fieldset name="basic">
+                <field name="search_limit" type="text" size="5" default="50" label="PLG_OS_SEARCH_LIMIT" description="PLG_OS_SEARCH_LIMIT_DESC"/>
+                <field name="search_short" type="radio" class="btn-group" default="1" label="PLG_OS_SEARCH_SHORT" description="PLG_OS_SEARCH_SHORT_DESC">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+                <field name="search_full" type="radio" class="btn-group" default="1" label="PLG_OS_SEARCH_FULL" description="PLG_OS_SEARCH_FULL_DESC">
+                    <option value="0">JNO</option>
+                    <option value="1">JYES</option>
+                </field>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

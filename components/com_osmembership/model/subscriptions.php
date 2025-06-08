@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
@@ -74,8 +75,7 @@ class OSMembershipModelSubscriptions extends MPFModelList
 		$query->where('tbl.user_id = ' . Factory::getApplication()->getIdentity()->id)
 			->where('tbl.plan_id IN (SELECT id FROM #__osmembership_plans WHERE published = 1)');
 
-		if (!$config->get('show_incomplete_payment_subscriptions', 1))
-		{
+		if (!$config->get('show_incomplete_payment_subscriptions', 1)) {
 			$query->where('(tbl.published != 0 OR tbl.gross_amount = 0 OR tbl.payment_method LIKE "os_offline%")');
 		}
 

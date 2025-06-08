@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="plugin" group="osproperty" version="3.21.0" method="upgrade">
+	<name>OS Property navigation</name>
+	<creationDate>Oct 2014</creationDate>
+	<author>Dang Thuc Dam</author>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>http://www.joomservices.com</authorUrl>
+	<copyright>Copyright 2012-2023 Joomdonation.com All rights reserved!</copyright>
+	<license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+	<version>3.21.0</version>
+	<description>Show Navigation (Next, Previous Properties) on Property Details from Advanced Search result.</description>
+	<files>
+		<filename plugin="ospnavigation">ospnavigation.php</filename>
+	</files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field name="nav_position" type="list" label="Select Position of Navigation" description="You can select to show the Navigation at top, middle or bottom of Property Details page">
+					<option value="top">Top</option>
+					<option value="middle">Middle</option>
+					<option value="bottom">Bottom</option>
+				</field>
+				<field type="spacer" default="Details" />
+				<field name="borderColor" class="" type="color" default="#f7931d" label="Border color" description="Choose the title color for static label. If left blank the Default (#f7931d) is used" />
+			</fieldset>
+		</fields>
+	</config>
+</extension>

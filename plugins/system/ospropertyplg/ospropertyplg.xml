@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="1.5" type="plugin" group="system" method="upgrade">
+	<name>OsProperty Cron Jobs Plugin</name>
+	<author>www.Joomdonation.com</author>
+	<creationDate>Nov 11 2011</creationDate>
+	<copyright>Copyright (C), Ossolution Co., Ltd. All Rights Reserved.</copyright>
+	<license>license GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html</license>
+	<authorEmail>damdt@joomservices.com</authorEmail>
+	<authorUrl>http://www.joomdonation.com</authorUrl>
+	<version>1.0</version>
+	<description>OS Property plugin - Check and process cron jobs</description>	
+	<files>
+		<filename plugin="ospropertyplg">ospropertyplg.php</filename>
+	</files>	
+</extension>

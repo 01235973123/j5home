@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -25,7 +25,7 @@ $this->includeTemplate('script');
 			</div>
 		</div>
 		<div class="clearfix"></div>
-		<table class="table itemList table-striped" id="ticketTypeList">
+		<table class="adminlist table table-striped" id="ticketTypeList">
 			<thead>
 			<tr>
 				<th width="1%" class="nowrap center hidden-phone">

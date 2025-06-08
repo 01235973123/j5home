@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -12,14 +12,14 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
-HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
+HTMLHelper::_('behavior.core');
 
-Factory::getApplication()
-	->getDocument()
-	->getWebAssetManager()
-	->useScript('core');
+HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
+$document = Factory::getApplication()->getDocument();
+$document->addStyleDeclaration('.hasTip{display:block !important}');
 
 // Little command to allow viewing subscription data easier without having to edit code during support
 if ($this->input->getInt('debug'))
@@ -214,20 +214,6 @@ $span6Class      = $bootstrapHelper->getClassMapping('span6');
 		</div>
 	</div>
 	<?php
-	if (!empty($this->item->coupon_code))
-	{
-	?>
-		<div class="control-group">
-			<div class="control-label">
-				<?php echo  Text::_('EB_COUPON'); ?>
-			</div>
-			<div class="controls">
-				<?php echo $this->item->coupon_code; ?>
-			</div>
-		</div>
-	<?php
-	}
-
 	if ($this->item->late_fee > 0)
 	{
 	?>
@@ -631,13 +617,9 @@ $span6Class      = $bootstrapHelper->getClassMapping('span6');
 		echo HTMLHelper::_( 'uitab.endTabSet');
 	}
 
-	Factory::getApplication()
-		->getDocument()
-		->addScriptOptions('numberMembers', (int) count($this->rowMembers))
+	$document->addScriptOptions('numberMembers', (int) count($this->rowMembers))
 		->addScriptOptions('selectedState', $selectedState)
-		->getWebAssetManager()
-		->registerAndUseScript('com_eventbooking.admin-registrant-default', 'media/com_eventbooking/js/admin-registrant-default.min.js')
-		->addInlineStyle('.hasTip{display:block !important}');
+		->addScript(Uri::root(true) . '/media/com_eventbooking/js/admin-registrant-default.min.js');
 
 	$languageItems = [
 		'EB_ADD_MEMBER_MAXIMUM_WARNING',

@@ -74,7 +74,7 @@ $inputLargeClass	= $bootstrapHelper->getClassMapping('input-large');
 							$db->setQuery("Select id as value, type_name as text from #__osrs_types where published = '1' order by ordering");
 							$types = $db->loadObjectList();
 							$type_arr  = array_merge($type_arr,$types);
-							echo HTMLHelper::_('select.genericlist',$type_arr,'adv_type_ids[]','style="height:150px; width:250px;" multiple class="form-control input-large chosen"','value','text',$type_lists);
+							echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist',$type_arr,'adv_type_ids[]','style="height:150px; width:250px;" multiple class="form-control input-large"','value','text',$type_lists));
 						?>
 					</div>
 				</div>

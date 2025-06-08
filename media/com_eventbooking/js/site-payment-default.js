@@ -3,13 +3,65 @@
         $("#adminForm").validationEngine('attach', {
             onValidationComplete: function(form, status){
                 if (status === true) {
+                    var paymentMethod;
+
                     form.on('submit', function(e) {
                         e.preventDefault();
                     });
 
                     form.find('#btn-submit').prop('disabled', true);
 
-                    return paymentMethodCallbackHandle();
+                    if($('input:radio[name^=payment_method]').length)
+                    {
+                        paymentMethod = $('input:radio[name^=payment_method]:checked').val();
+                    }
+                    else
+                    {
+                        paymentMethod = $('input[name^=payment_method]').val();
+                    }
+
+                    if (paymentMethod.indexOf('os_stripe') === 0)
+                    {
+                        if (typeof stripePublicKey !== 'undefined')
+                        {
+                            Stripe.card.createToken({
+                                number: $('#x_card_num').val(),
+                                cvc: $('#x_card_code').val(),
+                                exp_month: $('select[name^=exp_month]').val(),
+                                exp_year: $('select[name^=exp_year]').val(),
+                                name: $('#card_holder_name').val()
+                            }, stripeResponseHandler);
+
+                            return false;
+                        }
+
+                        // Stripe card element
+                        if (typeof stripe !== 'undefined')
+                        {
+                            stripe.createToken(card).then(function(result) {
+                                if (result.error) {
+                                    // Inform the customer that there was an error.
+                                    //var errorElement = document.getElementById('card-errors');
+                                    //errorElement.textContent = result.error.message;
+                                    alert(result.error.message);
+                                    $('#btn-submit').prop('disabled', false);
+                                } else {
+                                    // Send the token to your server.
+                                    stripeTokenHandler(result.token);
+                                }
+                            });
+
+                            return false;
+                        }
+                    }
+
+                    if (paymentMethod.indexOf('os_squarecard') === 0 && $('#square-card-form').is(':visible')) {
+                        squareCardCallBackHandle();
+
+                        return false;
+                    }
+
+                    return true;
                 }
                 return false;
             }
@@ -38,11 +90,6 @@
         {
             createSquareCardElement();
         }
-
-        // Dispatch custom event
-        document.dispatchEvent(new CustomEvent("onEBAfterRegistrationFormLoaded", {
-            detail: { registrationType: 'registrationPayment'}
-        }));
     });
 
     calculateRegistrationFee= function()

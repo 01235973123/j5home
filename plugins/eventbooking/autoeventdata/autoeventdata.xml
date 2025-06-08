@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension version="4.2.0" type="plugin" group="eventbooking" method="upgrade">
+<extension version="3.9.0" type="plugin" group="eventbooking" method="upgrade">
     <name>Events Booking - Auto Event Data</name>
     <author>Tuan Pham Ngoc</author>
     <creationDate>April 2024</creationDate>
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2010 - 2025 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2010 - 2024 Ossolution Team</copyright>
     <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>5.0.4</version>
+    <version>5.0.0</version>
     <description>This plugin set data (currently, only cancel before date) for events automatically when the event is
         saved so that you do not have to enter data for these fields manually.
     </description>

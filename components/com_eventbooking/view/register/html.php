@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -60,7 +60,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 	 *
 	 * @var array
 	 */
-	protected $methods = [];
+	protected $methods;
 
 	/**
 	 * The flag to mark if coupon is enabled
@@ -311,9 +311,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 
 		if ($layout == 'cart')
 		{
-			Factory::getApplication()
-				->getDocument()
-				->addScriptOptions('currencyCode', $config->currency_code);
+			Factory::getApplication()->getDocument()->addScriptOptions('currencyCode', $config->currency_code);
 			$this->displayCart();
 
 			return;
@@ -329,9 +327,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 			return;
 		}
 
-		Factory::getApplication()
-			->getDocument()
-			->addScriptOptions('currencyCode', $event->currency_code ?: $config->currency_code);
+		Factory::getApplication()->getDocument()->addScriptOptions('currencyCode', $event->currency_code ?: $config->currency_code);
 
 		$category = EventbookingHelperDatabase::getCategory($event->main_category_id);
 
@@ -444,10 +440,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 
 		$form->bind($data, $useDefault);
 		$form->prepareFormFields('calculateIndividualRegistrationFee();');
-		$paymentMethod = $input->post->getString(
-			'payment_method',
-			EventbookingHelperPayments::getDefautPaymentMethod(trim($event->payment_methods ?? ''))
-		);
+		$paymentMethod = $input->post->getString('payment_method', EventbookingHelperPayments::getDefautPaymentMethod(trim($event->payment_methods)));
 		$form->handleFieldsDependOnPaymentMethod($paymentMethod);
 
 		if ($waitingList)
@@ -469,7 +462,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 			);
 		}
 
-		$methods = EventbookingHelperPayments::getPaymentMethods(trim($event->payment_methods ?? ''));
+		$methods = EventbookingHelperPayments::getPaymentMethods(trim($event->payment_methods));
 
 		if (($event->enable_coupon == 0 && $config->enable_coupon) || in_array($event->enable_coupon, [1, 3]))
 		{
@@ -616,9 +609,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 				. $ItemidLink;
 		}
 
-		Factory::getApplication()
-			->getDocument()
-			->addScriptOptions('calculateIndividualRegistrationFeeUrl', $calculateIndividualRegistrationFeeUrl);
+		Factory::getApplication()->getDocument()->addScriptOptions('calculateIndividualRegistrationFeeUrl', $calculateIndividualRegistrationFeeUrl);
 
 		if ($this->collectMembersInformation)
 		{
@@ -937,9 +928,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 				. '/index.php?option=com_eventbooking&task=cart.calculate_cart_registration_fee' . $langLink . $ItemidLink;
 		}
 
-		Factory::getApplication()
-			->getDocument()
-			->addScriptOptions('calculateCartRegistrationFeeUrl', $calculateCartRegistrationFeeUrl);
+		Factory::getApplication()->getDocument()->addScriptOptions('calculateCartRegistrationFeeUrl', $calculateCartRegistrationFeeUrl);
 
 		// Load modal script
 		if ($this->config->accept_term == 1 && $this->config->article_id)
@@ -1121,12 +1110,6 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 
 			if (!$passwordPassed)
 			{
-				// Allow passing password directly on the request for validation
-				$passwordPassed = $this->input->getString('password') === $event->event_password;
-			}
-
-			if (!$passwordPassed)
-			{
 				$return = base64_encode(Uri::getInstance()->toString());
 
 				$app->redirect(
@@ -1147,8 +1130,6 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 	protected function loadAndInitializeJS()
 	{
 		$document = Factory::getApplication()->getDocument();
-		$wa       = $document->getWebAssetManager()
-			->useScript('core');
 		$config   = EventbookingHelper::getConfig();
 		$rootUri  = Uri::root(true);
 
@@ -1162,17 +1143,18 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 			$euVatNumberField = '';
 		}
 
-		$wa->addInlineScript(
+		$document->addScriptDeclaration(
 			'var siteUrl = "' . EventbookingHelper::getSiteUrl() . '";'
-		)->addInlineScript('var stripeCard = null;');
+		);
 
-		$document
+		$document->addScriptDeclaration('var stripeCard = null;')
 			->addScriptOptions('euVatNumberField', $euVatNumberField)
 			->addScriptOptions('ebSiteUrl', $rootUri . '/')
 			->addScriptOptions('isCountryBaseTax', EventbookingHelperRegistration::isCountryBaseTax())
 			->addScriptOptions('isEUTaxRuleEnabled', EventbookingHelperRegistration::isEUVatTaxRulesEnabled())
 			->addScriptOptions('taxStateCountries', EventbookingHelperRegistration::getTaxStateCountries());
 
+		HTMLHelper::_('behavior.core');
 		Text::script('EB_INVALID_VATNUMBER', true);
 
 		EventbookingHelperJquery::loadjQuery();
@@ -1193,7 +1175,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 
 		if (file_exists($customJSFile) && filesize($customJSFile) > 0)
 		{
-			$wa->registerAndUseScript('com_eventbooking.custom', 'media/com_eventbooking/assets/js/custom.js');
+			$document->addScript($rootUri . '/media/com_eventbooking/assets/js/custom.js');
 		}
 
 		EventbookingHelper::addLangLinkForAjax();
@@ -1359,6 +1341,8 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 	 */
 	protected function addGroupRegistrationJSVariables()
 	{
+		HTMLHelper::_('behavior.core');
+
 		$rootUri    = Uri::root(true);
 		$langLink   = EventbookingHelper::getLangLink();
 		$ItemidLink = EventbookingHelper::getItemIdLink($this->Itemid);
@@ -1373,8 +1357,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 			$memberFields[] = $rowField->name;
 		}
 
-		Factory::getApplication()->getDocument()
-			->addScriptOptions('defaultStep', $this->defaultStep)
+		Factory::getApplication()->getDocument()->addScriptOptions('defaultStep', $this->defaultStep)
 			->addScriptOptions('returnUrl', base64_encode(Uri::getInstance()->toString() . '#group_billing'))
 			->addScriptOptions('collectMemberInformation', (bool) $this->collectMemberInformation)
 			->addScriptOptions('showBillingStep', (bool) $this->showBillingStep)
@@ -1386,9 +1369,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 			->addScriptOptions('Itemid', $this->Itemid)
 			->addScriptOptions('memberFields', $memberFields)
 			->addScriptOptions('ajaxLoadingImageUrl', $rootUri . '/media/com_eventbooking/ajax-loadding-animation.gif')
-			->getWebAssetManager()
-			->useScript('core')
-			->addInlineScript('var returnUrl = "' . base64_encode(Uri::getInstance()->toString() . '#group_billing') . '";');
+			->addScriptDeclaration('var returnUrl = "' . base64_encode(Uri::getInstance()->toString() . '#group_billing') . '";');
 
 		if ($this->config->get('use_sef_url_for_ajax'))
 		{
@@ -1432,9 +1413,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 			$calculateGroupRegistrationFeeUrl = $rootUri . '/index.php?option=com_eventbooking&task=register.calculate_group_registration_fee' . $langLink . $ItemidLink;
 		}
 
-		Factory::getApplication()
-			->getDocument()
-			->addScriptOptions('numberMembersUrl', $numberMembersUrl)
+		Factory::getApplication()->getDocument()->addScriptOptions('numberMembersUrl', $numberMembersUrl)
 			->addScriptOptions('groupMembersUrl', $groupMembersUrl)
 			->addScriptOptions('groupBillingUrl', $groupBillingUrl)
 			->addScriptOptions('storeNumberMembersUrl', $storeNumberMembersUrl)
@@ -1473,10 +1452,7 @@ class EventbookingViewRegisterHtml extends EventbookingViewRegisterBase
 
 		if ($requireImask)
 		{
-			Factory::getApplication()
-				->getDocument()
-				->getWebAssetManager()
-				->registerAndUseScript('com_eventbooking.imask', 'media/com_eventbooking/assets/js/imask/imask.min.js');
+			Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/assets/js/imask/imask.min.js');
 		}
 	}
 }

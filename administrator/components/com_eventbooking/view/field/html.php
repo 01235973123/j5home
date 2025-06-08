@@ -1,9 +1,10 @@
 <?php
+
 /**
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -89,6 +90,7 @@ class EventbookingViewFieldHtml extends RADViewItem
 			'Heading',
 			'Message',
 			'File',
+			'Filemultiple',
 			'Countries',
 			'State',
 			'SQL',
@@ -97,8 +99,7 @@ class EventbookingViewFieldHtml extends RADViewItem
 			'Password',
 		];
 
-		foreach ($fieldTypes as $fieldType)
-		{
+		foreach ($fieldTypes as $fieldType) {
 			$options[] = HTMLHelper::_('select.option', $fieldType, $fieldType);
 		}
 
@@ -106,26 +107,20 @@ class EventbookingViewFieldHtml extends RADViewItem
 		$files     = Folder::files(JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/rad/form/field', 'php$');
 		$coreFiles = [];
 
-		foreach ($fieldTypes as $fieldType)
-		{
+		foreach ($fieldTypes as $fieldType) {
 			$coreFiles[] = strtolower($fieldType . '.php');
 		}
 
-		foreach ($files as $file)
-		{
-			if (!in_array($file, $coreFiles))
-			{
+		foreach ($files as $file) {
+			if (!in_array($file, $coreFiles)) {
 				$fieldType = ucfirst(File::stripExt($file));
 				$options[] = HTMLHelper::_('select.option', $fieldType, $fieldType);
 			}
 		}
 
-		if ($this->item->is_core)
-		{
+		if ($this->item->is_core) {
 			$readOnly = ' readonly="true" ';
-		}
-		else
-		{
+		} else {
 			$readOnly = '';
 		}
 
@@ -139,21 +134,16 @@ class EventbookingViewFieldHtml extends RADViewItem
 			$this->item->fieldtype
 		);
 
-		if ($this->item->category_id == -1)
-		{
+		if ($this->item->category_id == -1) {
 			$selectedCategoryIds = [-1];
-		}
-		elseif ($this->item->id)
-		{
+		} elseif ($this->item->id) {
 			$query->clear()
 				->select('category_id')
 				->from('#__eb_field_categories')
 				->where('field_id=' . $this->item->id);
 			$db->setQuery($query);
 			$selectedCategoryIds = $db->loadColumn();
-		}
-		else
-		{
+		} else {
 			$selectedCategoryIds = [];
 		}
 
@@ -167,13 +157,10 @@ class EventbookingViewFieldHtml extends RADViewItem
 			'EB_ALL_CATEGORIES'
 		);
 
-		if (!$this->item->id || $this->item->event_id == -1)
-		{
+		if (!$this->item->id || $this->item->event_id == -1) {
 			$selectedEventIds = [];
 			$assignment       = 0;
-		}
-		else
-		{
+		} else {
 			$query->clear()
 				->select('event_id')
 				->from('#__eb_field_events')
@@ -181,12 +168,9 @@ class EventbookingViewFieldHtml extends RADViewItem
 			$db->setQuery($query);
 			$selectedEventIds = $db->loadColumn();
 
-			if (count($selectedEventIds) && $selectedEventIds[0] < 0)
-			{
+			if (count($selectedEventIds) && $selectedEventIds[0] < 0) {
 				$assignment = -1;
-			}
-			else
-			{
+			} else {
 				$assignment = 1;
 			}
 
@@ -195,8 +179,7 @@ class EventbookingViewFieldHtml extends RADViewItem
 
 		$filters = [];
 
-		if ($config->hide_disable_registration_events)
-		{
+		if ($config->hide_disable_registration_events) {
 			$filters[] = 'registration_type != 3';
 		}
 
@@ -217,8 +200,7 @@ class EventbookingViewFieldHtml extends RADViewItem
 		$options[] = HTMLHelper::_('select.option', 0, Text::_('EB_ALL_EVENTS'));
 		$options[] = HTMLHelper::_('select.option', 1, Text::_('EB_ALL_SELECTED_EVENTS'));
 
-		if (!$config->multiple_booking)
-		{
+		if (!$config->multiple_booking) {
 			$options[] = HTMLHelper::_('select.option', -1, Text::_('EB_ALL_EXCEPT_SELECTED_EVENTS'));
 		}
 
@@ -244,17 +226,14 @@ class EventbookingViewFieldHtml extends RADViewItem
 		$results = Factory::getApplication()->triggerEvent('onGetFields', $eventObj);
 		$fields  = [];
 
-		foreach ($results as $res)
-		{
-			if (is_array($res) && count($res))
-			{
+		foreach ($results as $res) {
+			if (is_array($res) && count($res)) {
 				$fields = $res;
 				break;
 			}
 		}
 
-		if (count($fields))
-		{
+		if (count($fields)) {
 			$options                      = [];
 			$options[]                    = HTMLHelper::_('select.option', '', Text::_('Select Field'));
 			$options                      = array_merge($options, $fields);
@@ -276,17 +255,14 @@ class EventbookingViewFieldHtml extends RADViewItem
 		$results = Factory::getApplication()->triggerEvent('onGetNewsletterFields', $eventObj);
 		$fields  = [];
 
-		foreach ($results as $res)
-		{
-			if (is_array($res) && count($res))
-			{
+		foreach ($results as $res) {
+			if (is_array($res) && count($res)) {
 				$fields = $res;
 				break;
 			}
 		}
 
-		if (count($fields))
-		{
+		if (count($fields)) {
 			$options   = [];
 			$options[] = HTMLHelper::_('select.option', '', Text::_('Select Field'));
 
@@ -342,21 +318,12 @@ class EventbookingViewFieldHtml extends RADViewItem
 		$options[] = HTMLHelper::_('select.option', 3, Text::_('Email'));
 		$options[] = HTMLHelper::_('select.option', 4, Text::_('Url'));
 		$options[] = HTMLHelper::_('select.option', 5, Text::_('Phone'));
-		$options[] = HTMLHelper::_('select.option', 6, Text::_('Date'));
-		$options[] = HTMLHelper::_('select.option', 7, Text::_('Past Date'));
-		$options[] = HTMLHelper::_('select.option', 8, Text::_('Future Date'));
-		$options[] = HTMLHelper::_('select.option', 9, Text::_('Ipv4'));
-		$options[] = HTMLHelper::_('select.option', 10, Text::_('Ipv6'));
-		$options[] = HTMLHelper::_('select.option', 11, Text::_('Min Number Characters'));
-		$options[] = HTMLHelper::_('select.option', 12, Text::_('Max Number Characters'));
-		$options[] = HTMLHelper::_('select.option', 13, Text::_('Min Integer'));
-		$options[] = HTMLHelper::_('select.option', 14, Text::_('Max Integer'));
-		$options[] = HTMLHelper::_('select.option', 15, Text::_('Min Selected Checkboxes'));
-		$options[] = HTMLHelper::_('select.option', 16, Text::_('Max Selected Checkboxes'));
-		$options[] = HTMLHelper::_('select.option', 17, Text::_('Only Number and Space characters'));
-		$options[] = HTMLHelper::_('select.option', 18, Text::_('Only Letter and Space characters'));
-		$options[] = HTMLHelper::_('select.option', 19, Text::_('Only Letter and Number characters, No Space'));
-		$options[] = HTMLHelper::_('select.option', 20, Text::_('Equals'));
+		$options[] = HTMLHelper::_('select.option', 6, Text::_('Past Date'));
+		$options[] = HTMLHelper::_('select.option', 7, Text::_('Ip'));
+		$options[] = HTMLHelper::_('select.option', 8, Text::_('Min size'));
+		$options[] = HTMLHelper::_('select.option', 9, Text::_('Max size'));
+		$options[] = HTMLHelper::_('select.option', 10, Text::_('Min integer'));
+		$options[] = HTMLHelper::_('select.option', 11, Text::_('Max integer'));
 
 		$this->lists['datatype_validation'] = HTMLHelper::_(
 			'select.genericlist',
@@ -369,26 +336,18 @@ class EventbookingViewFieldHtml extends RADViewItem
 		);
 
 		$query->clear()
-			->select('id, event_id, title')
+			->select('id, title')
 			->from('#__eb_ticket_types')
-			->order('event_id')
 			->order('title');
 		$db->setQuery($query);
-		
-		$options = [];
-
-		foreach ($db->loadObjectList() as $ticketType)
-		{
-			$options[] = HTMLHelper::_('select.option', $ticketType->id, '[' . $ticketType->event_id . '] - ' . $ticketType->title);
-		}
 
 		$this->lists['depend_on_ticket_type_ids'] = HTMLHelper::_(
 			'select.genericlist',
-			$options,
+			$db->loadObjectList(),
 			'depend_on_ticket_type_ids[]',
 			'class="form-select" multiple',
-			'value',
-			'text',
+			'id',
+			'title',
 			explode(',', $this->item->depend_on_ticket_type_ids)
 		);
 
@@ -399,8 +358,7 @@ class EventbookingViewFieldHtml extends RADViewItem
 			->where('published=1')
 			->order('title');
 
-		if ($this->item->id)
-		{
+		if ($this->item->id) {
 			$query->where('id != ' . $this->item->id);
 		}
 
@@ -408,8 +366,7 @@ class EventbookingViewFieldHtml extends RADViewItem
 		$options   = [];
 		$options[] = HTMLHelper::_('select.option', 0, Text::_('Select'));
 
-		foreach ($db->loadObjectList() as $field)
-		{
+		foreach ($db->loadObjectList() as $field) {
 			$options[] = HTMLHelper::_('select.option', $field->id, '[' . $field->id . '] - ' . $field->title);
 		}
 
@@ -425,8 +382,7 @@ class EventbookingViewFieldHtml extends RADViewItem
 
 		$this->dependOptions = [];
 
-		if ($this->item->depend_on_field_id)
-		{
+		if ($this->item->depend_on_field_id) {
 			//Get the selected options
 			$this->dependOnOptions = json_decode($this->item->depend_on_options);
 			$query->clear()
@@ -539,7 +495,7 @@ class EventbookingViewFieldHtml extends RADViewItem
 			$this->item->payment_method ?: ''
 		);
 
-		$this->config = $config;
+		$this->config  = $config;
 
 		$eventObj = new EditField(
 			'onEditField',

@@ -1,0 +1,68 @@
+@CHARSET "ISO-8859-1";
+
+.googlemap img{
+	max-width: none;
+}
+.mod_ospropertygooglemap_title{
+	font-size:18px;
+	font-weight:bold;
+}
+.mod_ospropertymap_price{
+	font-size:16px;
+	font-weight:bold;
+}
+.mod_ospropertymap_title{
+	font-size:18px;
+	font-weight:bold;
+}
+.mod_ospropertymap_type {
+    background-color: #50b848;
+}
+.mod_ospropertymap_type {
+    color: #ffffff;
+}
+.mod_ospropertymap_type::before {
+    border-right-color: #50b848;
+}
+.mod_ospropertymap_type::before {
+    border-right-color: #50b848;
+}
+.mod_ospropertymap_type::before {
+    border-right-color: #ffffff;
+}
+.mod_ospropertymap_type::before {
+    border-color: transparent #50b848 transparent transparent;
+}
+.mod_ospropertymap_type::before {
+    border-width: 12px 12px 12px 0;
+    content: "";
+    left: -12px;
+}
+.mod_ospropertymap_type-common::before, .mod_ospropertymap_type-common::after, .mod_ospropertymap_type::before, .mod_ospropertymap_type::after, .mod_ospropertymap_type-flipped::before, .mod_ospropertymap_type-flipped::after {
+    border-style: solid;
+    height: 0;
+    position: absolute;
+    top: 0;
+    width: 0;
+}
+
+.mod_ospropertymap_type {
+    background-color: #50b848;
+}
+
+.mod_ospropertymap_type {
+    color: #ffffff;
+}
+
+.mod_ospropertymap_type {
+    margin-left: 12px;
+}
+.mod_ospropertymap_type, .mod_ospropertymap_type-flipped {
+    display: inline-block;
+    font-size: 12px;
+    height: 24px;
+    line-height: 25px;
+    padding: 0 12px;
+    position: relative;
+    text-transform: uppercase;
+}

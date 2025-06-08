@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -12,14 +12,12 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 
+HTMLHelper::_('behavior.core');
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
-Factory::getApplication()
-	->getDocument()
-	->getWebAssetManager()
-	->useScript('core')
-	->registerAndUseScript('com_eventbooking.admin-language-default', 'media/com_eventbooking/js/admin-language-default.min.js');
+Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/js/admin-language-default.min.js');
 ?>
 <form action="index.php?option=com_eventbooking&view=language" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container">
@@ -39,7 +37,7 @@ Factory::getApplication()
 			</div>
 		</div>
 		<div class="clearfix"></div>
-		<table class="table itemList table-striped" id="lang_table">
+		<table class="adminlist table table-striped" id="lang_table">
 			<thead>
 				<tr>
 					<th class="key" style="width:20%;"><?php echo Text::_('EB_KEY'); ?></th>

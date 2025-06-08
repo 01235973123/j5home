@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
@@ -43,8 +44,7 @@ class OSMembershipModelSubscribers extends MPFModelList
 	{
 		$rows = parent::getData();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$row->plans = OSMembershipHelperSubscription::getSubscriptions($row->id);
 		}
 
@@ -96,8 +96,7 @@ class OSMembershipModelSubscribers extends MPFModelList
 
 		$config = OSMembershipHelper::getConfig();
 
-		if (!$config->get('show_incomplete_payment_subscriptions', 1))
-		{
+		if (!$config->get('show_incomplete_payment_subscriptions', 1)) {
 			$query->where('(tbl.published != 0 OR gross_amount = 0 OR tbl.payment_method LIKE "os_offline%")');
 		}
 

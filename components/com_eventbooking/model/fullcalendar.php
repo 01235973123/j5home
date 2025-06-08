@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -16,31 +16,6 @@ use OSSolution\EventBooking\Admin\Event\Events\AfterReturnEventsFromDatabase;
 class EventbookingModelFullcalendar extends EventbookingModelCommoncalendar
 {
 	/**
-	 * Fields which can be searchable
-	 *
-	 * @var string[]
-	 */
-	protected $searchFields = [
-		'a.title',
-		'a.short_description',
-		'a.description',
-	];
-
-	/**
-	 * Fields which could be translated
-	 *
-	 * @var array
-	 */
-	protected static $translatableFields = [
-		'a.title',
-		'a.alias',
-		'a.short_description',
-		'a.description',
-		'a.price_text',
-		'a.registration_handle_url',
-	];
-
-	/**
 	 * Instantiate the model.
 	 *
 	 * @param   array  $config  configuration data for the model
@@ -51,8 +26,6 @@ class EventbookingModelFullcalendar extends EventbookingModelCommoncalendar
 		parent::__construct($config);
 
 		$this->state->insert('id', 'int', 0)
-			->insert('filter_location_id', 'int', 0)
-			->insert('search', 'string', '')
 			->insert('start', 'string', '')
 			->insert('mini_calendar', 'int', 0)
 			->insert('end', 'string', '');
@@ -65,11 +38,6 @@ class EventbookingModelFullcalendar extends EventbookingModelCommoncalendar
 			{
 				static::$fields[] = 'a.' . $field;
 			}
-		}
-
-		if (isset($config['search_fields']))
-		{
-			$this->searchFields = $config['search_fields'];
 		}
 	}
 
@@ -137,18 +105,13 @@ class EventbookingModelFullcalendar extends EventbookingModelCommoncalendar
 			$query->where("a.event_date BETWEEN $startDate AND $endDate");
 		}
 
-		$this->applyKeywordFilter($query);
-
 		$db->setQuery($query);
 
 		$rows = $db->loadObjectList();
 
-		if (count($rows) > 0)
-		{
-			$eventObj = new AfterReturnEventsFromDatabase(['rows' => $rows, 'context' => 'fullcalendar']);
+		$eventObj = new AfterReturnEventsFromDatabase(['rows' => $rows, 'context' => 'fullcalendar']);
 
-			$app->triggerEvent($eventObj->getName(), $eventObj);
-		}
+		$app->triggerEvent($eventObj->getName(), $eventObj);
 
 		return $rows;
 	}

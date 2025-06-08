@@ -39,7 +39,7 @@ class plgEventbookingFailurePaymentNotification extends CMSPlugin implements Sub
 	 *
 	 * @return void
 	 */
-	public function onAfterEBPaymentFailure(Event $eventObj): void
+	public function onAfterEBPaymentFailure(Event $eventObj):void
 	{
 		/**
 		 * @var EventbookingTableRegistrant $row
@@ -96,6 +96,7 @@ class plgEventbookingFailurePaymentNotification extends CMSPlugin implements Sub
 
 		$subject = EventbookingHelper::replaceCaseInsensitiveTags($subject, $replaces);
 		$message = EventbookingHelper::replaceCaseInsensitiveTags($message, $replaces);
+		$message = EventbookingHelper::convertImgTags($message);
 
 		$mailer    = EventbookingHelperMail::getMailer($config);
 		$logEmails = EventbookingHelperMail::loggingEnabled('new_event_notification_emails', $config);

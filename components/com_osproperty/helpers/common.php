@@ -4,7 +4,7 @@
 # common.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -34,16 +34,15 @@ class HelperOspropertyCommon{
 		global $bootstrapHelper, $jinput, $mainframe,$configClass;
 		$db = Factory::getDBO();
 		if($configClass['show_footer']==1){
-			if(file_exists(JPATH_ROOT."/components/com_osproperty/version.txt")){												
-				$fh = fopen(JPATH_ROOT."/components/com_osproperty/version.txt","r");
-				$version = fread($fh,filesize(JPATH_ROOT."/components/com_osproperty/version.txt"));
-				@fclose($fh);
-			}
 			?>
-			<div class="property_footer">
-				<strong><a href="https://www.joomdonation.com/joomla-extensions/os-property-joomla-real-estate.html" target="_blank" title="The best Joomla Real Estate extension">OS Property Real Estate</a></strong> Version <?php echo $version;?>, Copyright (C) 2011 - <?php echo date('Y'); ?> <strong><a href="http://joomdonation.com" target="_blank" title="Joomla Extensions and Templates">Ossolution</a></strong>
-			</div>
-			<?php
+<div class="property_footer">
+    <strong><a href="https://www.joomdonation.com/joomla-extensions/os-property-joomla-real-estate.html" target="_blank"
+            title="The best Joomla Real Estate extension">OS Property Real Estate</a></strong> Version
+    <?php echo OSPHelper::getInstalledVersion();?>, Copyright (C) 2011 - <?php echo date('Y'); ?> <strong><a
+            href="http://joomdonation.com" target="_blank"
+            title="Joomla Extensions and Templates">Ossolution</a></strong>
+</div>
+<?php
 		}
 	}
 	/**
@@ -179,7 +178,7 @@ class HelperOspropertyCommon{
 		global $bootstrapHelper, $jinput, $configClass,$languages,$bootstrapHelper;
 		$db = Factory::getDbo();
 		$class = $bootstrapHelper->getClassMapping($class);
-		$stateArr = array();
+		$stateArr = [];
 		$show_available_states_cities = $configClass['show_available_states_cities'];
 		
 		$lgs = OSPHelper::getLanguages();
@@ -248,7 +247,7 @@ class HelperOspropertyCommon{
 		
 		$availSql = "";
 		$show_available_states_cities = $configClass['show_available_states_cities'];
-		$cityArr = array();
+		$cityArr = [];
 		$cityArr[]= HTMLHelper::_('select.option','',Text::_('OS_ALL_CITIES'));
 		if($state_id > 0){
 			if($show_available_states_cities == 1){
@@ -293,7 +292,7 @@ class HelperOspropertyCommon{
 			$suffix = OSPHelper::getFieldSuffix();
 		}
 		
-		$stateArr = array();
+		$stateArr = [];
 		if((!HelperOspropertyCommon::checkCountry()) or ($req_country_id > 0)){
 
 			$query  = "Select id as value,state_name".$suffix." as text, state_name from #__osrs_states where published = 1 ";
@@ -346,7 +345,7 @@ class HelperOspropertyCommon{
 			$suffix = OSPHelper::getFieldSuffix();
 		}
 		
-		$cityArr = array();
+		$cityArr = [];
 		$cityArr[]= HTMLHelper::_('select.option','',Text::_('OS_ALL_CITIES'));
 		if($state_id > 0){
 			$db->setQuery("Select id as value, city".$suffix." as text, city from #__osrs_cities  where  published = '1' and state_id = '$state_id' order by city");
@@ -422,7 +421,7 @@ class HelperOspropertyCommon{
 			}else{
 				$db->setQuery("Select group_id from #__user_usergroup_map where user_id = '$user->id'");
 				$group_id = $db->loadResult();
-				if(($group_id >=3) and ($group_id <=8)){
+				if(($group_id >=3) && ($group_id <=8)){
 					return true;
 				}else{
 					return false;
@@ -698,17 +697,17 @@ class HelperOspropertyCommon{
 	public static function alphabetList($option,$alphabet,$formname){
 		global $bootstrapHelper, $jinput, $mainframe;
 		?>
-		<script type="text/javascript">
-		function submitAlphabetForm(a){
-			var form = document.getElementById("<?php echo $formname?>");
-			if(form != null){
-				form.alphabet.value = a;
-				form.submit();
-			}
-		}
-		</script>
-		<div id="characters_line" class="characters_line">
-			<?php
+<script type="text/javascript">
+function submitAlphabetForm(a) {
+    var form = document.getElementById("<?php echo $formname?>");
+    if (form != null) {
+        form.alphabet.value = a;
+        form.submit();
+    }
+}
+</script>
+<div id="characters_line" class="characters_line">
+    <?php
 			$class1 = "character";
 			$class2 = "character";
 			$class3 = "character";
@@ -822,42 +821,42 @@ class HelperOspropertyCommon{
 
 			}
 			?>
-			<a href="javascript:submitAlphabetForm('0-9')" class="<?php echo $class1?>">0-9</a>
-			<a href="javascript:submitAlphabetForm('A')" class="<?php echo $class2?>">A</a>
-			<a href="javascript:submitAlphabetForm('B')" class="<?php echo $class3?>">B</a>
-			<a href="javascript:submitAlphabetForm('C')" class="<?php echo $class4?>">C</a>
-			<a href="javascript:submitAlphabetForm('D')" class="<?php echo $class5?>">D</a>
-			<a href="javascript:submitAlphabetForm('E')" class="<?php echo $class6?>">E</a>
-	
-			<a href="javascript:submitAlphabetForm('F')" class="<?php echo $class7?>">F</a>
-			<a href="javascript:submitAlphabetForm('G')" class="<?php echo $class8?>">G</a>
-			<a href="javascript:submitAlphabetForm('H')" class="<?php echo $class9?>">H</a>
-			<a href="javascript:submitAlphabetForm('I')" class="<?php echo $class10?>">I</a>
-			<a href="javascript:submitAlphabetForm('J')" class="<?php echo $class11?>">J</a>
-			<a href="javascript:submitAlphabetForm('K')" class="<?php echo $class12?>">K</a>
-	
-			<a href="javascript:submitAlphabetForm('L')" class="<?php echo $class13?>">L</a>
-			<a href="javascript:submitAlphabetForm('M')" class="<?php echo $class14?>">M</a>
-			<a href="javascript:submitAlphabetForm('N')" class="<?php echo $class15?>">N</a>
-			<a href="javascript:submitAlphabetForm('O')" class="<?php echo $class16?>">O</a>
-			<a href="javascript:submitAlphabetForm('P')" class="<?php echo $class17?>">P</a>
-			<a href="javascript:submitAlphabetForm('Q')" class="<?php echo $class18?>">Q</a>
-	
-			<a href="javascript:submitAlphabetForm('R')" class="<?php echo $class19?>">R</a>
-			<a href="javascript:submitAlphabetForm('S')" class="<?php echo $class20?>">S</a>
-			<a href="javascript:submitAlphabetForm('T')" class="<?php echo $class21?>">T</a>
-			<a href="javascript:submitAlphabetForm('U')" class="<?php echo $class22?>">U</a>
-			<a href="javascript:submitAlphabetForm('V')" class="<?php echo $class23?>">V</a>
-			<a href="javascript:submitAlphabetForm('W')" class="<?php echo $class24?>">W</a>
-	
-			<a href="javascript:submitAlphabetForm('X')" class="<?php echo $class25?>">X</a>
-			<a href="javascript:submitAlphabetForm('Y')" class="<?php echo $class26?>">Y</a>
-			<a href="javascript:submitAlphabetForm('Z')" class="<?php echo $class27?>">Z</a>
-		</div>
-	
-		<!-- dealers list -->
-		<!-- dealers list end -->
-		<?php
+    <a href="javascript:submitAlphabetForm('0-9')" class="<?php echo $class1?>">0-9</a>
+    <a href="javascript:submitAlphabetForm('A')" class="<?php echo $class2?>">A</a>
+    <a href="javascript:submitAlphabetForm('B')" class="<?php echo $class3?>">B</a>
+    <a href="javascript:submitAlphabetForm('C')" class="<?php echo $class4?>">C</a>
+    <a href="javascript:submitAlphabetForm('D')" class="<?php echo $class5?>">D</a>
+    <a href="javascript:submitAlphabetForm('E')" class="<?php echo $class6?>">E</a>
+
+    <a href="javascript:submitAlphabetForm('F')" class="<?php echo $class7?>">F</a>
+    <a href="javascript:submitAlphabetForm('G')" class="<?php echo $class8?>">G</a>
+    <a href="javascript:submitAlphabetForm('H')" class="<?php echo $class9?>">H</a>
+    <a href="javascript:submitAlphabetForm('I')" class="<?php echo $class10?>">I</a>
+    <a href="javascript:submitAlphabetForm('J')" class="<?php echo $class11?>">J</a>
+    <a href="javascript:submitAlphabetForm('K')" class="<?php echo $class12?>">K</a>
+
+    <a href="javascript:submitAlphabetForm('L')" class="<?php echo $class13?>">L</a>
+    <a href="javascript:submitAlphabetForm('M')" class="<?php echo $class14?>">M</a>
+    <a href="javascript:submitAlphabetForm('N')" class="<?php echo $class15?>">N</a>
+    <a href="javascript:submitAlphabetForm('O')" class="<?php echo $class16?>">O</a>
+    <a href="javascript:submitAlphabetForm('P')" class="<?php echo $class17?>">P</a>
+    <a href="javascript:submitAlphabetForm('Q')" class="<?php echo $class18?>">Q</a>
+
+    <a href="javascript:submitAlphabetForm('R')" class="<?php echo $class19?>">R</a>
+    <a href="javascript:submitAlphabetForm('S')" class="<?php echo $class20?>">S</a>
+    <a href="javascript:submitAlphabetForm('T')" class="<?php echo $class21?>">T</a>
+    <a href="javascript:submitAlphabetForm('U')" class="<?php echo $class22?>">U</a>
+    <a href="javascript:submitAlphabetForm('V')" class="<?php echo $class23?>">V</a>
+    <a href="javascript:submitAlphabetForm('W')" class="<?php echo $class24?>">W</a>
+
+    <a href="javascript:submitAlphabetForm('X')" class="<?php echo $class25?>">X</a>
+    <a href="javascript:submitAlphabetForm('Y')" class="<?php echo $class26?>">Y</a>
+    <a href="javascript:submitAlphabetForm('Z')" class="<?php echo $class27?>">Z</a>
+</div>
+
+<!-- dealers list -->
+<!-- dealers list end -->
+<?php
 
 	}
 
@@ -875,45 +874,35 @@ class HelperOspropertyCommon{
 		$randomStr = md5(microtime());// md5 to generate the random string
 		$resultStr = substr($randomStr,0,5);//trim 5 digit
 		?>
-		<script type="text/javascript">
-		 function submitForm(form_id){
-			var form = document.getElementById(form_id);
-			var temp1,temp2;
-			var cansubmit = 1;
-			var require_field = form.require_field;
-			require_field = require_field.value;
-			var require_label = form.require_label;
-			require_label = require_label.value;
-			var require_fieldArr = require_field.split(",");
-			var require_labelArr = require_label.split(",");
-			for(i=0;i<require_fieldArr.length;i++){
-				temp1 = require_fieldArr[i];
-				temp2 = document.getElementById(temp1);
-				if(temp2 != null){
-					if(temp2.value == ""){
-						alert(require_labelArr[i] + " <?php echo Text::_('OS_IS_MANDATORY_FIELD')?>");
-						temp2.focus();
-						cansubmit = 0;
-						return false;
-					}else if(temp1 == "comment_security_code"){
-						var captcha_str = document.getElementById('captcha_str');
-						captcha_str = captcha_str.value;
-						if(captcha_str != temp2.value){
-							alert(" <?php echo Text::_('OS_SECURITY_CODE_IS_WRONG')?>");
-							temp2.focus();
-							cansubmit = 0;
-							return false;
-						}
-					}
-				}
-			}
-			if(cansubmit == 1)
-			{
-				form.submit();
-			}
-		}
-		</script>
-		<?php
+<script type="text/javascript">
+function submitForm(form_id) {
+    var form = document.getElementById(form_id);
+    var temp1, temp2;
+    var cansubmit = 1;
+    var require_field = form.require_field;
+    require_field = require_field.value;
+    var require_label = form.require_label;
+    require_label = require_label.value;
+    var require_fieldArr = require_field.split(",");
+    var require_labelArr = require_label.split(",");
+    for (i = 0; i < require_fieldArr.length; i++) {
+        temp1 = require_fieldArr[i];
+        temp2 = document.getElementById(temp1);
+        if (temp2 != null) {
+            if (temp2.value == "") {
+                alert(require_labelArr[i] + " <?php echo Text::_('OS_IS_MANDATORY_FIELD')?>");
+                temp2.focus();
+                cansubmit = 0;
+                return false;
+            }
+        }
+    }
+    if (cansubmit == 1) {
+        form.submit();
+    }
+}
+</script>
+<?php
 		//Random string
 		$RandomStr = md5(microtime());// md5 to generate the random string
 		$ResultStr = substr($RandomStr,0,5);//trim 5 digit
@@ -925,48 +914,49 @@ class HelperOspropertyCommon{
 		}
 		?>
 
-		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="contactForm">
-			<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                <div class="headercontactform">
-                    <?php echo Text::_('OS_CONTACT');?> <?php echo $name;?>
-                </div>
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<?php echo $startDiv; ?>
-						<input type="text" id="comment_author" name="comment_author<?php echo date("j",time());?>" maxlength="50" class="input-large form-control" value="<?php echo $user->name; ?>" placeholder="<?php echo Text::_('OS_YOUR_NAME');?>"/>
-					<?php echo $endDiv; ?>
-				</div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" id="contactForm">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="headercontactform">
+            <?php echo Text::_('OS_CONTACT');?> <?php echo $name;?>
+        </div>
+        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+            <?php echo $startDiv; ?>
+            <input type="text" id="comment_author" name="comment_author<?php echo date("j",time());?>" maxlength="50"
+                class="input-large form-control" value="<?php echo $user->name; ?>"
+                placeholder="<?php echo Text::_('OS_YOUR_NAME');?>" />
+            <?php echo $endDiv; ?>
+        </div>
 
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<?php echo $startDiv; ?>
-						<input type="text" id="comment_email" name="comment_email<?php echo date("j",time());?>" maxlength="50" class="input-large form-control" value="<?php echo $user->email; ?>" placeholder="<?php echo Text::_('OS_EMAIL');?>"/>
-					<?php echo $endDiv; ?>
-				</div>
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<?php echo $startDiv; ?>
-						<textarea id="message" rows="2" cols="50" class="input-large form-control" name="message"><?php printf(Text::_('OS_PREDEFINED_CONTACT_MESSAGE'), $name, $site_name);?></textarea>
-					<?php echo $endDiv; ?>
-				</div>
-				<?php
-				$captchaPlugin = Factory::getApplication()->getParams()->get('captcha', Factory::getConfig()->get('captcha'));
-				if ($captchaPlugin)
-				{
+        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+            <?php echo $startDiv; ?>
+            <input type="text" id="comment_email" name="comment_email<?php echo date("j",time());?>" maxlength="50"
+                class="input-large form-control" value="<?php echo $user->email; ?>"
+                placeholder="<?php echo Text::_('OS_EMAIL');?>" />
+            <?php echo $endDiv; ?>
+        </div>
+        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+            <?php echo $startDiv; ?>
+            <textarea id="message" rows="2" cols="50" class="input-large form-control"
+                name="message"><?php printf(Text::_('OS_PREDEFINED_CONTACT_MESSAGE'), $name, $site_name);?></textarea>
+            <?php echo $endDiv; ?>
+        </div>
+
+        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+            <?php
+					OSPHelper::generateCaptcha();
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<?php
-					echo Captcha::getInstance($captchaPlugin)->display('dynamic_recaptcha_1', 'dynamic_recaptcha_1', 'required');
-					?>
-					</div>
-					<?php
-				}	
-				?>
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<a href="#" onclick="javascript:submitForm('<?php echo $formname?>')" class="submitcontactform" ><?php echo Text::_("OS_SEND_MESSAGE")?></a>
-				</div>
-			</div>
-		</div>
-		<input type="hidden" name="require_field" value="comment_author,comment_email,comment_title,comment_message" />
-		<input type="hidden" name="require_label" value="<?php echo Text::_('OS_AUTHOR');?>,<?php echo Text::_('OS_AUTHOR_EMAIL')?>,<?php echo Text::_('OS_TITLE');?>,<?php echo Text::_('Message');?>,<?php echo Text::_('OS_MESSAGE');?>" />
-		<input type="hidden" name="return" id="return" value="<?php echo OSPHelper::currentUrl(); ?>" />
+        </div>
+
+        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+            <a href="#" onclick="javascript:submitForm('<?php echo $formname?>')"
+                class="submitcontactform"><?php echo Text::_("OS_SEND_MESSAGE")?></a>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="require_field" value="comment_author,comment_email,comment_title,comment_message" />
+<input type="hidden" name="require_label"
+    value="<?php echo Text::_('OS_AUTHOR');?>,<?php echo Text::_('OS_AUTHOR_EMAIL')?>,<?php echo Text::_('OS_TITLE');?>,<?php echo Text::_('Message');?>,<?php echo Text::_('OS_MESSAGE');?>" />
+<input type="hidden" name="return" id="return" value="<?php echo OSPHelper::currentUrl(); ?>" />
 <?php
 	}
 
@@ -1046,6 +1036,7 @@ class HelperOspropertyCommon{
 		'exe' => 'application/octet-stream',
 		// images
 		'gif' => 'image/gif',
+		'webp' => 'image/webp',
 		'png' => 'image/png',
 		'jpg' => 'image/jpeg',
 		'jpeg' => 'image/jpeg',
@@ -1346,14 +1337,14 @@ class HelperOspropertyCommon{
 		$rows = $db->loadObjectList();
 		if(count($rows) > 0){
 			?>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-					<?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <?php
 					for($i=0;$i<count($rows);$i++){
 						$row = $rows[$i];
 						?>
-						<strong><?php echo Text::_($row->neighborhood)?></strong>&nbsp; 
-						<?php 
+        <strong><?php echo Text::_($row->neighborhood)?></strong>&nbsp;
+        <?php 
 						if($row->distance > 0)
 						{
 							echo OSPHelper::showBath((float)$row->distance). ' km';
@@ -1361,7 +1352,7 @@ class HelperOspropertyCommon{
 						else
 						{
 							echo $row->mins > 0 ?$row->mins. " ".Text::_('OS_MINS')." " : " ";?> <?php echo Text::_('OS_BY')?> &nbsp;
-							<?php
+        <?php
 							switch ($row->traffic_type){
 								case "1":
 									echo Text::_('OS_WALK');
@@ -1376,12 +1367,12 @@ class HelperOspropertyCommon{
 						}
 						echo ",  ";
 						?>
-					<?php
+        <?php
 					}
 					?>
-				</div>
-			</div>
-			<?php
+    </div>
+</div>
+<?php
 		}
 	}
 
@@ -1404,43 +1395,43 @@ class HelperOspropertyCommon{
 				echo "<div class='".$bootstrapHelper->getClassMapping('span3')." neighborhooditem'>";
 
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-						<?php
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <?php
 						if($row->distance == 0)
 						{
 						?>
-						<div class="neightborhoodicon">
-							<?php
+    <div class="neightborhoodicon">
+        <?php
 							switch ($row->traffic_type)
 							{
 								default:
 								case "1":
 									?>
-									<img src="<?php echo Uri::root(true)?>/media/com_osproperty/assets/images/walking.png" />
-									<?php
+        <img src="<?php echo Uri::root(true)?>/media/com_osproperty/assets/images/walking.png" />
+        <?php
 								break;
 								case "2":
 									?>
-									<img src="<?php echo Uri::root(true)?>/media/com_osproperty/assets/images/car.png" />
-									<?php
+        <img src="<?php echo Uri::root(true)?>/media/com_osproperty/assets/images/car.png" />
+        <?php
 								break;
 								case "3":
 									?>
-									<img src="<?php echo Uri::root(true)?>/media/com_osproperty/assets/images/train.png" />
-									<?php
+        <img src="<?php echo Uri::root(true)?>/media/com_osproperty/assets/images/train.png" />
+        <?php
 								break;
 							}
 							?>
-						</div>
-						<?php
+    </div>
+    <?php
 						}		
 						?>
-						<div class="neightborhoodvalue">
-							<?php
+    <div class="neightborhoodvalue">
+        <?php
 							echo "<strong>".Text::_($row->neighborhood)."</strong> ";
 							?>
-							<BR />
-							<?php
+        <BR />
+        <?php
 							if($row->distance > 0)
 							{
 								echo OSPHelper::showBath((float)$row->distance). ' km';
@@ -1450,9 +1441,9 @@ class HelperOspropertyCommon{
 								echo $row->mins > 0? $row->mins." ".Text::_('OS_MINS')." " : " ";
 							}
 							?>
-						</div>
-					</div>
-				<?php
+    </div>
+</div>
+<?php
 				echo "</div>";
 				if($k == 4)
 				{
@@ -1508,16 +1499,20 @@ class HelperOspropertyCommon{
 		}
 	}
 
-	static function checkSpecial(){
+	static function checkSpecial()
+	{
 		global $bootstrapHelper, $jinput, $mainframe;;
 		$db = Factory::getDbo();
 		$user = Factory::getUser();
-		$specialArr = array("Super Users","Super Administrator","Administrator","Manager");
+		$specialArr = ["Super Users","Super Administrator","Administrator","Manager"];
         $db->setQuery("Select b.title from #__user_usergroup_map as a inner join #__usergroups as b on b.id = a.group_id where a.user_id = '$user->id'");
         $usertype = $db->loadResult();
-        if(in_array($usertype,$specialArr)){
+        if(in_array($usertype,$specialArr))
+		{
             return true;
-        }else{
+        }
+		else
+		{
             return false;
         }
 	}
@@ -1538,7 +1533,14 @@ class HelperOspropertyCommon{
 		if(intval($curr) == 0){
 			$curr = $configClass['general_currency_default'];
 		}
-		echo HTMLHelper::_('select.genericlist',$currencies,'curr','class="input-large chosen form-select"','value','text',$curr);
+		if(count($currencies) == 1)
+		{
+			echo "<input type='hidden' name='curr' value='".$curr."' />";
+		}
+		else
+		{
+			echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist',$currencies,'curr','class="input-large chosen form-select"','value','text',$curr));
+		}
 	}
 
 	/**
@@ -1619,7 +1621,7 @@ class HelperOspropertyCommon{
 		global $bootstrapHelper, $jinput, $configClass;
 		$db = Factory::getDbo();
 		$available_plans = OspropertyMembership::returnAvailablePlans();
-		$rows = array();
+		$rows = [];
 		if(count($available_plans) > 0){
 			$available_plans = implode(",",$available_plans);
 			//get from account table
@@ -1646,7 +1648,7 @@ class HelperOspropertyCommon{
 		global $bootstrapHelper, $jinput, $configClass;
 		$db = Factory::getDbo();
 		$available_plans = OspropertyMembership::returnAvailableFeaturedPlans($nitems);
-		$rows = array();
+		$rows = [];
 		if(count($available_plans) > 0){
 			$available_plans = implode(",",$available_plans);
 			//get from account table
@@ -1863,14 +1865,19 @@ class HelperOspropertyCommon{
 		global $bootstrapHelper, $jinput, $mainframe,$configClass;
 		$property_photo_link = Uri::root()."images/osproperty/properties/".$pid."/";
 		?>
-		<script type="text/javascript" src="<?php echo Uri::root()?>media/com_osproperty/assets/js/colorbox/jquery.colorbox.js"></script>
-		<script type="text/javascript">
-		 jQuery(document).ready( function(){
-		     jQuery(".propertyphotogroupgallery").colorbox({rel:'colorboxgallery',maxWidth:'95%', maxHeight:'95%'});
-		 });
-		</script>
-		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-			<?php
+<script type="text/javascript" src="<?php echo Uri::root()?>media/com_osproperty/assets/js/colorbox/jquery.colorbox.js">
+</script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+    jQuery(".propertyphotogroupgallery").colorbox({
+        rel: 'colorboxgallery',
+        maxWidth: '95%',
+        maxHeight: '95%'
+    });
+});
+</script>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <?php
 			$k =0;
 			for($i=0;$i<count($photos);$i++){
 				
@@ -1884,25 +1891,27 @@ class HelperOspropertyCommon{
 				
 					$k++;
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?>">
-						<a href="<?php echo $property_photo_link?><?php echo $photos[$i]->image?>" class="propertyphotogroupgallery" title="<?php echo $title;?>" >
-							<img src="<?php echo $property_photo_link?>thumb/<?php echo $photos[$i]->image?>" class="border1 padding3" />
-						</a>
-					</div>
-					<?php
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?>">
+        <a href="<?php echo $property_photo_link?><?php echo $photos[$i]->image?>" class="propertyphotogroupgallery"
+            title="<?php echo $title;?>">
+            <img src="<?php echo $property_photo_link?>thumb/<?php echo $photos[$i]->image?>"
+                class="border1 padding3" />
+        </a>
+    </div>
+    <?php
 				}
 				
 				if($k == 4){
 					?>
-					</div>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-					<?php
+</div>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <?php
 					$k = 0;
 				}
 			}
 			?>
-		</div>
-		<?php
+</div>
+<?php
 	}
 
 	/**
@@ -1918,102 +1927,118 @@ class HelperOspropertyCommon{
 		$pid = $property->id;
 		$property_photo_link = Uri::root()."images/osproperty/properties/".$pid."/";
 		?>
-		<script type="text/javascript" src="<?php echo Uri::root()?>media/com_osproperty/assets/js/colorbox/jquery.colorbox.js"></script>
-		<script type="text/javascript">
-		 jQuery(document).ready( function(){
-			 jQuery(".propertyphotogroup1").colorbox({rel:'colorbox',maxWidth:'95%', maxHeight:'95%'});
-		 });
-		</script>
-		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-			<?php
+<script type="text/javascript" src="<?php echo Uri::root()?>media/com_osproperty/assets/js/colorbox/jquery.colorbox.js">
+</script>
+<script type="text/javascript">
+jQuery(document).ready(function() {
+    jQuery(".propertyphotogroup1").colorbox({
+        rel: 'colorbox',
+        maxWidth: '95%',
+        maxHeight: '95%'
+    });
+});
+</script>
+<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+    <?php
 			if(count($photos) > 0){
 			?>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-				<div class="displayblock relative width100pc" id="img0">
-					<a href="<?php echo $property_photo_link?><?php echo $photos[0]->image?>" class="propertyphotogroup1" title="<?php echo $photos[0]->image_desc;?>">
-						<img src="<?php echo $property_photo_link?><?php echo $photos[0]->image?>" class="<?php echo $bootstrapHelper->getClassMapping('img-polaroid'); ?>">
-						<?php
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+        <div class="displayblock relative width100pc" id="img0">
+            <a href="<?php echo $property_photo_link?><?php echo $photos[0]->image?>" class="propertyphotogroup1"
+                title="<?php echo $photos[0]->image_desc;?>">
+                <img src="<?php echo $property_photo_link?><?php echo $photos[0]->image?>"
+                    class="<?php echo $bootstrapHelper->getClassMapping('img-polaroid'); ?>">
+                <?php
 						if($photos[0]->image_desc != ""){
 						?>
-						<h2 style="opacity:0.4;filter:alpha(opacity=40);" class="fontnormal padding10 colorwhite absolute top0 left5 backgroundblack">
-							<?php
+                <h2 style="opacity:0.4;filter:alpha(opacity=40);"
+                    class="fontnormal padding10 colorwhite absolute top0 left5 backgroundblack">
+                    <?php
 							echo $photos[0]->image_desc;
 							?>
-						</h2>
-						<?php } ?>
-					</a>
-				</div>
-				<?php
+                </h2>
+                <?php } ?>
+            </a>
+        </div>
+        <?php
 				for($i=1;$i<count($photos);$i++){
 					$photo = $photos[$i];
 					?>
-					<div class="nodisplay relative width100pc" id="img<?php echo $i?>">
-						<a href="<?php echo $property_photo_link?><?php echo $photos[$i]->image?>" class="propertyphotogroup1">
-							<img src="<?php echo $property_photo_link?><?php echo $photos[$i]->image?>" class="<?php echo $bootstrapHelper->getClassMapping('img-polaroid'); ?>" title="<?php echo $photos[$i]->image_desc;?>">
-							<?php
+        <div class="nodisplay relative width100pc" id="img<?php echo $i?>">
+            <a href="<?php echo $property_photo_link?><?php echo $photos[$i]->image?>" class="propertyphotogroup1">
+                <img src="<?php echo $property_photo_link?><?php echo $photos[$i]->image?>"
+                    class="<?php echo $bootstrapHelper->getClassMapping('img-polaroid'); ?>"
+                    title="<?php echo $photos[$i]->image_desc;?>">
+                <?php
 							if($photos[$i]->image_desc != ""){
 							?>
-							<h2 class="absolute colorwhite left5 backgroundblack fontnormal padding10" style="opacity:0.4;filter:alpha(opacity=40);">
-								<?php
+                <h2 class="absolute colorwhite left5 backgroundblack fontnormal padding10"
+                    style="opacity:0.4;filter:alpha(opacity=40);">
+                    <?php
 								echo $photos[$i]->image_desc;
 								?>
-							</h2>
-							<?php } ?>
-						</a>
-					</div>
-					<?php
+                </h2>
+                <?php } ?>
+            </a>
+        </div>
+        <?php
 				}
 				?>
-			</div>
-			<div class="clearfix"></div>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> noleftmargin" id="thumbPhotos_wrap">
-				<div id="thumbPhotos" class="thumbPhotos1">
-					<?php
+    </div>
+    <div class="clearfix"></div>
+    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> noleftmargin" id="thumbPhotos_wrap">
+        <div id="thumbPhotos" class="thumbPhotos1">
+            <?php
 					for($i=0;$i<count($photos);$i++){
 						$photo = $photos[$i];
 						if($photo->image != ""){
 							if(file_exists(JPATH_ROOT."/images/osproperty/properties".DS.$pid."/thumb".DS.$photos[$i]->image)){
 							?>
-							<div class="thumbPhotos1a">
-								<img src="<?php echo $property_photo_link?>thumb/<?php echo $photos[$i]->image?>" width="45" id="thumb<?php echo $i?>">
-							</div>
-							<script type="text/javascript">
-							jQuery(document).ready( function(){
-							    jQuery("#thumb<?php echo $i?>").hover( function() {
-							      jQuery(this).stop().animate({opacity: "0.5"}, 'fast');
-							    },
-							     function() {
-							      jQuery(this).stop().animate({opacity: "1"}, 'fast');
-							    });
-							  });
-							</script>
-							<?php
+            <div class="thumbPhotos1a">
+                <img src="<?php echo $property_photo_link?>thumb/<?php echo $photos[$i]->image?>" width="45"
+                    id="thumb<?php echo $i?>">
+            </div>
+            <script type="text/javascript">
+            jQuery(document).ready(function() {
+                jQuery("#thumb<?php echo $i?>").hover(function() {
+                        jQuery(this).stop().animate({
+                            opacity: "0.5"
+                        }, 'fast');
+                    },
+                    function() {
+                        jQuery(this).stop().animate({
+                            opacity: "1"
+                        }, 'fast');
+                    });
+            });
+            </script>
+            <?php
 							}
 						}
 					}
 					?>
-				</div>
-			</div>
-			<?php
+        </div>
+    </div>
+    <?php
 			}else{
 			?>
-				<img src="<?php echo Uri::root()?>media/com_osproperty/assets/images/nopropertyphoto.png" />
-			<?php
+    <img src="<?php echo Uri::root()?>media/com_osproperty/assets/images/nopropertyphoto.png" />
+    <?php
 			}
 			?>
-		</div>
-		<script type="text/javascript">
-		 function showImage(id){
-			var current_image = document.getElementById('current_image');
-			cimage = current_image.value;
-			var img = document.getElementById('img' + cimage);
-			img.style.display = "none";
-			current_image.value = id;
-			var img = document.getElementById('img' + id);
-			img.style.display = "block";
-		}
-		</script>
-		<?php
+</div>
+<script type="text/javascript">
+function showImage(id) {
+    var current_image = document.getElementById('current_image');
+    cimage = current_image.value;
+    var img = document.getElementById('img' + cimage);
+    img.style.display = "none";
+    current_image.value = id;
+    var img = document.getElementById('img' + id);
+    img.style.display = "block";
+}
+</script>
+<?php
 	}
 	
 	/**
@@ -2096,248 +2121,240 @@ class HelperOspropertyCommon{
         $document = new \DOMDocument();
 
         if (false === @$document->loadHTML('<?xml encoding="utf-8" ?>' . $content))
-        {
-            throw new Exception('The page content is not loadable');
-        }
+{
+throw new Exception('The page content is not loadable');
+}
 
-        $xpath = new \DOMXPath($document);
-        $nodes = $xpath->query('//span[@id="knowledge-currency__tgt-amount"]');
+$xpath = new \DOMXPath($document);
+$nodes = $xpath->query('//span[@id="knowledge-currency__tgt-amount"]');
 
-        if (1 !== $nodes->length)
-        {
-            $nodes = $xpath->query('//div[@class="vk_ans vk_bk" or @class="dDoNo vk_bk"]');
-        }
+if (1 !== $nodes->length)
+{
+$nodes = $xpath->query('//div[@class="vk_ans vk_bk" or @class="dDoNo vk_bk"]');
+}
 
-        if (1 !== $nodes->length)
-        {
-            throw new Exception('The currency is not supported or Google changed the response format');
-        }
+if (1 !== $nodes->length)
+{
+throw new Exception('The currency is not supported or Google changed the response format');
+}
 
-        $nodeContent = $nodes->item(0)->textContent;
+$nodeContent = $nodes->item(0)->textContent;
 
-        // Beware of "3 417.36111 Colombian pesos", with a non breaking space
-        $bid = strtr($nodeContent, ["\xc2\xa0" => '']);
+// Beware of "3 417.36111 Colombian pesos", with a non breaking space
+$bid = strtr($nodeContent, ["\xc2\xa0" => '']);
 
-        if (false !== strpos($bid, ' '))
-        {
-            $bid = strstr($bid, ' ', true);
-        }
-        // Does it have thousands separator?
-        if (strpos($bid, ',') && strpos($bid, '.'))
-        {
-            $bid = str_replace(',', '', $bid);
-        }
-		
-        if (!is_numeric($bid))
-        {
-			
-			if (strpos($bid, ',')){
-				$bid = str_replace(',', '.', $bid);
-			}
-            //throw new Exception('The currency is not supported or Google changed the response format');
-        }
+if (false !== strpos($bid, ' '))
+{
+$bid = strstr($bid, ' ', true);
+}
+// Does it have thousands separator?
+if (strpos($bid, ',') && strpos($bid, '.'))
+{
+$bid = str_replace(',', '', $bid);
+}
 
-        return $bid;
+if (!is_numeric($bid))
+{
+
+if (strpos($bid, ',')){
+$bid = str_replace(',', '.', $bid);
+}
+//throw new Exception('The currency is not supported or Google changed the response format');
+}
+
+return $bid;
+}
+
+/**
+* Get Categories list
+*
+* @param unknown_type $catid
+*/
+static function getCategoryParent($catid,& $categoryArr){
+global $bootstrapHelper, $jinput, $mainframe;
+$categoryArr[count($categoryArr)] = $catid;
+$db = Factory::getDbo();
+$db->setQuery("Select parent_id from #__osrs_categories where id = '$catid' and published = '1'");
+$parent_id = $db->loadResult();
+if($parent_id > 0){
+$categoryArr = HelperOspropertyCommon::getCategoryParent($parent_id,$categoryArr);
+}
+return $categoryArr;
+}
+
+/**
+* Get the list of categories
+*
+* @param unknown_type $catid
+* @param unknown_type $categoryArr
+*/
+static function getSubCategories($catid,& $categoryArr){
+global $bootstrapHelper, $jinput, $mainframe;
+$categoryArr[count($categoryArr)] = $catid;
+$db = Factory::getDbo();
+$db->setQuery("Select id from #__osrs_categories where parent_id = '$catid' and published = '1'");
+$catIds = $db->loadObjectList();
+if(count($catIds) > 0){
+for($i=0;$i<count($catIds);$i++){ $categoryArr=HelperOspropertyCommon::getSubCategories($catIds[$i]->id,$categoryArr);
+    }
+    }
+    return $categoryArr;
     }
 
-	/**
-	 * Get Categories list
-	 *
-	 * @param unknown_type $catid
-	 */
-	static function getCategoryParent($catid,& $categoryArr){
-		global $bootstrapHelper, $jinput, $mainframe;
-		$categoryArr[count($categoryArr)] = $catid;
-		$db = Factory::getDbo();
-		$db->setQuery("Select parent_id from #__osrs_categories where id = '$catid' and published = '1'");
-		$parent_id = $db->loadResult();
-		if($parent_id > 0){
-			$categoryArr = HelperOspropertyCommon::getCategoryParent($parent_id,$categoryArr);
-		}
-		return $categoryArr;
-	}
+    /**
+    * Check is Photo file
+    * Return false : if it is not the JPEG photo
+    * Return true : if it is JPEG photo
+    */
+    static function checkIsPhotoFileUploaded($element_name)
+    {
+    $file = $_FILES[$element_name];
+    $fname = $file['name'];
+    $ftype = end(explode('.', strtolower($fname)));
+    $ftype = strtolower($ftype);
+    $allowtype = array('jpg','jpeg','gif','png','webp');
+    if(!in_array($ftype,$allowtype))
+    {
+    return false;
+    }
+    else
+    {
+    //return true;
+    $imageinfo = getimagesize($_FILES[$element_name]['tmp_name']);
+    if(strtolower($imageinfo['mime']) != 'image/jpeg' && strtolower($imageinfo['mime']) != 'image/jpg' &&
+    strtolower($imageinfo['mime']) != 'image/png' && strtolower($imageinfo['mime']) != 'image/gif' &&
+    strtolower($imageinfo['mime']) != 'image/webp')
+    {
+    return false;
+    }else{
+    return true;
+    }
+    }
+    }
 
-	/**
-	 * Get the list of categories
-	 *
-	 * @param unknown_type $catid
-	 * @param unknown_type $categoryArr
-	 */
-	static function getSubCategories($catid,& $categoryArr){
-		global $bootstrapHelper, $jinput, $mainframe;
-		$categoryArr[count($categoryArr)] = $catid;
-		$db = Factory::getDbo();
-		$db->setQuery("Select id from #__osrs_categories where parent_id = '$catid' and published = '1'");
-		$catIds = $db->loadObjectList();
-		if(count($catIds) > 0){
-			for($i=0;$i<count($catIds);$i++){
-				$categoryArr = HelperOspropertyCommon::getSubCategories($catIds[$i]->id,$categoryArr);
-			}
-		}
-		return $categoryArr;
-	}
+    /**
+    * Check is Document file
+    * Return false : if it is not Doc or PDF file
+    * Return true : if it is Doc or PDF file
+    */
+    static function checkIsDocumentFileUploaded($element_name){
+    $file = $_FILES[$element_name];
+    $fname = $file['name'];
+    $ftype = end(explode('.', strtolower($fname)));
+    $ftype = strtolower($ftype);
+    $allowtype = array('pdf','doc','docx');
+    if(!in_array($ftype,$allowtype)){
+    return false;
+    }else{
+    $type = strtolower($_FILES[$element_name]['type']);
+    if (($type == "application/msword") || ($type == "application/pdf")){
+    return true;
+    }else{
+    return false;
+    }
+    }
+    }
 
-	/**
-	 * Check is Photo file
-	 * Return false : if it is not the JPEG photo
-	 * Return true  : if it is JPEG photo
-	 */
-	static function checkIsPhotoFileUploaded($element_name){
-		$file = $_FILES[$element_name];
-		$fname = $file['name'];
-		$ftype = end(explode('.', strtolower($fname)));
-		$ftype = strtolower($ftype);
-		$allowtype = array('jpg','jpeg','gif','png');
-		if(!in_array($ftype,$allowtype)){
-			return false;
-		}else{
-			//return true;
-			$imageinfo = getimagesize($_FILES[$element_name]['tmp_name']);
-			if(strtolower($imageinfo['mime']) != 'image/jpeg' && strtolower($imageinfo['mime']) != 'image/jpg' && strtolower($imageinfo['mime']) != 'image/png' && strtolower($imageinfo['mime']) != 'image/gif') {
-			    return false;
-			}else{
-				return true;
-			}
-		}
-	}
+    /**
+    * Get the category list
+    *
+    * @param unknown_type $parent_id
+    */
+    static function getCatList($parent_id, & $catArr){
+    global $bootstrapHelper, $jinput, $mainframe,$lang_suffix;
+    $db = Factory::getDbo();
+    $db->setQuery("Select id, parent_id,category_name$lang_suffix as category_name from #__osrs_categories where id =
+    '$parent_id'");
+    $category = $db->loadObjectList();
+    if(count($category) > 0){
+    $category = $category[0];
+    $count = count($catArr);
+    $catArr[$count] = new stdClass();
+    $catArr[$count]->id = $category->id;
+    $catArr[$count]->cat_name = $category->category_name;
+    $parent_id = $category->parent_id;
+    $catArr = self::getCatList($parent_id,$catArr);
+    }
+    return $catArr;
+    }
 
-	/**
-	 * Check is Document file
-	 * Return false : if it is not Doc or PDF file
-	 * Return true  : if it is Doc or PDF file
-	 */
-	static function checkIsDocumentFileUploaded($element_name){
-		$file = $_FILES[$element_name];
-		$fname = $file['name'];
-		$ftype = end(explode('.', strtolower($fname)));
-		$ftype = strtolower($ftype);
-		$allowtype = array('pdf','doc','docx');
-		if(!in_array($ftype,$allowtype)){
-			return false;
-		}else{
-			$type = strtolower($_FILES[$element_name]['type']);
-			if (($type == "application/msword") || ($type == "application/pdf")){ 
-				return true;
-			}else{
-				return false;
-			}
-		}
-	}
+    /**
+    * Drawn DPE Chart
+    *
+    * @param unknown_type $energy
+    * @param unknown_type $climate
+    * @return unknown
+    */
+    static function drawGraph($energy, $climate, $e_class, $c_class)
+    {
+    global $bootstrapHelper, $configClass;
+    $dstyle = 'padding: 0 3px; line-height: 20px; margin-bottom: 2px; height: 20px;';
 
-	/**
-	 * Get the category list
-	 *
-	 * @param unknown_type $parent_id
-	 */
-	static function getCatList($parent_id, & $catArr){
-		global $bootstrapHelper, $jinput, $mainframe,$lang_suffix;
-		$db = Factory::getDbo();
-		$db->setQuery("Select id, parent_id,category_name$lang_suffix as category_name from #__osrs_categories where id = '$parent_id'");
-		$category = $db->loadObjectList();
-		if(count($category) > 0){
-			$category = $category[0];
-			$count = count($catArr);
-			$catArr[$count]	= new stdClass();
-			$catArr[$count]->id = $category->id;
-			$catArr[$count]->cat_name = $category->category_name;
-			$parent_id = $category->parent_id;
-			$catArr = self::getCatList($parent_id,$catArr);
-		}
-		return $catArr;
-	}
+    if(($energy != 'null') || ($e_class != ""))
+    {
+    if(($climate != 'null') || ($c_class != ""))
+    {
+    $cwidth = '50%';
+    }
+    else
+    {
+    $cwidth = '100%';
+    }
+    }
+    if(($climate != 'null') || ($c_class != ""))
+    {
+    if(($energy != 'null') || ($e_class != ""))
+    {
+    $cwidth = '50%';
+    }
+    else
+    {
+    $cwidth = '100%';
+    }
+    }
+    $e_measurement = "kWH/m";
+    $c_measurement = "kg/m";
 
-	/**
-	 * Drawn DPE Chart
-	 *
-	 * @param unknown_type $energy
-	 * @param unknown_type $climate
-	 * @return unknown
-	 */
-	static function drawGraph($energy, $climate, $e_class, $c_class)
-	{
-		global $bootstrapHelper, $configClass;
-		$dstyle = 'padding: 0 3px; line-height: 20px; margin-bottom: 2px; height: 20px;';
+    $dpe_display = '';
 
-		if(($energy != 'null') || ($e_class != ""))
-		{
-			if(($climate != 'null') || ($c_class != ""))
-			{
-				$cwidth = '50%';
-			}
-			else
-			{
-				$cwidth = '100%';
-			}
-		}
-		if(($climate != 'null') || ($c_class != ""))
-		{
-			if(($energy != 'null') || ($e_class != ""))
-			{
-				$cwidth = '50%';
-			}
-			else
-			{
-				$cwidth = '100%';
-			}
-		}
-		$e_measurement = "kWH/m";
-		$c_measurement = "kg/m";
+    $energy_bg =
+    array('#3a7b15','#3e8d11','#49a909','#82ad06','#d7d71f','#d6ab28','#de801e','#d51b1c','#c51415','#a9090a','8a0506');
 
-		$dpe_display = '';
+    $dpe_display .= '<div class="'.$bootstrapHelper->getClassMapping('row-fluid').'">
+        <div class="'.$bootstrapHelper->getClassMapping('span6').'">';
+            if(((isset($energy) && $energy != 'null') || ($e_class != "")) && (($configClass['energy_class'] != "") &&
+            ($configClass['energy_value'] != "")))
+            {
+            $class_name = $configClass['energy_class'];
+            $class_value = $configClass['energy_value'];
 
-		$energy_bg =  array('#3a7b15','#3e8d11','#49a909','#82ad06','#d7d71f','#d6ab28','#de801e','#d51b1c','#c51415','#a9090a','8a0506');
+            if(($class_name != "") && ($class_value != ""))
+            {
 
-		$dpe_display .= '<div class="'.$bootstrapHelper->getClassMapping('row-fluid').'"><div class="'.$bootstrapHelper->getClassMapping('span6').'">';
-		if(((isset($energy) && $energy != 'null') || ($e_class != "")) && (($configClass['energy_class'] != "") && ($configClass['energy_value'] != "")))
-		{
-			$class_name  = $configClass['energy_class'];
-			$class_value = $configClass['energy_value'];
+            $class_name_array = explode(",",$class_name);
+            $class_value_array = explode(",",$class_value);
 
-			if(($class_name != "") && ($class_value != ""))
-			{
+            $dpe_display .= '<div class="os_dpe_header"><strong>' . Text::_('OS_ENERGY_HEADER') . ' (' . $e_measurement
+                    . ')</strong></div>';
+            $r_energy = round((float)$energy);
 
-				$class_name_array = explode(",",$class_name);
-				$class_value_array = explode(",",$class_value);
+            $dpe_display .= '<div class="clearfix"></div>
+            <div class="os_dpe_energy_container relative">';
 
-				$dpe_display .= '<div class="os_dpe_header"><strong>' . Text::_('OS_ENERGY_HEADER') . ' (' . $e_measurement . ')</strong></div>';
-				$r_energy = round((float)$energy);
+                $basic_width = round(70/count($class_name_array));
 
-				$dpe_display .= '<div class="clearfix"></div>
-								<div class="os_dpe_energy_container relative">';
-
-				$basic_width = round(70/count($class_name_array));
-
-				for($i=0;$i<count($class_name_array);$i++)
-				{
-					$class = $class_name_array[$i];
-					$width = 20 + $basic_width + $basic_width*$i;
-					//checking value;
-					if($e_class != "")
-					{
-						if($e_class == $class)
-						{
-							$e_height = $i*22;
-						}
-						if($i==0)
-						{
-							$value = "< ".$class_value_array[0];
-						}
-						elseif($i == count($class_value_array))
-                        {
-							$temp = $class_value_array[$i - 1] + 1;
-							$value = " > ".$temp;
-						}
-						else
-						{
-							$temp = $class_value_array[$i - 1] + 1;
-							$value = $temp." ".Text::_('OS_TO')." ".$class_value_array[$i];
+                for($i=0;$i<count($class_name_array);$i++) { $class=$class_name_array[$i]; $width=20 + $basic_width +
+                    $basic_width*$i; //checking value; if($e_class !="" ) { if($e_class==$class) { $e_height=$i*22; }
+                    if($i==0) { $value="< " .$class_value_array[0]; } elseif($i==count($class_value_array)) {
+                    $temp=$class_value_array[$i - 1] + 1; $value=" > " .$temp; } else { $temp=$class_value_array[$i - 1]
+                    + 1; $value=$temp." ".Text::_('OS_TO')." ".$class_value_array[$i];
 						}
 					}
 					else
 					{
 						if($i==0)
 						{
-							$value = "< ".$class_value_array[0];
+							$value = " < ".$class_value_array[0];
 							if($r_energy <= $class_value_array[0])
 							{
 								$e_height = 0;
@@ -2346,91 +2363,78 @@ class HelperOspropertyCommon{
 						elseif($i == count($class_value_array))
                         {
 							$temp = $class_value_array[$i - 1] + 1;
-							$value = " > ".$temp;
-							if($r_energy >= $temp)
-							{
-								$e_height = $i*22;
-							}
-						}
-						else
-						{
-							$temp = $class_value_array[$i - 1] + 1;
-							$value = $temp." ".Text::_('OS_TO')." ".$class_value_array[$i];
-							if(($r_energy >= $temp) && ($r_energy <= $class_value_array[$i]))
-							{
-								$e_height = $i*22;
-							}
-						}
-					}
-					$dpe_display .= '<div style="'.$dstyle.' background: '.$energy_bg[$i].'; width: '.$width.'%;" class="os_dpe_item colorwhite relative">(' . $value . ') <span class="floatright">'.$class.'</span></div>';
-				}
-				if($e_class != "")
-				{
-					$dpe_display .= '<div style="' . $dstyle . ' top: ' . $e_height . 'px; width: 10%; background: #ccc;" class="os_dpe_marker m_energy absolute center right0" title="'.Text::_('OS_ENERGY').': '.OSPHelper::showSquare($energy).' '.$e_measurement.'">' . $e_class . '</div></div>';
-				}
-				else
-				{
-					$dpe_display .= '<div style="' . $dstyle . ' top: ' . $e_height . 'px; width: 10%; background: #ccc;" class="os_dpe_marker m_energy absolute center right0">' . OSPHelper::showSquare($energy) . '</div>
-								</div>';
-				}
-				$dpe_display .= '<div class="clearfix"></div><div class="os_dpe_footer fontsmall">' . Text::_('OS_ENERGY_FOOTER') . '</div>';
-			}
-		}
-		
-		$dpe_display .= '</div>';
-		$dpe_display .= '<div class="'.$bootstrapHelper->getClassMapping('span6').'">';
-		
-		if(((isset($climate) && $climate != 'null') || ($c_class != "")) && (($configClass['climate_class'] != "") && ($configClass['climate_value'] != "")))
-		{
-			$dpe_display .= '<div class="os_dpe_header"><strong>'.Text::_('OS_CLIMATE_HEADER').' ('.$c_measurement.')</strong></div>';
-			$energy_bg =  array('#ede4f5','#e0c2f8','#d4aaf6','#c996f3','#b973ef','#a74deb','#891be0','#7e36b7','#712ba8','#5a2088','#421168');
-			$r_climate = round((float)$climate);
+							$value = "> ".$temp;
+                    if($r_energy >= $temp)
+                    {
+                    $e_height = $i*22;
+                    }
+                    }
+                    else
+                    {
+                    $temp = $class_value_array[$i - 1] + 1;
+                    $value = $temp." ".Text::_('OS_TO')." ".$class_value_array[$i];
+                    if(($r_energy >= $temp) && ($r_energy <= $class_value_array[$i])) { $e_height=$i*22; } } }
+                        $dpe_display .='<div style="' .$dstyle.' background: '.$energy_bg[$i].' ; width: '.$width.' %;"
+                        class="os_dpe_item colorwhite relative">(' . $value . ') <span
+                            class="floatright">'.$class.'</span></div>';
+            }
+            if($e_class != "")
+            {
+            $dpe_display .= '<div style="' . $dstyle . ' top: ' . $e_height . 'px; width: 10%; background: #ccc;"
+                class="os_dpe_marker m_energy absolute center "
+                title="'.Text::_('OS_ENERGY').': '.OSPHelper::showSquare($energy).' '.$e_measurement.'">' . $e_class . '
+            </div>
+        </div>';
+        }
+        else
+        {
+        $dpe_display .= '<div style="' . $dstyle . ' top: ' . $e_height . 'px; width: 10%; background: #ccc;"
+            class="os_dpe_marker m_energy absolute center ">' . OSPHelper::showSquare($energy) . '</div>
+    </div>';
+    }
+    $dpe_display .= '<div class="clearfix"></div>
+    <div class="os_dpe_footer fontsmall">' . Text::_('OS_ENERGY_FOOTER') . '</div>';
+    }
+    }
 
-			$class_name  = $configClass['climate_class'];
-			$class_value = $configClass['climate_value'];
+    $dpe_display .= '</div>';
+    $dpe_display .= '<div class="'.$bootstrapHelper->getClassMapping('span6').'">';
 
-			if(($class_name != "") && ($class_value != ""))
-			{
+        if(((isset($climate) && $climate != 'null') || ($c_class != "")) && (($configClass['climate_class'] != "") &&
+        ($configClass['climate_value'] != "")))
+        {
+        $dpe_display .= '<div class="os_dpe_header"><strong>'.Text::_('OS_CLIMATE_HEADER').'
+                ('.$c_measurement.')</strong></div>';
+        $energy_bg =
+        array('#ede4f5','#e0c2f8','#d4aaf6','#c996f3','#b973ef','#a74deb','#891be0','#7e36b7','#712ba8','#5a2088','#421168');
+        $r_climate = round((float)$climate);
 
-				$class_name_array = explode(",",$class_name);
-				$class_value_array = explode(",",$class_value);
+        $class_name = $configClass['climate_class'];
+        $class_value = $configClass['climate_value'];
 
-				$dpe_display .= '<div class="clearfix"></div>
-								<div class="os_dpe_energy_container relative">';
+        if(($class_name != "") && ($class_value != ""))
+        {
 
-				$basic_width = round(70/count($class_name_array));
+        $class_name_array = explode(",",$class_name);
+        $class_value_array = explode(",",$class_value);
 
-				for($i=0;$i<count($class_name_array);$i++)
-				{
-					$class = $class_name_array[$i];
-					$width = 20 + $basic_width + $basic_width*$i;
-					//checking value;
-					if($c_class != "")
-					{
-						if($c_class == $class)
-						{
-							$e_height = $i*22;
-						}
-						if($i==0)
-						{
-							$value = "< ".$class_value_array[0];
-						}
-						elseif($i == count($class_value_array))
-                        {
-							$temp = $class_value_array[$i - 1] + 1;
-							$value = " > ".$temp;
-						}
-						else
-						{
-							$temp = $class_value_array[$i - 1] + 1;
-							$value = $temp." ".Text::_('OS_TO')." ".$class_value_array[$i];
+        $dpe_display .= '<div class="clearfix"></div>
+        <div class="os_dpe_energy_container relative">';
+
+            $basic_width = round(70/count($class_name_array));
+
+            for($i=0;$i<count($class_name_array);$i++) { $class=$class_name_array[$i]; $width=20 + $basic_width +
+                $basic_width*$i; //checking value; if($c_class !="" ) { if($c_class==$class) { $e_height=$i*22; }
+                if($i==0) { $value="< " .$class_value_array[0]; } elseif($i==count($class_value_array)) {
+                $temp=$class_value_array[$i - 1] + 1; $value=" > " .$temp; } else { $temp=$class_value_array[$i - 1] +
+                1; $value=$temp." ".Text::_('OS_TO')." ".$class_value_array[$i];
 						}
 					}
 					else
 					{
 						if($i==0)
 						{
-							$value = "< ".$class_value_array[0];
+							$value = " < ".$class_value_array[0];
 							if($r_climate <= $class_value_array[0])
 							{
 								$e_height = 0;
@@ -2439,582 +2443,609 @@ class HelperOspropertyCommon{
 						elseif($i == count($class_value_array))
                         {
 							$temp = $class_value_array[$i - 1] + 1;
-							$value = " > ".$temp;
-							if($r_climate >= $temp)
-							{
-								$e_height = $i*22;
-							}
-						}
-						else
-						{
-							$temp = $class_value_array[$i - 1] + 1;
-							$value = $temp." ".Text::_('OS_TO')." ".$class_value_array[$i];
-							if(($r_climate >= $temp) && ($r_climate <= $class_value_array[$i]))
-							{
-								$e_height = $i*22;
-							}
-						}
-					}
-					$dpe_display .= '<div style="'.$dstyle.'background: '.$energy_bg[$i].'; width: '.$width.'%;" class="os_dpe_item colorwhite relative">(' . $value . ') <span class="floatright">'.$class.'</span></div>';
-				}
-				if($c_class != "")
-				{
-					$dpe_display .= '<div style="' . $dstyle . ' top: ' . $e_height . 'px; background: #ccc; " class="os_dpe_marker m_energy absolute center right0 width10pc hasTip" title="'.Text::_('OS_CLIMATE').': '.OSPHelper::showSquare($r_climate).' '.$c_measurement.'">' . $c_class . '</div>
-								</div>';
-				}
-				else
-				{
-					$dpe_display .= '<div style="' . $dstyle . ' top: ' . $e_height . 'px; background: #ccc; " class="os_dpe_marker m_energy absolute center right0 width10pc">' . OSPHelper::showSquare($r_climate) . '</div>
-								</div>';
-				}
-				$dpe_display .= '<div class="clearfix"></div><div class="os_dpe_footer fontsmall">' . Text::_('OS_CLIMATE_FOOTER') . '</div>';
-			}
-		}
-		
-		$dpe_display .= '</div></div>';
-		
-		return $dpe_display;
-	}
+							$value = "> ".$temp;
+                if($r_climate >= $temp)
+                {
+                $e_height = $i*22;
+                }
+                }
+                else
+                {
+                $temp = $class_value_array[$i - 1] + 1;
+                $value = $temp." ".Text::_('OS_TO')." ".$class_value_array[$i];
+                if(($r_climate >= $temp) && ($r_climate <= $class_value_array[$i])) { $e_height=$i*22; } } }
+                    $dpe_display .='<div style="' .$dstyle.'background: '.$energy_bg[$i].' ; width: '.$width.' %;"
+                    class="os_dpe_item colorwhite relative">(' . $value . ') <span class="floatright">'.$class.'</span>
+        </div>';
+        }
+        if($c_class != "")
+        {
+        $dpe_display .= '<div style="' . $dstyle . ' top: ' . $e_height . 'px; background: #ccc; "
+            class="os_dpe_marker m_energy absolute center  width10pc hasTip"
+            title="'.Text::_('OS_CLIMATE').': '.OSPHelper::showSquare($r_climate).' '.$c_measurement.'">' . $c_class . '
+        </div>
+    </div>';
+    }
+    else
+    {
+    $dpe_display .= '<div style="' . $dstyle . ' top: ' . $e_height . 'px; background: #ccc; "
+        class="os_dpe_marker m_energy absolute center  width10pc">' . OSPHelper::showSquare($r_climate) . '</div>
+    </div>';
+    }
+    $dpe_display .= '<div class="clearfix"></div>
+    <div class="os_dpe_footer fontsmall">' . Text::_('OS_CLIMATE_FOOTER') . '</div>';
+    }
+    }
+
+    $dpe_display .= '</div>
+    </div>';
+
+    return $dpe_display;
+    }
 
 
-	/**
-	 * Create the photo from main photo
-	 *
-	 * @param unknown_type $t
-	 * @param unknown_type $l
-	 * @param unknown_type $h
-	 * @param unknown_type $w
-	 * @param unknown_type $wall_image
-	 */
-	static function create_photo($t,$l,$h,$w,$photo_name,$type,$pid){
-		global $bootstrapHelper, $jinput, $configClass;
-		$configClass = OSPHelper::loadConfig();
-		$ext = $ext[count($ext)-1];
-		$path = JPATH_ROOT."/images/osproperty/properties".DS.$pid;
-		$srcImg  = imagecreatefromjpeg($path.DS.$photo_name);
-		$newImg  = imagecreatetruecolor($w, $h);
-		imagecopyresampled($newImg, $srcImg, 0, 0, $l, $t, $w, $h, $w, $h);
-		if($type == 0){
-			imagejpeg($newImg,$path."/thumb".DS.$photo_name);
-			//resize if the photo has big size
-			$images_thumbnail_width = $configClass['images_thumbnail_width'];
-			$images_thumbnail_height = $configClass['images_thumbnail_height'];
-			$info = getimagesize($path."/thumb".DS.$photo_name);
-			$width = $info[0];
-			$height = $info[1];
-			if($width > $images_thumbnail_width){
-				//resize image to the original thumb width
-				$image = new SimpleImage();
-			    $image->load($path."/thumb".DS.$photo_name);
-			    $image->resize($images_thumbnail_width,$images_thumbnail_height);
-			    $image->save($path."/thumb".DS.$photo_name,$configClass['images_quality']);
-			}
-		}else{
-			imagejpeg($newImg,$path."/medium".DS.$photo_name);
-			//resize if the photo has big size
-			$images_large_width = $configClass['images_large_width'];
-			$images_large_height = $configClass['images_large_height'];
-			$info = getimagesize($path."/medium".DS.$photo_name);
-			$width = $info[0];
-			$height = $info[1];
-			if($width > $images_large_width){
-				//resize image to the original thumb width
-				$image = new SimpleImage();
-			    $image->load($path."/medium".DS.$photo_name);
-			    $image->resize($images_large_width,$images_large_height);
-			    $image->save($path."/medium".DS.$photo_name,$configClass['images_quality']);
-			}
-		}
-	}
+    /**
+    * Create the photo from main photo
+    *
+    * @param unknown_type $t
+    * @param unknown_type $l
+    * @param unknown_type $h
+    * @param unknown_type $w
+    * @param unknown_type $wall_image
+    */
+    static function create_photo($t,$l,$h,$w,$photo_name,$type,$pid){
+    global $bootstrapHelper, $jinput, $configClass;
+    $configClass = OSPHelper::loadConfig();
+    $ext = $ext[count($ext)-1];
+    $path = JPATH_ROOT."/images/osproperty/properties".DS.$pid;
+    $srcImg = imagecreatefromjpeg($path.DS.$photo_name);
+    $newImg = imagecreatetruecolor($w, $h);
+    imagecopyresampled($newImg, $srcImg, 0, 0, $l, $t, $w, $h, $w, $h);
+    if($type == 0){
+    imagejpeg($newImg,$path."/thumb".DS.$photo_name);
+    //resize if the photo has big size
+    $images_thumbnail_width = $configClass['images_thumbnail_width'];
+    $images_thumbnail_height = $configClass['images_thumbnail_height'];
+    $info = getimagesize($path."/thumb".DS.$photo_name);
+    $width = $info[0];
+    $height = $info[1];
+    if($width > $images_thumbnail_width){
+    //resize image to the original thumb width
+    $image = new SimpleImage();
+    $image->load($path."/thumb".DS.$photo_name);
+    $image->resize($images_thumbnail_width,$images_thumbnail_height);
+    $image->save($path."/thumb".DS.$photo_name,$configClass['images_quality']);
+    }
+    }else{
+    imagejpeg($newImg,$path."/medium".DS.$photo_name);
+    //resize if the photo has big size
+    $images_large_width = $configClass['images_large_width'];
+    $images_large_height = $configClass['images_large_height'];
+    $info = getimagesize($path."/medium".DS.$photo_name);
+    $width = $info[0];
+    $height = $info[1];
+    if($width > $images_large_width){
+    //resize image to the original thumb width
+    $image = new SimpleImage();
+    $image->load($path."/medium".DS.$photo_name);
+    $image->resize($images_large_width,$images_large_height);
+    $image->save($path."/medium".DS.$photo_name,$configClass['images_quality']);
+    }
+    }
+    }
 
-	/**
-	 * Check max size of the image
-	 *
-	 * @param unknown_type $image_path
-	 */
-	static function returnMaxsize($image_path){
-		global $bootstrapHelper, $jinput, $mainframe,$configClass;
-		$info = getimagesize($image_path);
-		$width = $info[0];
-		$height = $info[1];
-		$max_width_allowed = $configClass['max_width_size'];
-		$max_height_allowed = $configClass['max_height_size'];
-		
-		if(($height > $max_height_allowed) and ($width > $max_width_allowed)){
-			$resize = 1;
-			//resize to both
-			/*
-			$return = HelperOspropertyCommon::calResizePhoto($width,$height,$max_width_allowed,$max_height_allowed,$resize);
-			//resize image
-			$image = new SimpleImage();
-		    $image->load($image_path);
-		    $image->resize($return[0],$return[1]);
-		    $image->save($image_path,100);
-		    */
-			OSPHelper::resizePhoto($image_path,$max_width_allowed,$max_height_allowed);
-		}elseif(($height > $max_height_allowed) and ($width <= $max_width_allowed)){
-			$resize = 2;
-			//resize to height
-			/*
-			$return = HelperOspropertyCommon::calResizePhoto($width,$height,$max_width_allowed,$max_height_allowed,$resize);
-			//resize image
-			$image = new SimpleImage();
-		    $image->load($image_path);
-		    $image->resize($return[0],$return[1]);
-		    $image->save($image_path,100);
-		    */
-			OSPHelper::resizePhoto($image_path,$width,$max_height_allowed);
-		}elseif(($height <= $max_height_allowed) and ($width > $max_width_allowed)){
-			$resize = 3;
-			//resize to width
-			/*
-			$return = HelperOspropertyCommon::calResizePhoto($width,$height,$max_width_allowed,$max_height_allowed,$resize);
-			//resize image
-			$image = new SimpleImage();
-		    $image->load($image_path);
-		    $image->resize($return[0],$return[1]);
-		    $image->save($image_path,100);
-		    */
-			OSPHelper::resizePhoto($image_path,$max_width_allowed,$height);
-		}else{
-			//do nothing
-		}
-	}
+    /**
+    * Check max size of the image
+    *
+    * @param unknown_type $image_path
+    */
+    static function returnMaxsize($image_path)
+    {
+    global $bootstrapHelper, $jinput, $mainframe,$configClass;
+    $info = getimagesize($image_path);
+    $type = str_replace('image/', '', $info['mime']);
 
+    $width = $info[0];
+    $height = $info[1];
+    $max_width_allowed = $configClass['max_width_size'];
+    $max_height_allowed = $configClass['max_height_size'];
 
-	static function calResizePhoto($width,$height, $maxwidth,$maxheight,$resize){
-		global $bootstrapHelper, $jinput, $mainframe;
-		switch ($resize){
-			case "1":
-				$return 	= HelperOspropertyCommon::calResizeWidth($width,$height,$maxwidth,$maxheight);
-				$newwidth 	= $return[0];
-				$newheight 	= $return[1];
-				if($newheight > $maxheight){
-					$return 	= HelperOspropertyCommon::calResizeHeight($width,$height,$maxwidth,$maxheight);
-				}
-				break;
-			case "2":
-				$return 	= HelperOspropertyCommon::calResizeHeight($width,$height,$maxwidth,$maxheight);
-				break;
-			case "3":
-				$return 	= HelperOspropertyCommon::calResizeWidth($width,$height,$maxwidth,$maxheight);
-				break;
-		}
-		return $return;
-	}
-
-	static function calResizeWidth($width,$height,$maxwidth,$maxheight){
-		$return = array();
-		if($width > $maxwidth){
-			$newwidth  = $maxwidth;
-			$newheight = round($height*$maxwidth/$width);
-			$return[0] = $newwidth;
-			$return[1] = $newheight;
-		}else{
-			$return[0] = $width;
-			$return[1] = $height;
-		}
-		return $return;
-	}
-
-	static function calResizeHeight($width,$height,$maxwidth,$maxheight){
-		$return = array();
-		if($height > $maxheight){
-			$newheight = $maxheight;
-			$newwidth  = round($width*$maxheight/$height);
-			$return[0] = $newwidth;
-			$return[1] = $newheight;
-		}else{
-			$return[0] = $width;
-			$return[1] = $height;
-		}
-		return $return;
-	}
-
-	/**
-	 * Check to see if this user is the owner of the property
-	 *
-	 * @param unknown_type $pid
-	 * @return unknown
-	 */
-	static function isOwner($pid){
-		$user = Factory::getUser();
-		if(intval($user->id) > 0){
-			$db = Factory::getDbo();
-			//check to see if this user is agent
-			$db->setQuery("Select count(id) from #__osrs_agents where user_id = '$user->id' and published = '1'");
-			$count = $db->loadResult();
-			if($count > 0){
-				$db->setQuery("Select id from #__osrs_agents where user_id = '$user->id' and published = '1'");
-				$agent_id = $db->loadResult();
-				$db->setQuery("Select count(id) from #__osrs_properties where agent_id = '$agent_id' and id = '$pid'");
-				$count = $db->loadResult();
-				if($count > 0){
-					return true;
-				}else{
-					return false;
-				}
-			}else{
-				return false;
-			}
-		}else{
-			return false;
-		}
-	}
-	
-	static function isCompanyOwner($pid){
-		global $bootstrapHelper, $jinput, $mainframe;
-		$user = Factory::getUser();
-		if(intval($user->id) > 0){
-			$db = Factory::getDbo();
-			//check to see if this user is agent
-			$db->setQuery("Select count(id) from #__osrs_companies where user_id = '$user->id' and published = '1'");
-			$count = $db->loadResult();
-			if($count > 0){
-				$db->setQuery("Select id from #__osrs_companies where user_id = '$user->id' and published = '1'");
-				$company_id = $db->loadResult();
-				
-				$db->setQuery("Select count(id) from #__osrs_properties where agent_id in (Select id from #__osrs_agents where published = '1' and company_id = '$company_id') and id = '$pid'");
-				$count = $db->loadResult();
-				if($count > 0){
-					return true;
-				}else{
-					return false;
-				}
-			}else{
-				return false;
-			}
-		}else{
-			return false;
-		}
-	}
-	
-	
-	static function isAgentOfCompany($agent_id){
-		global $bootstrapHelper, $jinput, $mainframe;
-		$user = Factory::getUser();
-		if(intval($user->id) > 0){
-			$db = Factory::getDbo();
-			//check to see if this user is agent
-			$db->setQuery("Select count(id) from #__osrs_companies where user_id = '$user->id' and published = '1'");
-			$count = $db->loadResult();
-			if($count > 0){
-				$db->setQuery("Select id from #__osrs_companies where user_id = '$user->id' and published = '1'");
-				$company_id = $db->loadResult();
-				
-				$db->setQuery("Select count(id) from #__osrs_agents where id = '$agent_id' and company_id = '$company_id'");
-				$count = $db->loadResult();
-				if($count > 0){
-					return true;
-				}else{
-					return false;
-				}
-			}else{
-				return false;
-			}
-		}else{
-			return false;
-		}
-	}
-
-	/**
-	 * Export data in XML Google Earth KML format
-	 *
-	 * @param unknown_type $rows
-	 */
-	static function generateGoogleEarthKML($rows){
-		global $bootstrapHelper, $jinput, $mainframe,$configClass;
-		$db = Factory::getDbo();
-		while(ob_end_clean());
-		$document 	   = Factory::getDocument();
-		$document->setMimeEncoding('application/vnd.google-earth.kml+xml');
-		$app = Factory::getApplication();
-
-		$config = Factory::getConfig();
-
-		################################################################################
-		# WRITTEN FOR GOOGLE KML 2.2 SPECS (US VERSION)
-		# http://code.google.com/apis/kml/documentation/kmlreference.html
-		################################################################################
-		$temp_name = time().".xml";
-		$xml = new XMLWriter();
-		$xml->openURI(JPATH_ROOT."/tmp".DS.time().$temp_name);
-		$xml->startDocument('1.0');
-		$xml->setIndent(true);
-
-		$xml->startElement('kml');
-		$xml->writeAttribute('xmlns', 'http://www.opengis.net/kml/2.2');
-		$xml->writeAttribute('xmlns:gx', 'http://www.google.com/kml/ext/2.2');
-		$xml->writeAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
-
-		$xml->startElement('Document');
-		$xml->startElement('atom:author');
-		$xml->writeElement('atom:name', $configClass['business_name']);
-		$xml->endElement();
-
-		$xml->writeElement('name', $configClass['business_name']);
-
-		$xml->startElement('Style');
-		$xml->startElement('IconStyle');
-		$xml->writeElement('href', 'http://maps.google.com/mapfiles/kml/pal4/icon46.png');
-		$xml->endElement();
-		$xml->writeElement('BalloonStyle', '');
-		$xml->endElement();
-
-		if(count($rows) > 0){
-			// start listings
-			for ($i=0;$i<count($rows);$i++){
-				$row 		= $rows[$i];
-				$db->setQuery("Select * from #__osrs_photos where pro_id = '$row->id'");
-				$images     = $db->loadObjectList();
-				//$features	= ipropertyModelFeed::getFeatures($property['id']);
-				$query 		= "Select a.id, a.amenities from #__osrs_amenities as a"
-				." inner join #__osrs_property_amenities as b on b.amen_id = a.id"
-				." where a.published = '1' and b.pro_id = '$row->id'";
-				$db->setQuery($query);
-				$features 	= $db->loadObjectList();
-
-				// create photo link
-				if($images){
-					$photo	= Uri::root()."images/osproperty/properties/".$row->id."/".$images[0]->image;
-				}else{
-					$photo  = '';
-				}
-				$address = '';
-				if($row->show_address == 1){
-					$address    .= $row->address;
-					if($row->postcode != ""){
-						$address    .= ", ".$row->postcode;
-					}
-					if($row->city > 0){
-						$address    .= ", ".HelperOspropertyCommon::loadCityName($row->city);
-					}
-					if($row->region != ""){
-						$address    .= ", ".$row->region;
-					}
-					$address    .= ", ".$row->start_name;
-					$address    .= ", ".$row->country_name;
-				}
-
-				$title = $row->pro_name;
-
-				if($row->agent_photo != ""){
-
-					// define vars
-					$agent_image = Uri::ROOT() . "images/osproperty/agent/thumbnail/" . $row->agent_photo;
-				}
-
-				// build the balloon_text object here.
-				$balloon_text = '<div style="width: 670px;">
-								<table width="100%" cellspacing="0" cellpadding="5">
-								<tr>
-								<td valign="top" style="width: 180px; border-right: solid 1px #ccc;">
-								<div style="padding-bottom: 5px;"><img src="' . Uri::root() . 'media/com_osproperty/agents/' . $property['agent_photo'] . '" alt="' .$row->agent_name .'" width="78" style="border: solid 1px #666; margin-bottom: 5px;" />
-								</div>
-								<div style="font-size: 11px; padding-top: 5px; border-top: solid 1px #ccc;">
-								<a href="' . Uri::root() . 'index.php?option=com_osproperty&task=agent_info&id=' . $row->agent_id . '" style="color: #ff0000; text-decoration: none; font-size: 12px; font-weight: bold;">' .$row->agent_name . '</a><br />';
-
-				if($row->agent_email) $balloon_text .= '<img src="' . Uri::root() . 'components/com_osproperty/assets/images/icon-email.gif" />' . $row->agent_email . '<br />';
-
-				$balloon_text .= '</div>
-								</td>
-								<td valign="top" style="width: 470px;">
-								<div style="border-bottom: solid 1px #ccc; padding: 0 10px 5px 10px; margin-bottom: 5px; font-size: 16px; font-weight: bold; text-transform: uppercase;">
-								<a href="' . Uri::root() . 'index.php?option=com_osproperty&task=property_details&id=' .$row->id. '">' . $address . '</a>
-								</div>
-								<div>';
-				if($row->bed_room != "") $balloon_text .= '<strong>Bedrooms:</strong> ' . $row->bed_room . '<br />';
-				if($row->bath_room) $balloon_text .= '<strong>Bathrooms:</strong> ' . $row->bath_room . '<br />';
-				if($row->square_feet) $balloon_text .= '<strong>Square FT:</strong> ' . $row->square_feet . '<br />';
-				if($row->rooms) $balloon_text .= '<strong>Rooms:</strong> ' . $row->rooms . '<br />';
-				if($property['price']) $balloon_text .= '<br /><span style="font-size: 14px; font-weight: bold;">Listing Price:</span><br /><span style="font-size: 24px; font-weight: bold; color: #ff0000;"> ' . HelperOspropertyCommon::loadCurrency($row->curr)." ".OSPHelper::showPrice($row->price);
-				if($row->rent_time != ""){
-					$balloon_text .= "/".$row->rent_time;
-				}
-				$balloon_text .= '</span>';
-
-				$balloon_text .= '</div>
-								<div style="padding-top: 10px; clear: both;">
-								<strong>Property Description:</strong><br /> ' . $row->pro_small_desc . '<br />
-								</div>
-								</td>
-								</tr>
-								</table>
-								</div>';			
-
-
-				####################################################################
-				# THIS IS WHERE THE ACTUAL PLACEMARK STARTS GETTING BUILT
-				####################################################################
-
-				$xml->startElement('Placemark');
-				$xml->writeAttribute('id', $row->id);
-				// location section
-				$xml->writeElement("name", $title);
-
-				$xml->startElement("description");
-				$xml->writeCData($row->pro_small_desc);
-				$xml->endElement();
-
-				$xml->startElement("Point");
-				$xml->writeElement("coordinates",$row->lat_add. "," .$row->lat_add . ",0");
-				$xml->endElement();
-
-				$xml->startElement("Style");
-				$xml->startElement("IconStyle");
-				$xml->startElement("Icon");
-				$xml->writeElement("href", $photo );
-				$xml->endElement();
-				$xml->endElement();
-				$xml->startElement("BalloonStyle");
-				$xml->startElement("text");
-				$xml->writeCData($balloon_text);
-				$xml->endElement();
-				$xml->endElement();
-				$xml->endElement();
-
-				// end listing data
-				$xml->endElement(); // item
-			}
-		}
-		$xml->endElement(); // rss
-		$xml->endDocument();
-		$xml->flush();
-
-		self::processDownload(JPATH_ROOT."/tmp".DS.time().$temp_name,$temp_name);
-
-	}
-
-	/**
-	 * Process download a file
-	 *
-	 * @param string $file : Full path to the file which will be downloaded
-	 */
-	public static function processDownload($filePath, $filename, $detectFilename = false) {
-		jimport ( 'joomla.filesystem.file' );
-		$fsize = @filesize ( $filePath );
-		$mod_date = date ( 'r', filemtime ( $filePath ) );
-		$cont_dis = 'attachment';
-		if ($detectFilename) {
-			$pos = strpos ( $filename, '_' );
-			$filename = substr ( $filename, $pos + 1 );
-		}
-		$ext = File::getExt ( $filename );
-		$mime = self::getMimeType ( $ext );
-		// required for IE, otherwise Content-disposition is ignored
-		if (ini_get ( 'zlib.output_compression' )) {
-			ini_set ( 'zlib.output_compression', 'Off' );
-		}
-		header ( "Pragma: public" );
-		header ( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
-		header ( "Expires: 0" );
-		header ( "Content-Transfer-Encoding: binary" );
-		header ( 'Content-Disposition:' . $cont_dis . ';' . ' filename="' . $filename . '";' . ' modification-date="' . $mod_date . '";' . ' size=' . $fsize . ';' ); //RFC2183
-		header ( "Content-Type: " . $mime ); // MIME type
-		header ( "Content-Length: " . $fsize );
-
-		if (! ini_get ( 'safe_mode' )) { // set_time_limit doesn't work in safe mode
-			@set_time_limit ( 0 );
-		}
-		self::readfile_chunked ( $filePath );
-	}
-
-	/**
-	 * Get mimetype of a file
-	 *
-	 * @return string
-	 */
-	public static function getMimeType($ext) {
-		require_once JPATH_ROOT . "/components/com_osproperty/helpers/mime.mapping.php";
-		foreach ( $mime_extension_map as $key => $value ) {
-			if ($key == $ext) {
-				return $value;
-			}
-		}
-
-		return "";
-	}
-
-	/**
-	 * Filter Form
-	 *
-	 * @param unknown_type $lists
-	 */
-	static function filterForm($lists)
-	{
-		global $bootstrapHelper, $jinput, $mainframe,$languages,$configClass;
-		$session = Factory::getSession();
-		$use_filterform = $session->get('use_filterform');
-		if($configClass['show_searchform']== 1 && $lists['show_filterform'] == 1) 
-		{
-            $show_location_div = 0;
-            $point = 0;
-            if(OSPHelper::checkOwnerExisting() && $lists['show_agenttypefilter']==1)
-			{
-                $point++;
+    if(($height > $max_height_allowed) && ($width > $max_width_allowed)){
+    $resize = 1;
+    //resize to both
+    /*
+    $return = HelperOspropertyCommon::calResizePhoto($width,$height,$max_width_allowed,$max_height_allowed,$resize);
+    //resize image
+    $image = new SimpleImage();
+    $image->load($image_path);
+    $image->resize($return[0],$return[1]);
+    $image->save($image_path,100);
+    */
+    OSPHelper::resizePhoto($image_path,$max_width_allowed,$max_height_allowed);
+    }elseif(($height > $max_height_allowed) && ($width <= $max_width_allowed)){ $resize=2; //resize to height /*
+        $return=HelperOspropertyCommon::calResizePhoto($width,$height,$max_width_allowed,$max_height_allowed,$resize);
+        //resize image $image=new SimpleImage(); $image->load($image_path);
+        $image->resize($return[0],$return[1]);
+        $image->save($image_path,100);
+        */
+        OSPHelper::resizePhoto($image_path,$width,$max_height_allowed);
+        }elseif(($height <= $max_height_allowed) && ($width> $max_width_allowed)){
+            $resize = 3;
+            //resize to width
+            /*
+            $return =
+            HelperOspropertyCommon::calResizePhoto($width,$height,$max_width_allowed,$max_height_allowed,$resize);
+            //resize image
+            $image = new SimpleImage();
+            $image->load($image_path);
+            $image->resize($return[0],$return[1]);
+            $image->save($image_path,100);
+            */
+            OSPHelper::resizePhoto($image_path,$max_width_allowed,$height);
+            }else{
+            //do nothing
             }
-            if ($lists['show_locationfilter'] == 1) {
+            }
+
+
+            static function calResizePhoto($width,$height, $maxwidth,$maxheight,$resize){
+            global $bootstrapHelper, $jinput, $mainframe;
+            switch ($resize){
+            case "1":
+            $return = HelperOspropertyCommon::calResizeWidth($width,$height,$maxwidth,$maxheight);
+            $newwidth = $return[0];
+            $newheight = $return[1];
+            if($newheight > $maxheight){
+            $return = HelperOspropertyCommon::calResizeHeight($width,$height,$maxwidth,$maxheight);
+            }
+            break;
+            case "2":
+            $return = HelperOspropertyCommon::calResizeHeight($width,$height,$maxwidth,$maxheight);
+            break;
+            case "3":
+            $return = HelperOspropertyCommon::calResizeWidth($width,$height,$maxwidth,$maxheight);
+            break;
+            }
+            return $return;
+            }
+
+            static function calResizeWidth($width,$height,$maxwidth,$maxheight){
+            $return = [];
+            if($width > $maxwidth){
+            $newwidth = $maxwidth;
+            $newheight = round($height*$maxwidth/$width);
+            $return[0] = $newwidth;
+            $return[1] = $newheight;
+            }else{
+            $return[0] = $width;
+            $return[1] = $height;
+            }
+            return $return;
+            }
+
+            static function calResizeHeight($width,$height,$maxwidth,$maxheight){
+            $return = [];
+            if($height > $maxheight){
+            $newheight = $maxheight;
+            $newwidth = round($width*$maxheight/$height);
+            $return[0] = $newwidth;
+            $return[1] = $newheight;
+            }else{
+            $return[0] = $width;
+            $return[1] = $height;
+            }
+            return $return;
+            }
+
+            /**
+            * Check to see if this user is the owner of the property
+            *
+            * @param unknown_type $pid
+            * @return unknown
+            */
+            static function isOwner($pid){
+            $user = Factory::getUser();
+            if(intval($user->id) > 0){
+            $db = Factory::getDbo();
+            //check to see if this user is agent
+            $db->setQuery("Select count(id) from #__osrs_agents where user_id = '$user->id' and published = '1'");
+            $count = $db->loadResult();
+            if($count > 0){
+            $db->setQuery("Select id from #__osrs_agents where user_id = '$user->id' and published = '1'");
+            $agent_id = $db->loadResult();
+            $db->setQuery("Select count(id) from #__osrs_properties where agent_id = '$agent_id' and id = '$pid'");
+            $count = $db->loadResult();
+            if($count > 0){
+            return true;
+            }else{
+            return false;
+            }
+            }else{
+            return false;
+            }
+            }else{
+            return false;
+            }
+            }
+
+            static function isCompanyOwner($pid){
+            global $bootstrapHelper, $jinput, $mainframe;
+            $user = Factory::getUser();
+            if(intval($user->id) > 0){
+            $db = Factory::getDbo();
+            //check to see if this user is agent
+            $db->setQuery("Select count(id) from #__osrs_companies where user_id = '$user->id' and published = '1'");
+            $count = $db->loadResult();
+            if($count > 0){
+            $db->setQuery("Select id from #__osrs_companies where user_id = '$user->id' and published = '1'");
+            $company_id = $db->loadResult();
+
+            $db->setQuery("Select count(id) from #__osrs_properties where agent_id in (Select id from #__osrs_agents
+            where published = '1' and company_id = '$company_id') and id = '$pid'");
+            $count = $db->loadResult();
+            if($count > 0){
+            return true;
+            }else{
+            return false;
+            }
+            }else{
+            return false;
+            }
+            }else{
+            return false;
+            }
+            }
+
+
+            static function isAgentOfCompany($agent_id){
+            global $bootstrapHelper, $jinput, $mainframe;
+            $user = Factory::getUser();
+            if(intval($user->id) > 0){
+            $db = Factory::getDbo();
+            //check to see if this user is agent
+            $db->setQuery("Select count(id) from #__osrs_companies where user_id = '$user->id' and published = '1'");
+            $count = $db->loadResult();
+            if($count > 0){
+            $db->setQuery("Select id from #__osrs_companies where user_id = '$user->id' and published = '1'");
+            $company_id = $db->loadResult();
+
+            $db->setQuery("Select count(id) from #__osrs_agents where id = '$agent_id' and company_id = '$company_id'");
+            $count = $db->loadResult();
+            if($count > 0){
+            return true;
+            }else{
+            return false;
+            }
+            }else{
+            return false;
+            }
+            }else{
+            return false;
+            }
+            }
+
+            /**
+            * Export data in XML Google Earth KML format
+            *
+            * @param unknown_type $rows
+            */
+            static function generateGoogleEarthKML($rows){
+            global $bootstrapHelper, $jinput, $mainframe,$configClass;
+            $db = Factory::getDbo();
+            while(ob_end_clean());
+            $document = Factory::getDocument();
+            $document->setMimeEncoding('application/vnd.google-earth.kml+xml');
+            $app = Factory::getApplication();
+
+            $config = Factory::getConfig();
+
+            ################################################################################
+            # WRITTEN FOR GOOGLE KML 2.2 SPECS (US VERSION)
+            # http://code.google.com/apis/kml/documentation/kmlreference.html
+            ################################################################################
+            $temp_name = time().".xml";
+            $xml = new XMLWriter();
+            $xml->openURI(JPATH_ROOT."/tmp".DS.time().$temp_name);
+            $xml->startDocument('1.0');
+            $xml->setIndent(true);
+
+            $xml->startElement('kml');
+            $xml->writeAttribute('xmlns', 'http://www.opengis.net/kml/2.2');
+            $xml->writeAttribute('xmlns:gx', 'http://www.google.com/kml/ext/2.2');
+            $xml->writeAttribute('xmlns:atom', 'http://www.w3.org/2005/Atom');
+
+            $xml->startElement('Document');
+            $xml->startElement('atom:author');
+            $xml->writeElement('atom:name', $configClass['business_name']);
+            $xml->endElement();
+
+            $xml->writeElement('name', $configClass['business_name']);
+
+            $xml->startElement('Style');
+            $xml->startElement('IconStyle');
+            $xml->writeElement('href', 'http://maps.google.com/mapfiles/kml/pal4/icon46.png');
+            $xml->endElement();
+            $xml->writeElement('BalloonStyle', '');
+            $xml->endElement();
+
+            if(count($rows) > 0){
+            // start listings
+            for ($i=0;$i<count($rows);$i++){ $row=$rows[$i]; $db->setQuery("Select * from #__osrs_photos where pro_id =
+                '$row->id'");
+                $images = $db->loadObjectList();
+                //$features = ipropertyModelFeed::getFeatures($property['id']);
+                $query = "Select a.id, a.amenities from #__osrs_amenities as a"
+                ." inner join #__osrs_property_amenities as b on b.amen_id = a.id"
+                ." where a.published = '1' and b.pro_id = '$row->id'";
+                $db->setQuery($query);
+                $features = $db->loadObjectList();
+
+                // create photo link
+                if($images){
+                $photo = Uri::root()."images/osproperty/properties/".$row->id."/".$images[0]->image;
+                }else{
+                $photo = '';
+                }
+                $address = '';
+                if($row->show_address == 1){
+                $address .= $row->address;
+                if($row->postcode != ""){
+                $address .= ", ".$row->postcode;
+                }
+                if($row->city > 0){
+                $address .= ", ".HelperOspropertyCommon::loadCityName($row->city);
+                }
+                if($row->region != ""){
+                $address .= ", ".$row->region;
+                }
+                $address .= ", ".$row->start_name;
+                $address .= ", ".$row->country_name;
+                }
+
+                $title = $row->pro_name;
+
+                if($row->agent_photo != ""){
+
+                // define vars
+                $agent_image = Uri::ROOT() . "images/osproperty/agent/thumbnail/" . $row->agent_photo;
+                }
+
+                // build the balloon_text object here.
+                $balloon_text = '<div style="width: 670px;">
+                    <table width="100%" cellspacing="0" cellpadding="5">
+                        <tr>
+                            <td valign="top" style="width: 180px; border-right: solid 1px #ccc;">
+                                <div style="padding-bottom: 5px;"><img
+                                        src="' . Uri::root() . 'media/com_osproperty/agents/' . $property['agent_photo'] . '"
+                                        alt="' .$row->agent_name .'" width="78"
+                                        style="border: solid 1px #666; margin-bottom: 5px;" />
+                                </div>
+                                <div style="font-size: 11px; padding-top: 5px; border-top: solid 1px #ccc;">
+                                    <a href="' . Uri::root() . 'index.php?option=com_osproperty&task=agent_info&id=' . $row->agent_id . '"
+                                        style="color: #ff0000; text-decoration: none; font-size: 12px; font-weight: bold;">'
+                                        .$row->agent_name . '</a><br />';
+
+                                    if($row->agent_email) $balloon_text .= '<img
+                                        src="' . Uri::root() . 'components/com_osproperty/assets/images/icon-email.gif" />'
+                                    . $row->agent_email . '<br />';
+
+                                    $balloon_text .= '
+                                </div>
+                            </td>
+                            <td valign="top" style="width: 470px;">
+                                <div
+                                    style="border-bottom: solid 1px #ccc; padding: 0 10px 5px 10px; margin-bottom: 5px; font-size: 16px; font-weight: bold; text-transform: uppercase;">
+                                    <a
+                                        href="' . Uri::root() . 'index.php?option=com_osproperty&task=property_details&id=' .$row->id. '">'
+                                        . $address . '</a>
+                                </div>
+                                <div>';
+                                    if($row->bed_room != "") $balloon_text .= '<strong>Bedrooms:</strong> ' .
+                                    $row->bed_room . '<br />';
+                                    if($row->bath_room) $balloon_text .= '<strong>Bathrooms:</strong> ' .
+                                    $row->bath_room . '<br />';
+                                    if($row->square_feet) $balloon_text .= '<strong>Square FT:</strong> ' .
+                                    $row->square_feet . '<br />';
+                                    if($row->rooms) $balloon_text .= '<strong>Rooms:</strong> ' . $row->rooms .
+                                    '<br />';
+                                    if($property['price']) $balloon_text .= '<br /><span
+                                        style="font-size: 14px; font-weight: bold;">Listing Price:</span><br /><span
+                                        style="font-size: 24px; font-weight: bold; color: #ff0000;"> ' .
+                                        HelperOspropertyCommon::loadCurrency($row->curr)."
+                                        ".OSPHelper::showPrice($row->price);
+                                        if($row->rent_time != ""){
+                                        $balloon_text .= "/".$row->rent_time;
+                                        }
+                                        $balloon_text .= '</span>';
+
+                                    $balloon_text .= '</div>
+                                <div style="padding-top: 10px; clear: both;">
+                                    <strong>Property Description:</strong><br /> ' . $row->pro_small_desc . '<br />
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>';
+
+
+                ####################################################################
+                # THIS IS WHERE THE ACTUAL PLACEMARK STARTS GETTING BUILT
+                ####################################################################
+
+                $xml->startElement('Placemark');
+                $xml->writeAttribute('id', $row->id);
+                // location section
+                $xml->writeElement("name", $title);
+
+                $xml->startElement("description");
+                $xml->writeCData($row->pro_small_desc);
+                $xml->endElement();
+
+                $xml->startElement("Point");
+                $xml->writeElement("coordinates",$row->lat_add. "," .$row->lat_add . ",0");
+                $xml->endElement();
+
+                $xml->startElement("Style");
+                $xml->startElement("IconStyle");
+                $xml->startElement("Icon");
+                $xml->writeElement("href", $photo );
+                $xml->endElement();
+                $xml->endElement();
+                $xml->startElement("BalloonStyle");
+                $xml->startElement("text");
+                $xml->writeCData($balloon_text);
+                $xml->endElement();
+                $xml->endElement();
+                $xml->endElement();
+
+                // end listing data
+                $xml->endElement(); // item
+                }
+                }
+                $xml->endElement(); // rss
+                $xml->endDocument();
+                $xml->flush();
+
+                self::processDownload(JPATH_ROOT."/tmp".DS.time().$temp_name,$temp_name);
+
+                }
+
+                /**
+                * Process download a file
+                *
+                * @param string $file : Full path to the file which will be downloaded
+                */
+                public static function processDownload($filePath, $filename, $detectFilename = false) {
+                jimport ( 'joomla.filesystem.file' );
+                $fsize = @filesize ( $filePath );
+                $mod_date = date ( 'r', filemtime ( $filePath ) );
+                $cont_dis = 'attachment';
+                if ($detectFilename) {
+                $pos = strpos ( $filename, '_' );
+                $filename = substr ( $filename, $pos + 1 );
+                }
+                $ext = File::getExt ( $filename );
+                $mime = self::getMimeType ( $ext );
+                // required for IE, otherwise Content-disposition is ignored
+                if (ini_get ( 'zlib.output_compression' )) {
+                ini_set ( 'zlib.output_compression', 'Off' );
+                }
+                header ( "Pragma: public" );
+                header ( "Cache-Control: must-revalidate, post-check=0, pre-check=0" );
+                header ( "Expires: 0" );
+                header ( "Content-Transfer-Encoding: binary" );
+                header ( 'Content-Disposition:' . $cont_dis . ';' . ' filename="' . $filename . '";' . '
+                modification-date="' . $mod_date . '";' . ' size=' . $fsize . ';' ); //RFC2183
+                header ( "Content-Type: " . $mime ); // MIME type
+                header ( "Content-Length: " . $fsize );
+
+                if (! ini_get ( 'safe_mode' )) { // set_time_limit doesn't work in safe mode
+                @set_time_limit ( 0 );
+                }
+                self::readfile_chunked ( $filePath );
+                }
+
+                /**
+                * Get mimetype of a file
+                *
+                * @return string
+                */
+                public static function getMimeType($ext) {
+                require_once JPATH_ROOT . "/components/com_osproperty/helpers/mime.mapping.php";
+                foreach ( $mime_extension_map as $key => $value ) {
+                if ($key == $ext) {
+                return $value;
+                }
+                }
+
+                return "";
+                }
+
+                /**
+                * Filter Form
+                *
+                * @param unknown_type $lists
+                */
+                static function filterForm($lists)
+                {
+                global $bootstrapHelper, $jinput, $mainframe,$languages,$configClass;
+                $session = Factory::getSession();
+                $use_filterform = $session->get('use_filterform');
+                if($configClass['show_searchform']== 1 && $lists['show_filterform'] == 1)
+                {
+                $show_location_div = 0;
+                $point = 0;
+                if(OSPHelper::checkOwnerExisting() && $lists['show_agenttypefilter']==1)
+                {
+                $point++;
+                }
+                if ($lists['show_locationfilter'] == 1) {
                 $show_location_div = 1;
                 $point++;
-            }
-            if ($lists['show_pricefilter'] == 1) {
+                }
+                if ($lists['show_pricefilter'] == 1) {
                 $point++;
-            }
-            if ($lists['show_propertytypefilter'] == 1) {
+                }
+                if ($lists['show_propertytypefilter'] == 1) {
                 $point++;
-            }
-            if ($lists['show_categoryfilter'] == 1) {
+                }
+                if ($lists['show_categoryfilter'] == 1) {
                 $point++;
-            }
-            if ($point > 0) {
+                }
+                if ($point > 0) {
                 $show_filter_button = 1;
-            }else{
+                }else{
                 $show_filter_button = 0;
-            }
-            if($point > 2){
+                }
+                if($point > 2){
                 $show_submit = 1;
-            }else{
+                }else{
                 $show_submit = 0;
-            }
-            if(HelperOspropertyCommon::checkCountry()) {
+                }
+                if(HelperOspropertyCommon::checkCountry()) {
                 $show_country_dropdown = 1;
-            }else{
+                }else{
                 $show_country_dropdown = 0;
-            }
+                }
 
-            ?>
-			<script type="text/javascript">
-			 function submitFilterForm(){
-				var item = document.getElementById('use_filterform');
-				item.value = 1;
-				var item1 = document.getElementById('restart_filterform');
-				item1.value = 1;
-				var form = document.getElementById('ftForm');
-				form.submit();
-			}
-			</script>
-			<input type="hidden" name="use_filterform" id="use_filterform" value="<?php echo (int) $use_filterform; ?>" />
-			<input type="hidden" name="restart_filterform" id="restart_filterform" value="0" />
-			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                    <div class="btn-toolbar filter-bar">
-						<?php
+                ?>
+                <script type="text/javascript">
+                function submitFilterForm() {
+                    var item = document.getElementById('use_filterform');
+                    item.value = 1;
+                    var item1 = document.getElementById('restart_filterform');
+                    item1.value = 1;
+                    var form = document.getElementById('ftForm');
+                    form.submit();
+                }
+                </script>
+                <input type="hidden" name="use_filterform" id="use_filterform"
+                    value="<?php echo (int) $use_filterform; ?>" />
+                <input type="hidden" name="restart_filterform" id="restart_filterform" value="0" />
+                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+                        <div class="btn-toolbar filter-bar">
+                            <?php
 						$currentUrl = OSPHelper::currentUrl();
 						$resetLink = Uri::root()."index.php?option=com_osproperty&tmpl=component&task=property_resetfilterform&return=".$currentUrl;
 						?>
-                        <?php
+                            <?php
                         if($lists['show_keywordfilter'] == 1) {
                             ?>
                             <div class="filter-search btn-group pull-left">
-                                <input type="text" class="input-large search-query" name="keyword" id="keyword" value="<?php echo htmlspecialchars($lists['keyword']);?>" />
+                                <input type="text" class="input-large search-query" name="keyword" id="keyword"
+                                    value="<?php echo htmlspecialchars($lists['keyword']);?>" />
                             </div>
                             <div class="btn-group pull-left">
-                                <input type="button" onClick="javascript:submitFilterForm();" class="btn btn-info" value="<?php echo Text::_('OS_FILTER')?>" />
-							
-								<a href="<?php echo $resetLink;?>" class="btn btn-warning filterResetLink" title="<?php echo Text::_('OS_RESET')?>"><?php echo Text::_('OS_RESET')?></a>
+                                <input type="button" onClick="javascript:submitFilterForm();" class="btn btn-info"
+                                    value="<?php echo Text::_('OS_FILTER')?>" />
+
+                                <a href="<?php echo $resetLink;?>" class="btn btn-warning filterResetLink"
+                                    title="<?php echo Text::_('OS_RESET')?>"><?php echo Text::_('OS_RESET')?></a>
 
                                 <?php if($show_filter_button == 1){ ?>
-                                <button class="btn hasTooltip js-stools-btn-filters" id="btn_search_tool" type="button" data-original-title="Filter the list items">
+                                <button class="btn hasTooltip js-stools-btn-filters" id="btn_search_tool" type="button"
+                                    data-original-title="Filter the list items">
                                     <?php echo Text::_('OS_SEARCH_TOOL'); ?>
                                     <i class="caret"></i>
                                 </button>
@@ -3023,40 +3054,53 @@ class HelperOspropertyCommon{
                             <?php
                         }
                         ?>
-                        <?php
+                            <?php
                         if($lists['show_keywordfilter'] == 0) {
                             ?>
                             <div class="btn-group pull-right">
-                                <input type="button" onClick="javascript:submitFilterForm();" class="btn btn-info" value="<?php echo Text::_('OS_FILTER')?>" />
+                                <input type="button" onClick="javascript:submitFilterForm();" class="btn btn-info"
+                                    value="<?php echo Text::_('OS_FILTER')?>" />
 
-                                <a href="<?php echo $resetLink;?>" class="btn btn-warning filterResetLink" title="<?php echo Text::_('OS_RESET')?>"><?php echo Text::_('OS_RESET')?></a>
+                                <a href="<?php echo $resetLink;?>" class="btn btn-warning filterResetLink"
+                                    title="<?php echo Text::_('OS_RESET')?>"><?php echo Text::_('OS_RESET')?></a>
 
 
                                 <?php if($show_filter_button == 1){ ?>
-                                    <button class="btn hasTooltip js-stools-btn-filters btn-primary" id="btn_search_tool" type="button" data-original-title="Filter the list items">
-                                        <?php echo Text::_('OS_SEARCH_TOOL'); ?>
-                                        <i class="caret"></i>
-                                    </button>
+                                <button class="btn hasTooltip js-stools-btn-filters btn-primary" id="btn_search_tool"
+                                    type="button" data-original-title="Filter the list items">
+                                    <?php echo Text::_('OS_SEARCH_TOOL'); ?>
+                                    <i class="caret"></i>
+                                </button>
                                 <?php } ?>
                             </div>
-                        <?php
+                            <?php
                         }
                         ?>
-                        <div class="btn-group pull-right">
-                            <?php echo $lists['ordertype'];?>
+                            <div class="btn-group pull-right">
+                                <label class="sr-only">
+                                    <?php echo Text::_('OS_ORDERBY')?>
+                                </label>
+                                <div class="clearfix"></div>
+                                <?php echo $lists['ordertype'];?>
+                            </div>
+                            <div class="btn-group pull-right">
+                                <label class="sr-only">
+                                    <?php echo Text::_('OS_SORTBY')?>
+                                </label>
+                                <div class="clearfix"></div>
+                                <?php echo $lists['sortby'];?>
+                            </div>
+                            <label for="isSold" class="sr-only"><?php echo Text::_('OS_MARKET_STATUS'); ?></label>
                         </div>
-                        <div class="btn-group pull-right">
-                            <?php echo $lists['sortby'];?>
-                        </div>
-					</div>
+                    </div>
                 </div>
-			</div>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" style="display:none;" id="filter_tool_div">
-				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-					<div class="filter-bar">
-						<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-							<div class="<?php echo $bootstrapHelper->getClassMapping('span12')?>">
-								<?php
+                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" style="display:none;"
+                    id="filter_tool_div">
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+                        <div class="filter-bar">
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('span12')?>">
+                                    <?php
 								if($lists['show_pricefilter'] == 1){
 									if ($configClass['price_filter_type'] == 1) {
 										$style = "min-width:250px;";
@@ -3064,8 +3108,9 @@ class HelperOspropertyCommon{
 										$style = "";
 									}
 									?>
-									<div class="btn-group pull-right" style="<?php echo $style; ?>" id="price_filter"><label>
-											<?php
+                                    <div class="btn-group pull-right" style="<?php echo $style; ?>" id="price_filter">
+                                        <label>
+                                            <?php
 											if($configClass['price_filter_type'] == 0){
 												$element_id = "id='pricefilter'";
 											}else{
@@ -3073,188 +3118,214 @@ class HelperOspropertyCommon{
 											}
 											OSPHelper::showPriceFilter($lists['price_value'],$lists['min_price'],$lists['max_price'],$lists['property_type'],'','list');
 											?></label>
-									</div>
-									<?php
+                                    </div>
+                                    <?php
 									if ($configClass['price_filter_type'] == 1) {?>
-										<div class="btn-group pull-right marginright15"><label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><strong><?php echo Text::_('OS_PRICE');?></strong></label></div>
-										<?php
+                                    <div class="btn-group pull-right marginright15"><label
+                                            class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><strong><?php echo Text::_('OS_PRICE');?></strong></label>
+                                    </div>
+                                    <?php
 									}
 								}
 								if($lists['show_propertytypefilter'] == 1){
 									?>
-									<div class="btn-group pull-left marginleft0">
-										<?php echo $lists['type']; ?>
-									</div>
-								<?php
+                                    <div class="btn-group pull-left marginleft0">
+                                        <?php echo $lists['type']; ?>
+                                    </div>
+                                    <?php
 								if($lists['show_pricefilter'] == 1){
 								OSPHelper::showPriceTypesConfig();
 								?>
-									<script type="text/javascript">
-										//filter form with property type and price
-										jQuery("#property_type").change(function () {
-											updateLocatorPrice(jQuery("#property_type").val(), "<?php echo Uri::root(); ?>");
-										});
-										function updateLocatorPrice(type_id, live_site) {
-											xmlHttp = GetXmlHttpObject();
-											url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_updatePrice&type_id=" + type_id + "&option_id=<?php echo $lists['price_value'];?>&min_price=<?php echo $lists['min_price'];?>&max_price=<?php echo $lists['max_price'];?>&module_id=list";
-											xmlHttp.onreadystatechange = ajax_updateLocatorSearch;
-											xmlHttp.open("GET", url, true)
-											xmlHttp.send(null)
-										}
+                                    <script type="text/javascript">
+                                    //filter form with property type and price
+                                    jQuery("#property_type").change(function() {
+                                        updateLocatorPrice(jQuery("#property_type").val(),
+                                            "<?php echo Uri::root(); ?>");
+                                    });
 
-										function ajax_updateLocatorSearch() {
-											if (xmlHttp.readyState == 4 || xmlHttp.readyState == "complete") {
-												var mod_osservice_price = document.getElementById("price_filter");
-												if (mod_osservice_price != null) {
-													mod_osservice_price.innerHTML = xmlHttp.responseText;
-													var ptype = jQuery("#property_type").val();
-													jQuery.ui.slider.prototype.widgetEventPrefix = 'slider';
-													jQuery(function () {
-														var min_value = jQuery("#min" + ptype).val();
-														min_value = parseFloat(min_value);
-														var step_value = jQuery("#step" + ptype).val();
-														step_value = parseFloat(step_value);
-														var max_value = jQuery("#max" + ptype).val();
-														max_value = parseFloat(max_value);
-														jQuery("#listsliderange")[0].slide = null;
-														jQuery("#listsliderange").slider({
-															range: true,
-															min: min_value,
-															step: step_value,
-															max: max_value,
-															values: [min_value, max_value],
-															slide: function (event, ui) {
-																var price_from = ui.values[0];
-																var price_to = ui.values[1];
-																jQuery("#listprice_from_input1").val(price_from);
-																jQuery("#listprice_to_input1").val(price_to);
+                                    function updateLocatorPrice(type_id, live_site) {
+                                        xmlHttp = GetXmlHttpObject();
+                                        url = live_site +
+                                            "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_updatePrice&type_id=" +
+                                            type_id +
+                                            "&option_id=<?php echo $lists['price_value'];?>&min_price=<?php echo $lists['min_price'];?>&max_price=<?php echo $lists['max_price'];?>&module_id=list";
+                                        xmlHttp.onreadystatechange = ajax_updateLocatorSearch;
+                                        xmlHttp.open("GET", url, true)
+                                        xmlHttp.send(null)
+                                    }
 
-																price_from = price_from.formatMoney(0, ',', '.');
-																price_to = price_to.formatMoney(0, ',', '.');
+                                    function ajax_updateLocatorSearch() {
+                                        if (xmlHttp.readyState == 4 || xmlHttp.readyState == "complete") {
+                                            var mod_osservice_price = document.getElementById("price_filter");
+                                            if (mod_osservice_price != null) {
+                                                mod_osservice_price.innerHTML = xmlHttp.responseText;
+                                                var ptype = jQuery("#property_type").val();
+                                                jQuery.ui.slider.prototype.widgetEventPrefix = 'slider';
+                                                jQuery(function() {
+                                                    var min_value = jQuery("#min" + ptype).val();
+                                                    min_value = parseFloat(min_value);
+                                                    var step_value = jQuery("#step" + ptype).val();
+                                                    step_value = parseFloat(step_value);
+                                                    var max_value = jQuery("#max" + ptype).val();
+                                                    max_value = parseFloat(max_value);
+                                                    jQuery("#listsliderange")[0].slide = null;
+                                                    jQuery("#listsliderange").slider({
+                                                        range: true,
+                                                        min: min_value,
+                                                        step: step_value,
+                                                        max: max_value,
+                                                        values: [min_value, max_value],
+                                                        slide: function(event, ui) {
+                                                            var price_from = ui.values[0];
+                                                            var price_to = ui.values[1];
+                                                            jQuery("#listprice_from_input1").val(
+                                                                price_from);
+                                                            jQuery("#listprice_to_input1").val(
+                                                                price_to);
 
-																jQuery("#listprice_from_input").text(price_from);
-																jQuery("#listprice_to_input").text(price_to);
-															}
-														});
-													});
-													Number.prototype.formatMoney = function (decPlaces, thouSeparator, decSeparator) {
-														var n = this,
-															decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 : decPlaces,
-															decSeparator = decSeparator == undefined ? "." : decSeparator,
-															thouSeparator = thouSeparator == undefined ? "," : thouSeparator,
-															sign = n < 0 ? "-" : "",
-															i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
-															j = (j = i.length) > 3 ? j % 3 : 0;
-														return sign + (j ? i.substr(0, j) + thouSeparator : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) + (decPlaces ? decSeparator + Math.abs(n - i).toFixed(decPlaces).slice(2) : "");
-													};
-												}
-											}
-										}
-									</script>
-									<?php
+                                                            price_from = price_from.formatMoney(0,
+                                                                ',', '.');
+                                                            price_to = price_to.formatMoney(0, ',',
+                                                                '.');
+
+                                                            jQuery("#listprice_from_input").text(
+                                                                price_from);
+                                                            jQuery("#listprice_to_input").text(
+                                                                price_to);
+                                                        }
+                                                    });
+                                                });
+                                                Number.prototype.formatMoney = function(decPlaces, thouSeparator,
+                                                    decSeparator) {
+                                                    var n = this,
+                                                        decPlaces = isNaN(decPlaces = Math.abs(decPlaces)) ? 2 :
+                                                        decPlaces,
+                                                        decSeparator = decSeparator == undefined ? "." :
+                                                        decSeparator,
+                                                        thouSeparator = thouSeparator == undefined ? "," :
+                                                        thouSeparator,
+                                                        sign = n < 0 ? "-" : "",
+                                                        i = parseInt(n = Math.abs(+n || 0).toFixed(decPlaces)) + "",
+                                                        j = (j = i.length) > 3 ? j % 3 : 0;
+                                                    return sign + (j ? i.substr(0, j) + thouSeparator : "") + i
+                                                        .substr(j).replace(/(\d{3})(?=\d)/g, "$1" + thouSeparator) +
+                                                        (decPlaces ? decSeparator + Math.abs(n - i).toFixed(
+                                                            decPlaces).slice(2) : "");
+                                                };
+                                            }
+                                        }
+                                    }
+                                    </script>
+                                    <?php
 								}
 								} ?>
-								<?php
+                                    <?php
 								if(($configClass['active_market_status'] == 1) && ($lists['show_marketstatusfilter'] == 1)){
 									?>
-									<div class="btn-group pull-left">
-										<?php echo $lists['marketstatus']; ?>
-									</div>
-								<?php } ?>
-							</div>
-						</div>
+                                    <div class="btn-group pull-left">
+                                        <?php echo $lists['marketstatus']; ?>
+                                    </div>
+                                    <?php } ?>
+                                </div>
+                            </div>
 
 
-						<?php
+                            <?php
 						if($show_location_div == 1)
 						{
 							?>
-							<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-								<div class="<?php echo $bootstrapHelper->getClassMapping('span12')?>">
-									<?php
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('span12')?>">
+                                    <?php
 									if($show_country_dropdown == 1){
 										?>
-										<div class="btn-group pull-left">
-											<?php echo $lists['country']; ?>
-										</div>
-									<?php
+                                    <div class="btn-group pull-left">
+                                        <?php echo $lists['country']; ?>
+                                    </div>
+                                    <?php
 									}else{
 										echo $lists['country'];
 									}
 									?>
-									<?php
+                                    <?php
 									if(OSPHelper::userOneState()){
 										?>
-										<input type="hidden" name="state_id" id="state_id" value="<?php echo OSPHelper::returnDefaultState();?>" />
-									<?php
+                                    <input type="hidden" name="state_id" id="state_id"
+                                        value="<?php echo OSPHelper::returnDefaultState();?>" />
+                                    <?php
 									}else{
 										?>
-										<div class="btn-group pull-left" id="div_state">
-											<?php echo $lists['state']; ?>
-										</div>
-									<?php
+                                    <div class="btn-group pull-left" id="div_state">
+                                        <?php echo $lists['state']; ?>
+                                    </div>
+                                    <?php
 									}
 									?>
-									<div class="btn-group pull-left" id="city_div">
-										<?php echo $lists['city']; ?>
-									</div>
-								</div>
-							</div>
-							<?php
+                                    <div class="btn-group pull-left" id="city_div">
+                                        <?php echo $lists['city']; ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
 						}
 						?>
-					</div>
-					<?php
+                        </div>
+                        <?php
 					if($lists['show_categoryfilter'] == 1){
 						?>
-						<div class="filter-bar <?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-							<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-								<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-									<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-										<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><strong><?php echo Text::_('OS_CATEGORY')?></strong></label>
-									</div>
-								</div>
-								<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-									<?php
+                        <div class="filter-bar <?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+                                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+                                        <label
+                                            class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><strong><?php echo Text::_('OS_CATEGORY')?></strong></label>
+                                    </div>
+                                </div>
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+                                    <?php
 									$k = 0;
 									foreach($lists['category'] as $cat) {
 										$k++;
 										?>
-										<div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?>"><label class="checkbox filterformlabel"><?php echo $cat;?></label></div>
-										<?php
+                                    <div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?>"><label
+                                            class="checkbox filterformlabel"><?php echo $cat;?></label></div>
+                                    <?php
 										if($k == 4){
 											$k = 0;
 											?>
-												</div><div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-											<?php
+                                </div>
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+                                    <?php
 										}
 									}
 									?>
-									<input type="hidden" name="submitCategory" id="submitCategory" value="1"/>
-								</div>
-							</div>
-						</div>
-					<?php } ?>
-					<?php if($show_submit == 1){ ?>
-					<div class="btn-toolbar filter-bar">
-						<div class="btn-group pull-right">
-							<input type="button" onClick="javascript:submitFilterForm();" class="btn btn-info" value="<?php echo Text::_('OS_FILTER')?>" />
+                                    <input type="hidden" name="submitCategory" id="submitCategory" value="1" />
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <?php if($show_submit == 1){ ?>
+                        <div class="btn-toolbar filter-bar">
+                            <div class="btn-group pull-right">
+                                <input type="button" onClick="javascript:submitFilterForm();" class="btn btn-info"
+                                    value="<?php echo Text::_('OS_FILTER')?>" />
 
-							<a href="<?php echo $resetLink;?>" class="btn btn-warning filterResetLink" title="<?php echo Text::_('OS_RESET')?>"><?php echo Text::_('OS_RESET')?></a>
+                                <a href="<?php echo $resetLink;?>" class="btn btn-warning filterResetLink"
+                                    title="<?php echo Text::_('OS_RESET')?>"><?php echo Text::_('OS_RESET')?></a>
 
 
-						</div>
-					</div>
-					<?php } ?>
-				</div>
-			</div>
-            <script type="text/javascript">
+                            </div>
+                        </div>
+                        <?php } ?>
+                    </div>
+                </div>
+                <script type="text/javascript">
                 jQuery("#btn_search_tool").click(function() {
                     jQuery("#filter_tool_div").slideToggle("slow");
-					jQuery("#filter_tool_div").removeClass("nodisplay");
+                    jQuery("#filter_tool_div").removeClass("nodisplay");
                 });
-            </script>
-			<?php
+                </script>
+                <?php
 		}
 	}
 	
@@ -3313,7 +3384,7 @@ class HelperOspropertyCommon{
 	{
 		global $bootstrapHelper, $jinput, $configClass;
 		$db = Factory::getDbo();
-		$prices = array();
+		$prices = [];
 		if($type_id > 0)
 		{
 			$db->setQuery("Select * from #__osrs_pricegroups where type_id = '$type_id' and published = '1' order by ordering");
@@ -3323,7 +3394,7 @@ class HelperOspropertyCommon{
 			$db->setQuery("Select * from #__osrs_pricegroups where type_id = '0' and published = '1' order by ordering");
 			$prices = $db->loadObjectList();
 		}
-		$priceArr   = array();
+		$priceArr   = [];
 		$priceArr[] = HTMLHelper::_('select.option','',Text::_('OS_PRICE_FILTER'));
 		for($i=0;$i<count($prices);$i++)
 		{
@@ -3365,148 +3436,197 @@ class HelperOspropertyCommon{
 	static function generateLocatorForm($lists, $type_id)
 	{
 		global $bootstrapHelper, $jinput, $configClass,$ismobile;
-		$search_Arr = array();
+		$search_Arr = [];
 		if($type_id > 0)
 		{
 			echo '<input type="hidden"  name="property_type" value="'.$type_id.'" />';
 		}
 		?>
-		<input type="hidden" name="orderby" id="orderby" value="<?php echo $lists['orderby']?>"/>
-		<input type="hidden" name="sortby" id="sortby" value="<?php echo $lists['sortby']?>"/>
+                <input type="hidden" name="orderby" id="orderby" value="<?php echo $lists['orderby']?>" />
+                <input type="hidden" name="sortby" id="sortby" value="<?php echo $lists['sortby']?>" />
 
-		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> locatorpage margintop10 osp-container">
-			<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-                <div class="osnavbar">
-                    <div class="osnavbar-inner">
-                        <ul class="nav">
-                            <li class="active">
-                                <input type="text" name="location" id="location" class="input-large form-control" value="<?php echo stripslashes($lists['location']);?>" placeholder="<?php echo Text::_('OS_SEARCH_ADDRESS_EXPLAIN')?>" />
-                            </li>
-                            <li class="active"><?php echo $lists['radius']; ?></li>
-                            <li class="divider-vertical <?php echo $bootstrapHelper->getClassMapping('hidden-phone'); ?>"></li>
-							<?php 
+                <div
+                    class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> locatorpage margintop10 osp-container">
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+                        <div class="osnavbar">
+                            <div class="osnavbar-inner">
+                                <ul class="nav">
+                                    <li class="active">
+                                        <input type="text" name="location" id="location"
+                                            class="input-large form-control"
+                                            value="<?php echo stripslashes($lists['location']);?>"
+                                            placeholder="<?php echo Text::_('OS_SEARCH_ADDRESS_EXPLAIN')?>" />
+                                    </li>
+                                    <li class="active"><?php echo $lists['radius']; ?></li>
+                                    <li
+                                        class="divider-vertical <?php echo $bootstrapHelper->getClassMapping('hidden-phone'); ?>">
+                                    </li>
+                                    <?php 
 							if($configClass['show_my_location'] == 1){
 							?>
-							<li>
-								<a href="javascript:updateMyLocation();"
-								 title="<?php echo Text::_('OS_SEARCH_AROUND_MY_LOCATION');?>">
-									<?php echo Text::_('OS_MY_LOCATION');?>
-								</a>
-							</li>
-                            <li class="divider-vertical  <?php echo $bootstrapHelper->getClassMapping('hidden-phone'); ?>"></li>
-							<?php } ?>
-							<li class="dropdown <?php echo $bootstrapHelper->getClassMapping('hidden-phone'); ?> moreoption">
-								<a href="javascript:void(0);" id="linkmoreoption">
-									<?php echo Text::_('OS_MORE_OPTION'); ?>
-								</a>
-							</li>
-							<li class="divider-vertical  <?php echo $bootstrapHelper->getClassMapping('hidden-phone'); ?>"></li>
-                            <li class="active"><button type="button" onclick="javascript:checkingLocatorForm();" id="applylocatorform" class="btn btn-info"><i class="osicon-search"></i></button></li>
-                        </ul>
+                                    <li>
+                                        <div class="mylocationdiv">
+                                            <a href="javascript:updateMyLocation();"
+                                                title="<?php echo Text::_('OS_SEARCH_AROUND_MY_LOCATION');?>">
+                                                <?php echo Text::_('OS_MY_LOCATION');?>
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <li
+                                        class="divider-vertical <?php echo $bootstrapHelper->getClassMapping('hidden-phone'); ?>">
+                                    </li>
+                                    <?php } ?>
+                                    <li
+                                        class="dropdown <?php echo $bootstrapHelper->getClassMapping('hidden-phone'); ?> moreoption">
+                                        <a href="javascript:void(0);" id="linkmoreoption">
+                                            <?php echo Text::_('OS_MORE_OPTION'); ?>
+                                        </a>
+                                    </li>
+                                    <li
+                                        class="divider-vertical  <?php echo $bootstrapHelper->getClassMapping('hidden-phone'); ?>">
+                                    </li>
+                                    <li class="active"><button type="button" onclick="javascript:checkingLocatorForm();"
+                                            id="applylocatorform" class="btn btn-info"><i
+                                                class="osicon-search"></i></button></li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-			</div>
-		</div>
-		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> nodisplay" id="locatormoredetails">
-			<div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
-				<?php
+                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> nodisplay"
+                    id="locatormoredetails">
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
+                        <?php
 				if($configClass['locator_show_category'] == 1)
 				{
 				?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-							<?php echo Text::_('OS_CATEGORIES'); ?>
-						</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<?php
-							echo $lists['category'];
-							?>
-						</div>
-					</div>
-				<?php } ?>
-				<?php
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_CATEGORIES'); ?>
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php $parentArr = OSPHelper::loadCategoryBoxes($lists['category_ids'],'category_ids'); ?>
+                                <div class="custom-multi-select" id="category-select">
+                                    <span class="selected-items"><?php echo Text::_('OS_SELECT_CATEGORIES')?></span>
+                                    <div class="dropdown-content">
+                                        <?php
+									foreach($parentArr as $cat)
+									{
+										?>
+                                        <label><?php echo $cat; ?></label>
+                                        <?php
+									}
+									?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <?php
 				$locator_type_idArrs = $lists['locator_type_idArrs'];
-				if(($locator_type_idArrs[0] == 0) and ($configClass['locator_show_type'] == 1)){
+				if(($locator_type_idArrs[0] == 0) && ($configClass['locator_show_type'] == 1)){
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_TYPE'); ?></label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<?php
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label
+                                class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_TYPE'); ?></label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php
 							echo $lists['type'];
 							?>
-						</div>
-					</div>
-					<?php
+                            </div>
+                        </div>
+                        <?php
 				}
 				if($configClass['active_market_status'] == 1)
 				{
 				?>
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_MARKET_STATUS')?>:</label>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-						<?php
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label
+                                class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_MARKET_STATUS')?>:</label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php
 						echo $lists['market_status'];
 						?>
-					</div>
-				</div>
-				<?php } ?>
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_PRICE')?>:</label>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-						<?php
-						OSPHelper::showPriceFilter($lists['price_value'],$lists['min_price'],$lists['max_price'],$lists['locator_type'],'','adv');
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label
+                                class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_PRICE')?>:</label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php
+						//OSPHelper::showPriceFilter($lists['price_value'],$lists['min_price'],$lists['max_price'],$lists['locator_type'],'','adv');
 						?>
-					</div>
-				</div>
-			</div>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
-				<?php
+                                <div class="price-range">
+                                    <input type="range" id="minPriceRange" name="min_price" min="0"
+                                        max="<?php echo $configClass['max_price_slider']?>"
+                                        step="<?php echo $configClass['price_step_amount']?>"
+                                        value="<?php echo $lists['min_price'];?>" />
+                                    <input type="range" id="maxPriceRange" name="max_price" min="0"
+                                        max="<?php echo $configClass['max_price_slider']?>"
+                                        step="<?php echo $configClass['price_step_amount']?>"
+                                        value="<?php echo $lists['max_price'];?>" />
+                                </div>
+                                <div class="price-values">
+                                    <span><?php echo Text::_('OS_MIN') ?>: <?php echo self::loadCurrency(0); ?><span
+                                            id="minPriceValue"><?php echo $lists['min_price'];?></span></span>
+                                    <span><?php echo Text::_('OS_MAX') ?>: <?php echo self::loadCurrency(0); ?><span
+                                            id="maxPriceValue"><?php echo $lists['max_price'];?></span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
+                        <?php
 				if($configClass['use_bedrooms'] == 1)
 				{
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_BEDS')?>:</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<?php echo $lists['nbed'];?>
-						</div>
-					</div>
-				<?php } ?>
-				<?php
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label
+                                class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_BEDS')?>:</label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php echo $lists['nbed'];?>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <?php
 				if($configClass['use_bedrooms'] == 1)
 				{
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_BATHS')?>:</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<?php echo $lists['nbath'];?>
-						</div>
-					</div>
-				<?php } ?>
-				<?php
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label
+                                class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_BATHS')?>:</label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php echo $lists['nbath'];?>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <?php
 				if($configClass['use_rooms'] == 1)
 				{
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_ROOMS')?>:</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<?php echo $lists['nroom'];?>
-						</div>
-					</div>
-				<?php } ?>
-				<?php
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label
+                                class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_ROOMS')?>:</label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php echo $lists['nroom'];?>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <?php
 				if($configClass['use_squarefeet'] == 1)
 				{
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-							<?php
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php
 							if($configClass['use_square'] == 0){
 								echo Text::_('OS_SQUARE_FEET');
 							}else{
 								echo Text::_('OS_SQUARE_METER');
 							}
 							?>
-							<?php
+                                <?php
 							echo "(";
 							if($configClass['use_square'] == 0){
 								echo Text::_('OS_SQFT');
@@ -3515,43 +3635,102 @@ class HelperOspropertyCommon{
 							}
 							echo ")";
 							?>
-							:
-						</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<input type="text" class="input-mini form-control imini" name="sqft_min" id="sqft_min" placeholder="<?php echo Text::_('OS_MIN')?>" value="<?php echo $lists['sqft_min'];?>" />
-                            <span class="seperator">-</span>
-							<input type="text" class="input-mini form-control imini" name="sqft_max" id="sqft_max" placeholder="<?php echo Text::_('OS_MAX')?>" value="<?php echo $lists['sqft_max'];?>"/>
-						</div>
-					</div>
-				<?php } ?>
-			</div>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_KEYWORD')?>:</label>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-						<input type="text" class="input-medium form-control imedium" name="keyword" id="keyword" value="<?php echo htmlspecialchars($lists['keyword'])?>" placeholder="<?php echo Text::_('OS_KEYWORD_FITLER_PLACEHOLDER');?>" />
-					</div>
-				</div>
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_SORTBY')?>:</label>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-						<?php echo $lists['sort']; ?>
-					</div>
-				</div>
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_ORDERBY')?>:</label>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-						<?php echo $lists['order']; ?>
-					</div>
-				</div>
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-					<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-						<button type="button" onclick="javascript:checkingLocatorForm();" id="applylocatorform" class="btn btn-info"><i class="osicon-search"></i>&nbsp;<?php echo Text::_('OS_SEARCH');?></button>
-					</div>
-				</div>
-			</div>
-		</div>
-	<?php
+                                :
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <input type="text" class="input-mini form-control imini" name="sqft_min" id="sqft_min"
+                                    placeholder="<?php echo Text::_('OS_MIN')?>"
+                                    value="<?php echo $lists['sqft_min'];?>" />
+                                <span class="seperator">-</span>
+                                <input type="text" class="input-mini form-control imini" name="sqft_max" id="sqft_max"
+                                    placeholder="<?php echo Text::_('OS_MAX')?>"
+                                    value="<?php echo $lists['sqft_max'];?>" />
+                            </div>
+                        </div>
+                        <?php } ?>
+                    </div>
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label
+                                class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_KEYWORD')?>:</label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <input type="text" class="input-medium form-control imedium" name="keyword" id="keyword"
+                                    value="<?php echo htmlspecialchars($lists['keyword'])?>"
+                                    placeholder="<?php echo Text::_('OS_KEYWORD_FITLER_PLACEHOLDER');?>" />
+                            </div>
+                        </div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label
+                                class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_SORTBY')?>:</label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php echo $lists['sort']; ?>
+                            </div>
+                        </div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label
+                                class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_ORDERBY')?>:</label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php echo $lists['order']; ?>
+                            </div>
+                        </div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <button type="button" onclick="javascript:checkingLocatorForm();" id="applylocatorform"
+                                    class="btn btn-info"><i
+                                        class="osicon-search"></i>&nbsp;<?php echo Text::_('OS_SEARCH');?></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Multiple Select Handler
+                    document.querySelectorAll('.custom-multi-select').forEach(select => {
+                        select.addEventListener('click', function(event) {
+                            this.classList.toggle('open');
+                            event.stopPropagation();
+                        });
+
+                        this.querySelectorAll('.dropdown-content input').forEach(input => {
+                            input.addEventListener('change', function() {
+                                updateSelectedOptions(select);
+                            });
+                        });
+                    });
+
+                    function updateSelectedOptions(select) {
+                        const selectedItems = select.querySelector('.selected-items');
+                        const selectedOptions = Array.from(select.querySelectorAll(
+                                '.dropdown-content input:checked'))
+                            .map(input => input.dataset.value)
+                            .join(', ') || '<?php echo Text::_("OS_SELECT")?>';
+                        selectedItems.textContent = selectedOptions;
+                    }
+
+                    document.addEventListener('click', function(event) {
+                        document.querySelectorAll('.custom-multi-select').forEach(select => {
+                            if (!select.contains(event.target)) {
+                                select.classList.remove('open');
+                            }
+                        });
+                    });
+
+                });
+
+                const minPriceRange = document.getElementById('minPriceRange');
+                const maxPriceRange = document.getElementById('maxPriceRange');
+                const minPriceValue = document.getElementById('minPriceValue');
+                const maxPriceValue = document.getElementById('maxPriceValue');
+
+                minPriceRange.addEventListener('input', function() {
+                    minPriceValue.textContent = minPriceRange.value;
+                });
+
+                maxPriceRange.addEventListener('input', function() {
+                    maxPriceValue.textContent = maxPriceRange.value;
+                });
+                </script>
+                <?php
 	}
 
 	static function generateLocatorFormVertical($lists, $type_id){
@@ -3559,109 +3738,114 @@ class HelperOspropertyCommon{
 		$controlGroupClass = $bootstrapHelper->getClassMapping('control-group');
 		$controlLabelClass = $bootstrapHelper->getClassMapping('control-label');
 		$controlClass	   = $bootstrapHelper->getClassMapping('controls');
-		$search_Arr = array();
+		$search_Arr = [];
 		if($type_id > 0){
 			echo '<input type="hidden"  name="property_type" value="'.$type_id.'" />';
 		}
 		?>
-		<input type="hidden" name="orderby" id="orderby" value="<?php echo $lists['orderby']?>"/>
-		<input type="hidden" name="sortby" id="sortby" value="<?php echo $lists['sortby']?>"/>
+                <input type="hidden" name="orderby" id="orderby" value="<?php echo $lists['orderby']?>" />
+                <input type="hidden" name="sortby" id="sortby" value="<?php echo $lists['sortby']?>" />
 
-		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> locatorpagevertical margintop10">
-			<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> alignleft">
-				<input type="text" name="location" id="location" class="input-large form-control" value="<?php echo stripslashes($lists['location']);?>" placeholder="<?php echo Text::_('OS_SEARCH_ADDRESS_EXPLAIN')?>" />
-				<?php echo $lists['radius']; ?>
-				<BR />
-				<?php
+                <div
+                    class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> locatorpagevertical margintop10">
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> alignleft">
+                        <input type="text" name="location" id="location" class="input-large form-control"
+                            value="<?php echo stripslashes($lists['location']);?>"
+                            placeholder="<?php echo Text::_('OS_SEARCH_ADDRESS_EXPLAIN')?>" />
+                        <?php echo $lists['radius']; ?>
+                        <BR />
+                        <?php
 				if($configClass['locator_show_category'] == 1){
 				?>
 
-					<div class="<?php echo $controlGroupClass; ?>">
-						<div class="<?php echo $controlLabelClass; ?>">
-							<?php echo Text::_('OS_CATEGORIES'); ?>
-						</div>
+                        <div class="<?php echo $controlGroupClass; ?>">
+                            <div class="<?php echo $controlLabelClass; ?>">
+                                <?php echo Text::_('OS_CATEGORIES'); ?>
+                            </div>
 
-						<div class="<?php echo $controlClass; ?>">
-							<?php
+                            <div class="<?php echo $controlClass; ?>">
+                                <?php
 							echo $lists['category'];
 							?>
-						</div>
-					</div>
+                            </div>
+                        </div>
 
-				<?php } ?>
-				<?php
+                        <?php } ?>
+                        <?php
 				$locator_type_idArrs = $lists['locator_type_idArrs'];
-				if(($locator_type_idArrs[0] == 0) and ($configClass['locator_show_type'] == 1)){
+				if(($locator_type_idArrs[0] == 0) && ($configClass['locator_show_type'] == 1)){
 					?>
-					<div class="<?php echo $controlGroupClass; ?>">
-						<div class="<?php echo $controlLabelClass; ?>">
-							<?php echo Text::_('OS_TYPE'); ?>
-						</div>
-						<div class="<?php echo $controlClass; ?>">
-							<?php
+                        <div class="<?php echo $controlGroupClass; ?>">
+                            <div class="<?php echo $controlLabelClass; ?>">
+                                <?php echo Text::_('OS_TYPE'); ?>
+                            </div>
+                            <div class="<?php echo $controlClass; ?>">
+                                <?php
 							echo $lists['type'];
 							?>
-						</div>
-					</div>
-					<?php
+                            </div>
+                        </div>
+                        <?php
 				}
 				?>
-				<BR />
-				<?php
+                        <BR />
+                        <?php
 				if($configClass['active_market_status'] == 1){
 					?>
-					<div class="<?php echo $controlGroupClass; ?>">
-						<div class="<?php echo $controlLabelClass; ?>">
-							<?php echo Text::_('OS_MARKET_STATUS')?>
-						</div>
-						<div class="<?php echo $controlClass; ?>">
-							<?php
+                        <div class="<?php echo $controlGroupClass; ?>">
+                            <div class="<?php echo $controlLabelClass; ?>">
+                                <?php echo Text::_('OS_MARKET_STATUS')?>
+                            </div>
+                            <div class="<?php echo $controlClass; ?>">
+                                <?php
 							echo $lists['market_status'];
 							?>
-						</div>
-					</div>
-					<?php
+                            </div>
+                        </div>
+                        <?php
 				}
 				?>
-				<div class="<?php echo $controlGroupClass; ?>">
-					<div class="<?php echo $controlLabelClass; ?>"><?php echo Text::_('OS_PRICE')?>
-					</div>
-					<div class="<?php echo $controlClass; ?>">
-						<?php
+                        <div class="<?php echo $controlGroupClass; ?>">
+                            <div class="<?php echo $controlLabelClass; ?>"><?php echo Text::_('OS_PRICE')?>
+                            </div>
+                            <div class="<?php echo $controlClass; ?>">
+                                <?php
 						OSPHelper::showPriceFilter($lists['price_value'],$lists['min_price'],$lists['max_price'],$lists['locator_type'],'','adv');
 						?>
-					</div>
-				</div>
-				<?php
+                            </div>
+                        </div>
+                        <?php
 				if($configClass['use_bedrooms'] == 1){
 					?>
-					<div class="<?php echo $controlGroupClass; ?>">
-						<div class="<?php echo $controlLabelClass; ?>">
-							<?php echo Text::_('OS_BEDS')?>
-						</div>
-						<div class="<?php echo $controlClass; ?>">
-							<?php echo $lists['nbed'];?>
-						</div>
-					</div>
-				<?php } ?>
-				<?php
+                        <div class="<?php echo $controlGroupClass; ?>">
+                            <div class="<?php echo $controlLabelClass; ?>">
+                                <?php echo Text::_('OS_BEDS')?>
+                            </div>
+                            <div class="<?php echo $controlClass; ?>">
+                                <?php echo $lists['nbed'];?>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <?php
 				if($configClass['use_bedrooms'] == 1){
 					?>
-					<div class="<?php echo $controlGroupClass; ?>">
-						<div class="<?php echo $controlLabelClass; ?>">
-							<?php echo Text::_('OS_BATHS')?>
-						</div>
-						<div class="<?php echo $controlClass; ?>">
-							<?php echo $lists['nbath'];?>
-						</div>
-					</div>
-				<?php } ?>
-				<BR />
-				<button type="button" onclick="javascript:checkingLocatorForm();" id="applylocatorform" class="btn btn-info"><i class="osicon-search"></i>&nbsp;<?php echo Text::_('OS_SHOW_ON_MAP'); ?></button>
-			</div>
-		</div>
+                        <div class="<?php echo $controlGroupClass; ?>">
+                            <div class="<?php echo $controlLabelClass; ?>">
+                                <?php echo Text::_('OS_BATHS')?>
+                            </div>
+                            <div class="<?php echo $controlClass; ?>">
+                                <?php echo $lists['nbath'];?>
+                            </div>
+                        </div>
+                        <?php } ?>
+                        <BR />
+                        <button type="button" onclick="javascript:checkingLocatorForm();" id="applylocatorform"
+                            class="btn btn-info"><i
+                                class="osicon-search"></i>&nbsp;<?php echo Text::_('OS_SHOW_ON_MAP'); ?></button>
+                    </div>
+                </div>
 
-	<?php
+                <?php
 	}
 
 	static function generateMembershipForm($agentAcc,$area,$pid){
@@ -3695,82 +3879,93 @@ class HelperOspropertyCommon{
             $disabled2 = "";
         }
 		?>
-		<table width="100%" class="table table-striped table-bordered membershiptable" id="membershiptable">
-			<thead>
-				<tr>
-					<th width="30%" class="nowrap  paddingleft10 colorwhite">
-						<?php echo Text::_('OS_PROPERTY_TYPE');?>
-					</th>
-					<th width="25%" class="nowrap  paddingleft10 colorwhite">
-						<span class="hasTip" title="<?php echo Text::_('OS_ACCOUNT_REMAINING');?>::<?php echo Text::_('OS_ACCOUNT_REMAINING_EXPLAIN');?>">
-							<?php echo Text::_('OS_ACCOUNT_REMAINING');?>
-						</span>
-					</th>
-					<?php
+                <table width="100%" class="table table-striped table-bordered membershiptable" id="membershiptable">
+                    <thead>
+                        <tr>
+                            <th width="30%" class="nowrap  paddingleft10 colorwhite">
+                                <?php echo Text::_('OS_PROPERTY_TYPE');?>
+                            </th>
+                            <th width="25%" class="nowrap  paddingleft10 colorwhite">
+                                <span class="hasTip"
+                                    title="<?php echo Text::_('OS_ACCOUNT_REMAINING');?>::<?php echo Text::_('OS_ACCOUNT_REMAINING_EXPLAIN');?>">
+                                    <?php echo Text::_('OS_ACCOUNT_REMAINING');?>
+                                </span>
+                            </th>
+                            <?php
 					if($configClass['general_use_expiration_management'] == 1){
 					?>
-					<th width="45%" class="nowrap paddingleft10 colorwhite">
-						<span class="hasTip" title="<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>::<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON_EXPLAIN');?>">
-							<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>
-						</span>
-					</th>
-					<?php } ?>
-				</tr>
-			</thead>
-			<tbody>
-			    <tr class="row0">
-			        <td width="35%" class="paddingleft10" data-label="<?php echo Text::_('OS_PROPERTY_TYPE');?>">
-			            <input type="radio" name="property_type" id="property_type" value="0" <?php echo $checked1;?> <?php echo $disabled1;?>/>
-			            <?php
+                            <th width="45%" class="nowrap paddingleft10 colorwhite">
+                                <span class="hasTip"
+                                    title="<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>::<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON_EXPLAIN');?>">
+                                    <?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>
+                                </span>
+                            </th>
+                            <?php } ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="row0">
+                            <td width="35%" class="paddingleft10"
+                                data-label="<?php echo Text::_('OS_PROPERTY_TYPE');?>">
+                                <input type="radio" name="property_type" id="property_type" value="0"
+                                    <?php echo $checked1;?> <?php echo $disabled1;?> />
+                                <?php
 
 			            echo Text::_('OS_STANDARD_PROPERTY');
 			            ?>
-			        </td>
-			        <td width="20%" class="paddingleft10 center" data-label="<?php echo Text::_('OS_ACCOUNT_REMAINING');?>">
-						<?php echo (int)$agentAcc[0]; ?>
-			        </td>
-			        <?php
+                            </td>
+                            <td width="20%" class="paddingleft10 center"
+                                data-label="<?php echo Text::_('OS_ACCOUNT_REMAINING');?>">
+                                <?php echo (int)$agentAcc[0]; ?>
+                            </td>
+                            <?php
                     if($configClass['general_use_expiration_management'] == 1){
                     ?>
-                        <td width="45%" class="paddingleft10" data-label="<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>">
-                            <?php
+                            <td width="45%" class="paddingleft10"
+                                data-label="<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>">
+                                <?php
                             echo OSPHelper::returnDateformat(self::getExpiredNormal($expired_time,1));
                             ?>
-                        </td>
-                    <?php } ?>
-			    </tr>
-			    <tr class="row1">
-			        <td width="35%" class="paddingleft10" data-label="<?php echo Text::_('OS_PROPERTY_TYPE');?>">
-			            <input type="radio" name="property_type" id="property_type" value="1" <?php echo $checked2;?> <?php echo $disabled2;?> />
-			            <?php
+                            </td>
+                            <?php } ?>
+                        </tr>
+                        <tr class="row1">
+                            <td width="35%" class="paddingleft10"
+                                data-label="<?php echo Text::_('OS_PROPERTY_TYPE');?>">
+                                <input type="radio" name="property_type" id="property_type" value="1"
+                                    <?php echo $checked2;?> <?php echo $disabled2;?> />
+                                <?php
 			            echo Text::_('OS_FEATURED_PROPERTY');
 			            ?>
-			        </td>
-			        <td width="20%" class="paddingleft10 center" data-label="<?php echo Text::_('OS_ACCOUNT_REMAINING');?>">
-						<?php echo (int)$agentAcc[1]; ?>
-						<?php
+                            </td>
+                            <td width="20%" class="paddingleft10 center"
+                                data-label="<?php echo Text::_('OS_ACCOUNT_REMAINING');?>">
+                                <?php echo (int)$agentAcc[1]; ?>
+                                <?php
 						if((int)$agentAcc[1] == 0){
                             $link = OspropertyMembership::generateLink($usertype,1,0);
                             ?>
-                            <div class="clearfix"></div>
-                            <a href="<?php echo $link;?>" title="<?php echo Text::_('OS_PURCHASE_SUBSCRIPTION');?>"><?php echo Text::_('OS_PURCHASE_SUBSCRIPTION');?></a>
-                            <?php
+                                <div class="clearfix"></div>
+                                <a href="<?php echo $link;?>"
+                                    title="<?php echo Text::_('OS_PURCHASE_SUBSCRIPTION');?>"><?php echo Text::_('OS_PURCHASE_SUBSCRIPTION');?></a>
+                                <?php
 						}
 						?>
-			        </td>
-			        <?php
+                            </td>
+                            <?php
                     if($configClass['general_use_expiration_management'] == 1){
                     ?>
-                        <td width="45%" class="paddingleft10" data-label="<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>">
-                            <?php
+                            <td width="45%" class="paddingleft10"
+                                data-label="<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>">
+                                <?php
                             echo OSPHelper::returnDateformat(self::getExpiredFeature($expired_feature_time,1));
                             ?>
-                        </td>
-                    <?php } ?>
-			    </tr>
-            </tbody>
-		</table>
-		<?php
+                            </td>
+                            <?php } ?>
+                        </tr>
+                    </tbody>
+                </table>
+                <?php
 	}
 
 
@@ -3780,43 +3975,45 @@ class HelperOspropertyCommon{
 		$expired_time = self::getRealTime();
 		$expired_feature_time = self::getRealTime();
 		?>
-		<table width="100%" class="plantable">
-		    <thead>
-                <tr>
-                    <th width="50%" class="paddingleft20 header_td">
-                        <span class="hasTip" title="<?php echo Text::_('OS_ACCOUNT_REMAINING');?>::<?php echo Text::_('OS_ACCOUNT_REMAINING_EXPLAIN');?>">
-                            <?php echo Text::_('OS_ACCOUNT_REMAINING');?>
-                        </span>
-                    </th>
-                    <?php
+                <table width="100%" class="plantable">
+                    <thead>
+                        <tr>
+                            <th width="50%" class="paddingleft20 header_td">
+                                <span class="hasTip"
+                                    title="<?php echo Text::_('OS_ACCOUNT_REMAINING');?>::<?php echo Text::_('OS_ACCOUNT_REMAINING_EXPLAIN');?>">
+                                    <?php echo Text::_('OS_ACCOUNT_REMAINING');?>
+                                </span>
+                            </th>
+                            <?php
 					if($configClass['general_use_expiration_management'] == 1){
 					?>
-					<th width="45%" class="nowrap header_td">
-						<span class="hasTip" title="<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>::<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON_EXPLAIN');?>">
-							<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>
-						</span>
-					</th>
-					<?php } ?>
-                </tr>
-			</thead>
-			<tbody>
-                <tr>
-                    <td width="50%" class="paddingleft20 center">
-                        <?php echo $agentAcc; ?>
-                    </td>
-                    <?php
+                            <th width="45%" class="nowrap header_td">
+                                <span class="hasTip"
+                                    title="<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>::<?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON_EXPLAIN');?>">
+                                    <?php echo Text::_('OS_PROPERTY_WILL_EXPIRED_ON');?>
+                                </span>
+                            </th>
+                            <?php } ?>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td width="50%" class="paddingleft20 center">
+                                <?php echo $agentAcc; ?>
+                            </td>
+                            <?php
 					if($configClass['general_use_expiration_management'] == 1){
 					?>
-                        <td width="50%" class="paddingleft20 center">
-                        <?php
+                            <td width="50%" class="paddingleft20 center">
+                                <?php
                             echo OSPHelper::returnDateformat(self::getExpiredFeature($expired_feature_time,1));
                         ?>
-                        </td>
-					<?php } ?>
-                </tr>
-			</tbody>
-		</table>
-		<?php
+                            </td>
+                            <?php } ?>
+                        </tr>
+                    </tbody>
+                </table>
+                <?php
 	}
 	/**
 	 * Compare expired time and feature expired time, if the feature expired time is longer than expired time
@@ -3885,43 +4082,59 @@ class HelperOspropertyCommon{
 		$configClass = OSPHelper::loadConfig();
 		$user = Factory::getUser();
         ?>
-        <div class="leadFormWrap">
-            <form method="POST" action="<?php echo Uri::root()?>index.php?option=com_osproperty&task=property_submittellfriend&Itemid=<?php echo $itemid?>" name="tellfriend_form" id="tellfriend_form" class="form-horizontal">
-                <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_FRIEND_NAME');?></label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <input class="input-large form-control ilarge" type="text" id="friend_name" name="friend_name" maxlength="50" placeholder="<?php echo Text::_('OS_FRIEND_NAME');?>"/>
+                <form method="POST"
+                    action="<?php echo Uri::root()?>index.php?option=com_osproperty&task=property_submittellfriend&Itemid=<?php echo $itemid?>"
+                    name="tellfriend_form" id="tellfriend_form" class="form-horizontal">
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                        <label
+                            class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_FRIEND_NAME');?></label>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                            <input class="input-large form-control ilarge" type="text" id="friend_name"
+                                name="friend_name" maxlength="50"
+                                placeholder="<?php echo Text::_('OS_FRIEND_NAME');?>" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_FRIEND_EMAIL');?></label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <input class="input-large form-control ilarge" type="text" id="friend_email" name="friend_email" maxlength="50" placeholder="<?php echo Text::_('OS_FRIEND_EMAIL');?>" />
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                        <label
+                            class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_FRIEND_EMAIL');?></label>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                            <input class="input-large form-control ilarge" type="text" id="friend_email"
+                                name="friend_email" maxlength="50"
+                                placeholder="<?php echo Text::_('OS_FRIEND_EMAIL');?>" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_YOUR_NAME');?></label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <input class="input-large form-control ilarge" type="text" id="your_name" name="your_name" maxlength="50" placeholder="<?php echo Text::_('OS_YOUR_NAME');?>" value="<?php echo $user->name; ?>" />
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                        <label
+                            class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_YOUR_NAME');?></label>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                            <input class="input-large form-control ilarge" type="text" id="your_name" name="your_name"
+                                maxlength="50" placeholder="<?php echo Text::_('OS_YOUR_NAME');?>"
+                                value="<?php echo $user->name; ?>" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_YOUR_EMAIL');?></label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <input type="text" id="your_email" name="your_email" maxlength="50" class="input-large form-control ilarge" placeholder="<?php echo Text::_('OS_YOUR_EMAIL');?>" value="<?php echo $user->email; ?>"/>
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                        <label
+                            class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_YOUR_EMAIL');?></label>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                            <input type="text" id="your_email" name="your_email" maxlength="50"
+                                class="input-large form-control ilarge"
+                                placeholder="<?php echo Text::_('OS_YOUR_EMAIL');?>"
+                                value="<?php echo $user->email; ?>" />
+                        </div>
                     </div>
-                </div>
 
-                <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_MESSAGE');?></label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <textarea id="message" name="message" rows="3" cols="50" class="input-large form-control ilarge"></textarea>
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                        <label
+                            class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_MESSAGE');?></label>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                            <textarea id="message" name="message" rows="3" cols="50"
+                                class="input-large form-control ilarge"></textarea>
+                        </div>
                     </div>
-                </div>
-                <?php
+                    <?php
                 $captcha = 0;
                 if($configClass['captcha_in_tell_friend_form'] == 1){
                     $captcha = 1;
@@ -3929,15 +4142,16 @@ class HelperOspropertyCommon{
                         $captcha = 0;
                     }
                 }
-                if($captcha == 1) {
+                if($captcha == 1) 
+				{
                     ?>
                     <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                        <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_SECURITY_CODE'); ?></label>
+                        <label
+                            class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>"><?php echo Text::_('OS_SECURITY_CODE'); ?></label>
                         <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                            <span class="grey_small lineheight16"><?php echo Text::_('OS_PLEASE_INSERT_THE_SYMBOL_FROM_THE_INAGE_TO_FIELD_BELOW') ?></span>
-                            <div class="clear"></div>
-                            <img src="<?php echo Uri::root() ?>index.php?option=com_osproperty&no_html=1&task=property_captcha&ResultStr=<?php echo $row->ResultStr ?>"/>
-                            <input type="text" class="input-mini form-control imini" id="sharing_security_code" name="sharing_security_code" maxlength="5"/>
+                            <?php
+							OSPHelper::generateCaptcha();
+							?>
                         </div>
                     </div>
                     <?php
@@ -3983,10 +4197,11 @@ class HelperOspropertyCommon{
                             <?php
                             if ($link)
                             {
-                                $extra = ' class="osmodal" ' ;
+                                $extra = ' osmodal ' ;
                                 ?>
-                                <a href="<?php echo $link; ?>" <?php echo $extra;?> class="eb-colorbox-privacy-policy"><?php echo Text::_('OS_PRIVACY_POLICY');?></a>
-                                <?php
+                            <a href="<?php echo $link; ?>"
+                                class="eb-colorbox-privacy-policy <?php echo $extra;?>"><?php echo Text::_('OS_PRIVACY_POLICY');?></a>
+                            <?php
                             }
                             else
                             {
@@ -3995,14 +4210,16 @@ class HelperOspropertyCommon{
                             ?>
                         </label>
                         <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                            <input type="checkbox" name="agree_privacy_policy" id="agree_privacy_policy" value="1" data-errormessage="<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
+                            <input type="checkbox" name="agree_privacy_policy" id="agree_privacy_policy" value="1"
+                                data-errormessage="<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
                             <?php
                             $agreePrivacyPolicyMessage = Text::_('OS_AGREE_PRIVACY_POLICY_MESSAGE');
                             if (strlen($agreePrivacyPolicyMessage))
                             {
                                 ?>
-                                <div class="eb-privacy-policy-message alert alert-info"><?php echo $agreePrivacyPolicyMessage;?></div>
-                                <?php
+                            <div class="eb-privacy-policy-message alert alert-info">
+                                <?php echo $agreePrivacyPolicyMessage;?></div>
+                            <?php
                             }
                             ?>
                         </div>
@@ -4010,36 +4227,40 @@ class HelperOspropertyCommon{
                     <?php
                 }
                 ?>
-                <div class="clear"></div>
+                    <div class="clear"></div>
 
-                <button class="btn btn-primary" type="button" name="finish" onclick="javascript:submitForm('tellfriend_form');"/><?php echo Text::_('OS_SEND');?></button>
-                <span class="reg_loading" id="tf_loading">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                <input type="hidden" name="captcha_str" id="captcha_str" value="<?php echo $row->ResultStr?>" />
-                <input type="hidden" name="option" value="com_osproperty" />
-                <input type="hidden" name="task" value="property_submittellfriend" />
-                <input type="hidden" name="id" value="<?php echo $row->id;?>" />
-                <input type="hidden" name="Itemid" value="<?php echo $itemid;?>" />
-                <?php
+                    <button class="btn btn-primary" type="button" name="finish"
+                        onclick="javascript:submitForm('tellfriend_form');" /><?php echo Text::_('OS_SEND');?></button>
+                    <span class="reg_loading" id="tf_loading">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input type="hidden" name="captcha_str" id="captcha_str" value="<?php echo $row->ResultStr?>" />
+                    <input type="hidden" name="option" value="com_osproperty" />
+                    <input type="hidden" name="task" value="property_submittellfriend" />
+                    <input type="hidden" name="id" value="<?php echo $row->id;?>" />
+                    <input type="hidden" name="Itemid" value="<?php echo $itemid;?>" />
+                    <?php
                 if($captcha == 1){
                     $request_field = ",sharing_security_code";
                     $request_label = ",".Text::_('OS_SECURITY_CODE');
                 }
                 if($configClass['use_privacy_policy']){
                     ?>
-                    <input type="hidden" name="require_field" value="friend_name,friend_email<?php echo $request_field;?>,agree_privacy_policy" />
-                    <input type="hidden" name="require_label" value="<?php echo Text::_('OS_FRIEND_NAME');?>,<?php echo Text::_('OS_FRIEND_EMAIL');?>,<?php echo Text::_('OS_SECURITY_CODE')?>,<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
+                    <input type="hidden" name="require_field"
+                        value="friend_name,friend_email<?php echo $request_field;?>,agree_privacy_policy" />
+                    <input type="hidden" name="require_label"
+                        value="<?php echo Text::_('OS_FRIEND_NAME');?>,<?php echo Text::_('OS_FRIEND_EMAIL');?>,<?php echo Text::_('OS_SECURITY_CODE')?>,<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
                     <?php
                 }else{
                 ?>
                     <input type="hidden" name="require_field" value="friend_name,friend_email,sharing_security_code" />
-                    <input type="hidden" name="require_label" value="<?php echo Text::_('OS_FRIEND_NAME');?>,<?php echo Text::_('OS_FRIEND_EMAIL');?><?php echo $request_label;?>" />
-                <?php
+                    <input type="hidden" name="require_label"
+                        value="<?php echo Text::_('OS_FRIEND_NAME');?>,<?php echo Text::_('OS_FRIEND_EMAIL');?><?php echo $request_label;?>" />
+                    <?php
                 }
                 ?>
-                <input type="hidden" name="use_privacy_policy" id="use_privacy_policy" value="<?php echo $configClass['use_privacy_policy']?>" />
-            </form>
-        </div>
-        <?php
+                    <input type="hidden" name="use_privacy_policy" id="use_privacy_policy"
+                        value="<?php echo $configClass['use_privacy_policy']?>" />
+                </form>
+                <?php
     }
 
     /**
@@ -4054,38 +4275,41 @@ class HelperOspropertyCommon{
 		$configClass		    = OSPHelper::loadConfig();
 		$user				    = Factory::getUser();
 		$allowed_subjects	    = trim($configClass['allowed_subjects']);
-		$allowed_subjects_array = array();
+		$allowed_subjects_array = [];
 		if($allowed_subjects != ""){
 			$allowed_subjects_array   = explode(",",$allowed_subjects);
 		}
         ?>
-        <div class="leadFormWrap">
-            <form method="POST" action="<?php echo Uri::root()?>index.php?option=com_osproperty&task=property_requestmoredetails&Itemid=<?php echo $itemid?>" name="requestdetails_form" id="requestdetails_form" class="form-horizontal">
-				<?php
+                <div class="leadFormWrap">
+                    <form method="POST"
+                        action="<?php echo Uri::root()?>index.php?option=com_osproperty&task=property_requestmoredetails&Itemid=<?php echo $itemid?>"
+                        name="requestdetails_form" id="requestdetails_form" class="form-horizontal">
+                        <?php
 				if(count($allowed_subjects_array) > 0){
 				?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-						<?php echo Text::_('OS_SUBJECT');?>
-						</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<select name='subject' id='subject' class='input-large form-select ilarge' onchange="javascript:updateRequestForm(this.value)">
-								<?php
-								$firstoption = array();
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_SUBJECT');?>
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <select name='subject' id='subject' class='input-large form-select ilarge'
+                                    onchange="javascript:updateRequestForm(this.value)">
+                                    <?php
+								$firstoption = [];
 								for($i=1;$i<=7;$i++){
 									if(in_array($i,$allowed_subjects_array)){
 										$firstoption[count($firstoption)] = $i;
 										?>
-										<option value="<?php echo $i?>"><?php echo Text::_('OS_REQUEST_'.$i)?></option>
-										<?php
+                                    <option value="<?php echo $i?>"><?php echo Text::_('OS_REQUEST_'.$i)?></option>
+                                    <?php
 									}
 								}
 								$firstoption = $firstoption[0];
 								?>
-							</select>
-						</div>
-					</div>
-				<?php } 
+                                </select>
+                            </div>
+                        </div>
+                        <?php } 
 				if($firstoption == 7){
 					$div_requestmessage = "";
 					$div_requestcheckin = "";
@@ -4098,70 +4322,82 @@ class HelperOspropertyCommon{
 					$div_requestguests = "nodisplay";
 				}
 				?>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                        <?php echo Text::_('OS_YOUR_NAME');?>
-                    </label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <input class="input-large form-control ilarge" type="text" id="requestyour_name" name="requestyour_name" size="30" maxlength="50"  value="<?php echo $user->name?>" placeholder="<?php echo Text::_('OS_YOUR_NAME')?>"/>
-                    </div>
-                </div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                        <?php echo Text::_('OS_PHONE');?>
-                    </label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <input class="input-large form-control ilarge" type="text" id="your_phone" name="your_phone" maxlength="50" placeholder="<?php echo Text::_('OS_PHONE')?>"/>
-                    </div>
-                </div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                        <?php echo Text::_('OS_YOUR_EMAIL');?>
-                    </label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <input class="input-large form-control ilarge" type="text" id="requestyour_email" name="requestyour_email" size="30" maxlength="50"  value="<?php echo $user->email;?>" placeholder="<?php echo Text::_('OS_YOUR_EMAIL')?>"/>
-                    </div>
-                </div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_YOUR_NAME');?>
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <input class="input-large form-control ilarge" type="text" id="requestyour_name"
+                                    name="requestyour_name" size="30" maxlength="50" value="<?php echo $user->name?>"
+                                    placeholder="<?php echo Text::_('OS_YOUR_NAME')?>" />
+                            </div>
+                        </div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_PHONE');?>
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <input class="input-large form-control ilarge" type="text" id="your_phone"
+                                    name="your_phone" maxlength="50" placeholder="<?php echo Text::_('OS_PHONE')?>" />
+                            </div>
+                        </div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_YOUR_EMAIL');?>
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <input class="input-large form-control ilarge" type="text" id="requestyour_email"
+                                    name="requestyour_email" size="30" maxlength="50" value="<?php echo $user->email;?>"
+                                    placeholder="<?php echo Text::_('OS_YOUR_EMAIL')?>" />
+                            </div>
+                        </div>
 
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> <?php echo $div_requestcheckin;?>" id="requestcheckin">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                        <?php echo Text::_('OS_CHECKIN');?>
-                    </label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <?php echo HTMLHelper::_('calendar','','requestmoredetailscheckin','requestmoredetailscheckin',"%Y-%m-%d",array('class'=>'input-medium form-control'));?>
-                    </div>
-                </div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> <?php echo $div_requestcheckin;?>"
+                            id="requestcheckin">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_CHECKIN');?>
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php echo HTMLHelper::_('calendar','','requestmoredetailscheckin','requestmoredetailscheckin',"%Y-%m-%d",array('class'=>'input-medium form-control'));?>
+                            </div>
+                        </div>
 
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> <?php echo $div_requestcheckout;?>" id="requestcheckout">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                        <?php echo Text::_('OS_CHECKOUT');?>
-                    </label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <?php echo HTMLHelper::_('calendar','','requestmoredetailscheckout','requestmoredetailscheckout',"%Y-%m-%d",array('class'=>'input-medium form-control'));?>
-                    </div>
-                </div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> <?php echo $div_requestcheckout;?>"
+                            id="requestcheckout">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_CHECKOUT');?>
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <?php echo HTMLHelper::_('calendar','','requestmoredetailscheckout','requestmoredetailscheckout',"%Y-%m-%d",array('class'=>'input-medium form-control'));?>
+                            </div>
+                        </div>
 
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> <?php echo $div_requestguests;?>" id="requestguests">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                        <?php echo Text::_('OS_NGUEST');?>
-                    </label>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <input class="input-large form-control imedium" type="text" id="nguest" name="nguest" placeholder="<?php echo Text::_('OS_NGUEST')?>"/>
-                    </div>
-                </div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> <?php echo $div_requestguests;?>"
+                            id="requestguests">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_NGUEST');?>
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <input class="input-large form-control imedium" type="text" id="nguest" name="nguest"
+                                    placeholder="<?php echo Text::_('OS_NGUEST')?>" />
+                            </div>
+                        </div>
 
-				<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>" id="requestmessagediv">
-                    <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                        <?php echo Text::_('OS_MESSAGE');?>
-                    </label>
-					<?php
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>"
+                            id="requestmessagediv">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_MESSAGE');?>
+                            </label>
+                            <?php
 					$message = Text::_('OS_REQUEST_MSG'.$firstoption);
 					?>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                        <textarea class="input-large form-control ilarge" id="requestmessage" name="requestmessage" rows="3" cols="60"><?php echo $message;?> <?php echo ($row->ref != "")? $row->ref.", ":""?><?php echo $row->pro_name?></textarea>
-                    </div>
-                </div>
-                <?php
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <textarea class="input-large form-control ilarge" id="requestmessage"
+                                    name="requestmessage" rows="3"
+                                    cols="60"><?php echo $message;?> <?php echo ($row->ref != "")? $row->ref.", ":""?><?php echo $row->pro_name?></textarea>
+                            </div>
+                        </div>
+                        <?php
                 $passcaptcha        = 0;
                 $googlecaptcha      = 0;
                 $captcha            = 0;
@@ -4171,44 +4407,31 @@ class HelperOspropertyCommon{
                 if($configClass['captcha_in_request_more_details'] == 1 && $passcaptcha == 0) {
                     $captcha = 1;
                     ?>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                        <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                            <?php echo Text::_('OS_HUMAN_VERIFICATION'); ?>
-                        </label>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                            <?php
-                            if($configClass['user_recaptcha_in_request_more_details'] == 1)
-							{
-                                $captchaPlugin = Factory::getApplication()->getParams()->get('captcha', Factory::getConfig()->get('captcha'));
-                                if ($captchaPlugin)
-                                {
-                                    $googlecaptcha = 1;
-                                    echo Captcha::getInstance($captchaPlugin)->display('dynamic_recaptcha_1', 'dynamic_recaptcha_1', 'required');
-                                }
-                            }else {
-                                ?>
-                                <span class="grey_small lineheight16"><?php echo Text::_('OS_PLEASE_INSERT_THE_SYMBOL_FROM_THE_INAGE_TO_FIELD_BELOW') ?></span>
-                                <div class="clearfix"></div>
-                                <img src="<?php echo Uri::root() ?>index.php?option=com_osproperty&no_html=1&task=property_captcha&ResultStr=<?php echo $row->ResultStr ?>"/>
-                                <input type="text" class="input-mini form-control imini" id="request_security_code" name="request_security_code" maxlength="5"/>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php echo Text::_('OS_HUMAN_VERIFICATION'); ?>
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
                                 <?php
-                            }
+                            OSPHelper::generateCaptcha();
                             ?>
+                            </div>
                         </div>
-                    </div>
-                    <?php
+                        <?php
                 }
 				if($configClass['request_term_condition'] == 1)
 				{
 					OSPHelperJquery::colorbox('a.osmodal');
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> center">
-						<input type="checkbox" name="termcondition" id="termcondition" value="1" />
-						&nbsp;
-						<?php echo Text::_('OS_READ_TERM'); ?> 
-						<a href="<?php echo Uri::root()?>index.php?option=com_content&view=article&id=<?php echo $configClass['request_article_id'];?>&tmpl=component" class="osmodal" rel="{handler: 'iframe', size: {x: 600, y: 450}}" title="<?php echo Text::_('OS_TERM_AND_CONDITION');?>"><?php echo Text::_('OS_TERM_AND_CONDITION');?></a>
-					</div>
-					<?php 
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> center">
+                            <input type="checkbox" name="termcondition" id="termcondition" value="1" />
+                            &nbsp;
+                            <?php echo Text::_('OS_READ_TERM'); ?>
+                            <a href="<?php echo Uri::root()?>index.php?option=com_content&view=article&id=<?php echo $configClass['request_article_id'];?>&tmpl=component"
+                                class="osmodal" rel="{handler: 'iframe', size: {x: 600, y: 450}}"
+                                title="<?php echo Text::_('OS_TERM_AND_CONDITION');?>"><?php echo Text::_('OS_TERM_AND_CONDITION');?></a>
+                        </div>
+                        <?php 
 				}
 				if ($configClass['use_privacy_policy'])
                 {
@@ -4246,14 +4469,15 @@ class HelperOspropertyCommon{
                         $link = '';
                     }
                     ?>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                        <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                            <?php
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                <?php
                             if ($link)
                             {
                                 $extra = ' class="osmodal" ' ;
                                 ?>
-                                <a href="<?php echo $link; ?>" <?php echo $extra;?> class="eb-colorbox-privacy-policy"><?php echo Text::_('OS_PRIVACY_POLICY');?></a>
+                                <a href="<?php echo $link; ?>" <?php echo $extra;?>
+                                    class="eb-colorbox-privacy-policy"><?php echo Text::_('OS_PRIVACY_POLICY');?></a>
                                 <?php
                             }
                             else
@@ -4261,102 +4485,110 @@ class HelperOspropertyCommon{
                                 echo Text::_('OS_PRIVACY_POLICY');
                             }
                             ?>
-                        </label>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                            <input type="checkbox" name="agree_privacy_policy" id="agree_privacy_policy" value="1" data-errormessage="<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
-                            <?php
+                            </label>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                <input type="checkbox" name="agree_privacy_policy" id="agree_privacy_policy" value="1"
+                                    data-errormessage="<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
+                                <?php
                             $agreePrivacyPolicyMessage = Text::_('OS_AGREE_PRIVACY_POLICY_MESSAGE');
                             if (strlen($agreePrivacyPolicyMessage))
                             {
                                 ?>
-                                <div class="eb-privacy-policy-message alert alert-info"><?php echo $agreePrivacyPolicyMessage;?></div>
+                                <div class="eb-privacy-policy-message alert alert-info">
+                                    <?php echo $agreePrivacyPolicyMessage;?></div>
                                 <?php
                             }
                             ?>
+                            </div>
                         </div>
-                    </div>
-                    <?php
+                        <?php
                 }
 				?>
-                <div class="clearfix"></div>
-                <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                    <button class="btn btn-primary" type="button" id="requestbutton" name="requestbutton" onclick="javascript:submitForm('requestdetails_form');"/><?php echo Text::_("OS_REQUEST_BUTTON1")?></button>
-                    <input type="hidden" name="csrqt<?php echo intval(date("m",time()))?>" id="csrqt<?php echo intval(date("m",time()))?>" value="<?php echo $row->ResultStr?>" />
-                    <input type="hidden" name="captcha_str" id="captcha_str" value="<?php echo $row->ResultStr?>" />
-                </div>
-                <input type="hidden" name="option" value="com_osproperty" />
-                <input type="hidden" name="task" value="property_requestmoredetails" />
-                <input type="hidden" name="id" value="<?php echo $row->id?>" />
-                <input type="hidden" name="Itemid" value="<?php echo $itemid;?>" />
-                <?php
-                if($googlecaptcha == 0 && $passcaptcha == 0 && $captcha == 1){
-                    $request_field = ",request_security_code";
-                    $request_label = ",".Text::_('OS_SECURITY_CODE');
-                }
-                if($configClass['use_privacy_policy'] == 1){
+                        <div class="clearfix"></div>
+                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                            <button class="btn btn-primary" type="button" id="requestbutton" name="requestbutton"
+                                onclick="javascript:submitForm('requestdetails_form');"><?php echo Text::_("OS_REQUEST_BUTTON1")?></button>
+                            <input type="hidden" name="csrqt<?php echo intval(date("m",time()))?>"
+                                id="csrqt<?php echo intval(date("m",time()))?>" value="<?php echo $row->ResultStr?>" />
+                            <input type="hidden" name="captcha_str" id="captcha_str"
+                                value="<?php echo $row->ResultStr?>" />
+                        </div>
+                        <input type="hidden" name="option" value="com_osproperty" />
+                        <input type="hidden" name="task" value="property_requestmoredetails" />
+                        <input type="hidden" name="id" value="<?php echo $row->id?>" />
+                        <input type="hidden" name="Itemid" value="<?php echo $itemid;?>" />
+                        <?php
+                
+                if($configClass['use_privacy_policy'] == 1)
+				{
                     ?>
-                    <input type="hidden" name="require_field" value="requestyour_name,requestyour_email<?php echo $request_field; ?>,agree_privacy_policy" />
-                    <input type="hidden" name="require_label" value="<?php echo Text::_('OS_YOUR_NAME');?>,<?php echo Text::_('OS_YOUR_EMAIL');?><?php echo $request_label?>,<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
-                    <?php
+                        <input type="hidden" name="require_field"
+                            value="requestyour_name,requestyour_email<?php echo $request_field; ?>,agree_privacy_policy" />
+                        <input type="hidden" name="require_label"
+                            value="<?php echo Text::_('OS_YOUR_NAME');?>,<?php echo Text::_('OS_YOUR_EMAIL');?><?php echo $request_label?>,<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
+                        <?php
                 }else{
                     ?>
-                    <input type="hidden" name="require_field" value="requestyour_name,requestyour_email<?php echo $request_field; ?>" />
-                    <input type="hidden" name="require_label" value="<?php echo Text::_('OS_YOUR_NAME');?>,<?php echo Text::_('OS_YOUR_EMAIL');?><?php echo $request_label; ?>" />
-                <?php } ?>
-                <input type="hidden" name="use_privacy_policy" id="use_privacy_policy" value="<?php echo $configClass['use_privacy_policy']?>" />
-            </form>
-			<?php
+                        <input type="hidden" name="require_field"
+                            value="requestyour_name,requestyour_email<?php echo $request_field; ?>" />
+                        <input type="hidden" name="require_label"
+                            value="<?php echo Text::_('OS_YOUR_NAME');?>,<?php echo Text::_('OS_YOUR_EMAIL');?><?php echo $request_label; ?>" />
+                        <?php } ?>
+                        <input type="hidden" name="use_privacy_policy" id="use_privacy_policy"
+                            value="<?php echo $configClass['use_privacy_policy']?>" />
+                    </form>
+                    <?php
 			$property_name = "";
-			if(($row->ref != "") and ($configClass['show_ref'] == 1)){
+			if(($row->ref != "") && ($configClass['show_ref'] == 1)){
 				$property_name = $row->ref.", ".$row->pro_name;
 			}else{
 				$property_name = $row->pro_name;
 			}
 			?>
-			<script type="text/javascript">
-				 function updateRequestForm(subject){
-					var message = document.getElementById('requestmessage');
-					var requestbutton = document.getElementById('requestbutton');
-					if(subject != 7){
-						jQuery('#requestcheckin').hide();
-						jQuery('#requestcheckout').hide();
-						jQuery('#requestguests').hide();
-						jQuery('#requestcheckin').addClass('nodisplay');
-						jQuery('#requestcheckout').addClass('nodisplay');
-						jQuery('#requestguests').addClass('nodisplay');
-					}
-					if(subject == 1){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG1')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON1')?>";
-					}else if(subject == 2){
-						message.value = "<?php printf(Text::_('OS_REQUEST_MSG2'),$property_name);?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON2')?>";
-					}else if(subject == 3){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG3')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON3')?>";
-					}else if(subject == 4){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG4')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON4')?>";
-					}else if(subject == 5){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG5')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON5')?>";
-					}else if(subject == 6){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG6')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON6')?>";
-					}else if(subject == 7){
-						jQuery('#requestcheckin').removeClass('nodisplay');
-						jQuery('#requestcheckout').removeClass('nodisplay');
-						jQuery('#requestguests').removeClass('nodisplay');
-						jQuery('#requestcheckin').show();
-						jQuery('#requestcheckout').show();
-						jQuery('#requestguests').show();
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG7')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON7')?>";
-					}
-				}
-			</script>
-        </div>
-        <?php
+                    <script type="text/javascript">
+                    function updateRequestForm(subject) {
+                        var message = document.getElementById('requestmessage');
+                        var requestbutton = document.getElementById('requestbutton');
+                        if (subject != 7) {
+                            jQuery('#requestcheckin').hide();
+                            jQuery('#requestcheckout').hide();
+                            jQuery('#requestguests').hide();
+                            jQuery('#requestcheckin').addClass('nodisplay');
+                            jQuery('#requestcheckout').addClass('nodisplay');
+                            jQuery('#requestguests').addClass('nodisplay');
+                        }
+                        if (subject == 1) {
+                            message.value = "<?php echo Text::_('OS_REQUEST_MSG1')?> <?php echo $property_name; ?>";
+                            requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON1')?>";
+                        } else if (subject == 2) {
+                            message.value = "<?php printf(Text::_('OS_REQUEST_MSG2'),$property_name);?>";
+                            requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON2')?>";
+                        } else if (subject == 3) {
+                            message.value = "<?php echo Text::_('OS_REQUEST_MSG3')?> <?php echo $property_name; ?>";
+                            requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON3')?>";
+                        } else if (subject == 4) {
+                            message.value = "<?php echo Text::_('OS_REQUEST_MSG4')?> <?php echo $property_name; ?>";
+                            requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON4')?>";
+                        } else if (subject == 5) {
+                            message.value = "<?php echo Text::_('OS_REQUEST_MSG5')?> <?php echo $property_name; ?>";
+                            requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON5')?>";
+                        } else if (subject == 6) {
+                            message.value = "<?php echo Text::_('OS_REQUEST_MSG6')?> <?php echo $property_name; ?>";
+                            requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON6')?>";
+                        } else if (subject == 7) {
+                            jQuery('#requestcheckin').removeClass('nodisplay');
+                            jQuery('#requestcheckout').removeClass('nodisplay');
+                            jQuery('#requestguests').removeClass('nodisplay');
+                            jQuery('#requestcheckin').show();
+                            jQuery('#requestcheckout').show();
+                            jQuery('#requestguests').show();
+                            message.value = "<?php echo Text::_('OS_REQUEST_MSG7')?> <?php echo $property_name; ?>";
+                            requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON7')?>";
+                        }
+                    }
+                    </script>
+                </div>
+                <?php
     }
 
     /**
@@ -4364,37 +4596,39 @@ class HelperOspropertyCommon{
      * @param $row
      * @param $item
      */
-    public static function requestMoreDetailsTop($row,$itemid,$classname='input-medium form-control ilarge'){
+    public static function requestMoreDetailsTop($row,$itemid,$classname='input-medium form-control ilarge')
+	{
 		global $bootstrapHelper;
 		$configClass = OSPHelper::loadConfig();
 		$user = Factory::getUser();
 		$allowed_subjects	= trim($configClass['allowed_subjects']);
-		$allowed_subjects_array = array();
+		$allowed_subjects_array = [];
 		if($allowed_subjects != ""){
 			$allowed_subjects_array   = explode(",",$allowed_subjects);
 		}
         ?>
-        <div class="leadFormWrap">
-            <form method="POST" action="<?php echo Uri::root()?>index.php?option=com_osproperty&task=property_requestmoredetails&Itemid=<?php echo $itemid?>" name="requestdetails_form" id="requestdetails_form">
-                <div class="_leadError ajax-error"></div>
-				<?php
+                <form method="POST"
+                    action="<?php echo Uri::root()?>index.php?option=com_osproperty&task=property_requestmoredetails&Itemid=<?php echo $itemid?>"
+                    name="requestdetails_form_top" id="requestdetails_form_top">
+                    <?php
 				if(count($allowed_subjects_array) > 0){
 				?>
-                    <select name='subject' id='subject' class='<?php echo $classname;?> form-select' onchange="javascript:updateRequestForm(this.value)">
+                    <select name='subject' id='subject' class='<?php echo $classname;?> form-select'
+                        onchange="javascript:updateRequestForm_top(this.value)">
                         <?php
-                        $firstoption = array();
+                        $firstoption = [];
                         for($i=1;$i<=7;$i++){
                             if(in_array($i,$allowed_subjects_array)){
                                 $firstoption[count($firstoption)] = $i;
                                 ?>
-                                <option value="<?php echo $i?>"><?php echo Text::_('OS_REQUEST_'.$i)?></option>
-                                <?php
+                        <option value="<?php echo $i?>"><?php echo Text::_('OS_REQUEST_'.$i)?></option>
+                        <?php
                             }
                         }
                         $firstoption = $firstoption[0];
                         ?>
                     </select>
-				<?php } 
+                    <?php } 
 				if($firstoption == 7){
 					$div_requestcheckin = "";
 					$div_requestcheckout = "";
@@ -4405,62 +4639,57 @@ class HelperOspropertyCommon{
 					$div_requestguests = "nodisplay";
 				}
 				?>
-                <input class="<?php echo $classname;?>" type="text" id="requestyour_name" name="requestyour_name" size="30" maxlength="50"  value="<?php echo $user->name?>" placeholder="<?php echo Text::_('OS_YOUR_NAME')?>"/>
-                <input class="<?php echo $classname;?>" type="text" id="your_phone" name="your_phone" maxlength="50" placeholder="<?php echo Text::_('OS_PHONE')?>"/>
-                <input class="<?php echo $classname;?>" type="text" id="requestyour_email" name="requestyour_email" size="30" maxlength="50"  value="<?php echo $user->email;?>" placeholder="<?php echo Text::_('OS_YOUR_EMAIL')?>"/>
-				<span id="requestcheckin" class="<?php echo $div_requestcheckin;?>">
-					<?php echo HTMLHelper::_('calendar','','requestmoredetailscheckin','requestmoredetailscheckin',"%Y-%m-%d",array('class'=>'input-small form-control','placeholder'=>Text::_('OS_CHECKIN')));?>
-				</span>
-				<span id="requestcheckout" class="<?php echo $div_requestcheckout;?>">
-					<?php echo HTMLHelper::_('calendar','','requestmoredetailscheckout','requestmoredetailscheckout',"%Y-%m-%d",array('class'=>'input-small form-control','placeholder'=>Text::_('OS_CHECKOUT')));?>
-                </span>
-				<span id="requestguests" class="<?php echo $div_requestguests;?>">
-                     <input class="input-medium form-control" type="text" id="nguest" name="nguest" placeholder="<?php echo Text::_('OS_NGUEST')?>"/>
-                </span>
-				<span id="requestmessagediv" class="<?php echo $div_requestmessage;?>">
-					<?php
+                    <input class="<?php echo $classname;?>" type="text" id="requestyour_name_top"
+                        name="requestyour_name" size="30" maxlength="50" value="<?php echo $user->name?>"
+                        placeholder="<?php echo Text::_('OS_YOUR_NAME')?>" />
+                    <input class="<?php echo $classname;?>" type="text" id="your_phone" name="your_phone" maxlength="50"
+                        placeholder="<?php echo Text::_('OS_PHONE')?>" />
+                    <input class="<?php echo $classname;?>" type="text" id="requestyour_email_top"
+                        name="requestyour_email" size="30" maxlength="50" value="<?php echo $user->email;?>"
+                        placeholder="<?php echo Text::_('OS_YOUR_EMAIL')?>" />
+                    <span id="requestcheckin_top" class="<?php echo $div_requestcheckin;?>">
+                        <?php echo HTMLHelper::_('calendar','','requestmoredetailscheckin','requestmoredetailscheckin_top',"%Y-%m-%d",array('class'=>'input-small form-control','placeholder'=>Text::_('OS_CHECKIN')));?>
+                    </span>
+                    <span id="requestcheckout_top" class="<?php echo $div_requestcheckout;?>">
+                        <?php echo HTMLHelper::_('calendar','','requestmoredetailscheckout','requestmoredetailscheckout_top',"%Y-%m-%d",array('class'=>'input-small form-control','placeholder'=>Text::_('OS_CHECKOUT')));?>
+                    </span>
+                    <span id="requestguests_top" class="<?php echo $div_requestguests;?>">
+                        <input class="input-medium form-control" type="text" id="nguest_top" name="nguest"
+                            placeholder="<?php echo Text::_('OS_NGUEST')?>" />
+                    </span>
+                    <span id="requestmessagediv" class="<?php echo $div_requestmessage;?>">
+                        <?php
 					$message = Text::_('OS_REQUEST_MSG'.$firstoption);
 					?>
-					<textarea class="<?php echo $classname;?>" id="requestmessage" name="requestmessage" cols="60"><?php echo Text::_('OS_REQUEST_MSG1')?> <?php echo (($row->ref != "") and ($configClass['show_ref'] == 1))? $row->ref.", ":""?><?php echo $row->pro_name?></textarea>
-				</span>
-                <div class="clearfix"></div>
-                <?php
+                        <textarea class="<?php echo $classname;?>" id="requestmessage_top" name="requestmessage"
+                            cols="60"><?php echo Text::_('OS_REQUEST_MSG1')?> <?php echo (($row->ref != "") && ($configClass['show_ref'] == 1))? $row->ref.", ":""?><?php echo $row->pro_name?></textarea>
+                    </span>
+                    <div class="clearfix"></div>
+                    <?php
                 $passcaptcha        = 0;
                 $googlecaptcha      = 0;
                 $captcha            = 0;
                 if($configClass['pass_captcha_with_logged_user'] == 1 && $user->id > 0){
                     $passcaptcha    = 1;
                 }
-                if($configClass['captcha_in_request_more_details'] == 1 && $passcaptcha == 0) {
+                if($configClass['captcha_in_request_more_details'] == 1 && $passcaptcha == 0) 
+				{
                     $captcha = 1;
-                    if($configClass['user_recaptcha_in_request_more_details'] == 1){
-                        $captchaPlugin = Factory::getApplication()->getParams()->get('captcha', Factory::getConfig()->get('captcha'));
-                        if ($captchaPlugin)
-                        {
-                            $googlecaptcha = 1;
-                            echo Captcha::getInstance($captchaPlugin)->display('dynamic_recaptcha_1', 'dynamic_recaptcha_1', 'required');
-                        }
-                    }else {
-                        ?>
-                        <span class="grey_small lineheight16"><?php echo Text::_('OS_PLEASE_INSERT_THE_SYMBOL_FROM_THE_INAGE_TO_FIELD_BELOW') ?></span>
-                        <div class="clearfix"></div>
-                        <img src="<?php echo Uri::root() ?>index.php?option=com_osproperty&no_html=1&task=property_captcha&ResultStr=<?php echo $row->ResultStr ?>"/>
-                        <input type="text" class="input-mini form-control imini" id="request_security_code" name="request_security_code"
-                               maxlength="5"/>
-                        <?php
-                    }
+					OSPHelper::generateCaptcha();
                 }
 				if($configClass['request_term_condition'] == 1)
 				{
 					OSPHelperJquery::colorbox('a.osmodal');
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> alignleft">
-						<input type="checkbox" name="termcondition" id="termcondition" value="1" />
-						&nbsp;
-						<?php echo Text::_('OS_READ_TERM'); ?> 
-						<a href="<?php echo Uri::root()?>index.php?option=com_content&view=article&id=<?php echo $configClass['request_article_id'];?>&tmpl=component" class="osmodal" rel="{handler: 'iframe', size: {x: 600, y: 450}}" title="<?php echo Text::_('OS_TERM_AND_CONDITION');?>"><?php echo Text::_('OS_TERM_AND_CONDITION');?></a>
-					</div>
-					<?php 
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?> alignleft">
+                        <input type="checkbox" name="termcondition" id="termcondition_top" value="1" />
+                        &nbsp;
+                        <?php echo Text::_('OS_READ_TERM'); ?>
+                        <a href="<?php echo Uri::root()?>index.php?option=com_content&view=article&id=<?php echo $configClass['request_article_id'];?>&tmpl=component"
+                            class="osmodal" rel="{handler: 'iframe', size: {x: 600, y: 450}}"
+                            title="<?php echo Text::_('OS_TERM_AND_CONDITION');?>"><?php echo Text::_('OS_TERM_AND_CONDITION');?></a>
+                    </div>
+                    <?php 
 				}
 				if ($configClass['use_privacy_policy'])
                 {
@@ -4505,22 +4734,25 @@ class HelperOspropertyCommon{
                             {
                                 $extra = ' class="osmodal" ' ;
                                 ?>
-                                <a href="<?php echo $link; ?>" <?php echo $extra;?> class="eb-colorbox-privacy-policy"><?php echo Text::_('OS_PRIVACY_POLICY');?></a>
-                                <?php
+                            <a href="<?php echo $link; ?>" <?php echo $extra;?>
+                                class="eb-colorbox-privacy-policy"><?php echo Text::_('OS_PRIVACY_POLICY');?></a>
+                            <?php
                             }
                             else
                             {
                                 echo Text::_('OS_PRIVACY_POLICY');
                             }
                             ?>
-                            <input type="checkbox" name="agree_privacy_policy" id="agree_privacy_policy" value="1" data-errormessage="<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
+                            <input type="checkbox" name="agree_privacy_policy" id="agree_privacy_policy_top" value="1"
+                                data-errormessage="<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
                             <?php
                             $agreePrivacyPolicyMessage = Text::_('OS_AGREE_PRIVACY_POLICY_MESSAGE');
                             if (strlen($agreePrivacyPolicyMessage))
                             {
                                 ?>
-                                <div class="eb-privacy-policy-message alert alert-info"><?php echo $agreePrivacyPolicyMessage;?></div>
-                                <?php
+                            <div class="eb-privacy-policy-message alert alert-info">
+                                <?php echo $agreePrivacyPolicyMessage;?></div>
+                            <?php
                             }
                             ?>
                         </div>
@@ -4528,83 +4760,95 @@ class HelperOspropertyCommon{
                     <?php
                 }
 				?>
-				<div class="clearfix"></div>
-                <input class="btn btn-info" type="button" id="requestbutton" name="requestbutton" value="<?php echo Text::_("OS_REQUEST_BUTTON1")?>" onclick="javascript:submitForm('requestdetails_form');"/>
-                <input type="hidden" name="csrqt<?php echo intval(date("m",time()))?>" id="csrqt<?php echo intval(date("m",time()))?>" value="<?php echo $row->ResultStr?>" />
-                <input type="hidden" name="captcha_str" id="captcha_str" value="<?php echo $row->ResultStr?>" />
-                <input type="hidden" name="option" value="com_osproperty" />
-                <input type="hidden" name="task" value="property_requestmoredetails" />
-                <input type="hidden" name="id" value="<?php echo $row->id?>" />
-                <input type="hidden" name="Itemid" value="<?php echo $itemid;?>" />
-                <?php
-                if($googlecaptcha == 0 && $passcaptcha == 0 && $captcha == 1){
-                    $request_field = ",request_security_code";
-                    $request_label = ",".Text::_('OS_SECURITY_CODE');
-                }
-                if($configClass['use_privacy_policy'] == 1){
-                   ?>
-                    <input type="hidden" name="require_field" value="requestyour_name,requestyour_email<?php echo $request_field; ?>,agree_privacy_policy" />
-                    <input type="hidden" name="require_label" value="<?php echo Text::_('OS_YOUR_NAME');?>,<?php echo Text::_('OS_YOUR_EMAIL');?><?php echo $request_label?>,<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
+                    <div class="clearfix"></div>
+                    <button class="btn btn-primary" type="button" id="requestbutton_top" name="requestbutton"
+                        onclick="javascript:submitForm('requestdetails_form_top');" /><?php echo Text::_("OS_REQUEST_BUTTON1")?></button>
+                    <input type="hidden" name="csrqt<?php echo intval(date("m",time()))?>"
+                        id="csrqt<?php echo intval(date("m",time()))?>" value="<?php echo $row->ResultStr?>" />
+                    <input type="hidden" name="captcha_str" id="captcha_str" value="<?php echo $row->ResultStr?>" />
+                    <input type="hidden" name="option" value="com_osproperty" />
+                    <input type="hidden" name="task" value="property_requestmoredetails" />
+                    <input type="hidden" name="id" value="<?php echo $row->id?>" />
+                    <input type="hidden" name="Itemid" value="<?php echo $itemid;?>" />
                     <?php
-                }else{
+                if($googlecaptcha == 0 && $passcaptcha == 0 && $captcha == 1){
+                    //$request_field = ",request_security_code";
+                    //$request_label = ",".Text::_('OS_SECURITY_CODE');
+                }
+                if($configClass['use_privacy_policy'] == 1)
+				{
+                   ?>
+                    <input type="hidden" name="require_field"
+                        value="requestyour_name_top,requestyour_email_top<?php echo $request_field; ?>,agree_privacy_policy_top" />
+                    <input type="hidden" name="require_label"
+                        value="<?php echo Text::_('OS_YOUR_NAME');?>,<?php echo Text::_('OS_YOUR_EMAIL');?><?php echo $request_label?>,<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
+                    <?php
+                }
+				else
+				{
                 ?>
-                    <input type="hidden" name="require_field" value="requestyour_name,requestyour_email<?php echo $request_field; ?>" />
-                    <input type="hidden" name="require_label" value="<?php echo Text::_('OS_YOUR_NAME');?>,<?php echo Text::_('OS_YOUR_EMAIL');?><?php echo $request_label; ?>" />
-                <?php } ?>
-                <input type="hidden" name="use_privacy_policy" id="use_privacy_policy" value="<?php echo $configClass['use_privacy_policy']?>" />
-            </form>
-            <?php
-			$property_name = "";
-			if(($row->ref != "") and ($configClass['show_ref'] == 1)){
-				$property_name = $row->ref.", ".$row->pro_name;
-			}else{
-				$property_name = $row->pro_name;
-			}
-			?>
-			<script type="text/javascript">
-				 function updateRequestForm(subject){
-					var message = document.getElementById('requestmessage');
-					var requestbutton = document.getElementById('requestbutton');
-					if(subject != 7){
-						jQuery('#requestcheckin').addClass('nodisplay');
-						jQuery('#requestcheckout').addClass('nodisplay');
-						jQuery('#requestguests').addClass('nodisplay');
-						jQuery('#requestcheckin').hide();
-						jQuery('#requestcheckout').hide();
-						jQuery('#requestguests').hide();
-					}
-					if(subject == 1){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG1')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON1')?>";
-					}else if(subject == 2){
-						message.value = "<?php printf(Text::_('OS_REQUEST_MSG2'),$property_name);?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON2')?>";
-					}else if(subject == 3){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG3')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON3')?>";
-					}else if(subject == 4){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG4')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON4')?>";
-					}else if(subject == 5){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG5')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON5')?>";
-					}else if(subject == 6){
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG6')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON6')?>";
-					}else if(subject == 7){
-						jQuery('#requestcheckin').removeClass('nodisplay');
-						jQuery('#requestcheckout').removeClass('nodisplay');
-						jQuery('#requestguests').removeClass('nodisplay');
-						jQuery('#requestcheckin').show();
-						jQuery('#requestcheckout').show();
-						jQuery('#requestguests').show();
-						message.value = "<?php echo Text::_('OS_REQUEST_MSG7')?> <?php echo $property_name; ?>";
-						requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON7')?>";
-					}
-				}
-			</script>
-        </div>
-        <?php
+                    <input type="hidden" name="require_field"
+                        value="requestyour_name_top,requestyour_email_top<?php echo $request_field; ?>" />
+                    <input type="hidden" name="require_label"
+                        value="<?php echo Text::_('OS_YOUR_NAME');?>,<?php echo Text::_('OS_YOUR_EMAIL');?><?php echo $request_label; ?>" />
+                    <?php } ?>
+                    <input type="hidden" name="use_privacy_policy" id="use_privacy_policy"
+                        value="<?php echo $configClass['use_privacy_policy']?>" />
+                </form>
+                <?php
+		$property_name = "";
+		if($row->ref != "" && $configClass['show_ref'] == 1)
+		{
+			$property_name = $row->ref.", ".$row->pro_name;
+		}
+		else
+		{
+			$property_name = $row->pro_name;
+		}
+		?>
+                <script type="text/javascript">
+                function updateRequestForm_top(subject) {
+                    var message = document.getElementById('requestmessage_top');
+                    var requestbutton = document.getElementById('requestbutton_top');
+                    if (subject != 7) {
+                        jQuery('#requestcheckin_top').addClass('nodisplay');
+                        jQuery('#requestcheckout_top').addClass('nodisplay');
+                        jQuery('#requestguests_top').addClass('nodisplay');
+                        jQuery('#requestcheckin_top').hide();
+                        jQuery('#requestcheckout_top').hide();
+                        jQuery('#requestguests_top').hide();
+                    }
+                    if (subject == 1) {
+                        message.value = "<?php echo Text::_('OS_REQUEST_MSG1')?> <?php echo $property_name; ?>";
+                        requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON1')?>";
+                    } else if (subject == 2) {
+                        message.value = "<?php printf(Text::_('OS_REQUEST_MSG2'),$property_name);?>";
+                        requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON2')?>";
+                    } else if (subject == 3) {
+                        message.value = "<?php echo Text::_('OS_REQUEST_MSG3')?> <?php echo $property_name; ?>";
+                        requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON3')?>";
+                    } else if (subject == 4) {
+                        message.value = "<?php echo Text::_('OS_REQUEST_MSG4')?> <?php echo $property_name; ?>";
+                        requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON4')?>";
+                    } else if (subject == 5) {
+                        message.value = "<?php echo Text::_('OS_REQUEST_MSG5')?> <?php echo $property_name; ?>";
+                        requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON5')?>";
+                    } else if (subject == 6) {
+                        message.value = "<?php echo Text::_('OS_REQUEST_MSG6')?> <?php echo $property_name; ?>";
+                        requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON6')?>";
+                    } else if (subject == 7) {
+                        jQuery('#requestcheckin_top').removeClass('nodisplay');
+                        jQuery('#requestcheckout_top').removeClass('nodisplay');
+                        jQuery('#requestguests_top').removeClass('nodisplay');
+                        jQuery('#requestcheckin_top').show();
+                        jQuery('#requestcheckout_top').show();
+                        jQuery('#requestguests_top').show();
+                        message.value = "<?php echo Text::_('OS_REQUEST_MSG7')?> <?php echo $property_name; ?>";
+                        requestbutton.value = "<?php echo Text::_('OS_REQUEST_BUTTON7')?>";
+                    }
+                }
+                </script>
+                <?php
     }
 
     /**
@@ -4614,22 +4858,24 @@ class HelperOspropertyCommon{
 		global $bootstrapHelper;
 		$user = Factory::getUser();
         ?>
-		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> commentform">
-			<div class="block_caption" id="comment_form_caption">
-				<strong><?php echo Text::_('OS_ADD_COMMENT')?></strong>
-			</div>
+                <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> commentform">
+                    <div class="block_caption" id="comment_form_caption">
+                        <strong><?php echo Text::_('OS_ADD_COMMENT')?></strong>
+                    </div>
 
-			<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> noleftmargin">
-				<form method="POST" action="<?php echo Uri::root()?>index.php?option=com_osproperty&task=property_submitcomment&Itemid=<?php echo $itemid;?>" name="commentForm" id="commentForm" class="form-horizontal">
-					<?php
+                    <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> noleftmargin">
+                        <form method="POST"
+                            action="<?php echo Uri::root()?>index.php?option=com_osproperty&task=property_submitcomment&Itemid=<?php echo $itemid;?>"
+                            name="commentForm" id="commentForm" class="form-horizontal">
+                            <?php
 					if($configClass['show_rating'] == 1){
 						?>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-							<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-								<?php echo Text::_('OS_RATING');?>
-							</label>
-							<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-								<!--
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                                <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                    <?php echo Text::_('OS_RATING');?>
+                                </label>
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                    <!--
 								<i><?php echo Text::_('OS_WORST');?>
 									&nbsp;
 									<?php
@@ -4646,81 +4892,85 @@ class HelperOspropertyCommon{
 									?>
 									&nbsp;&nbsp;<?php echo Text::_('OS_BEST');?></i>
 									-->
-								<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> paddingbottom10">
-									<?php
-									$rateOption = array();
+                                    <div
+                                        class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> paddingbottom10">
+                                        <?php
+									$rateOption = [];
 									for($i=1;$i<=5;$i++){
 										$rateOption[] = HTMLHelper::_('select.option',$i,$i);
 									}
 									for($i=1;$i<5;$i++){
 									?>
-										<div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
-											<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-												<div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
-													<strong><?php echo Text::_('OS_RATE_OPTION'.$i);?></strong>
-												</div>
-												<div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
-													<?php
+                                        <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
+                                            <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+                                                <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
+                                                    <strong><?php echo Text::_('OS_RATE_OPTION'.$i);?></strong>
+                                                </div>
+                                                <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
+                                                    <?php
 													echo HTMLHelper::_('select.genericlist',$rateOption,'rate'.$i ,'class="input-small form-select smallSizeBox"','value','text');
 													?>
-												</div>
-											</div>
-										</div>
-									<?php 
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <?php 
 										if($i==2){
 											?>
-											</div>
-											<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-											<?php
+                                    </div>
+                                    <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+                                        <?php
 										}
 									} 
 									?>
-								</div>
-							</div>
-						</div>
-					<?php
+                                    </div>
+                                </div>
+                            </div>
+                            <?php
 					}
 					?>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-							<?php echo Text::_('OS_AUTHOR');?>
-						</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<input class="input-large form-control" type="text" id="comment_author" name="comment_author" maxlength="50" value="<?php echo $user->name;?>" />
-						</div>
-					</div>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                                <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                    <?php echo Text::_('OS_AUTHOR');?>
+                                </label>
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                    <input class="input-large form-control" type="text" id="comment_author"
+                                        name="comment_author" maxlength="50" value="<?php echo $user->name;?>" />
+                                </div>
+                            </div>
 
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-							<?php echo Text::_('OS_TITLE');?>
-						</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<input class="input-large form-control" type="text" id="comment_title" name="comment_title" size="40" placeholder="<?php echo Text::_('OS_TITLE');?>" />
-						</div>
-					</div>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                                <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                    <?php echo Text::_('OS_TITLE');?>
+                                </label>
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                    <input class="input-large form-control" type="text" id="comment_title"
+                                        name="comment_title" size="40"
+                                        placeholder="<?php echo Text::_('OS_TITLE');?>" />
+                                </div>
+                            </div>
 
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-							<?php echo Text::_('OS_MESSAGE');?>
-						</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<textarea id="comment_message" name="comment_message" rows="6" cols="50" class="input-large form-control"></textarea>
-						</div>
-					</div>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                                <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                    <?php echo Text::_('OS_MESSAGE');?>
+                                </label>
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                    <textarea id="comment_message" name="comment_message" rows="6" cols="50"
+                                        class="input-large form-control"></textarea>
+                                </div>
+                            </div>
 
-					<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-						<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-							<?php echo Text::_('OS_SECURITY_CODE');?>
-						</label>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-							<span class="grey_small lineheight16"><?php echo Text::_('OS_PLEASE_INSERT_THE_SYMBOL_FROM_THE_INAGE_TO_FIELD_BELOW')?></span>
-							<div class="clearfix"></div>
-							<img src="<?php echo Uri::root()?>index.php?option=com_osproperty&no_html=1&task=property_captcha&ResultStr=<?php echo $row->ResultStr?>" />
-							<input type="text" class="input-mini form-control imini" id="comment_security_code" name="comment_security_code" maxlength="5"/>
-						</div>
-					</div>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                                <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                    <?php echo Text::_('OS_SECURITY_CODE');?>
+                                </label>
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                    <?php
+							OSPHelper::generateCaptcha();
+							?>
+                                </div>
+                            </div>
 
-					<?php
+                            <?php
 					if ($configClass['use_privacy_policy'])
                     {
                         if ($configClass['privacy_policy_article_id'] > 0)
@@ -4757,14 +5007,15 @@ class HelperOspropertyCommon{
                             $link = '';
                         }
                         ?>
-                        <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
-                            <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
-                                <?php
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+                                <label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+                                    <?php
                                 if ($link)
                                 {
                                     $extra = ' class="osmodal" ' ;
                                     ?>
-                                    <a href="<?php echo $link; ?>" <?php echo $extra;?> class="eb-colorbox-privacy-policy"><?php echo Text::_('OS_PRIVACY_POLICY');?></a>
+                                    <a href="<?php echo $link; ?>" <?php echo $extra;?>
+                                        class="eb-colorbox-privacy-policy"><?php echo Text::_('OS_PRIVACY_POLICY');?></a>
                                     <?php
                                 }
                                 else
@@ -4772,51 +5023,62 @@ class HelperOspropertyCommon{
                                     echo Text::_('OS_PRIVACY_POLICY');
                                 }
                                 ?>
-                            </label>
-                            <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                                <input type="checkbox" name="agree_privacy_policy" id="agree_privacy_policy" value="1" data-errormessage="<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
-                                <?php
+                                </label>
+                                <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+                                    <input type="checkbox" name="agree_privacy_policy" id="agree_privacy_policy"
+                                        value="1"
+                                        data-errormessage="<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>" />
+                                    <?php
                                 $agreePrivacyPolicyMessage = Text::_('OS_AGREE_PRIVACY_POLICY_MESSAGE');
                                 if (strlen($agreePrivacyPolicyMessage))
                                 {
                                     ?>
-                                    <div class="eb-privacy-policy-message alert alert-info"><?php echo $agreePrivacyPolicyMessage;?></div>
+                                    <div class="eb-privacy-policy-message alert alert-info">
+                                        <?php echo $agreePrivacyPolicyMessage;?></div>
                                     <?php
                                 }
                                 ?>
+                                </div>
                             </div>
-                        </div>
-                        <?php
+                            <?php
                     }
 					?>
-					<div class="clearfix"></div>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<input onclick="javascript:submitForm('commentForm')" class="btn btn-warning margin0 width100px" type="button" name="finish" value="<?php echo Text::_('OS_SUBMIT')?>" />
-						<span id="comment_loading" class="reg_loading">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
-					</div>
+                            <div class="clearfix"></div>
+                            <div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+                                <input onclick="javascript:submitForm('commentForm')"
+                                    class="btn btn-warning margin0 width100px" type="button" name="finish"
+                                    value="<?php echo Text::_('OS_SUBMIT')?>" />
+                                <span id="comment_loading" class="reg_loading">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            </div>
 
-					<input type="hidden" name="captcha_str" id="captcha_str" value="<?php echo $row->ResultStr?>" />
-					<input type="hidden" name="option" value="com_osproperty" />
-					<input type="hidden" name="task" value="property_submitcomment" />
-					<input type="hidden" name="id" value="<?php echo $row->id?>" />
-					<input type="hidden" name="Itemid" value="<?php echo $itemid?>" />
+                            <input type="hidden" name="captcha_str" id="captcha_str"
+                                value="<?php echo $row->ResultStr?>" />
+                            <input type="hidden" name="option" value="com_osproperty" />
+                            <input type="hidden" name="task" value="property_submitcomment" />
+                            <input type="hidden" name="id" value="<?php echo $row->id?>" />
+                            <input type="hidden" name="Itemid" value="<?php echo $itemid?>" />
 
-					<?php
+                            <?php
                     if($configClass['use_privacy_policy']){
                     ?>
-                        <input type="hidden" name="require_field"  value="comment_author,comment_title,comment_message,comment_security_code,agree_privacy_policy" />
-                        <input type="hidden" name="require_label"  value="<?php echo Text::_('OS_AUTHOR');?>,<?php echo Text::_('OS_TITLE');?>,<?php echo Text::_('OS_MESSAGE');?>,<?php echo Text::_('OS_SECURITY_CODE')?>,<?php echo Text::_('OS_SECURITY_CODE')?>" />
-                    <?php
+                            <input type="hidden" name="require_field"
+                                value="comment_author,comment_title,comment_message,comment_security_code,agree_privacy_policy" />
+                            <input type="hidden" name="require_label"
+                                value="<?php echo Text::_('OS_AUTHOR');?>,<?php echo Text::_('OS_TITLE');?>,<?php echo Text::_('OS_MESSAGE');?>,<?php echo Text::_('OS_SECURITY_CODE')?>,<?php echo Text::_('OS_SECURITY_CODE')?>" />
+                            <?php
                     }else{
                     ?>
-                        <input type="hidden" name="require_field"  value="comment_author,comment_title,comment_message,comment_security_code" />
-                        <input type="hidden" name="require_label"  value="<?php echo Text::_('OS_AUTHOR');?>,<?php echo Text::_('OS_TITLE');?>,<?php echo Text::_('OS_MESSAGE');?>,<?php echo Text::_('OS_SECURITY_CODE')?>" />
-                    <?php } ?>
-					<input type="hidden" name="use_privacy_policy" id="use_privacy_policy" value="<?php echo $configClass['use_privacy_policy']?>" />
-				</form>
-			</div>
-		</div>
-        <?php
+                            <input type="hidden" name="require_field"
+                                value="comment_author,comment_title,comment_message,comment_security_code" />
+                            <input type="hidden" name="require_label"
+                                value="<?php echo Text::_('OS_AUTHOR');?>,<?php echo Text::_('OS_TITLE');?>,<?php echo Text::_('OS_MESSAGE');?>,<?php echo Text::_('OS_SECURITY_CODE')?>" />
+                            <?php } ?>
+                            <input type="hidden" name="use_privacy_policy" id="use_privacy_policy"
+                                value="<?php echo $configClass['use_privacy_policy']?>" />
+                        </form>
+                    </div>
+                </div>
+                <?php
     }
 
 	static function showLabel($name, $title, $tooltip){
@@ -4912,7 +5174,7 @@ class HelperOspropertyCommon{
 	 */
 	public static function renderShowon($fields)
 	{
-		$output = array();
+		$output = [];
 
 		$i = 0;
 
@@ -4949,7 +5211,7 @@ class HelperOspropertyCommon{
 		if($translatable){
 			$suffix = OSPHelper::getFieldSuffix();
 		}
-		$cityArr = array();
+		$cityArr = [];
 		if($req_state_id > 0){
 			$query  = "Select id as value, city".$suffix." as text from #__osrs_cities where published = 1 ";
 			$query .= " and state_id = '$req_state_id'";

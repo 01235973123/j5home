@@ -1,43 +1,43 @@
 <?php
+
 /**
  * @package        Joomla
  * @subpackage     Event Booking
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright      Copyright (C) 2010 - 2024 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Utilities\ArrayHelper;
 
-$config          = EventbookingHelper::getConfig();
 $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 $btnPrimary      = $bootstrapHelper->getClassMapping('btn btn-primary');
 $locationIds     = $this->params->get('location_ids', []);
 $locationIds     = array_filter(ArrayHelper::toInteger($locationIds));
 
-if ($config->show_filter_reset_button)
-{
-	Factory::getApplication()
-		->getDocument()
-		->getWebAssetManager()
-		->registerAndUseScript('com_eventbooking.site-search-filters', 'media/com_eventbooking/js/site-search-filters.min.js');
-}
+$db    = Factory::getContainer()->get('db');
+$query = $db->getQuery(true)
+	->select('id, title')
+	->from('#__eb_speakers')
+	->order('title');
+$db->setQuery($query);
+$speakers = $db->loadObjectList();
+
 ?>
 <form name="eb-event-search" method="post" id="eb-event-search">
 	<div class="filters btn-toolbar eb-search-bar-container clearfix">
 		<div class="filter-search pull-left">
-			<input type="text" name="search" class="input-large form-control" value="<?php echo htmlspecialchars($this->state->search, ENT_COMPAT, 'UTF-8'); ?>"
-				   placeholder="<?php echo Text::_('EB_KEY_WORDS'); ?>"/>
+			<input type="text" name="search" class="input-large form-control"
+				value="<?php echo htmlspecialchars($this->state->search, ENT_COMPAT, 'UTF-8'); ?>"
+				placeholder="<?php echo Text::_('EB_KEY_WORDS'); ?>" />
 		</div>
 		<div class="btn-group pull-left">
 			<?php
 
-			if ($this->config->show_category_filter && empty($this->state->id))
-			{
+			if ($this->config->show_category_filter && empty($this->state->id)) {
 				// Show categories filter if configured
 				$filters = [];
 				$filters[] = '`access` IN (' . implode(',', Factory::getApplication()->getIdentity()->getAuthorisedViewLevels()) . ')';
@@ -47,15 +47,12 @@ if ($config->show_filter_reset_button)
 
 			$locations = EventbookingHelperDatabase::getAllLocations();
 
-			if (count($locations) > 1)
-			{
+			if (count($locations) > 1) {
 				$options   = [];
 				$options[] = HTMLHelper::_('select.option', 0, Text::_('EB_ALL_LOCATIONS'), 'id', 'name');
 
-				foreach ($locations as $location)
-				{
-					if (!count($locationIds) || in_array($location->id, $locationIds))
-					{
+				foreach ($locations as $location) {
+					if (!count($locationIds) || in_array($location->id, $locationIds)) {
 						$options[] = HTMLHelper::_('select.option', $location->id, $location->name, 'id', 'name');
 					}
 				}
@@ -63,9 +60,19 @@ if ($config->show_filter_reset_button)
 				echo HTMLHelper::_('select.genericlist', $options, 'location_id', ' class="input-large form-select" onchange="submit();" ', 'id', 'name', $this->state->location_id);
 			}
 
+			if (count($speakers) > 1) {
+				$options   = [];
+				$options[] = HTMLHelper::_('select.option', 0, Text::_('EB_ALL_SPEAKERS'), 'id', 'title');
+
+				foreach ($speakers as $speaker) {
+					$options[] = HTMLHelper::_('select.option', $speaker->id, $speaker->title, 'id', 'title');
+				}
+
+				echo HTMLHelper::_('select.genericlist', $options, 'speaker_id', ' class="input-large form-select" onchange="submit();" ', 'id', 'title', $this->state->speaker_id);
+			}
+
 			// Do not display duration filter when the menu item is configured to display past events
-			if ($this->params->get('display_events_type', 0) != 3)
-			{
+			if ($this->params->get('display_events_type', 0) != 3) {
 				$options   = [];
 				$options[] = HTMLHelper::_('select.option', '', Text::_('EB_ALL_DATES'));
 				$options[] = HTMLHelper::_('select.option', 'today', Text::_('EB_TODAY'));
@@ -80,16 +87,9 @@ if ($config->show_filter_reset_button)
 			?>
 		</div>
 		<div class="btn-group pull-left">
-			<input type="submit" class="<?php echo $btnPrimary; ?> eb-btn-search" value="<?php echo Text::_('EB_SEARCH'); ?>"/>
+			<input type="submit" class="<?php echo $btnPrimary; ?> eb-btn-search"
+				value="<?php echo Text::_('EB_SEARCH'); ?>" />
 
-			<?php
-				if ($config->show_filter_reset_button)
-				{
-				?>
-					<input type="button" id="eb-search-filters-reset-button" class="<?php echo $btnPrimary; ?> eb-btn-reset" value="<?php echo Text::_('EB_RESET'); ?>"/>
-				<?php
-				}
-			?>
 		</div>
 	</div>
 </form>

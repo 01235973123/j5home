@@ -163,12 +163,6 @@ class RADModelState
 					if ($value !== '')
 					{
 						$value = $filterInput->clean($value, $filter);
-
-						// Workaround for int filter
-						if ($filter === 'int' && is_array($value))
-						{
-							$value = (int) $value[0];
-						}
 					}
 					else
 					{

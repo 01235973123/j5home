@@ -216,10 +216,16 @@ class RADController
 		$this->name   = $config['name'];
 
 		// Build default config data for the controller
+		if (empty($config['language_prefix']))
+		{
+			$component                 = substr($config['option'], 4);
+			$config['language_prefix'] = strtoupper($component);
+		}
 
-		$config['language_prefix'] ??= strtoupper(substr($config['option'], 4));
-
-		$config['default_view'] ??= $config['component'];
+		if (empty($config['default_view']))
+		{
+			$config['default_view'] = $config['component'];
+		}
 
 		// Store the controller config
 		$this->config = $config;
@@ -429,9 +435,15 @@ class RADController
 			$config['is_admin_view'] = true;
 		}
 
-		$config['Itemid'] ??= $this->input->getInt('Itemid');
+		if (!isset($config['Itemid']))
+		{
+			$config['Itemid'] = $this->input->getInt('Itemid');
+		}
 
-		$config['input'] ??= $this->input;
+		if (!isset($config['input']))
+		{
+			$config['input'] = $this->input;
+		}
 
 		return RADView::getInstance($name, $type, ucfirst($config['class_prefix']) . 'View', $config);
 	}

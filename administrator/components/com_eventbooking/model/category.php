@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -32,11 +32,6 @@ class EventbookingModelCategory extends RADModelAdmin
 	protected function beforeStore($row, $input, $isNew)
 	{
 		parent::beforeStore($row, $input, $isNew);
-
-		if (EventbookingHelper::isCategoryCustomFieldsEnabled())
-		{
-			$input->set('fields', json_encode($input->post->get('fields', [], 'array')));
-		}
 
 		$paymentMethods = $input->get('payment_methods', [], 'array');
 

@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -233,11 +233,11 @@ trait EventbookingViewEvent
 
 		if ($config->enable_coupon)
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('EB_ENABLE') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('EB_ENABLE') . ')';
 		}
 		else
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('EB_DISABLE') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('EB_DISABLE') . ')';
 		}
 
 		$options[] = HTMLHelper::_('select.option', 0, $useGlobalText);
@@ -258,11 +258,11 @@ trait EventbookingViewEvent
 
 		if ($config->activate_waitinglist_feature)
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
 		}
 		else
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
 		}
 
 		$options   = [];
@@ -438,7 +438,7 @@ trait EventbookingViewEvent
 
 			try
 			{
-				$form = Form::getInstance('ebeventfields', JPATH_ROOT . '/components/com_eventbooking/fields.xml', [], false, '//config');
+				$form = Form::getInstance('pmform', JPATH_ROOT . '/components/com_eventbooking/fields.xml', [], false, '//config');
 				$form->bind($data);
 				$this->form = $form;
 			}
@@ -475,10 +475,7 @@ trait EventbookingViewEvent
 		$currencies = require JPATH_ROOT . '/components/com_eventbooking/helper/currencies.php';
 		ksort($currencies);
 		$options   = [];
-
-
-
-		$options[] = HTMLHelper::_('select.option', '', Text::_('JGLOBAL_USE_GLOBAL') . ' (' . $config->currency_symbol . ')');
+		$options[] = HTMLHelper::_('select.option', '', Text::_('EB_SELECT_CURRENCY'));
 
 		foreach ($currencies as $code => $title)
 		{
@@ -511,11 +508,11 @@ trait EventbookingViewEvent
 
 		if ($config->user_registration)
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
 		}
 		else
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
 		}
 
 		$options   = [];
@@ -535,11 +532,11 @@ trait EventbookingViewEvent
 
 		if ($config->accept_term)
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
 		}
 		else
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
 		}
 
 		$options   = [];
@@ -559,11 +556,11 @@ trait EventbookingViewEvent
 
 		if ($config->prevent_duplicate_registration)
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
 		}
 		else
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
 		}
 
 		$options   = [];
@@ -583,11 +580,11 @@ trait EventbookingViewEvent
 
 		if ($config->collect_member_information)
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
 		}
 		else
 		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
+			$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
 		}
 
 		$options   = [];
@@ -608,19 +605,19 @@ trait EventbookingViewEvent
 		switch ($config->send_emails)
 		{
 			case 0:
-				$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('EB_ENABLE') . ')';
+				$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('EB_ENABLE') . ')';
 				break;
 			case 1:
-				$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('EB_ONLY_TO_ADMIN') . ')';
+				$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('EB_ONLY_TO_ADMIN') . ')';
 				break;
 			case 2:
-				$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('EB_ONLY_TO_REGISTRANT') . ')';
+				$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('EB_ONLY_TO_REGISTRANT') . ')';
 				break;
 			case 3:
-				$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
+				$useGlobalText = Text::_('EB_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
 				break;
 			default:
-				$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL');
+				$useGlobalText = Text::_('EB_USE_GLOBAL');
 				break;
 		}
 
@@ -843,62 +840,6 @@ trait EventbookingViewEvent
 				$item->published
 			);
 		}
-
-		$options   = [];
-		$options[] = HTMLHelper::_('select.option', '', Text::_('JGLOBAL_USE_GLOBAL'));
-		$options[] = HTMLHelper::_('select.option', 'index, follow', 'index, follow');
-		$options[] = HTMLHelper::_('select.option', 'noindex, follow', 'noindex, follow');
-		$options[] = HTMLHelper::_('select.option', 'index, nofollow', 'index, nofollow');
-		$options[] = HTMLHelper::_('select.option', 'noindex, nofollow', 'noindex, nofollow');
-
-		$this->lists['robots'] = HTMLHelper::_(
-			'select.genericlist',
-			$options,
-			'robots',
-			' class="form-select" ',
-			'value',
-			'text',
-			$item->robots
-		);
-
-		$options = [];
-
-		if ($config->send_ics_file)
-		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JYES') . ')';
-		}
-		else
-		{
-			$useGlobalText = Text::_('JGLOBAL_USE_GLOBAL') . ' (' . Text::_('JNO') . ')';
-		}
-
-		$options[] = HTMLHelper::_('select.option', '', $useGlobalText);
-		$options[] = HTMLHelper::_('select.option', 0, Text::_('JNO'));
-		$options[] = HTMLHelper::_('select.option', 1, Text::_('JYES'));
-
-		$this->lists['send_ics_file'] = HTMLHelper::_(
-			'select.genericlist',
-			$options,
-			'send_ics_file',
-			' class="form-select" ',
-			'value',
-			'text',
-			$item->send_ics_file
-		);
-
-		$options   = [];
-		$options[] = HTMLHelper::_('select.option', 0, Text::_('EB_EACH_MEMBER'));
-		$options[] = HTMLHelper::_('select.option', 1, Text::_('EB_EACH_REGISTRATION'));
-
-		$this->lists['deposit_amount_apply_for'] = HTMLHelper::_(
-			'select.genericlist',
-			$options,
-			'deposit_amount_apply_for',
-			'class="form-select"',
-			'value',
-			'text',
-			$item->deposit_amount_apply_for
-		);
 
 		#Plugin support
 		PluginHelper::importPlugin('eventbooking');

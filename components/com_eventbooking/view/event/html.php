@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -325,13 +325,8 @@ class EventbookingViewEventHtml extends RADViewHtml
 	{
 		$active = Factory::getApplication()->getMenu()->getActive();
 
-		$params = new Registry($this->item->params ?? '{}');
-
 		if ($active && $this->isDirectMenuLink($active))
 		{
-			$this->params->def('menu-meta_keywords', $this->item->meta_keywords);
-			$this->params->def('menu-meta_description', $this->item->meta_description);
-			$this->params->def('robots', $params->get('robots', ''));
 		}
 		else
 		{
@@ -344,11 +339,6 @@ class EventbookingViewEventHtml extends RADViewHtml
 			if ($this->item->meta_description)
 			{
 				$this->params->set('menu-meta_description', $this->item->meta_description);
-			}
-
-			if ($params->get('robots'))
-			{
-				$this->params->set('robots', $params->get('robots'));
 			}
 		}
 

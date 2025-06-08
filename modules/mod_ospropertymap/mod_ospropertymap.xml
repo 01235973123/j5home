@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="module" version="3.21.0" position="left" method="upgrade" client="site">
+    <name>OS Property Map</name>
+    <author>Dang Thuc Dam</author>
+    <authorEmail>damdt@joomservices.com</authorEmail>
+    <authorUrl>http://joomdonation.com</authorUrl>
+    <version>3.21.0</version>
+    <creationDate>April 2014</creationDate>
+    <copyright>www.joomdonation.com</copyright>
+    <license>http://www.gnu.org/copyleft/gpl.html GNU/GPL</license>
+    <description>Display Properties on Google</description>
+    <files>
+        <filename module="mod_ospropertymap">mod_ospropertymap.php</filename>
+        <filename>helper.php</filename>
+        <filename>index.html</filename>
+		<folder>asset</folder>
+		<folder>elements</folder>
+		<folder>tmpl</folder>		
+    </files>
+	<config>
+		<fields name="params">
+			<fieldset name="basic">
+				<field
+					name="width"
+					type="text"
+					default="100%"
+					class="input-mini"
+					label="Width of Map (px/%)"
+					description="Width of Map, default value 100%" />
+				<field
+					name="height"
+					type="text"
+					default="300"
+					class="input-mini"
+					label="Height of Map (px) "
+					description="Height of Map, default value 300px" />
+				<field
+					name="maxitem"
+					type="text"
+					default="0"
+					class="input-mini"
+					label="Max Properties"
+					description="In case your system has a lot of properties, please enter Max properties that will be shown on the Map to reduce the loading speed. Put 0 or leave it empty if you want to show all Properties" />
+				<field
+                    name="zoom"
+                    type="text"
+                    default="10"
+					class="input-mini"
+                    label="Zoom level"
+                    description="Please select Zoom level" />
+                <field name="google_maptype"
+                                       type="list"
+                                       default="ROADMAP"
+                                       label="Google Map Type"
+                                       description="Select Google Map Type">
+                    <option value="ROADMAP" >Road Map</option>
+                    <option value="SATELLITE">Satellite</option>
+                    <option value="HYBRID">Hybrid</option>
+                    <option value="TERRAIN">Terrain</option>
+                </field>
+				<field name="google_mapstyle"
+                                       type="list"
+                                       default="0"
+                                       label="Google Map Style"
+                                       description="Select Google Map Style">
+                    <option value="0" >Default style</option>
+					<option value="1" >Style1</option>
+					<option value="2" >Style2</option>
+					<option value="3" >Style3</option>
+					<option value="4" >Style4</option>
+					<option value="5" >Style5</option>
+                </field>
+				<field name="disable_mouse_wheel"
+                                       type="radio"
+                                       default="0"
+                                       label="Disable Mouse Wheel"
+                                       description="Do you want to disable Mouse wheel"
+									   class="btn-group btn-group-yesno"
+									   >
+                    <option value="0" >No</option>
+                    <option value="1">Yes</option>
+                </field>
+			</fieldset>
+			<fieldset name="source_setting" label="Source Setting"
+				addfieldpath="/modules/mod_ospropertymap/elements">
+				<field name="osp_category" type="ospmulticategories" 
+					default="" size="10" multiple="multiple" label="Categories"
+					description="Select Categories of OS Property that you want to show properties" />
+				<field name="osp_type" type="ospmultipropertytypes" 
+					default="" size="10" multiple="multiple" label="Property types"
+					description="Select Property Types that you want to show properties" />
+				<field name="osp_countries" type="ospmulticountries" 
+					default="" size="10" multiple="multiple" label="Select countries"
+					description="Select Countries that you want to show properties" />
+				<field
+                    name="state_ids"
+                    type="text"
+                    default=""
+					class="input-large"
+                    label="OS Property State IDs"
+                    description="Put ID of state with format: id1,id2,id3. Example : 1,2,3. You can find IDs of States at Back-end > OS Property > Manage States" />
+				<field
+                    name="city_ids"
+                    type="text"
+                    default=""
+					class="input-large"
+                    label="OS Property City IDs"
+                    description="Put ID of city with format: id1,id2,id3. Example : 1,2,3. You can find IDs of Cities at Back-end > OS Property > Manage Cities" />
+			</fieldset>
+			<fieldset name="advanced">
+				<field name="cache" type="hidden" default="0"/>
+				<field name="useCache" type="list" default="1" label="Use cache" description="Enable cache if you want to speed up your site loading time">
+					<option value="1">Enable</option>
+					<option value="0">Disable</option>
+				</field>
+				<field name="cacheTime" type="text" default="900" label="Cache time" description="Set cache time in minute"/>
+			</fieldset>
+		</fields>
+	</config>
+</extension>

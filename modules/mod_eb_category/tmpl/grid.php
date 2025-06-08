@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Event Booking
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright      Copyright (C) 2010 - 2024 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -22,14 +22,10 @@ use Joomla\CMS\Uri\Uri;
  * @var int                      $itemId
  */
 
-Factory::getApplication()
-	->getDocument()
-	->getWebAssetManager()
-	->registerAndUseStyle(
-		'com_eventbooking.categorygrid',
-		'media/com_eventbooking/assets/css/categorygrid.min.css',
-		['version' => EventbookingHelper::getInstalledVersion()]
-	);
+Factory::getApplication()->getDocument()->addStyleSheet(
+	Uri::root(true) . '/media/com_eventbooking/assets/css/categorygrid.min.css',
+	['version' => EventbookingHelper::getInstalledVersion()]
+);
 
 $bootstrapHelper = EventbookingHelperBootstrap::getInstance();
 $rowFluid        = $bootstrapHelper->getClassMapping('row-fluid');

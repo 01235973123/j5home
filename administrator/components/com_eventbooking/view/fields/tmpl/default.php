@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -17,7 +17,7 @@ $this->includeTemplate('script');
 	<div id="j-main-container" class="eb-joomla4-container">
 		<?php echo $this->loadTemplate('filter'); ?>
 		<div class="clearfix"></div>
-		<table class="table itemList table-striped" id="fieldList">
+		<table class="adminlist table table-striped" id="fieldList">
 			<thead>
 			<tr>
 				<th width="1%" class="nowrap center hidden-phone">

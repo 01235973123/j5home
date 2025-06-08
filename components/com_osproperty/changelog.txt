@@ -1,3 +1,11 @@
+16th November 2024 - New version 3.21.6
+===============================
+- Improve Backend layout - Joomla 5
+- Remove Google reCatpcha Joomla 4 & 5 and replace by JD Captcha
+- Add configure option to select theme in property details page
+- Improve Wider theme
+- Fix minor issues
+
 07th October 2024 - New version 3.21.5
 ===============================
 - Fix issue in XML import/export function

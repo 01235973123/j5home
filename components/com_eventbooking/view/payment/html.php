@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Uri\Uri;
 
 class EventbookingViewPaymentHtml extends RADViewHtml
 {
@@ -22,7 +23,7 @@ class EventbookingViewPaymentHtml extends RADViewHtml
 	 *
 	 * @var array
 	 */
-	protected $methods = [];
+	protected $methods;
 
 	/**
 	 * The payment fee data
@@ -131,9 +132,9 @@ class EventbookingViewPaymentHtml extends RADViewHtml
 
 		// Load common js code
 		$document = Factory::getApplication()->getDocument();
-		$wa       = $document->getWebAssetManager();
+		$rootUri  = Uri::root(true);
 
-		$wa->addInlineScript(
+		$document->addScriptDeclaration(
 			'var siteUrl = "' . EventbookingHelper::getSiteUrl() . '";'
 		);
 
@@ -147,7 +148,7 @@ class EventbookingViewPaymentHtml extends RADViewHtml
 
 		if (file_exists($customJSFile) && filesize($customJSFile) > 0)
 		{
-			$wa->registerAndUseScript('com_eventbooking.custom', 'media/com_eventbooking/assets/js/custom.js');
+			$document->addScript($rootUri . '/media/com_eventbooking/assets/js/custom.js');
 		}
 
 		EventbookingHelper::addLangLinkForAjax();
@@ -229,8 +230,8 @@ class EventbookingViewPaymentHtml extends RADViewHtml
 		$config = EventbookingHelper::getConfig();
 
 		/* @var \Joomla\Database\DatabaseDriver $db */
-		$db    = Factory::getContainer()->get('db');
-		$query = $db->getQuery(true);
+		$db     = Factory::getContainer()->get('db');
+		$query  = $db->getQuery(true);
 
 		$registrationCode = $this->input->getString('order_number') ?: $this->input->getString('registration_code');
 

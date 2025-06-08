@@ -486,7 +486,7 @@
                 }
                 else
                 {
-                    $('.payment_information:not(.eb-credit-card-input)').css('display', '');
+                    $('.payment_information').css('display', '');
                     updatePaymentMethod();
                 }
 

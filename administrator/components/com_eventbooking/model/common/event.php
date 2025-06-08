@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -43,13 +43,6 @@ class EventbookingModelCommonEvent extends RADModelAdmin
 		'certificate_bg_width',
 		'certificate_bg_height',
 		'ics_content',
-		'robots',
-		'send_ics_file',
-		'deposit_amount_apply_for',
-	];
-
-	protected static $paramFieldsDefaultValue = [
-		'deposit_amount_apply_for' => 0,
 	];
 
 	public function __construct($config = [])
@@ -106,7 +99,7 @@ class EventbookingModelCommonEvent extends RADModelAdmin
 
 		foreach (self::$paramFields as $field)
 		{
-			$this->data->{$field} = self::$paramFieldsDefaultValue[$field] ?? '';
+			$this->data->{$field} = '';
 		}
 
 		if (File::exists(JPATH_ADMINISTRATOR . '/components/com_eventbooking/data/event_default_data.php'))
@@ -290,7 +283,20 @@ class EventbookingModelCommonEvent extends RADModelAdmin
 		$params = new Registry((string) $row->params);
 		$params->set('user_registration', $input->getString('user_registration'));
 
-		foreach (static::$paramFields as $key)
+		// Store some keys into params fields to reduce number of fields need to be use to store events data
+		$keys = [
+			'ticket_bg_top',
+			'ticket_bg_left',
+			'ticket_bg_width',
+			'ticket_bg_height',
+			'certificate_bg_left',
+			'certificate_bg_top',
+			'certificate_bg_width',
+			'certificate_bg_height',
+			'ics_content',
+		];
+
+		foreach ($keys as $key)
 		{
 			if ($input->exists($key))
 			{
@@ -1377,7 +1383,7 @@ class EventbookingModelCommonEvent extends RADModelAdmin
 	 * @param $data
 	 * @param $isNew
 	 */
-	public function storeEventCategories($eventId, $data, $isNew)
+	protected function storeEventCategories($eventId, $data, $isNew)
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
@@ -1437,7 +1443,7 @@ class EventbookingModelCommonEvent extends RADModelAdmin
 	 * @param $data
 	 * @param $isNew
 	 */
-	public function storeEventGroupRegistrationRates($eventId, $data, $isNew)
+	protected function storeEventGroupRegistrationRates($eventId, $data, $isNew)
 	{
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
@@ -1773,12 +1779,13 @@ class EventbookingModelCommonEvent extends RADModelAdmin
 	 */
 	protected function setRelationDataFromParentEvent($row, $rowChild, $isNew)
 	{
-		$db = $this->getDbo();
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
 
 		// Delete existing data
 		if (!$isNew)
 		{
-			$query = $db->getQuery(true)
+			$query->clear()
 				->delete('#__eb_event_categories')
 				->where('event_id = ' . $rowChild->id);
 			$db->setQuery($query)
@@ -1980,7 +1987,7 @@ class EventbookingModelCommonEvent extends RADModelAdmin
 		// Validate and make sure alias is not duplicated
 		$config = EventbookingHelper::getConfig();
 		$task   = $input->getCmd('task');
-		$alias  = $input->getString('alias', '');
+		$alias  = $input->getString('alias');
 		$id     = $input->getInt('id', 0);
 
 		if ($task != 'save2copy' && strlen($alias) && !$config->get('insert_event_id'))
@@ -2048,7 +2055,7 @@ class EventbookingModelCommonEvent extends RADModelAdmin
 		try
 		{
 			$formData['params'] = $data['params'] ?? [];
-			$form               = Form::getInstance('ebeventfields', JPATH_ROOT . '/components/com_eventbooking/fields.xml', [], false, '//config');
+			$form               = Form::getInstance('pmform', JPATH_ROOT . '/components/com_eventbooking/fields.xml', [], false, '//config');
 			$return             = $form->process($formData);
 
 			if ($return instanceof Exception)

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
@@ -67,12 +68,10 @@ class OSMembershipModelSubscriptions extends MPFModelList
 		$db->setQuery($query);
 		$searchableFields = $db->loadColumn();
 
-		foreach ($searchableFields as $field)
-		{
+		foreach ($searchableFields as $field) {
 			$field = 'tbl.' . $field;
 
-			if (!in_array($field, $this->searchFields))
-			{
+			if (!in_array($field, $this->searchFields)) {
 				$this->searchFields[] = $field;
 			}
 		}
@@ -107,12 +106,9 @@ class OSMembershipModelSubscriptions extends MPFModelList
 			->select('c.username AS username')
 			->select('d.id AS coupon_id, d.code AS coupon_code');
 
-		if (Factory::getApplication()->isClient('site'))
-		{
+		if (Factory::getApplication()->isClient('site')) {
 			$fieldSuffix = OSMembershipHelper::getFieldSuffix();
-		}
-		else
-		{
+		} else {
 			$fieldSuffix = '';
 		}
 
@@ -154,50 +150,41 @@ class OSMembershipModelSubscriptions extends MPFModelList
 		$config = OSMembershipHelper::getConfig();
 		$state  = $this->getState();
 
-		if (!$this->includeGroupMembers)
-		{
+		if (!$this->includeGroupMembers) {
 			$query->where('group_admin_id = 0');
 		}
 
-		if ($state->filter_category_id)
-		{
+		if ($state->filter_category_id) {
 			$query->where('tbl.plan_id IN (SELECT id FROM #__osmembership_plans WHERE category_id = ' . $state->filter_category_id . ')');
 		}
 
-		if ($state->plan_id)
-		{
+		if ($state->plan_id) {
 			$query->where('tbl.plan_id = ' . $state->plan_id);
 		}
 
-		if ($state->published != -1)
-		{
+		if ($state->published != -1) {
 			$query->where('tbl.published = ' . $state->published);
 		}
 
 		$subscriptionIds = array_filter(ArrayHelper::toInteger($this->state->filter_subscription_ids));
 
-		if (count($subscriptionIds))
-		{
+		if (count($subscriptionIds)) {
 			$query->whereIn('tbl.id', $subscriptionIds);
 		}
 
-		if ($this->excludeStatus)
-		{
+		if ($this->excludeStatus) {
 			$query->whereNotIn('tbl.published', $this->excludeStatus);
 		}
 
-		if (!$config->get('show_incomplete_payment_subscriptions', 1))
-		{
+		if (!$config->get('show_incomplete_payment_subscriptions', 1)) {
 			$query->where('(tbl.published != 0 OR gross_amount = 0 OR tbl.payment_method LIKE "os_offline%")');
 		}
 
-		if (!$user->authorise('core.admin', 'com_osmembership'))
-		{
+		if (!$user->authorise('core.admin', 'com_osmembership')) {
 			$query->where('tbl.plan_id IN (SELECT id FROM #__osmembership_plans WHERE subscriptions_manage_user_id IN (0, ' . $user->id . '))');
 		}
 
-		switch ($state->subscription_type)
-		{
+		switch ($state->subscription_type) {
 			case 1:
 				$query->where('tbl.act = "subscribe"');
 				break;
@@ -211,36 +198,27 @@ class OSMembershipModelSubscriptions extends MPFModelList
 
 		$filterDateField = $this->state->filter_date_field ?: 'tbl.created_date';
 
-		if (!in_array($filterDateField, ['tbl.created_date', 'tbl.from_date', 'tbl.to_date']))
-		{
+		if (!in_array($filterDateField, ['tbl.created_date', 'tbl.from_date', 'tbl.to_date'])) {
 			$filterDateField = 'tbl.to_date';
 		}
 
 		$config     = OSMembershipHelper::getConfig();
 		$dateFormat = str_replace('%', '', $config->get('date_field_format', '%Y-%m-%d'));
 
-		if (Factory::getApplication()->isClient('site'))
-		{
+		if (Factory::getApplication()->isClient('site')) {
 			$dateTimeFormat = $dateFormat . ' H:i';
-		}
-		else
-		{
+		} else {
 			$dateTimeFormat = $dateFormat . ' H:i:s';
 		}
 
-		if ($state->filter_from_date)
-		{
-			try
-			{
+		if ($state->filter_from_date) {
+			try {
 				$date = DateTime::createFromFormat($dateTimeFormat, $state->filter_from_date);
 
-				if ($date !== false)
-				{
+				if ($date !== false) {
 					$this->state->filter_from_date = $date->format('Y-m-d H:i:s');
 				}
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				// Do-nothing
 			}
 
@@ -248,19 +226,14 @@ class OSMembershipModelSubscriptions extends MPFModelList
 			$query->where($db->quoteName($filterDateField) . ' >= ' . $db->quote($date->toSql()));
 		}
 
-		if ($state->filter_to_date)
-		{
-			try
-			{
+		if ($state->filter_to_date) {
+			try {
 				$date = DateTime::createFromFormat($dateTimeFormat, $state->filter_to_date);
 
-				if ($date !== false)
-				{
+				if ($date !== false) {
 					$this->state->filter_to_date = $date->format('Y-m-d H:i:s');
 				}
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				// Do-nothing
 			}
 
@@ -270,16 +243,14 @@ class OSMembershipModelSubscriptions extends MPFModelList
 
 		$filterFields = array_filter($this->state->get('filter_fields', []));
 
-		foreach ($filterFields as $fieldName => $fieldValue)
-		{
+		foreach ($filterFields as $fieldName => $fieldValue) {
 			$pos           = strrpos($fieldName, '_');
 			$fieldId       = (int) substr($fieldName, $pos + 1);
 			$rowFieldValue = $fieldValue;
 			$fieldValue    = $db->quote('%' . $db->escape($fieldValue, true) . '%', false);
 
 			// This is a core field, so we need to query directly from #__subscribers table
-			if ($fieldId <= 13)
-			{
+			if ($fieldId <= 13) {
 				$coreFieldQuery = $db->getQuery(true)
 					->select('name')
 					->from('#__osmembership_fields')
@@ -287,25 +258,20 @@ class OSMembershipModelSubscriptions extends MPFModelList
 				$db->setQuery($coreFieldQuery);
 				$coreFieldName = $db->loadResult();
 
-				if ($coreFieldName)
-				{
+				if ($coreFieldName) {
 					$query->where($db->quoteName('tbl.' . $coreFieldName) . ' = ' . $db->quote($rowFieldValue));
 				}
-			}
-			else
-			{
+			} else {
 				$query->where(
 					'tbl.id IN (SELECT subscriber_id FROM #__osmembership_field_value WHERE field_id = ' . $fieldId . ' AND field_value LIKE ' . $fieldValue . ')'
 				);
 			}
 		}
 
-		if ($this->state->filter_subscription_duration)
-		{
+		if ($this->state->filter_subscription_duration) {
 			[$fromDate, $toDate] = $this->getDateDuration($this->state->filter_subscription_duration);
 
-			if ($fromDate && $toDate)
-			{
+			if ($fromDate && $toDate) {
 				$query->where('tbl.created_date >= ' . $db->quote($fromDate))
 					->where('tbl.created_date <=' . $db->quote($toDate));
 			}
@@ -333,15 +299,12 @@ class OSMembershipModelSubscriptions extends MPFModelList
 		$db->setQuery($query);
 
 		// We only convert state name to state code if the field type is state
-		if ($db->loadResult() !== 'State')
-		{
+		if ($db->loadResult() !== 'State') {
 			return;
 		}
 
-		foreach ($rows as $row)
-		{
-			if (!$row->state)
-			{
+		foreach ($rows as $row) {
+			if (!$row->state) {
 				continue;
 			}
 
@@ -372,15 +335,13 @@ class OSMembershipModelSubscriptions extends MPFModelList
 	{
 		$fieldsData = [];
 		$rows       = $this->data;
-		if (count($rows) && count($fields))
-		{
+		if (count($rows) && count($fields)) {
 			$db    = $this->getDbo();
 			$query = $db->getQuery(true);
 
 			$subscriptionIds = [];
 
-			foreach ($rows as $row)
-			{
+			foreach ($rows as $row) {
 				$subscriptionIds[] = $row->id;
 			}
 
@@ -391,12 +352,10 @@ class OSMembershipModelSubscriptions extends MPFModelList
 			$db->setQuery($query);
 			$rowFieldValues = $db->loadObjectList();
 
-			foreach ($rowFieldValues as $rowFieldValue)
-			{
+			foreach ($rowFieldValues as $rowFieldValue) {
 				$fieldValue = $rowFieldValue->field_value;
 
-				if (is_string($fieldValue) && is_array(json_decode($fieldValue)))
-				{
+				if (is_string($fieldValue) && is_array(json_decode($fieldValue))) {
 					$fieldValue = implode(', ', json_decode($fieldValue));
 				}
 
@@ -707,10 +666,8 @@ class OSMembershipModelSubscriptions extends MPFModelList
 			'count'  => [],
 		];
 
-		for ($i = 0; $i < 13; $i++)
-		{
-			if ($i > 0)
-			{
+		for ($i = 0; $i < 13; $i++) {
+			if ($i > 0) {
 				$today->modify('-1 month');
 			}
 
@@ -733,8 +690,7 @@ class OSMembershipModelSubscriptions extends MPFModelList
 				->where('created_date >= ' . $db->quote($startMonth->toSql()))
 				->where('created_date <= ' . $db->quote($endMonth->toSql()));
 
-			if ($planId > 0)
-			{
+			if ($planId > 0) {
 				$query->where('plan_id = ' . $planId);
 			}
 
@@ -777,12 +733,9 @@ class OSMembershipModelSubscriptions extends MPFModelList
 		$dateFormat = str_replace('%', '', $config->get('date_field_format', '%Y-%m-%d'));
 
 		// From frontend, we only allow choosing Hours and Minutes
-		if (Factory::getApplication()->isClient('site'))
-		{
+		if (Factory::getApplication()->isClient('site')) {
 			$dateTimeFormat = $dateFormat . ' H:i';
-		}
-		else
-		{
+		} else {
 			$dateTimeFormat = $dateFormat . ' H:i:s';
 		}
 
@@ -791,36 +744,26 @@ class OSMembershipModelSubscriptions extends MPFModelList
 		$toDate   = Factory::getDate('now', Factory::getApplication()->get('offset'));
 
 
-		if ($this->state->filter_from_date)
-		{
-			try
-			{
+		if ($this->state->filter_from_date) {
+			try {
 				$date = DateTime::createFromFormat($dateTimeFormat, $this->state->filter_from_date);
 
-				if ($date !== false)
-				{
+				if ($date !== false) {
 					$fromDate = Factory::getDate($date->format('Y-m-d H:i:s'), Factory::getApplication()->get('offset'));
 				}
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				// Do-nothing
 			}
 		}
 
-		if ($this->state->filter_to_date)
-		{
-			try
-			{
+		if ($this->state->filter_to_date) {
+			try {
 				$date = DateTime::createFromFormat($dateTimeFormat, $this->state->filter_to_date);
 
-				if ($date !== false)
-				{
+				if ($date !== false) {
 					$toDate = Factory::getDate($date->format('Y-m-d H:i:s'), Factory::getApplication()->get('offset'));
 				}
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				// Do-nothing
 			}
 		}
@@ -841,8 +784,7 @@ class OSMembershipModelSubscriptions extends MPFModelList
 
 		$i = 0;
 
-		while ($fromDate < $toDate)
-		{
+		while ($fromDate < $toDate) {
 			$startDay = clone $fromDate;
 			$startDay->setTime(0, 0, 0);
 			$endDay = clone $fromDate;
@@ -856,8 +798,7 @@ class OSMembershipModelSubscriptions extends MPFModelList
 				->where('created_date >= ' . $db->quote($startDay->toSql()))
 				->where('created_date <= ' . $db->quote($endDay->toSql()));
 
-			if ($planId > 0)
-			{
+			if ($planId > 0) {
 				$query->where('plan_id = ' . $planId);
 			}
 
@@ -876,12 +817,9 @@ class OSMembershipModelSubscriptions extends MPFModelList
 
 			$sales['count'][] = $db->loadResult();
 
-			if ($i % 7 === 0)
-			{
+			if ($i % 7 === 0) {
 				$sales['labels'][] = $fromDate->format('d-M-y', true);
-			}
-			else
-			{
+			} else {
 				$sales['labels'][] = '';
 			}
 

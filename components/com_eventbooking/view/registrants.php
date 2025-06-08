@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -204,43 +204,18 @@ trait EventbookingViewRegistrants
 			}
 		}
 
-		$query->clear()
-			->select('DISTINCT published')
-			->from('#__eb_registrants')
-			->where('(published = 1 OR payment_method LIKE "os_offline%")');
-		$db->setQuery($query);
-		$registrantStatus = $db->loadColumn();
-
 		$options   = [];
 		$options[] = HTMLHelper::_('select.option', -1, Text::_('EB_REGISTRATION_STATUS'));
-
-		if (in_array(0, $registrantStatus))
-		{
-			$options[] = HTMLHelper::_('select.option', 0, Text::_('EB_PENDING'));
-		}
-
-		if (in_array(1, $registrantStatus))
-		{
-			$options[] = HTMLHelper::_('select.option', 1, Text::_('EB_PAID'));
-		}
+		$options[] = HTMLHelper::_('select.option', 0, Text::_('EB_PENDING'));
+		$options[] = HTMLHelper::_('select.option', 1, Text::_('EB_PAID'));
 
 		if ($config->activate_waitinglist_feature)
 		{
-			if (in_array(3, $registrantStatus))
-			{
-				$options[] = HTMLHelper::_('select.option', 3, Text::_('EB_WAITING_LIST'));
-			}
-
-			if (in_array(4, $registrantStatus))
-			{
-				$options[] = HTMLHelper::_('select.option', 4, Text::_('EB_WAITING_LIST_CANCELLED'));
-			}
+			$options[] = HTMLHelper::_('select.option', 3, Text::_('EB_WAITING_LIST'));
+			$options[] = HTMLHelper::_('select.option', 4, Text::_('EB_WAITING_LIST_CANCELLED'));
 		}
 
-		if (in_array(2, $registrantStatus))
-		{
-			$options[] = HTMLHelper::_('select.option', 2, Text::_('EB_CANCELLED'));
-		}
+		$options[] = HTMLHelper::_('select.option', 2, Text::_('EB_CANCELLED'));
 
 		$this->lists['filter_published'] = HTMLHelper::_(
 			'select.genericlist',
@@ -469,24 +444,11 @@ trait EventbookingViewRegistrants
 	{
 		if ($field->fieldtype === 'File')
 		{
-			if (EventbookingHelper::isImageFilename($fieldValue))
-			{
-				$fieldValue = '<a href="' . Route::_(
-						'index.php?option=com_eventbooking&task=controller.download_file&file_name=' . $fieldValue
-					) . '"><img src="' . Route::_(
-						'index.php?option=com_eventbooking&task=controller.download_file&inline=1&file_name=' . $fieldValue
-					) . '" class="eb-uploaded-image-thumb" alt="' . $fieldValue . '" /></a>';
-			}
-			else
-			{
-				$fieldValue = '<a href="' . Route::_(
-						'index.php?option=com_eventbooking&task=controller.download_file&file_name=' . $fieldValue
-					) . '">' . $fieldValue . '</a>';
-			}
+			$fieldValue = '<a href="' . Route::_('index.php?option=com_eventbooking&task=controller.download_file&file_name=' . $fieldValue) . '">' . $fieldValue . '</a>';
 		}
 		elseif ($field->fieldtype === 'SQL' && isset($this->sqlFieldsData[$field->id][$fieldValue]))
 		{
-			$fieldValue = $this->sqlFieldsData[$field->id][$fieldValue];
+			$fieldValue =  $this->sqlFieldsData[$field->id][$fieldValue];
 		}
 
 		return $fieldValue;

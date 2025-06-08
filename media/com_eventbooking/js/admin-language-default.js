@@ -38,10 +38,10 @@
         const table = document.getElementById('lang_table');
         const row = table.insertRow(1);
         const cell0 = row.insertCell(0);
-        cell0.innerHTML = '<input type="text" name="extra_keys[]" class="form-control eb-new-key" size="50" />';
+        cell0.innerHTML = '<input type="text" name="extra_keys[]" class="eb-new-key" size="50" />';
         const cell1 = row.insertCell(1);
         const cell2 = row.insertCell(2);
-        cell2.innerHTML = '<input type="text" name="extra_values[]" class="form-control eb-new-value" size="100" />';
+        cell2.innerHTML = '<input type="text" name="extra_values[]" class="eb-new-value" size="100" />';
     }
 
     function searchTable() {

@@ -1,9 +1,10 @@
 <?php
+
 /**
  * @package            Joomla
  * @subpackage         Event Booking
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2010 - 2025 Ossolution Team
+ * @copyright          Copyright (C) 2010 - 2024 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -45,8 +46,7 @@ class EventbookingViewFieldsHtml extends RADViewList
 
 		$filters = [];
 
-		if ($config->hide_disable_registration_events)
-		{
+		if ($config->hide_disable_registration_events) {
 			$filters[] = 'registration_type != 3';
 		}
 
@@ -58,10 +58,8 @@ class EventbookingViewFieldsHtml extends RADViewList
 		$options   = [];
 		$options[] = HTMLHelper::_('select.option', 0, Text::_('EB_ALL_EVENTS'), 'id', 'title');
 
-		if ($config->show_event_date)
-		{
-			foreach ($rows as $row)
-			{
+		if ($config->show_event_date) {
+			foreach ($rows as $row) {
 				$options[] = HTMLHelper::_(
 					'select.option',
 					$row->id,
@@ -70,9 +68,7 @@ class EventbookingViewFieldsHtml extends RADViewList
 					'title'
 				);
 			}
-		}
-		else
-		{
+		} else {
 			$options = array_merge($options, $rows);
 		}
 
@@ -153,8 +149,7 @@ class EventbookingViewFieldsHtml extends RADViewList
 		$options   = [];
 		$options[] = HTMLHelper::_('select.option', '', Text::_('EB_FIELD_TYPE'));
 
-		foreach ($fieldTypes as $fieldType)
-		{
+		foreach ($fieldTypes as $fieldType) {
 			$options[] = HTMLHelper::_('select.option', $fieldType, $fieldType);
 		}
 

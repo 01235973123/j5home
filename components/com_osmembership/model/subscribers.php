@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
@@ -26,13 +27,11 @@ class OSMembershipModelSubscribers extends OSMembershipModelSubscriptions
 	{
 		parent::__construct($config);
 
-		if ($this->params->get('default_subscription_status', '') !== '')
-		{
+		if ($this->params->get('default_subscription_status', '') !== '') {
 			$this->state->setDefault('published', $this->params->get('default_subscription_status', ''));
 		}
 
-		if ($this->params->get('list_limit'))
-		{
+		if ($this->params->get('list_limit')) {
 			$this->state->setDefault('limit', (int) $this->params->get('list_limit'));
 		}
 	}
@@ -48,22 +47,20 @@ class OSMembershipModelSubscribers extends OSMembershipModelSubscriptions
 	{
 		$user = Factory::getApplication()->getIdentity();
 
-		if (!$user->authorise('core.admin', 'com_osmembership'))
-		{
+		if (!$user->authorise('core.admin', 'com_osmembership')) {
 			$query->where('tbl.plan_id IN (SELECT id FROM #__osmembership_plans WHERE subscriptions_manage_user_id IN (0, ' . $user->id . '))');
 		}
 
 		$params = $this->params;
 
-		if ($params->get('plan_ids'))
-		{
+		if ($params->get('plan_ids')) {
 			$query->whereIn('tbl.plan_id', ArrayHelper::toInteger($params->get('plan_ids')));
 		}
 
-		if ($params->get('exclude_plan_ids'))
-		{
+		if ($params->get('exclude_plan_ids')) {
 			$query->whereNotIn('tbl.plan_id', ArrayHelper::toInteger($params->get('exclude_plan_ids')));
 		}
+
 
 		return parent::buildQueryWhere($query);
 	}
