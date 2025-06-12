@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package            Joomla
  * @subpackage         Event Booking
@@ -37,8 +38,7 @@ class EventbookingModelRegister extends RADModel
 	{
 		$event = EventbookingHelperDatabase::getEvent($eventId);
 
-		if ($event && $event->event_password == $password)
-		{
+		if ($event && $event->event_password == $password) {
 			return true;
 		}
 
@@ -71,21 +71,17 @@ class EventbookingModelRegister extends RADModel
 		$data['registration_code'] = EventbookingHelperRegistration::getRegistrationCode();
 		$data['created_by']        = $user->id;
 
-		if (!$user->id && $config->user_registration)
-		{
+		if (!$user->id && $config->user_registration) {
 			$userId          = EventbookingHelper::callOverridableHelperMethod('Registration', 'saveRegistration', [$data]);
 			$data['user_id'] = $userId;
 		}
 
 		$row->ticket_qrcode = EventbookingHelperRegistration::getTicketCode();
 
-		if (($event->event_capacity > 0) && ($event->event_capacity <= $event->total_registrants))
-		{
+		if (($event->event_capacity > 0) && ($event->event_capacity <= $event->total_registrants)) {
 			$waitingList        = true;
 			$typeOfRegistration = 2;
-		}
-		else
-		{
+		} else {
 			$waitingList        = false;
 			$typeOfRegistration = 1;
 		}
@@ -100,17 +96,14 @@ class EventbookingModelRegister extends RADModel
 		$form->bind($data);
 		$form->handleFieldsDependOnPaymentMethod($paymentMethod);
 
-		if ($waitingList)
-		{
+		if ($waitingList) {
 			$fees = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculateIndividualRegistrationFees',
 				[$event, $form, $data, $config, ''],
 				'Helper'
 			);
-		}
-		else
-		{
+		} else {
 			$fees = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculateIndividualRegistrationFees',
@@ -121,8 +114,7 @@ class EventbookingModelRegister extends RADModel
 
 		$paymentType = isset($data['payment_type']) ? (int) $data['payment_type'] : 0;
 
-		if ($paymentType == 0)
-		{
+		if ($paymentType == 0) {
 			$fees['deposit_amount'] = 0;
 		}
 
@@ -138,12 +130,9 @@ class EventbookingModelRegister extends RADModel
 		$row->bind($data);
 		$row->id = 0;
 
-		if ($config->show_subscribe_newsletter_checkbox)
-		{
+		if ($config->show_subscribe_newsletter_checkbox) {
 			$row->subscribe_newsletter = empty($data['subscribe_to_newsletter']) ? 0 : 1;
-		}
-		else
-		{
+		} else {
 			$row->subscribe_newsletter = 1;
 		}
 
@@ -153,51 +142,39 @@ class EventbookingModelRegister extends RADModel
 		$row->register_date        = gmdate('Y-m-d H:i:s');
 		$row->number_registrants   = 1;
 
-		if (isset($data['user_id']))
-		{
+		if (isset($data['user_id'])) {
 			$row->user_id = $data['user_id'];
-		}
-		else
-		{
+		} else {
 			$row->user_id = $user->id;
 		}
 
-		if ($row->deposit_amount > 0)
-		{
+		if ($row->deposit_amount > 0) {
 			$row->payment_status = 0;
-		}
-		else
-		{
+		} else {
 			$row->payment_status = 1;
 		}
 
 		$row->user_ip = EventbookingHelper::getUserIp();
 
 		//Save the active language
-		if ($app->getLanguageFilter())
-		{
+		if ($app->getLanguageFilter()) {
 			$row->language = $app->getLanguage()->getTag();
-		}
-		else
-		{
+		} else {
 			$row->language = '*';
 		}
 
 		$couponCode = $data['coupon_code'] ?? null;
 
-		if ($couponCode && $fees['coupon_valid'])
-		{
+		if ($couponCode && $fees['coupon_valid']) {
 			$coupon         = $fees['coupon'];
 			$row->coupon_id = $coupon->id;
 
-			if (!empty($fees['coupon_usage_times']))
-			{
+			if (!empty($fees['coupon_usage_times'])) {
 				$row->coupon_usage_times = $fees['coupon_usage_times'];
 			}
 		}
 
-		if (!empty($fees['bundle_discount_ids']))
-		{
+		if (!empty($fees['bundle_discount_ids'])) {
 			$query->clear()
 				->update('#__eb_discounts')
 				->set('used = used + 1')
@@ -206,8 +183,7 @@ class EventbookingModelRegister extends RADModel
 			$db->execute();
 		}
 
-		if ($waitingList)
-		{
+		if ($waitingList) {
 			$row->published      = 3;
 			$row->payment_method = 'os_offline';
 		}
@@ -222,17 +198,15 @@ class EventbookingModelRegister extends RADModel
 		$form->storeData($row->id, $data);
 
 		// Store registrant tickets
-		if ($event->has_multiple_ticket_types)
-		{
+		if ($event->has_multiple_ticket_types) {
 			$this->storeRegistrantTickets($row, $event, $data);
 		}
 
 		/* Accept privacy consent to avoid Joomla requires users to accept it again */
 		if (PluginHelper::isEnabled(
-				'system',
-				'privacyconsent'
-			) && $row->user_id > 0 && $config->show_privacy_policy_checkbox)
-		{
+			'system',
+			'privacyconsent'
+		) && $row->user_id > 0 && $config->show_privacy_policy_checkbox) {
 			EventbookingHelperRegistration::acceptPrivacyConsent($row);
 		}
 
@@ -247,22 +221,17 @@ class EventbookingModelRegister extends RADModel
 
 		$app->triggerEvent('onAfterStoreRegistrant', $eventObj);
 
-		if ($row->deposit_amount > 0)
-		{
+		if ($row->deposit_amount > 0) {
 			$data['amount'] = $row->deposit_amount;
 		}
 
 		// Store registration_code into session, use for registration complete code
 		$app->getSession()->set('eb_registration_code', $row->registration_code);
 
-		if ($row->amount > 0 && !$waitingList)
-		{
+		if ($row->amount > 0 && !$waitingList) {
 			$this->processRegistrationPayment($row, $event, $data);
-		}
-		else
-		{
-			if (!$waitingList)
-			{
+		} else {
+			if (!$waitingList) {
 				$this->completeNonePaymentRegistration($row, $event);
 
 				return 1;
@@ -298,23 +267,17 @@ class EventbookingModelRegister extends RADModel
 		/* @var EventbookingTableRegistrant $row */
 		$row = $this->getTable('Registrant');
 
-		if (isset($data['number_registrants']) && $data['number_registrants'] > 0)
-		{
+		if (isset($data['number_registrants']) && $data['number_registrants'] > 0) {
 			$numberRegistrants = (int) $data['number_registrants'];
-		}
-		else
-		{
+		} else {
 			$numberRegistrants = (int) $session->get('eb_number_registrants', '');
 		}
 
 		$membersData = $session->get('eb_group_members_data', null);
 
-		if ($membersData)
-		{
+		if ($membersData) {
 			$membersData = unserialize($membersData);
-		}
-		else
-		{
+		} else {
 			$membersData = [];
 		}
 
@@ -323,19 +286,15 @@ class EventbookingModelRegister extends RADModel
 		$data['registration_code']  = EventbookingHelperRegistration::getRegistrationCode();
 		$data['created_by']         = $user->id;
 
-		if (!$user->id && $config->user_registration)
-		{
+		if (!$user->id && $config->user_registration) {
 			$userId          = EventbookingHelper::callOverridableHelperMethod('Registration', 'saveRegistration', [$data]);
 			$data['user_id'] = $userId;
 		}
 
-		if (($event->event_capacity > 0) && ($event->event_capacity <= $event->total_registrants))
-		{
+		if (($event->event_capacity > 0) && ($event->event_capacity <= $event->total_registrants)) {
 			$waitingList        = true;
 			$typeOfRegistration = 2;
-		}
-		else
-		{
+		} else {
 			$typeOfRegistration = 1;
 			$waitingList        = false;
 		}
@@ -351,17 +310,14 @@ class EventbookingModelRegister extends RADModel
 		$paymentMethod = $data['payment_method'] ?? '';
 		$form->handleFieldsDependOnPaymentMethod($paymentMethod);
 
-		if ($waitingList)
-		{
+		if ($waitingList) {
 			$fees = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculateGroupRegistrationFees',
 				[$event, $form, $data, $config, null],
 				'Helper'
 			);
-		}
-		else
-		{
+		} else {
 			$fees = EventbookingHelper::callOverridableHelperMethod(
 				'Registration',
 				'calculateGroupRegistrationFees',
@@ -372,8 +328,7 @@ class EventbookingModelRegister extends RADModel
 
 		$paymentType = (int) @$data['payment_type'];
 
-		if ($paymentType == 0)
-		{
+		if ($paymentType == 0) {
 			$fees['deposit_amount'] = 0;
 		}
 
@@ -388,8 +343,7 @@ class EventbookingModelRegister extends RADModel
 		$data['coupon_discount_amount'] = round($fees['coupon_discount_amount'], 2);
 		$data['tax_rate']               = $fees['tax_rate'];
 
-		if (!isset($data['first_name']))
-		{
+		if (!isset($data['first_name'])) {
 			//Get data from first member
 			$firstMemberForm = new RADForm($memberFormFields);
 			$firstMemberForm->setFieldSuffix(1);
@@ -400,12 +354,9 @@ class EventbookingModelRegister extends RADModel
 
 		$row->bind($data);
 
-		if ($config->show_subscribe_newsletter_checkbox)
-		{
+		if ($config->show_subscribe_newsletter_checkbox) {
 			$row->subscribe_newsletter = empty($data['subscribe_to_newsletter']) ? 0 : 1;
-		}
-		else
-		{
+		} else {
 			$row->subscribe_newsletter = 1;
 		}
 
@@ -415,31 +366,22 @@ class EventbookingModelRegister extends RADModel
 		$row->register_date        = gmdate('Y-m-d H:i:s');
 		$row->is_group_billing     = 1;
 
-		if (isset($data['user_id']))
-		{
+		if (isset($data['user_id'])) {
 			$row->user_id = $data['user_id'];
-		}
-		else
-		{
+		} else {
 			$row->user_id = $user->id;
 		}
 
-		if ($row->deposit_amount > 0)
-		{
+		if ($row->deposit_amount > 0) {
 			$row->payment_status = 0;
-		}
-		else
-		{
+		} else {
 			$row->payment_status = 1;
 		}
 
 		// Save the active language
-		if ($app->getLanguageFilter())
-		{
+		if ($app->getLanguageFilter()) {
 			$row->language = $app->getLanguage()->getTag();
-		}
-		else
-		{
+		} else {
 			$row->language = '*';
 		}
 
@@ -449,19 +391,16 @@ class EventbookingModelRegister extends RADModel
 		// Coupon code
 		$couponCode = $data['coupon_code'] ?? null;
 
-		if ($couponCode && $fees['coupon_valid'])
-		{
+		if ($couponCode && $fees['coupon_valid']) {
 			$coupon         = $fees['coupon'];
 			$row->coupon_id = $coupon->id;
 
-			if (!empty($fees['coupon_usage_times']))
-			{
+			if (!empty($fees['coupon_usage_times'])) {
 				$row->coupon_usage_times = $fees['coupon_usage_times'];
 			}
 		}
 
-		if (!empty($fees['bundle_discount_ids']))
-		{
+		if (!empty($fees['bundle_discount_ids'])) {
 			$query->clear()
 				->update('#__eb_discounts')
 				->set('used = used + 1')
@@ -470,8 +409,7 @@ class EventbookingModelRegister extends RADModel
 			$db->execute();
 		}
 
-		if ($waitingList)
-		{
+		if ($waitingList) {
 			$row->published      = 3;
 			$row->payment_method = 'os_offline';
 		}
@@ -487,27 +425,22 @@ class EventbookingModelRegister extends RADModel
 		$row->store();
 		$form->storeData($row->id, $data);
 
-		if ($event->collect_member_information === '')
-		{
+		if ($event->collect_member_information === '') {
 			$collectMemberInformation = $config->collect_member_information;
-		}
-		else
-		{
+		} else {
 			$collectMemberInformation = $event->collect_member_information;
 		}
 
 		//Store group members data
-		if ($collectMemberInformation)
-		{
+		if ($collectMemberInformation) {
 			$this->storeGroupMembers($row, $fees);
 		}
 
 		/* Accept privacy consent to avoid Joomla requires users to accept it again */
 		if (PluginHelper::isEnabled(
-				'system',
-				'privacyconsent'
-			) && $row->user_id > 0 && $config->show_privacy_policy_checkbox)
-		{
+			'system',
+			'privacyconsent'
+		) && $row->user_id > 0 && $config->show_privacy_policy_checkbox) {
 			EventbookingHelperRegistration::acceptPrivacyConsent($row);
 		}
 
@@ -524,8 +457,7 @@ class EventbookingModelRegister extends RADModel
 		$app->triggerEvent('onAfterStoreRegistrant', $eventObj);
 
 		// Support deposit payment
-		if ($row->deposit_amount > 0)
-		{
+		if ($row->deposit_amount > 0) {
 			$data['amount'] = $row->deposit_amount;
 		}
 
@@ -537,20 +469,15 @@ class EventbookingModelRegister extends RADModel
 		//Store registration code in session, use it for registration complete page
 		$session->set('eb_registration_code', $row->registration_code);
 
-		if ($row->amount > 0 && !$waitingList)
-		{
+		if ($row->amount > 0 && !$waitingList) {
 			$this->processRegistrationPayment($row, $event, $data);
-		}
-		else
-		{
-			if (!$waitingList)
-			{
+		} else {
+			if (!$waitingList) {
 				$this->completeNonePaymentRegistration($row, $event);
 
 				return 1;
 			}
-			if ($row->is_group_billing)
-			{
+			if ($row->is_group_billing) {
 				EventbookingHelperRegistration::updateGroupRegistrationRecord($row->id);
 			}
 
@@ -569,12 +496,9 @@ class EventbookingModelRegister extends RADModel
 	{
 		$method = EventbookingHelperRegistration::loadPaymentMethod($paymentMethod);
 
-		try
-		{
+		try {
 			$method->verifyPayment();
-		}
-		catch (RADPaymentException $e)
-		{
+		} catch (RADPaymentException $e) {
 			$this->handlePaymentError($e);
 		}
 	}
@@ -586,8 +510,7 @@ class EventbookingModelRegister extends RADModel
 	 */
 	public function cancelRegistration($id)
 	{
-		if (!$id)
-		{
+		if (!$id) {
 			return;
 		}
 
@@ -600,13 +523,11 @@ class EventbookingModelRegister extends RADModel
 		$row = $this->getTable('Registrant');
 		$row->load($id);
 
-		if (!$row->id)
-		{
+		if (!$row->id) {
 			return;
 		}
 
-		if (in_array($row->published, [2, 4]))
-		{
+		if (in_array($row->published, [2, 4])) {
 			return;
 		}
 
@@ -622,12 +543,9 @@ class EventbookingModelRegister extends RADModel
 
 		$app->triggerEvent('onRegistrationCancel', $eventObj);
 
-		if ($published == 3)
-		{
+		if ($published == 3) {
 			$row->published = 4;
-		}
-		else
-		{
+		} else {
 			$row->published = 2;
 		}
 
@@ -636,8 +554,7 @@ class EventbookingModelRegister extends RADModel
 		$row->store();
 
 		// Update status of group members record to cancelled as well
-		if ($row->is_group_billing)
-		{
+		if ($row->is_group_billing) {
 			// We will need to set group members records to be cancelled
 			$query->update('#__eb_registrants')
 				->set('published = ' . $row->published)
@@ -645,9 +562,7 @@ class EventbookingModelRegister extends RADModel
 				->where('group_id = ' . (int) $row->id);
 			$db->setQuery($query)
 				->execute();
-		}
-		elseif ($row->group_id > 0)
-		{
+		} elseif ($row->group_id > 0) {
 			$groupId = (int) $row->group_id;
 			$query->update('#__eb_registrants')
 				->set('published = ' . $row->published)
@@ -673,8 +588,7 @@ class EventbookingModelRegister extends RADModel
 
 		EventbookingHelper::callOverridableHelperMethod('Mail', 'sendUserCancelRegistrationEmail', [$row, $config]);
 
-		if (in_array($published, [0, 1]))
-		{
+		if (in_array($published, [0, 1])) {
 			EventbookingHelper::callOverridableHelperMethod(
 				'Mail',
 				'sendWaitingListNotificationEmail',
@@ -698,10 +612,8 @@ class EventbookingModelRegister extends RADModel
 		$query       = $db->getQuery(true);
 		$ticketTypes = EventbookingHelperData::getTicketTypes($event->id, true);
 
-		foreach ($ticketTypes as $ticketType)
-		{
-			if (!empty($data['ticket_type_' . $ticketType->id]))
-			{
+		foreach ($ticketTypes as $ticketType) {
+			if (!empty($data['ticket_type_' . $ticketType->id])) {
 				$quantity = (int) $data['ticket_type_' . $ticketType->id];
 				$query->clear()
 					->insert('#__eb_registrant_tickets')
@@ -714,23 +626,19 @@ class EventbookingModelRegister extends RADModel
 
 		$params = new Registry($event->params);
 
-		if ($params->get('ticket_types_collect_members_information'))
-		{
+		if ($params->get('ticket_types_collect_members_information')) {
 			// Store Members information
 			$numberRegistrants = 0;
 			$count             = 0;
 
-			foreach ($ticketTypes as $ticketType)
-			{
-				if (!empty($data['ticket_type_' . $ticketType->id]))
-				{
+			foreach ($ticketTypes as $ticketType) {
+				if (!empty($data['ticket_type_' . $ticketType->id])) {
 					$quantity          = (int) $data['ticket_type_' . $ticketType->id];
 					$numberRegistrants += $quantity;
 
 					$memberFormFields = EventbookingHelperRegistration::getFormFields($event->id, 2);
 
-					for ($i = 0; $i < $quantity; $i++)
-					{
+					for ($i = 0; $i < $quantity; $i++) {
 						$rowMember                       = $this->getTable('Registrant');
 						$rowMember->group_id             = $row->id;
 						$rowMember->transaction_id       = $row->transaction_id;
@@ -799,8 +707,7 @@ class EventbookingModelRegister extends RADModel
 		$membersLateFee        = $fees['members_late_fee'];
 		$membersAmount         = $fees['members_amount'];
 
-		for ($i = 0; $i < $row->number_registrants; $i++)
-		{
+		for ($i = 0; $i < $row->number_registrants; $i++) {
 			/* @var EventbookingTableRegistrant $rowMember */
 			$rowMember                     = $this->getTable('Registrant');
 			$rowMember->group_id           = $row->id;
@@ -865,8 +772,7 @@ class EventbookingModelRegister extends RADModel
 		$data['item_name'] = $itemName;
 
 		// Validate credit card
-		if (!empty($data['x_card_num']) && empty($data['card_type']))
-		{
+		if (!empty($data['x_card_num']) && empty($data['card_type'])) {
 			$data['card_type'] = EventbookingHelperCreditcard::getCardType($data['x_card_num']);
 		}
 
@@ -879,8 +785,7 @@ class EventbookingModelRegister extends RADModel
 		$db->setQuery($query);
 		$plugin = $db->loadObject();
 
-		if (!$plugin)
-		{
+		if (!$plugin) {
 			throw new RuntimeException(sprintf('Payment Method %s Not Found', $paymentMethod), 404);
 		}
 
@@ -891,12 +796,10 @@ class EventbookingModelRegister extends RADModel
 		// Convert payment amount to USD if the currency is not supported by payment gateway
 		$currency = $event->currency_code ?: $config->currency_code;
 
-		if (method_exists($paymentClass, 'getSupportedCurrencies'))
-		{
+		if (method_exists($paymentClass, 'getSupportedCurrencies')) {
 			$currencies = $paymentClass->getSupportedCurrencies();
 
-			if (!in_array($currency, $currencies))
-			{
+			if (!in_array($currency, $currencies)) {
 				$data['amount'] = EventbookingHelper::callOverridableHelperMethod(
 					'Helper',
 					'convertAmountToUSD',
@@ -916,12 +819,9 @@ class EventbookingModelRegister extends RADModel
 		$row->payment_amount   = $data['amount'];
 		$row->store();
 
-		try
-		{
+		try {
 			$paymentClass->processPayment($row, $data);
-		}
-		catch (RADPaymentException $e)
-		{
+		} catch (RADPaymentException $e) {
 			$this->handlePaymentError($e);
 		}
 	}
@@ -939,21 +839,15 @@ class EventbookingModelRegister extends RADModel
 
 		$row->payment_date = gmdate('Y-m-d H:i:s');
 
-		if ($row->total_amount <= 0)
-		{
+		if ($row->total_amount <= 0) {
 			$published = $event->free_event_registration_status;
-		}
-		else
-		{
+		} else {
 			$published = 1;
 		}
 
-		if ($published == 0)
-		{
+		if ($published == 0) {
 			$row->payment_method = 'os_offline';
-		}
-		else
-		{
+		} else {
 			$row->payment_method = '';
 		}
 
@@ -962,13 +856,11 @@ class EventbookingModelRegister extends RADModel
 		$row->store();
 
 		// Update ticket members information status
-		if ($row->is_group_billing)
-		{
+		if ($row->is_group_billing) {
 			EventbookingHelperRegistration::updateGroupRegistrationRecord($row->id);
 		}
 
-		if ($row->published == 1)
-		{
+		if ($row->published == 1) {
 			$eventObj = new AfterPaymentSuccess(
 				'onAfterPaymentSuccess',
 				['row' => $row]

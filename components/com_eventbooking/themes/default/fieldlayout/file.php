@@ -7,13 +7,30 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
 $isMultiple = $row->multiple_files;
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_eventbooking/assets/js/jquery.min.js');
+
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->registerAndUseScript('com_eventbooking.ajaxupload', 'media/com_eventbooking/assets/js/ajaxupload.min.js');
 ?>
 
 <?php if ($isMultiple): ?>
 	<!-- MULTIPLE FILE UPLOAD MODE -->
 	<input type="file" id="file-upload-<?php echo $name; ?>" multiple class="form-control" />
-	<div id="upload-status-<?php echo $name; ?>" class="mt-2"></div>
+	<div id="upload-status-<?php echo $name; ?>" class="mt-2">
+		<?php
+		if (!empty($value)) {
+			$files = explode(',', $value);
+			foreach ($files as $file) {
+				$file = trim($file);
+				if (file_exists(JPATH_ROOT . '/media/com_eventbooking/files/' . $file)) {
+					$fileUrl = Route::_('index.php?option=com_eventbooking&task=controller.download_file&file_name=' . $file);
+					echo '<div><a href="' . $fileUrl . '" target="_blank"><i class="fa fa-download"></i> ' . htmlspecialchars($file) . '</a></div>';
+				}
+			}
+		}
+		?>
+	</div>
 	<input type="hidden" name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="<?php echo $value; ?>" />
 
 	<script>
@@ -21,7 +38,7 @@ Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/co
 			const input = jQuery('#file-upload-<?php echo $name; ?>');
 			const statusBox = jQuery('#upload-status-<?php echo $name; ?>');
 			const hiddenInput = jQuery('#<?php echo $name; ?>');
-			let uploadedFiles = [];
+			let uploadedFiles = hiddenInput.val() ? hiddenInput.val().split(',') : [];
 
 			input.on('change', function() {
 				const files = this.files;
@@ -50,7 +67,10 @@ Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/co
 							loadingText.remove();
 							if (response.success) {
 								uploadedFiles.push(response.file);
-								statusBox.append('<div><i class="fa fa-check-circle text-success"></i> ' + response.file + '</div>');
+								const link = '<div><i class="fa fa-check-circle text-success"></i> ' +
+									'<a href="' + siteUrl + 'index.php?option=com_eventbooking&task=controller.download_file&file_name=' + response.file + '" target="_blank">' +
+									response.file + '</a></div>';
+								statusBox.append(link);
 								hiddenInput.val(uploadedFiles.join(','));
 							} else {
 								statusBox.append('<div class="text-danger"><i class="fa fa-times-circle"></i> ' + (response.error || 'Upload failed') + '</div>');
@@ -67,16 +87,17 @@ Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/co
 	</script>
 
 <?php else: ?>
-	<!-- SINGLE FILE UPLOAD MODE (default) -->
+	<!-- SINGLE FILE UPLOAD MODE -->
 	<input type="button" value="<?php echo Text::_('EB_SELECT_FILE'); ?>" id="button-file-<?php echo $name; ?>" class="btn btn-primary" />
 	<span class="eb-uploaded-file" id="uploaded-file-<?php echo $name; ?>">
 		<?php if ($value && file_exists(JPATH_ROOT . '/media/com_eventbooking/files/' . $value)) : ?>
-			<a href="<?php echo Route::_('index.php?option=com_eventbooking&task=controller.download_file&file_name=' . $value); ?>">
+			<a href="<?php echo Route::_('index.php?option=com_eventbooking&task=controller.download_file&file_name=' . $value); ?>" target="_blank">
 				<i class="fa fa-download"></i><strong><?php echo $value; ?></strong>
 			</a>
 		<?php endif; ?>
 	</span>
 	<input type="hidden" id="<?php echo $name; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />
+
 	<script>
 		new AjaxUpload('#button-file-<?php echo $name; ?>', {
 			action: siteUrl + 'index.php?option=com_eventbooking&task=upload_file&field_id=<?php echo $row->id; ?>',
@@ -91,8 +112,10 @@ Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/co
 				jQuery('#button-file-<?php echo $name; ?>').attr('disabled', false);
 				jQuery('.error').remove();
 				if (json['success']) {
-					jQuery('#uploaded-file-<?php echo $name; ?>').html(file);
-					jQuery('input[name="<?php echo $name; ?>"]').attr('value', json['file']);
+					jQuery('#uploaded-file-<?php echo $name; ?>').html(
+						'<a href="' + siteUrl + 'index.php?option=com_eventbooking&task=controller.download_file&file_name=' + json.file + '" target="_blank"><i class="fa fa-download"></i><strong>' + json.file + '</strong></a>'
+					);
+					jQuery('input[name="<?php echo $name; ?>"]').val(json.file);
 				}
 				if (json['error']) {
 					jQuery('#button-file-<?php echo $name; ?>').after('<span class="error">' + json['error'] + '</span>');
