@@ -3,7 +3,7 @@
  * @package		   Joomla
  * @subpackage	   Membership Pro
  * @author		   Tuan Pham Ngoc
- * @copyright	   Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright	   Copyright (C) 2012 - 2025 Ossolution Team
  * @license		   GNU/GPL, see LICENSE.php
  */
 
@@ -23,7 +23,10 @@ if (Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_osmem
 	ToolbarHelper::preferences('com_osmembership');
 }
 
-HTMLHelper::_('behavior.core');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core');
 ?>
 <form action="<?php echo $this->getFormAction(); ?>" method="post" name="adminForm" id="adminForm" autocomplete="off" enctype="multipart/form-data" class="form form-horizontal">
 	<?php

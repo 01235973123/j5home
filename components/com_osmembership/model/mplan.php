@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -13,13 +13,16 @@ use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 
 JLoader::register('OSMembershipModelPlan', JPATH_ADMINISTRATOR . '/components/com_osmembership/model/plan.php');
-JLoader::register('OSMembershipModelOverridePlan', JPATH_ADMINISTRATOR . '/components/com_osmembership/model/override/plan.php');
+JLoader::register(
+	'OSMembershipModelOverridePlan',
+	JPATH_ADMINISTRATOR . '/components/com_osmembership/model/override/plan.php'
+);
 
 class OSMembershipModelMplan extends OSMembershipModelPlan
 {
 	public function __construct($config)
 	{
-		$config['name']  = 'plan';
+		$config['name'] = 'plan';
 		$config['table'] = '#__osmembership_plans';
 
 		parent::__construct($config);

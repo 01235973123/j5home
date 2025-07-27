@@ -1,8 +1,5 @@
 <?php
-use Joomla\CMS\Object\CMSObject;
-use Joomla\CMS\Factory;
-use Joomla\Utilities\ArrayHelper;
-use Joomla\CMS\Language\Text;
+
 /*------------------------------------------------------------------------
 # helper.php - mod_ospropertyrandom
 # ------------------------------------------------------------------------
@@ -14,7 +11,11 @@ use Joomla\CMS\Language\Text;
 */
 /** ensure this file is being included by a parent file */
 defined('_JEXEC') or die('Restricted access');
-jimport( 'joomla.application.component.model' );
+
+use Joomla\CMS\Object\CMSObject;
+use Joomla\CMS\Factory;
+use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Language\Text;
 
 class modOSpropertyramdomHelper extends CMSObject
 {

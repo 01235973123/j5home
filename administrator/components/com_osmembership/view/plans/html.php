@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -49,7 +49,7 @@ class OSMembershipViewPlansHtml extends MPFViewList
 			$this->lists['filter_category_id'] = OSMembershipHelperHtml::buildCategoryDropdown(
 				$this->state->filter_category_id,
 				'filter_category_id',
-				'class="form-select input-xlarge" onchange="submit();"'
+				'class="form-select" onchange="submit();"'
 			);
 			$this->lists['filter_category_id'] = OSMembershipHelperHtml::getChoicesJsSelect(
 				$this->lists['filter_category_id'],

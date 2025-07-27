@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @package     MPF
  * @subpackage  Model
@@ -79,6 +78,25 @@ class MPFModelList extends MPFModel
 	protected $clearJoin = true;
 
 	/**
+	 * List of states which are excluded from isFiltersActive check
+	 *
+	 * @var string[]
+	 */
+	protected $excludeStatesFromActiveFiltersCheck = [
+		'filter_order',
+		'filter_order_Dir',
+		'filter_search',
+		'filter_full_ordering',
+	];
+
+	/**
+	 * List of none standard filters which will be included in isFiltersActive check
+	 *
+	 * @var array
+	 */
+	protected $includeStatesFromActiveFiltersCheck = [];
+
+	/**
 	 * Instantiate the model.
 	 *
 	 * @param   array  $config  configuration data for the model
@@ -91,21 +109,28 @@ class MPFModelList extends MPFModel
 
 		$fields = array_keys($this->db->getTableColumns($this->table));
 
-		if (in_array('ordering', $fields)) {
+		if (in_array('ordering', $fields))
+		{
 			$defaultOrdering = 'tbl.ordering';
-		} else {
+		}
+		else
+		{
 			$defaultOrdering = 'tbl.id';
 		}
 
-		if (in_array('published', $fields)) {
+		if (in_array('published', $fields))
+		{
 			$this->stateField = 'tbl.published';
-		} else {
+		}
+		else
+		{
 			$this->stateField = 'tbl.state';
 		}
 
 		$listLimit = Factory::getApplication()->get('list_limit');
 
-		if ($listLimit > 100) {
+		if ($listLimit > 100)
+		{
 			$listLimit = 100;
 		}
 
@@ -119,24 +144,31 @@ class MPFModelList extends MPFModel
 			->insert('filter_language', 'string')
 			->insert('filter_full_ordering', 'string');
 
-		if (isset($config['search_fields'])) {
+		if (isset($config['search_fields']))
+		{
 			$this->searchFields = (array) $config['search_fields'];
-		} else {
+		}
+		else
+		{
 			// Build the search field array automatically, basically, we should search based on name, title, description if these fields are available
-			if (in_array('name', $fields)) {
+			if (in_array('name', $fields))
+			{
 				$this->searchFields[] = 'tbl.name';
 			}
 
-			if (in_array('title', $fields)) {
+			if (in_array('title', $fields))
+			{
 				$this->searchFields[] = 'tbl.title';
 			}
 
-			if (in_array('alias', $fields)) {
+			if (in_array('alias', $fields))
+			{
 				$this->searchFields[] = 'tbl.alias';
 			}
 		}
 
-		if (isset($config['clear_join'])) {
+		if (isset($config['clear_join']))
+		{
 			$this->clearJoin = $config['clear_join'];
 		}
 	}
@@ -150,7 +182,8 @@ class MPFModelList extends MPFModel
 	 */
 	public function getData($returnIterator = false)
 	{
-		if (empty($this->data)) {
+		if (empty($this->data))
+		{
 			$db = $this->getDbo();
 
 			$query = $this->buildListQuery();
@@ -160,12 +193,14 @@ class MPFModelList extends MPFModel
 			// Adjust the limitStart state property
 			$limit = $this->state->limit;
 
-			if ($limit) {
+			if ($limit)
+			{
 				$offset = $this->state->limitstart;
 				$total  = $this->getTotal();
 
 				//If the offset is higher than the total recalculate the offset
-				if ($offset !== 0 && $total !== 0 && $offset >= $total) {
+				if ($offset !== 0 && $total !== 0 && $offset >= $total)
+				{
 					$offset                  = floor(($total - 1) / $limit) * $limit;
 					$this->state->limitstart = $offset;
 				}
@@ -173,9 +208,12 @@ class MPFModelList extends MPFModel
 
 			$db->setQuery($query, $this->state->limitstart, $this->state->limit);
 
-			if ($returnIterator) {
+			if ($returnIterator)
+			{
 				$this->data = $db->getIterator();
-			} else {
+			}
+			else
+			{
 				$this->data = $db->loadObjectList();
 			}
 
@@ -195,7 +233,8 @@ class MPFModelList extends MPFModel
 	 */
 	public function getTotal()
 	{
-		if (empty($this->total)) {
+		if (empty($this->total))
+		{
 			$db    = $this->getDbo();
 			$query = $this->buildTotalQuery();
 			$this->beforeQueryTotal($query);
@@ -214,7 +253,8 @@ class MPFModelList extends MPFModel
 	public function getPagination()
 	{
 		// Lets load the content if it doesn't already exist
-		if (empty($this->pagination)) {
+		if (empty($this->pagination))
+		{
 			$this->pagination = new Pagination($this->getTotal(), $this->state->limitstart, $this->state->limit);
 		}
 
@@ -229,6 +269,41 @@ class MPFModelList extends MPFModel
 	public function getQuery()
 	{
 		return $this->query;
+	}
+
+	/**
+	 * Method to check if filter is active
+	 *
+	 * @return bool
+	 */
+	public function isFiltersActive(): bool
+	{
+		$state = $this->getState();
+
+		foreach ($state->getProperties() as $name)
+		{
+			/**
+			 * Ignore some core states which should not be included in the check
+			 */
+			if (in_array($name, $this->excludeStatesFromActiveFiltersCheck))
+			{
+				continue;
+			}
+
+			// Only check if state name stars with filter_ or if the state is specified in includeStatesFromActiveFiltersCheck property
+			if (!str_contains($name, 'filter_') && !in_array($name, $this->includeStatesFromActiveFiltersCheck))
+			{
+				continue;
+			}
+
+			// If a none default option is selected, the state is active
+			if ($state->get($name) != $state->getDefault($name))
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	/**
@@ -268,7 +343,8 @@ class MPFModelList extends MPFModel
 			->select('COUNT(*)');
 
 		// Clear join clause if needed
-		if ($this->clearJoin) {
+		if ($this->clearJoin)
+		{
 			$query->clear('join');
 		}
 
@@ -328,27 +404,34 @@ class MPFModelList extends MPFModel
 		$db    = $this->getDbo();
 		$state = $this->state;
 
-		if ($state->filter_state == 'P') {
+		if ($state->filter_state == 'P')
+		{
 			$query->where($this->stateField . ' = 1');
-		} elseif ($state->filter_state == 'U') {
+		}
+		elseif ($state->filter_state == 'U')
+		{
 			$query->where($this->stateField . ' = 0');
 		}
 
-		if ($state->filter_access) {
+		if ($state->filter_access)
+		{
 			$query->where('tbl.access = ' . (int) $state->filter_access);
 
-			if (!$user->authorise('core.admin')) {
+			if (!$user->authorise('core.admin'))
+			{
 				$query->whereIn('tbl.access', $user->getAuthorisedViewLevels());
 			}
 		}
 
 		$state->filter_search = trim($state->filter_search);
 
-		if ($state->filter_search) {
+		if ($state->filter_search)
+		{
 			$this->applySearchFilter($query);
 		}
 
-		if ($state->filter_language && $state->filter_language != '*') {
+		if ($state->filter_language && $state->filter_language != '*')
+		{
 			$query->whereIn('tbl.language', [$state->filter_language, '*'], ParameterType::STRING);
 		}
 
@@ -368,15 +451,20 @@ class MPFModelList extends MPFModel
 		$state = $this->state;
 
 		//Remove blank space from searching
-		if (stripos($state->filter_search, 'id:') === 0) {
+		if (stripos($state->filter_search, 'id:') === 0)
+		{
 			$query->where('tbl.id = ' . (int) substr($state->filter_search, 3));
-		} else {
+		}
+		else
+		{
 			$search = $db->quote('%' . $db->escape($state->filter_search, true) . '%', false);
 
-			if (is_array($this->searchFields)) {
+			if (is_array($this->searchFields))
+			{
 				$whereOr = [];
 
-				foreach ($this->searchFields as $searchField) {
+				foreach ($this->searchFields as $searchField)
+				{
 					$whereOr[] = " LOWER($searchField) LIKE " . $search;
 				}
 
@@ -420,7 +508,8 @@ class MPFModelList extends MPFModel
 	{
 		$sort      = $this->state->filter_order;
 		$direction = strtoupper($this->state->filter_order_Dir);
-		if ($sort) {
+		if ($sort)
+		{
 			$query->order($sort . ' ' . $direction);
 		}
 
@@ -432,14 +521,18 @@ class MPFModelList extends MPFModel
 	 *
 	 * @param   \Joomla\Database\DatabaseQuery  $query
 	 */
-	protected function beforeQueryData(DatabaseQuery $query) {}
+	protected function beforeQueryData(DatabaseQuery $query)
+	{
+	}
 
 	/**
 	 * This method give child class a chance to adjust the query object before it is run to return total records
 	 *
 	 * @param   \Joomla\Database\DatabaseQuery  $query
 	 */
-	protected function beforeQueryTotal(DatabaseQuery $query) {}
+	protected function beforeQueryTotal(DatabaseQuery $query)
+	{
+	}
 
 	/**
 	 * This method give child class to adjust the return data in getData method without having to override the
@@ -447,5 +540,7 @@ class MPFModelList extends MPFModel
 	 *
 	 * @param   array  $rows
 	 */
-	protected function beforeReturnData($rows) {}
+	protected function beforeReturnData($rows)
+	{
+	}
 }

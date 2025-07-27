@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
@@ -11,13 +11,14 @@ defined('_JEXEC') or die ;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
-Factory::getApplication()->getDocument()->getWebAssetManager()
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
 	->useScript('table.columns')
-	->useScript('multiselect');
-
-HTMLHelper::_('behavior.core');
+	->useScript('multiselect')
+	->registerAndUseScript('com_osmembership.admin-plugins-default', 'media/com_osmembership/js/admin-plugins-default.min.js');
 
 $this->loadDraggableLib('pluginList');
 $this->loadSearchTools();
@@ -25,7 +26,6 @@ $this->loadSearchTools();
 $saveOrder       = $this->state->filter_order === 'tbl.ordering';
 $saveOrderingUrl = 'index.php?option=com_osmembership&task=plugin.save_order_ajax';
 
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/js/admin-plugins-default.min.js');
 Text::script('OSM_CHOOSE_PLUGIN', true);
 ?>
 <form action="<?php echo $this->getFormAction(); ?>" method="post" name="adminForm" enctype="multipart/form-data" id="adminForm">

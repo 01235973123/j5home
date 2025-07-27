@@ -1,22 +1,22 @@
 <?php
-
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
+
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\Adapter\ComponentAdapter;
 use Joomla\CMS\Language\LanguageHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\Database\ParameterType;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use Joomla\Registry\Registry;
 
 class com_osmembershipInstallerScript
@@ -78,7 +78,10 @@ class com_osmembershipInstallerScript
 	{
 		if (!version_compare(JVERSION, self::MIN_JOOMLA_VERSION, 'ge'))
 		{
-			$this->app->enqueueMessage('Cannot install Membership Pro in a Joomla release prior to ' . self::MIN_JOOMLA_VERSION, 'error');
+			$this->app->enqueueMessage(
+				'Cannot install Membership Pro in a Joomla release prior to ' . self::MIN_JOOMLA_VERSION,
+				'error'
+			);
 
 			return false;
 		}
@@ -110,7 +113,8 @@ class com_osmembershipInstallerScript
 		}
 
 		// Allow custom translation for backend language file from 3.0.0
-		if (version_compare($this->installedVersion, '3.0.0', '>=') && !in_array('admin.en-GB.com_osmembership.ini', self::$languageFiles))
+		if (version_compare($this->installedVersion, '3.0.0', '>=')
+			&& !in_array('admin.en-GB.com_osmembership.ini', self::$languageFiles))
 		{
 			self::$languageFiles[] = 'admin.en-GB.com_osmembership.ini';
 		}
@@ -128,7 +132,7 @@ class com_osmembershipInstallerScript
 				$languageFolder = JPATH_ROOT . '/language/en-GB/';
 			}
 
-			if (File::exists($languageFolder . $languageFile))
+			if (is_file($languageFolder . $languageFile))
 			{
 				File::copy($languageFolder . $languageFile, $languageFolder . 'bak.' . $languageFile);
 			}
@@ -208,6 +212,12 @@ class com_osmembershipInstallerScript
 			{
 				$this->correctMessageItemsType();
 			}
+
+			// Convert tables to utf8mb4
+			if (version_compare($this->installedVersion, '4.2.2', '<='))
+			{
+				$this->convertDBTablesToUtf8mb4();
+			}
 		}
 
 		// Setup default data
@@ -272,7 +282,7 @@ class com_osmembershipInstallerScript
 
 		foreach ($deleteFolders as $folder)
 		{
-			if (Folder::exists($folder))
+			if (is_dir($folder))
 			{
 				Folder::delete($folder);
 			}
@@ -280,7 +290,7 @@ class com_osmembershipInstallerScript
 
 		foreach ($deleteFiles as $file)
 		{
-			if (File::exists($file))
+			if (is_file($file))
 			{
 				File::delete($file);
 			}
@@ -295,7 +305,8 @@ class com_osmembershipInstallerScript
 	private function restoreLanguageFiles()
 	{
 		// Allow custom translation for backend language file from 3.0.0
-		if (version_compare($this->installedVersion, '3.0.0', '>=') && !in_array('admin.en-GB.com_osmembership.ini', self::$languageFiles))
+		if (version_compare($this->installedVersion, '3.0.0', '>=')
+			&& !in_array('admin.en-GB.com_osmembership.ini', self::$languageFiles))
 		{
 			self::$languageFiles[] = 'admin.en-GB.com_osmembership.ini';
 		}
@@ -334,7 +345,7 @@ class com_osmembershipInstallerScript
 			$backupFile  = $languageFolder . 'bak.' . $languageFile;
 			$currentFile = $languageFolder . $languageFile;
 
-			if (File::exists($currentFile) && File::exists($backupFile))
+			if (is_file($currentFile) && is_file($backupFile))
 			{
 				$registry->loadFile($currentFile, 'INI');
 				$currentItems = $registry->toArray();
@@ -359,7 +370,7 @@ class com_osmembershipInstallerScript
 			}
 		}
 
-		if (File::exists(JPATH_ROOT . '/components/com_osmembership/assets/css/custom.css'))
+		if (is_file(JPATH_ROOT . '/components/com_osmembership/assets/css/custom.css'))
 		{
 			File::move(
 				JPATH_ROOT . '/components/com_osmembership/com_osmembership/assets/css/custom.css',
@@ -367,7 +378,7 @@ class com_osmembershipInstallerScript
 			);
 		}
 
-		if (Folder::exists(JPATH_ROOT . '/components/com_osmembership/assets'))
+		if (is_dir(JPATH_ROOT . '/components/com_osmembership/assets'))
 		{
 			Folder::delete(JPATH_ROOT . '/components/com_osmembership/assets');
 		}
@@ -392,7 +403,7 @@ class com_osmembershipInstallerScript
 		$distFile   = JPATH_ROOT . '/components/com_osmembership/layouts/joomla/form/field/user.dist.php';
 		$layoutFile = JPATH_ROOT . '/components/com_osmembership/layouts/joomla/form/field/user.php';
 
-		if (File::exists($layoutFile))
+		if (is_file($layoutFile))
 		{
 			File::delete($layoutFile);
 		}
@@ -699,21 +710,21 @@ class com_osmembershipInstallerScript
 
 		if (!in_array('min', $fields))
 		{
-			$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `min` INT NOT NULL DEFAULT 0";
+			$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `min` DECIMAL(10,2) DEFAULT NULL";
 			$db->setQuery($sql)
 				->execute();
 		}
 
 		if (!in_array('max', $fields))
 		{
-			$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `max` INT NOT NULL DEFAULT 0";
+			$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `max` DECIMAL(10,2) DEFAULT NULL";
 			$db->setQuery($sql)
 				->execute();
 		}
 
 		if (!in_array('step', $fields))
 		{
-			$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `step` INT NOT NULL DEFAULT 0";
+			$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `step` DECIMAL(10,2) DEFAULT 0";
 			$db->setQuery($sql)
 				->execute();
 		}
@@ -812,6 +823,28 @@ class com_osmembershipInstallerScript
 		{
 			$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `populate_from_group_admin` TINYINT NOT NULL DEFAULT  0;";
 			$db->setQuery($sql)
+				->execute();
+		}
+
+		if (version_compare($installedVersion, '4.1.2', '<='))
+		{
+			$sql = "ALTER TABLE  `#__osmembership_fields` MODIFY  `min` decimal(10,2) DEFAULT NULL;";
+			$db->setQuery($sql)
+				->execute();
+			$sql = "ALTER TABLE  `#__osmembership_fields` MODIFY  `max` decimal(10,2) DEFAULT NULL;";
+			$db->setQuery($sql)
+				->execute();
+			$sql = "ALTER TABLE  `#__osmembership_fields` MODIFY  `step` decimal(10,2) DEFAULT 0.00;";
+			$db->setQuery($sql)
+				->execute();
+
+			$query = $db->getQuery(true)
+				->update('#__osmembership_fields')
+				->set($db->quoteName('min') . ' = NULL')
+				->set($db->quoteName('max') . ' = NULL')
+				->where($db->quoteName('min') . ' = 0')
+				->where($db->quoteName('max') . ' = 0');
+			$db->setQuery($query)
 				->execute();
 		}
 
@@ -1223,6 +1256,13 @@ class com_osmembershipInstallerScript
 		$sql = "ALTER TABLE  `#__osmembership_subscribers` CHANGE `email` `email` VARCHAR( 255 ) NULL;";
 		$db->setQuery($sql)
 			->execute();
+
+		if (!in_array('eb_coupon_id', $fields))
+		{
+			$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `eb_coupon_id` INT NOT NULL DEFAULT  0;";
+			$db->setQuery($sql)
+				->execute();
+		}
 
 		if (!in_array('offline_payment_reminder_email_sent', $fields))
 		{
@@ -1748,6 +1788,18 @@ class com_osmembershipInstallerScript
 			self::insertMessageItems($customItems);
 		}
 
+		// Make the two message items translatable
+		$query->clear()
+			->update('#__osmembership_mitems')
+			->set('translatable = 1')
+			->whereIn(
+				'name',
+				['offline_payment_reminder_email_subject', 'offline_payment_reminder_email_body'],
+				ParameterType::STRING
+			);
+		$db->setQuery($query)
+			->execute();
+
 		$query->clear()
 			->select('COUNT(*)')
 			->from('#__osmembership_taxes');
@@ -1917,12 +1969,37 @@ class com_osmembershipInstallerScript
 		}
 	}
 
+	private function convertDBTablesToUtf8mb4()
+	{
+		/* @var \Joomla\Database\DatabaseDriver $db */
+		$db = Factory::getContainer()->get('db');
+
+		$tablesToConvert = [
+			'#__osmembership_categories',
+			'#__osmembership_plans',
+			'#__osmembership_messages',
+			'#__osmembership_fields',
+			'#__osmembership_subscribers',
+			'#__osmembership_field_value',
+			'#__osmembership_mmtemplates',
+			'#__osmembership_emails',
+		];
+
+		foreach ($tablesToConvert as $table)
+		{
+			// Convert table
+			$sql = "ALTER TABLE $table CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+			$db->setQuery($sql)
+				->execute();
+		}
+	}
+
 	/**
 	 * Insert message items
 	 *
 	 * @param   array  $items
 	 */
-	private static function insertMessageItems($items)
+	public static function insertMessageItems($items)
 	{
 		if (!count($items))
 		{
@@ -1960,7 +2037,9 @@ class com_osmembershipInstallerScript
 			$translatable = $item['translatable'] ?? 0;
 			$featured     = $item['featured'] ?? 0;
 
-			$query->values(implode(',', $db->quote([$name, $title, $titleEn, $type, $group, $translatable, $featured])));
+			$query->values(
+				implode(',', $db->quote([$name, $title, $titleEn, $type, $group, $translatable, $featured]))
+			);
 		}
 
 		if ($count)
@@ -2031,7 +2110,7 @@ class com_osmembershipInstallerScript
 
 		foreach ($folders as $hiddenFolder)
 		{
-			if (Folder::exists(JPATH_ROOT . '/' . $hiddenFolder))
+			if (is_dir(JPATH_ROOT . '/' . $hiddenFolder))
 			{
 				Folder::delete(JPATH_ROOT . '/' . $hiddenFolder);
 			}

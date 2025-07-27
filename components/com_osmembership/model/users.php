@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -72,7 +72,9 @@ class OSMembershipModelUsers extends MPFModelList
 
 		if ($this->state->filter_group_id)
 		{
-			$query->where('tbl.id IN (SELECT user_id FROM #__user_usergroup_map WHERE group_id=' . (int) $this->state->filter_group_id . ')');
+			$query->where(
+				'tbl.id IN (SELECT user_id FROM #__user_usergroup_map WHERE group_id=' . (int) $this->state->filter_group_id . ')'
+			);
 		}
 
 		$query->where('tbl.block = 0');

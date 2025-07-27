@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -175,7 +175,9 @@ class OSMembershipHelperGroupmembership
 		}
 		else
 		{
-			$query->where('(a.lifetime_membership = 1 OR (from_date <= UTC_TIMESTAMP() AND to_date >= UTC_TIMESTAMP()))');
+			$query->where(
+				'(a.lifetime_membership = 1 OR (from_date <= UTC_TIMESTAMP() AND to_date >= UTC_TIMESTAMP()))'
+			);
 		}
 
 		$db->setQuery($query);

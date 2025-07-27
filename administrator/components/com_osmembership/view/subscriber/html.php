@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -43,6 +43,20 @@ class OSMembershipViewSubscriberHtml extends MPFViewItem
 	 * @var MPFForm
 	 */
 	protected $form;
+
+	/**
+	 * The selected state
+	 *
+	 * @var string
+	 */
+	protected $selectedState = '';
+
+	/**
+	 * Flag to mark if state field is State field type or not
+	 *
+	 * @var bool
+	 */
+	protected $stateType = false;
 
 	/**
 	 * Set data and render the view
@@ -100,6 +114,18 @@ class OSMembershipViewSubscriberHtml extends MPFViewItem
 		$form = new MPFForm($rowFields);
 		$form->setData($data)->bindData();
 		$form->buildFieldsDependency();
+
+		$fields = $form->getFields();
+
+		if (isset($fields['state']))
+		{
+			$this->selectedState = $fields['state']->value;
+
+			if ($fields['state']->type == 'State')
+			{
+				$this->stateType = true;
+			}
+		}
 
 		//Trigger third party add-on
 		PluginHelper::importPlugin('osmembership');

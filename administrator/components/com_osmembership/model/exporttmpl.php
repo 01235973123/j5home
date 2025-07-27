@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -16,9 +16,9 @@ class OSMembershipModelExporttmpl extends MPFModelAdmin
 	/**
 	 * Pre-process data before export template is being saved to database
 	 *
-	 * @param   Table  $row
-	 * @param   MPFInput                 $input
-	 * @param   bool                     $isNew
+	 * @param   Table     $row
+	 * @param   MPFInput  $input
+	 * @param   bool      $isNew
 	 */
 	protected function beforeStore($row, $input, $isNew)
 	{

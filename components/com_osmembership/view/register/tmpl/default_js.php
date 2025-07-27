@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -14,11 +14,16 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
+/**
+ * Layout variables
+ *
+ * @var string $selectedState
+ * @var bool   $hasFeeFields
+ * @var string $inputPrependClass
+ * @var string $addOnClass
+ *
+ */
 
-OSMembershipHelperJquery::validateForm();
-OSMembershipHelperPayments::writeJavascriptObjects();
 
 // Calculate and pass PHP variables to Javascript
 if (isset($this->fees['gross_amount']) && $this->fees['gross_amount'] == 0 && !$this->plan->recurring_subscription)
@@ -39,14 +44,11 @@ else
 	$paymentNeeded = false;
 }
 
-$document = Factory::getApplication()->getDocument();
-$document->addScriptDeclaration('var siteUrl = "' . Uri::root(true) . '/";');
-$document->addScriptDeclaration('
-    var taxStateCountries = "' . $this->taxStateCountries . '";
-    taxStateCountries = taxStateCountries.split(",");
-');
+HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
-$document->addScriptOptions('hasStripePaymentMethod', $this->hasStripe)
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('hasStripePaymentMethod', $this->hasStripe)
 	->addScriptOptions('hidePaymentInformation', $hidePaymentInformation)
 	->addScriptOptions('paymentNeeded', $paymentNeeded)
 	->addScriptOptions('selectedState', $selectedState)
@@ -56,7 +58,19 @@ $document->addScriptOptions('hasStripePaymentMethod', $this->hasStripe)
 	->addScriptOptions('addOnClass', $addOnClass)
 	->addScriptOptions('countryCode', $this->countryCode)
 	->addScriptOptions('currencyCode', $this->plan->currency ?: $this->config->currency_code)
-	->addScriptOptions('maxErrorsPerField', (int) $this->config->max_errors_per_field);
+	->addScriptOptions('maxErrorsPerField', (int) $this->config->max_errors_per_field)
+	->getWebAssetManager()
+	->useScript('core')
+	->addInlineScript('var siteUrl = "' . Uri::root(true) . '/";')
+	->addInlineScript(
+		'
+    var taxStateCountries = "' . $this->taxStateCountries . '";
+    taxStateCountries = taxStateCountries.split(",");
+'
+	);
+
+OSMembershipHelperJquery::validateForm();
+OSMembershipHelperPayments::writeJavascriptObjects();
 
 OSMembershipHelperHtml::addOverridableScript('media/com_osmembership/js/site-register-default.min.js');
 

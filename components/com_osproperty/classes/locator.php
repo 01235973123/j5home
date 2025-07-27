@@ -4,7 +4,7 @@
 # locator.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -51,12 +51,13 @@ class OspropertyLocator{
 	 *
 	 * @param unknown_type $option
 	 */
-	static function locatorSearch($option){
+	static function locatorSearch($option)
+	{
 		global $jinput, $mainframe,$configClass,$lang_suffix;
 		$max_locator_results = (intval($configClass['max_locator_results']) > 0)? $configClass['max_locator_results']:'100';
 		OSPHelper::generateHeading(1,$configClass['general_bussiness_name']." - ".Text::_('OS_SEARCH_LOCATOR'));
 		$db = Factory::getDBO();
-		$lists = array();
+		$lists = [];
 		$radius_arr = array(5,10,20,50,100,200);
 		$no_search = true;
 		
@@ -69,16 +70,7 @@ class OspropertyLocator{
 		}
 		$menus			= Factory::getApplication()->getMenu();
         $menu			= $menus->getActive();
-		if (is_object($menu)) 
-		{
-			$params			= new Registry() ;
-			$params->loadString($menu->getParams());
-			$locator_style	= $params->get('locator_style','style1');
-		}
-		else
-		{
-			$locator_style = 'style1';
-		}
+		$locator_style  = 'style1';
 
 		$search_my_location	= $jinput->getInt('search_my_location',0);
 		$lists['search_my_location'] = $search_my_location;
@@ -114,10 +106,14 @@ class OspropertyLocator{
 		
 		$radius_search_cal = 0;
 		
-		if(intval($radius_search) > 0){
-			if($configClass['locator_radius_type'] == 1){
+		if(intval($radius_search) > 0)
+		{
+			if($configClass['locator_radius_type'] == 1)
+			{
 				$radius_search_cal = 0.62*$radius_search;
-			}else{
+			}
+			else
+			{
 				$radius_search_cal = $radius_search;
 			}
 		}
@@ -131,10 +127,11 @@ class OspropertyLocator{
 		if($location != ""){
 			$dosearch = 1;
 		}
-		if(($my_lat !== "") && ($my_long != "")){
+		if($my_lat !== "" && $my_long != ""){
 			$dosearch = 1;
 		}
-		if((intval($price) > 0) or ($min_price > 0) or ($max_price > 0)){
+		if(intval($price) > 0 || $min_price > 0 || $max_price > 0)
+		{
 			$dosearch = 1;
 		}
 		//if($state_id > 0){
@@ -156,19 +153,28 @@ class OspropertyLocator{
 		if($radius_search > 0)
 		{
 			$google_address_search_encode = urldecode($location);
-			$return = HelperOspropertyGoogleMap::findAddress($option,'',$google_address_search_encode,1);
-			$search_lat = $return[0];
-			$search_long = $return[1];
-			$status = $return[2];
+			if($configClass['map_type'] == 0)
+			{
+				$return				= HelperOspropertyGoogleMap::findAddress($option,'',$google_address_search_encode,1);
+			}
+			else
+			{
+				$return				= HelperOspropertyOpenStreetMap::findAddress($option,'',$google_address_search_encode,1);
+			}
+			$search_lat				= $return[0];
+			$search_long			= $return[1];
+			$status					= $return[2];
+			//$search_lat				= 40.7127281;
+			//$search_long			= -74.0060152;
 			if($my_lat!= "" && $my_long != "")
 			{
-				$search_lat = $my_lat;
-				$search_long = $my_long;
-				$status = "OK";
+				$search_lat			= $my_lat;
+				$search_long		= $my_long;
+				$status				= "OK";
 			}
 		}
 		
-		if (($location != '' || ($my_lat!= "" && $my_long != "")) && $radius_search > 0 && $status == "OK")
+		if (($location != '' || $my_lat!= "" && $my_long != "") && $radius_search > 0 && $status == "OK")
 		{
 			$sortby			= OSPHelper::getStringRequest('sortby','distance','');
 			$orderby 		= OSPHelper::getStringRequest('orderby','asc','');
@@ -179,20 +185,23 @@ class OspropertyLocator{
 			$orderby 		= OSPHelper::getStringRequest('orderby','desc','');
 		}
 
-		if(($location == '') or ($radius_search == 0) or ($status != "OK")){
-			if($sortby == "distance"){
+		if($location == '' || $radius_search == 0 || $status != "OK")
+		{
+			if($sortby == "distance")
+			{
 				$sortby = "id";
 			}
 		}
 
-		if($sortby == ''){
+		if($sortby == '')
+		{
 			$sortby = "id";
 		}
 		$lists['sortby'] = $sortby;
 		$lists['orderby'] = $orderby;
 
 
-        $optionArr = array();
+        $optionArr = [];
         $optionArr[] = HTMLHelper::_('select.option','',Text::_('OS_SELECT_SORT_BY'));
         $optionArr[] = HTMLHelper::_('select.option','a.created',Text::_('OS_CREATED'));
         $optionArr[] = HTMLHelper::_('select.option','a.isFeatured',Text::_('OS_FEATURED'));
@@ -200,7 +209,7 @@ class OspropertyLocator{
         $optionArr[] = HTMLHelper::_('select.option','distance',Text::_('OS_DISTANCE'));
         $lists['sort'] = HTMLHelper::_('select.genericlist',$optionArr,'sortby','class="input-medium form-select imedium"','value','text',$lists['sortby']);
 
-        $optionArr = array();
+        $optionArr = [];
         $optionArr[] = HTMLHelper::_('select.option','',Text::_('OS_SELECT_ORDER_BY'));
         $optionArr[] = HTMLHelper::_('select.option','asc',Text::_('OS_ASC'));
         $optionArr[] = HTMLHelper::_('select.option','desc',Text::_('OS_DESC'));
@@ -211,7 +220,9 @@ class OspropertyLocator{
 			
 		//categories
 		//$lists['category'] = OSPHelper::listCategoriesCheckboxes($categoryArr);
-        $lists['category'] = OSPHelper::listCategoriesInMultiple($categoryArr,'');
+        //$lists['category'] = OSPHelper::listCategoriesInMultiple($categoryArr,'');
+
+		$lists['categoryArr'] = $categoryArr;
 		//property types
 		
 		$typeArr[] = HTMLHelper::_('select.option','',Text::_('OS_ALL_PROPERTY_TYPES'));
@@ -267,7 +278,7 @@ class OspropertyLocator{
 		$lists['location'] = $location;
 			
 		// distance radius
-		$radiusArr = array();
+		$radiusArr = [];
 		$radius_type = ($configClass['locator_radius_type'] == 0) ? Text::_('OS_MILES') : Text::_('OS_KILOMETRE');
 		foreach ($radius_arr as $radius) {
 			$radiusArr[] = HTMLHelper::_('select.option',$radius, $radius. ' '. $radius_type);
@@ -287,12 +298,13 @@ class OspropertyLocator{
 		$user = Factory::getUser();
         $agent_id = 0;
         if($user->id > 0){
-            if(HelperOspropertyCommon::isAgent()){
+            if(HelperOspropertyCommon::isAgent())
+			{
                 $agent_id = HelperOspropertyCommon::getAgentID();
             }
         }
         if($agent_id > 0){
-            $where .= ' and ((a.`access` IN (' . implode(',', Factory::getUser()->getAuthorisedViewLevels()) . ')) or (a.agent_id = "'.$agent_id.'"))';
+            $where .= ' and ((a.`access` IN (' . implode(',', Factory::getUser()->getAuthorisedViewLevels()) . ')) || (a.agent_id = "'.$agent_id.'"))';
         }else{
             $where .= ' and a.`access` IN (' . implode(',', Factory::getUser()->getAuthorisedViewLevels()) . ')';
         }
@@ -313,7 +325,8 @@ class OspropertyLocator{
 			$no_search = false;
 		}
 		
-		if($address_search != ""){
+		if($address_search != "")
+		{
 			$no_search = false;
 		}
 		
@@ -374,7 +387,7 @@ class OspropertyLocator{
 		}
 		
 		if ($default_search) $no_search = false;
-		if (( ($location != '') || (($my_lat!= "") && ($my_long != "")) ) && ($radius_search > 0)){
+		if (( $location != '' || ($my_lat!= "" && $my_long != "") ) && $radius_search > 0){
 			if ($status == "OK") {
 				$multiFactor = 3959;
 				// Search the rows in the table
@@ -391,16 +404,18 @@ class OspropertyLocator{
 				$no_search = false;
 			}
 		}
-		$rows = array();
+		$rows = [];
 		//$group_by = " GROUP BY a.id ";
 		$group_by = "";
 		if (($dosearch == 1) && ( ($location != '') || (($my_lat!= "") && ($my_long != "")) )){
 			$db->setQuery($select.' '.$from.' '.$where.' '.$Order_by);
 			$rows = $db->loadObjectList();
 		}
-		
-		if(count($rows) > 0){
-			for($i=0;$i<count($rows);$i++){
+
+		if(count($rows) > 0)
+		{
+			for($i=0;$i<count($rows);$i++)
+			{
 				$row = $rows[$i];
 				$pro_name = OSPHelper::getLanguageFieldValue($row,'pro_name');
 				$row->pro_name = $pro_name;
@@ -410,7 +425,7 @@ class OspropertyLocator{
 				$image = $db->loadResult();
 				$row->image = $image;
 				$row->category_name = OSPHelper::getCategoryNamesOfPropertyWithLinks($row->id);
-                $need = array();
+                $need = [];
                 $need[] = "property_details";
                 $need[] = $row->id;
                 $itemid = OSPRoute::getItemid($need);
@@ -449,10 +464,18 @@ class OspropertyLocator{
 			}
 		}
 		
-		$lists['price_value'] = $price;
-		$lists['locator_type'] = $locator_type;
-		$lists['min_price'] = $min_price;
-		$lists['max_price'] = $max_price;
+		$lists['price_value']		= $price;
+		$lists['locator_type']		= $locator_type;
+		if($min_price == 0)
+		{
+			$min_price				= $configClass['min_price_slider'];
+		}
+		if($max_price == 0)
+		{
+			$max_price				= $configClass['max_price_slider'];
+		}
+		$lists['min_price']			= $min_price;
+		$lists['max_price']			= $max_price;
 		
 		// change vote
 		if ($locator_search || $default_search){
@@ -460,7 +483,7 @@ class OspropertyLocator{
 		
 		$db->setQuery("SELECT id as value,type_name$lang_suffix as text FROM #__osrs_types where published = '1' ORDER BY ordering");
 		$protypes = $db->loadObjectList();
-		$typeArr   = array();
+		$typeArr   = [];
 		$typeArr[] = HTMLHelper::_('select.option','',Text::_('OS_ANY'));
 		$typeArr   = array_merge($typeArr,$protypes);
 		$lists['type'] = HTMLHelper::_('select.genericlist',$typeArr,'property_type','class="input-large form-select ilarge"','value','text',$property_type);
@@ -479,7 +502,7 @@ class OspropertyLocator{
 		global $jinput, $mainframe,$lang_suffix;
 		$db = Factory::getDBO();
 		$country_id = $jinput->getInt('country_id',0);
-		$option_state = array();
+		$option_state = [];
 		$option_state[]= HTMLHelper::_('select.option','',' - '.Text::_('OS_SELECT_STATE').' - ');
 		
 		if ($country_id){

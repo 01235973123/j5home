@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -24,6 +24,8 @@ $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 $controlGroupClass = $bootstrapHelper->getClassMapping('control-group');
 $controlLabelClass = $bootstrapHelper->getClassMapping('control-label');
 $controlsClass     = $bootstrapHelper->getClassMapping('controls');
+
+$currencySymbol = $this->item->currency_symbol ?: $this->item->currency;
 ?>
 <div id="osm-subscription-detail-page" class="osm-container">
 <h1 class="osm-page-title"><?php echo Text::_('OSM_SUBSCRIPTION_DETAIL'); ?></h1>
@@ -159,7 +161,7 @@ $controlsClass     = $bootstrapHelper->getClassMapping('controls');
 					<?php echo  Text::_('OSM_SETUP_FEE'); ?>
 				</label>
 				<div class="<?php echo $controlsClass; ?>">
-					<?php echo $this->config->currency_symbol . number_format($this->item->setup_fee, 2); ?>
+					<?php echo OSMembershipHelper::formatCurrency($this->item->setup_fee, $this->config, $currencySymbol); ?>
 				</div>
 			</div>
 		<?php
@@ -170,7 +172,7 @@ $controlsClass     = $bootstrapHelper->getClassMapping('controls');
 			<?php echo  Text::_('OSM_NET_AMOUNT'); ?>
 		</label>
 		<div class="<?php echo $controlsClass; ?>">
-			<?php echo $this->config->currency_symbol . ($this->item->amount > 0 ? number_format($this->item->amount, 2) : '0.00'); ?>
+			<?php echo OSMembershipHelper::formatCurrency($this->item->amount, $this->config, $currencySymbol); ?>
 		</div>
 	</div>
 	<?php
@@ -182,7 +184,7 @@ $controlsClass     = $bootstrapHelper->getClassMapping('controls');
 			<?php echo  Text::_('OSM_DISCOUNT_AMOUNT'); ?>
 		</label>
 		<div class="<?php echo $controlsClass; ?>">
-			<?php echo $this->config->currency_symbol ;  ?><?php echo $this->item->discount_amount > 0 ? number_format($this->item->discount_amount, 2) : '0.00'; ?>
+			<?php echo OSMembershipHelper::formatCurrency($this->item->discount_amount, $this->config, $currencySymbol); ?>
 		</div>
 	</div>
 	<?php
@@ -195,7 +197,7 @@ $controlsClass     = $bootstrapHelper->getClassMapping('controls');
 				<?php echo  Text::_('OSM_TAX_AMOUNT'); ?>
 			</label>
 			<div class="<?php echo $controlsClass; ?>">
-				<?php echo $this->config->currency_symbol ;  ?><?php echo number_format($this->item->tax_amount, 2); ?>
+				<?php echo OSMembershipHelper::formatCurrency($this->item->tax_amount, $this->config, $currencySymbol); ?>
 			</div>
 		</div>
 	<?php
@@ -207,7 +209,7 @@ $controlsClass     = $bootstrapHelper->getClassMapping('controls');
 			<?php echo  Text::_('OSM_GROSS_AMOUNT'); ?>
 		</label>
 		<div class="<?php echo $controlsClass; ?>">
-			<?php echo $this->config->currency_symbol ;  ?><?php echo $this->item->gross_amount > 0 ? number_format($this->item->gross_amount, 2) : '0.00'; ?>
+			<?php echo OSMembershipHelper::formatCurrency($this->item->gross_amount, $this->config, $currencySymbol); ?>
 		</div>
 	</div>
 	<?php
@@ -221,6 +223,7 @@ $controlsClass     = $bootstrapHelper->getClassMapping('controls');
 			<div class="<?php echo $controlsClass; ?>">
 				<?php
 					$method = OSMembershipHelperPayments::loadPaymentMethod($this->item->payment_method) ;
+
 					if ($method)
 					{
 						echo Text::_($method->title);

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -78,7 +78,9 @@ class OSMembershipViewSchedulecontentHtml extends MPFViewHtml
 	{
 		if (!PluginHelper::isEnabled('system', 'schedulecontent'))
 		{
-			Factory::getApplication()->enqueueMessage(Text::_('Schedule Content feature is not enabled. Please contact super administrator'));
+			Factory::getApplication()->enqueueMessage(
+				Text::_('Schedule Content feature is not enabled. Please contact super administrator')
+			);
 
 			return;
 		}
@@ -89,7 +91,9 @@ class OSMembershipViewSchedulecontentHtml extends MPFViewHtml
 
 		$params = new Registry($plugin->params);
 
-		$activePlanIds = array_unique(array_keys(OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getUserSubscriptionsInfo')));
+		$activePlanIds = array_unique(
+			array_keys(OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getUserSubscriptionsInfo'))
+		);
 
 		/* @var $model OSMembershipModelSchedulecontent */
 		$model = $this->getModel();
@@ -132,7 +136,10 @@ class OSMembershipViewSchedulecontentHtml extends MPFViewHtml
 		$this->items                        = $model->getData();
 		$this->config                       = OSMembershipHelper::getConfig();
 		$this->pagination                   = $model->getPagination();
-		$this->subscriptions                = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getUserSubscriptionsInfo');
+		$this->subscriptions                = OSMembershipHelper::callOverridableHelperMethod(
+			'Subscription',
+			'getUserSubscriptionsInfo'
+		);
 		$this->releaseArticleOlderThanXDays = (int) $params->get('release_article_older_than_x_days', 0);
 		$this->openArticle                  = $params->get('open_article');
 

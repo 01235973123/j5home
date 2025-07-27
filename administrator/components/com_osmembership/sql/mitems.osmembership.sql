@@ -71,4 +71,8 @@ INSERT INTO `#__osmembership_mitems` (`id`, `name`, `title`, `title_en`, `type`,
 (70, 'second_reminder_sms', 'OSM_SECOND_REMINDER_SMS', 'Second Reminder SMS', 'textarea', 8, 0, 0),
 (71, 'third_reminder_sms', 'OSM_THIRD_REMINDER_SMS', 'Third Reminder SMS', 'textarea', 8, 0, 0),
 (72, 'invite_group_members_email_subject', 'OSM_INVITE_GROUP_MEMBERS_EMAIL_SUBJECT', 'Default Join Group Invitation Email Subject', 'text', 6, 0, 0),
-(73, 'invite_group_members_message', 'OSM_INVITE_GROUP_MEMBERS_EMAIL_BODY', 'Default Join Group Invitation Email Message', 'editor', 6, 0, 0);
+(73, 'invite_group_members_message', 'OSM_INVITE_GROUP_MEMBERS_EMAIL_BODY', 'Default Join Group Invitation Email Message', 'editor', 6, 0, 0),
+(74, 'user_email_subject_offline', 'OSM_USER_EMAIL_SUBJECT_OFFLINE', 'User Email Subject Offline Payment', 'text', 1, 1, 0),
+(75, 'user_renew_email_subject_offline', 'OSM_RENEW_USER_EMAIL_SUBJECT_OFFLINE', 'Subscription Renewal User Email Subject Offline Payment', 'text', 2, 1, 0),
+(76, 'user_upgrade_email_subject_offline', 'OSM_UPGRADE_USER_EMAIL_SUBJECT_OFFLINE', 'Subscription Upgrade User Email Subject Offline Payment', 'text', 3, 1, 0);
+

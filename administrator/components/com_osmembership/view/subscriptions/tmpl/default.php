@@ -3,70 +3,42 @@
  * @package		   Joomla
  * @subpackage	   Membership Pro
  * @author		   Tuan Pham Ngoc
- * @copyright	   Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright	   Copyright (C) 2012 - 2025 Ossolution Team
  * @license		   GNU/GPL, see LICENSE.php
  */
-defined('_JEXEC') or die ;
+
+defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
 
-Factory::getApplication()->getDocument()->getWebAssetManager()
-	->useScript('table.columns')
-	->useScript('multiselect');
-
-HTMLHelper::_('behavior.core');
 Text::script('OSM_SELECT_PLAN_TO_ADD_SUBSCRIPTION', true);
 
-$document = Factory::getApplication()->getDocument();
-$document->addScript(Uri::root(true) . '/media/com_osmembership/js/admin-subscriptions-default.min.js');
-$document->addScriptOptions('force_select_plan', (int) $this->config->force_select_plan);
-$cols = 8 ;
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('force_select_plan', (int) $this->config->force_select_plan)
+	->getWebAssetManager()
+	->useScript('core')
+	->useScript('table.columns')
+	->useScript('multiselect')
+	->registerAndUseScript('com_osmembership.admin-subscriptions-default', 'media/com_osmembership/js/admin-subscriptions-default.min.js');
+
+$this->loadSearchTools();
+
+$cols = 9;
+
+$subscriptionTypes = [
+	'subscribe' => Text::_('OSM_TYPE_OF_SUBSCRIPTION_NEW'),
+	'renew' => Text::_('OSM_TYPE_OF_SUBSCRIPTION_RENEW'),
+	'upgrade' => Text::_('OSM_TYPE_OF_SUBSCRIPTION_UPGRADE'),
+];
 ?>
 <form action="<?php echo $this->getFormAction(); ?>" method="post" name="adminForm" id="adminForm" enctype="multipart/form-data">
 	<div id="j-main-container" class="mp-joomla4-container">
-		<div id="filter-bar" class="btn-toolbar js-stools-container-filters-visible">
-			<div class="filter-search btn-group pull-left">
-				<label for="filter_search" class="element-invisible"><?php echo Text::_('OSM_FILTER_SEARCH_SUBSCRIPTIONS_DESC');?></label>
-				<input type="text" name="filter_search" inputmode="search" id="filter_search" placeholder="<?php echo Text::_('JSEARCH_FILTER'); ?>" value="<?php echo $this->escape($this->state->filter_search); ?>" class="hasTooltip form-control" title="<?php echo HTMLHelper::tooltipText('OSM_SEARCH_SUBSCRIPTIONS_DESC'); ?>" onchange="submit();" />
-			</div>
-			<div class="btn-group pull-left">
-				<?php echo $this->lists['filter_date_field']; ?>
-			</div>
-			<div class="btn-group pull-left osm-filter-date">
-				<div class="pull-left"><?php echo HTMLHelper::_('calendar', (int) $this->state->filter_from_date ? $this->state->filter_from_date : '', 'filter_from_date', 'filter_from_date', $this->datePickerFormat . ' %H:%M:%S', ['class' => 'input-medium', 'showTime' => true, 'placeholder' => Text::_('OSM_FROM')]); ?></div>
-				<div class="pull-left"><?php echo HTMLHelper::_('calendar', (int) $this->state->filter_to_date ? $this->state->filter_to_date : '', 'filter_to_date', 'filter_to_date', $this->datePickerFormat . ' %H:%M:%S', ['class' => 'input-medium', 'showTime' => true, 'placeholder' => Text::_('OSM_TO')]); ?></div>
-			</div>
-			<div class="btn-group pull-left">
-				<button type="submit" class="btn btn-primary hasTooltip" title="<?php echo HTMLHelper::tooltipText('JSEARCH_FILTER_SUBMIT'); ?>"><span class="icon-search"></span></button>
-				<button type="button" class="btn btn-primary hasTooltip" title="<?php echo HTMLHelper::tooltipText('JSEARCH_FILTER_CLEAR'); ?>" onclick="document.getElementById('filter_search').value='';document.getElementById('filter_from_date').value='';document.getElementById('filter_to_date').value='';this.form.submit();"><span class="icon-remove"></span></button>
-				<?php
-					echo $this->pagination->getLimitBox();
-				?>
-			</div>
-			<div class="btn-group pull-right btn-subscriptions-filter-second-row">
-				<?php
-					if (isset($this->lists['filter_category_id']))
-					{
-						echo $this->lists['filter_category_id'];
-					}
-
-					echo $this->lists['plan_id'];
-					echo $this->lists['subscription_type'];
-					echo $this->lists['published'];
-					echo $this->lists['filter_subscription_duration'];
-
-					foreach ($this->filters as $filter)
-					{
-						echo $filter;
-					}
-				?>
-			</div>
-		</div>
+		<?php echo $this->renderSearchTools(); ?>
 		<div class="clearfix"></div>
 		<table class="adminlist table table-striped">
 			<thead>
@@ -109,6 +81,9 @@ $cols = 8 ;
 					?>
 					<th class="title" style="text-align: left;">
 						<?php echo $this->gridSort('OSM_PLAN', 'b.title'); ?>
+					</th>
+					<th class="center">
+						<?php echo $this->gridSort('OSM_TYPE_OF_SUBSCRIPTION', 'tbl.act'); ?>
 					</th>
 					<th class="title center">
 						<?php echo $this->gridSort('OSM_START_DATE', 'tbl.from_date'); ?>
@@ -274,6 +249,7 @@ $cols = 8 ;
 					<td>
 						<a href="<?php echo Route::_('index.php?option=com_osmembership&task=plan.edit&cid[]=' . $row->plan_id); ?>" target="_blank"><?php echo $row->plan_title ; ?></a>
 					</td>
+					<td class="center"><?php echo $subscriptionTypes[$row->act] ?? Text::_('OSM_TYPE_OF_SUBSCRIPTION_NEW'); ?></td>
 					<td class="center">
 						<strong><?php echo HTMLHelper::_('date', $row->from_date, $this->config->date_format); ?></strong> <?php echo Text::_('OSM_TO'); ?>
 						<strong>
@@ -368,7 +344,7 @@ $cols = 8 ;
 									if ($row->invoice_number)
 									{
 									?>
-										<a href="<?php echo Route::_('index.php?option=com_osmembership&task=download_invoice&id=' . $row->id); ?>" title="<?php echo Text::_('OSM_DOWNLOAD'); ?>"><?php echo OSMembershipHelper::formatInvoiceNumber($row, $this->config) ; ?></a>
+										<a href="<?php echo Route::_('index.php?option=com_osmembership&task=download_invoice&id=' . $row->id); ?>" title="<?php echo Text::_('OSM_DOWNLOAD'); ?>"><?php echo OSMembershipHelper::formatInvoiceNumber($row, $this->config); ?></a>
 									<?php
 									}
 								?>

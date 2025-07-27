@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -121,10 +121,19 @@ class OSMembershipModelMitems extends MPFModelList
 		$offlinePaymentMessageItems = [
 			['name' => 'user_email_body_offline', 'title' => 'User Email Body', 'group' => 1],
 			['name' => 'thanks_message_offline', 'title' => 'Thank You Message', 'group' => 1],
-			['name' => 'user_renew_email_body_offline', 'title' => 'Subscription Renewal User Email Body', 'group' => 2],
+			['name'  => 'user_renew_email_body_offline',
+			 'title' => 'Subscription Renewal User Email Body',
+			 'group' => 2
+			],
 			['name' => 'renew_thanks_message_offline', 'title' => 'Subscription Renewal Thanks Message', 'group' => 2],
-			['name' => 'user_upgrade_email_body_offline', 'title' => 'Subscription Upgrade User Email Body', 'group' => 3],
-			['name' => 'upgrade_thanks_message_offline', 'title' => 'Subscription Upgrade Thanks Message', 'group' => 3],
+			['name'  => 'user_upgrade_email_body_offline',
+			 'title' => 'Subscription Upgrade User Email Body',
+			 'group' => 3
+			],
+			['name'  => 'upgrade_thanks_message_offline',
+			 'title' => 'Subscription Upgrade Thanks Message',
+			 'group' => 3
+			],
 		];
 
 		foreach ($extraOfflinePlugins as $offlinePaymentPlugin)

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -14,15 +14,16 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\Toolbar;
-use Joomla\CMS\Uri\Uri;
-
-HTMLHelper::_('behavior.core');
 
 $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 $centerClass  = $bootstrapHelper->getClassMapping('center');
 
-$document = Factory::getApplication()->getDocument();
-$document->addScript(Uri::root(true) . '/media/com_osmembership/js/site-subscribers-import.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('com_osmembership.site-subscribers-import', 'media/com_osmembership/js/site-subscribers-import.min.js');
+
 Text::script('OSM_SELECT_FILE_TO_IMPORT_SUBSCRIPTIONS', true);
 ?>
 <div id="osm-container">

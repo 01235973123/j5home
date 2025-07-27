@@ -8,7 +8,6 @@
  */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -18,6 +17,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Content\Site\Helper\RouteHelper;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Filesystem\Path;
 
 class OSMembershipHelperHtml
 {
@@ -31,29 +31,25 @@ class OSMembershipHelperHtml
 	 */
 	public static function addOverridableScript($files, $options = [], $attribs = [])
 	{
-		$config   = OSMembershipHelper::getConfig();
-		$document = Factory::getApplication()->getDocument();
-		$rootUri  = Uri::root(true);
-		$files    = (array) $files;
+		$wa = Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager();
+
+		$files = (array) $files;
 
 		foreach ($files as $file)
 		{
-			if ($config->debug)
-			{
-				$file = str_replace('.min.js', '.js', $file);
-			}
-
 			$parts             = explode('/', $file);
 			$count             = count($parts);
 			$parts[$count - 1] = 'override.' . $parts[$count - 1];
 			$overridableFile   = implode('/', $parts);
 
-			if (File::exists(JPATH_ROOT . '/' . $overridableFile))
+			if (is_file(JPATH_ROOT . '/' . $overridableFile))
 			{
 				$file = $overridableFile;
 			}
 
-			$document->addScript($rootUri . '/' . $file, $options, $attribs);
+			$wa->registerAndUseScript('com_osmembership.' . $file, $file, $options, $attribs);
 		}
 	}
 
@@ -184,15 +180,15 @@ class OSMembershipHelperHtml
 			$layout = str_replace('common/', 'common/tmpl/', $layout);
 		}
 
-		if (File::exists($layout))
+		if (is_file(Path::clean($layout)))
 		{
 			$path = $layout;
 		}
-		elseif (File::exists(JPATH_THEMES . '/' . $app->getTemplate() . '/html/com_osmembership/' . $themeFile))
+        elseif (is_file(JPATH_THEMES . '/' . $app->getTemplate() . '/html/com_osmembership/' . $themeFile))
 		{
 			$path = JPATH_THEMES . '/' . $app->getTemplate() . '/html/com_osmembership/' . $themeFile;
 		}
-		elseif (File::exists(JPATH_ROOT . '/components/com_osmembership/view/' . $layout))
+        elseif (is_file(JPATH_ROOT . '/components/com_osmembership/view/' . $layout))
 		{
 			$path = JPATH_ROOT . '/components/com_osmembership/view/' . $layout;
 		}
@@ -254,7 +250,7 @@ class OSMembershipHelperHtml
 		// Find override layout first
 		foreach ($paths as $overridePath)
 		{
-			if (File::exists($overridePath . '/' . $themeFile))
+			if (is_file($overridePath . '/' . $themeFile))
 			{
 				$path = $overridePath . '/' . $themeFile;
 				break;
@@ -262,7 +258,7 @@ class OSMembershipHelperHtml
 		}
 
 		// If there is no override layout, use component layout
-		if (!$path && File::exists(JPATH_ROOT . '/components/com_osmembership/view/' . $layout))
+		if (!$path && is_file(JPATH_ROOT . '/components/com_osmembership/view/' . $layout))
 		{
 			$path = JPATH_ROOT . '/components/com_osmembership/view/' . $layout;
 		}
@@ -410,11 +406,11 @@ class OSMembershipHelperHtml
 			{
 				$result = $content;
 			} // Use only the title, if title and text are the same.
-			elseif ($title == $content)
+            elseif ($title == $content)
 			{
 				$result = '<strong>' . $title . '</strong>';
 			} // Use a formatted string combining the title and content.
-			elseif ($content != '')
+            elseif ($content != '')
 			{
 				$result = '<strong>' . $title . '</strong><br />' . $content;
 			}
@@ -502,14 +498,16 @@ class OSMembershipHelperHtml
 	public static function renderSubmenu($vName = 'dashboard')
 	{
 		?>
-		<script language="javascript">
-			function confirmBuildTaxRules() {
-				if (confirm('This will delete all tax rules you created and build EU tax rules. Are you sure ?')) {
-					location.href = 'index.php?option=com_osmembership&task=tool.build_eu_tax_rules';
-				}
-			}
-		</script>
+        <script language="javascript">
+            function confirmBuildTaxRules() {
+                if (confirm('This will delete all tax rules you created and build EU tax rules. Are you sure ?')) {
+                    location.href = 'index.php?option=com_osmembership&task=tool.build_eu_tax_rules';
+                }
+            }
+        </script>
 		<?php
+		HTMLHelper::_('bootstrap.dropdown');
+
 		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
@@ -623,7 +621,9 @@ class OSMembershipHelperHtml
 					}
 
 					$html .= '<li' . $class . '><a class="nav-link dropdown-item' . $extraClass . '" href="' . $subMenu->menu_link .
-						'" tabindex="-1"><span class="icon-' . $subMenu->menu_class . '"></span> ' . Text::_($subMenu->menu_name) . '</a></li>';
+						'" tabindex="-1"><span class="icon-' . $subMenu->menu_class . '"></span> ' . Text::_(
+							$subMenu->menu_name
+						) . '</a></li>';
 				}
 
 				$html .= '</ul>';
@@ -647,7 +647,7 @@ class OSMembershipHelperHtml
 	public static function getArticleInput($fieldValue, $fieldName = 'article_id')
 	{
 		FormHelper::addFieldPrefix('Joomla\Component\Content\Administrator\Field');
-		
+
 		$field = FormHelper::loadFieldType('Modal_Article');
 
 		$field->setDatabase(Factory::getContainer()->get('db'));
@@ -884,7 +884,7 @@ class OSMembershipHelperHtml
 				$tags = array_merge($commonEmailTags, ['APPROVAL_USERNAME', 'APPROVAL_NAME', 'APPROVAL_EMAIL']);
 				break;
 			case 'subscription_form_msg':
-				$tags = ['PLAN_TITLE', 'PLAN_DURATION', 'CATEGORY_TITLE', 'AMOUNT'];
+				$tags = ['PLAN_TITLE', 'PLAN_DURATION', 'CATEGORY_TITLE', 'AMOUNT', 'PLAN_SHORT_DESCRIPTION', 'PLAN_DESCRIPTION'];
 				break;
 			case 'thanks_message':
 			case 'thanks_message_offline':
@@ -949,7 +949,15 @@ class OSMembershipHelperHtml
 				break;
 			case 'subscription_end_email_subject':
 			case 'subscription_end_email_body':
-				$tags = ['plan_title', 'first_name', 'last_name', 'number_days', 'membership_id', 'gross_amount', 'payment_method'];
+				$tags = [
+					'plan_title',
+					'first_name',
+					'last_name',
+					'number_days',
+					'membership_id',
+					'gross_amount',
+					'payment_method'
+				];
 				break;
 			case 'new_group_member_email_subject':
 			case 'new_group_member_email_body':

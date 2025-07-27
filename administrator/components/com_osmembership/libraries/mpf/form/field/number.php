@@ -28,17 +28,17 @@ class MPFFormFieldNumber extends MPFFormFieldText
 	{
 		parent::__construct($row, $value, $fieldSuffix);
 
-		if ($row->min)
+		if ($row->min !== null)
 		{
 			$this->attributes['min'] = $row->min;
 		}
 
-		if ($row->max)
+		if ($row->max !== null)
 		{
 			$this->attributes['max'] = $row->max;
 		}
 
-		if ($row->step)
+		if ($row->step > 0)
 		{
 			$this->attributes['step'] = $row->step;
 		}

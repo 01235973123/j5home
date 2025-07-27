@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -18,24 +18,28 @@ use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
-HTMLHelper::_('behavior.core');
 HTMLHelper::_('formbehavior.chosen', 'select');
 
 $rootUri = Uri::root(true);
 
-$document = Factory::getApplication()->getDocument();
-$document->addScriptDeclaration('
-	var siteUrl = "' . $rootUri . '/";			
-');
-
 OSMembershipHelperJquery::loadjQuery();
-$document->addScript($rootUri . '/media/com_osmembership/assets/js/membershippro.min.js');
+
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('selectedState', $this->selectedState)
+	->getWebAssetManager()
+	->useScript('core')
+	->addInlineScript(
+		'
+	var siteUrl = "' . $rootUri . '/";			
+'
+	)->registerAndUseScript('com_osmembership.membershippro', 'media/com_osmembership/assets/js/membershippro.min.js')
+	->registerAndUseScript('com_osmembership.site-subscriber-default', 'media/com_osmembership/js/site-subscriber-default.min.js');
 
 OSMembershipHelper::loadLanguage();
 OSMembershipHelperJquery::validateForm();
 
 $bootstrapHelper   = OSMembershipHelperBootstrap::getInstance();
-$rowFluidClasss    = $bootstrapHelper->getClassMapping('row-fluid');
 $controlGroupClass = $bootstrapHelper->getClassMapping('control-group');
 $controlLabelClass = $bootstrapHelper->getClassMapping('control-label');
 $controlsClass     = $bootstrapHelper->getClassMapping('controls');
@@ -168,22 +172,6 @@ $selectedState = '';
 
 			$fields = $this->form->getFields();
 
-			$stateType = 0;
-
-			if (isset($fields['state']))
-			{
-				if ($fields['state']->type == 'State')
-				{
-					$stateType = 1;
-				}
-				else
-				{
-					$stateType = 0;
-				}
-
-				$selectedState = $fields['state']->value;
-			}
-
 			if (isset($fields['email']))
 			{
 				$fields['email']->setAttribute('class', 'validate[required,custom[email]]');
@@ -194,9 +182,6 @@ $selectedState = '';
 				/* @var MPFFormField $field */
 				echo $field->getControlGroup($bootstrapHelper);
 			}
-
-			$document->addScriptOptions('selectedState', $selectedState)
-				->addScript($rootUri . '/media/com_osmembership/js/site-subscriber-default.min.js');
 			?>
             <div class="<?php echo $controlGroupClass; ?>">
                 <div class="<?php echo $controlLabelClass; ?>">

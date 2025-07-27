@@ -3,14 +3,14 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\LanguageHelper;
+use Joomla\Filesystem\File;
 use Joomla\Registry\Registry;
 
 class OSMembershipModelLanguage extends MPFModel
@@ -66,7 +66,7 @@ class OSMembershipModelLanguage extends MPFModel
 			$translatedRegistry = new Registry();
 			$translatedPath     = $languageFolder . $language . '/' . $language . '.' . $languageFile . '.ini';
 
-			if (File::exists($translatedPath))
+			if (is_file($translatedPath))
 			{
 				$translatedRegistry->loadFile($translatedPath);
 			}
@@ -119,7 +119,7 @@ class OSMembershipModelLanguage extends MPFModel
 		$registry = new Registry();
 		$filePath = $languageFolder . $language . '/' . $language . '.' . $languageFile . '.ini';
 
-		if (File::exists($filePath))
+		if (is_file($filePath))
 		{
 			$registry->loadFile($filePath, 'INI');
 		}
@@ -153,7 +153,9 @@ class OSMembershipModelLanguage extends MPFModel
 			}
 		}
 
-		File::write($filePath, $registry->toString('INI'));
+		$iniString = $registry->toString('INI');
+
+		File::write($filePath, $iniString);
 
 		return true;
 	}

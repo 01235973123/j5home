@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -118,6 +118,13 @@ class OSMembershipViewProfileHtml extends MPFViewHtml
 	protected $additionalTabs = [];
 
 	/**
+	 * The selected state
+	 *
+	 * @var string
+	 */
+	protected $selectedState = '';
+
+	/**
 	 * Prepare view data
 	 *
 	 * @return void
@@ -214,9 +221,17 @@ class OSMembershipViewProfileHtml extends MPFViewHtml
 
 		if ($item->group_admin_id == 0)
 		{
-			[$planIds, $renewOptions] = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getRenewOptions', [$user->id]);
+			[$planIds, $renewOptions] = OSMembershipHelper::callOverridableHelperMethod(
+				'Subscription',
+				'getRenewOptions',
+				[$user->id]
+			);
 
-			$this->upgradeRules = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getUpgradeRules', [$item->user_id]);
+			$this->upgradeRules = OSMembershipHelper::callOverridableHelperMethod(
+				'Subscription',
+				'getUpgradeRules',
+				[$item->user_id]
+			);
 
 			$this->planIds      = $planIds;
 			$this->renewOptions = $renewOptions;
@@ -226,17 +241,21 @@ class OSMembershipViewProfileHtml extends MPFViewHtml
 		// Load js file to support state field dropdown
 		OSMembershipHelper::addLangLinkForAjax();
 
-		$document = Factory::getApplication()->getDocument();
-		$rootUri  = Uri::root(true);
-
 		OSMembershipHelperJquery::loadjQuery();
-		$document->addScript($rootUri . '/media/com_osmembership/assets/js/paymentmethods.min.js');
+
+		$wa = Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager()
+			->registerAndUseScript(
+				'com_osmembership.paymentmethods',
+				'media/com_osmembership/assets/js/paymentmethods.min.js'
+			);
 
 		$customJSFile = JPATH_ROOT . '/media/com_osmembership/assets/js/custom.js';
 
 		if (file_exists($customJSFile) && filesize($customJSFile) > 0)
 		{
-			$document->addScript($rootUri . '/media/com_osmembership/assets/js/custom.js');
+			$wa->registerAndUseScript('com_osmembership.custom', 'media/com_osmembership/assets/js/custom.js');
 		}
 
 		if ($config->get('enable_select_show_hide_members_list'))
@@ -283,6 +302,13 @@ class OSMembershipViewProfileHtml extends MPFViewHtml
 			{
 				$this->additionalTabs[$tab['title']] = $tab['content'];
 			}
+		}
+
+		$fields = $form->getFields();
+
+		if (isset($fields['state']))
+		{
+			$this->selectedState = $fields['state']->value;
 		}
 
 		// Need to get subscriptions information of the user

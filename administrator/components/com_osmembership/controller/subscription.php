@@ -3,17 +3,17 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Database\ParameterType;
 use Joomla\Utilities\ArrayHelper;
 use OSSolution\MembershipPro\Admin\Event\Export\BeforeXLSXExport;
@@ -40,7 +40,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 	{
 		$id = $this->input->post->getInt('id', 0);
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 		$query->select('*')
@@ -51,7 +51,10 @@ class OSMembershipControllerSubscription extends OSMembershipController
 
 		if ($rowSubscription && OSMembershipHelper::canCancelSubscription($rowSubscription))
 		{
-			JLoader::register('OSMembershipModelRegister', JPATH_ROOT . '/components/com_osmembership/model/register.php');
+			JLoader::register(
+				'OSMembershipModelRegister',
+				JPATH_ROOT . '/components/com_osmembership/model/register.php'
+			);
 
 			/**@var OSMembershipModelRegister $model * */
 			$model = $this->getModel('Register');
@@ -219,7 +222,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 
 		$inputFile = $this->input->files->get('input_file');
 		$fileName  = $inputFile ['name'];
-		$fileExt   = strtolower(File::getExt($fileName));
+		$fileExt   = strtolower(OSMembershipHelper::getFileExt($fileName));
 
 		if (!in_array($fileExt, ['csv', 'xls', 'xlsx']))
 		{
@@ -389,7 +392,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 
 		$this->getApplication()->triggerEvent($event->getName(), $event);
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('id, name, is_core')
@@ -516,7 +519,11 @@ class OSMembershipControllerSubscription extends OSMembershipController
 			}
 		}
 
-		$filePath = OSMembershipHelper::callOverridableHelperMethod('Data', 'excelExport', [$fields, $rows, 'subscriptions_list']);
+		$filePath = OSMembershipHelper::callOverridableHelperMethod(
+			'Data',
+			'excelExport',
+			[$fields, $rows, 'subscriptions_list']
+		);
 
 		if ($filePath)
 		{
@@ -594,7 +601,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 
 		$this->getApplication()->triggerEvent($event->getName(), $event);
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('id, name, is_core')
@@ -676,7 +683,11 @@ class OSMembershipControllerSubscription extends OSMembershipController
 
 		$this->prepareExportData($rows, $rowFields, $fieldValues, $fields);
 
-		$filePath = OSMembershipHelper::callOverridableHelperMethod('Helper', 'generateSubscriptionsPDF', [$rows, $fields]);
+		$filePath = OSMembershipHelper::callOverridableHelperMethod(
+			'Helper',
+			'generateSubscriptionsPDF',
+			[$rows, $fields]
+		);
 
 		$this->processDownloadFile($filePath);
 	}
@@ -775,7 +786,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 			return;
 		}
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('id, name, is_core')
@@ -890,7 +901,11 @@ class OSMembershipControllerSubscription extends OSMembershipController
 			return;
 		}
 
-		$filePath = OSMembershipHelper::callOverridableHelperMethod('Data', 'excelExport', [$fields, $rows, 'expired_subscribers_list']);
+		$filePath = OSMembershipHelper::callOverridableHelperMethod(
+			'Data',
+			'excelExport',
+			[$fields, $rows, 'expired_subscribers_list']
+		);
 
 		if ($filePath)
 		{
@@ -907,7 +922,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 
 		$planId = $this->input->getInt('plan_id', 0);
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 		$query->select('name')
@@ -919,8 +934,12 @@ class OSMembershipControllerSubscription extends OSMembershipController
 		if ($planId > 0)
 		{
 			$negPlanId = -1 * $planId;
-			$query->where('(plan_id = 0 OR id IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $planId . ' OR plan_id < 0))')
-				->where('id NOT IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $negPlanId . ')');
+			$query->where(
+				'(plan_id = 0 OR id IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $planId . ' OR plan_id < 0))'
+			)
+				->where(
+					'id NOT IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $negPlanId . ')'
+				);
 		}
 
 		$db->setQuery($query);
@@ -1010,7 +1029,11 @@ class OSMembershipControllerSubscription extends OSMembershipController
 			return;
 		}
 
-		$filePath = OSMembershipHelper::callOverridableHelperMethod('Data', 'excelExport', [$fields, [$row], 'subscriptions_import_template']);
+		$filePath = OSMembershipHelper::callOverridableHelperMethod(
+			'Data',
+			'excelExport',
+			[$fields, [$row], 'subscriptions_import_template']
+		);
 
 		if ($filePath)
 		{
@@ -1034,7 +1057,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 
 		if (count($cid))
 		{
-			/* @var \Joomla\Database\DatabaseDriver $db */
+			/* @var DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
 			$query = $db->getQuery(true);
 			$query->update('#__osmembership_subscribers')
@@ -1042,6 +1065,23 @@ class OSMembershipControllerSubscription extends OSMembershipController
 				->set('second_reminder_sent = 1')
 				->set('third_reminder_sent = 1')
 				->whereIn('id', $cid);
+
+			$subscribeTableFields = array_keys($db->getTableColumns('#__osmembership_subscribers'));
+
+			$extraReminderSentFields = [
+				'fourth_reminder_sent',
+				'fifth_reminder_sent',
+				'sixth_reminder_sent',
+			];
+
+			foreach ($extraReminderSentFields as $extraField)
+			{
+				if (in_array($extraField, $subscribeTableFields))
+				{
+					$query->set($extraField . ' = 1');
+				}
+			}
+
 			$db->setQuery($query)
 				->execute();
 		}
@@ -1068,7 +1108,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 
 		if (count($cid))
 		{
-			/* @var \Joomla\Database\DatabaseDriver $db */
+			/* @var DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
 			$query = $db->getQuery(true);
 			$query->update('#__osmembership_subscribers')
@@ -1079,6 +1119,24 @@ class OSMembershipControllerSubscription extends OSMembershipController
 				->set('second_reminder_sent_at = NULL')
 				->set('third_reminder_sent_at = NULL')
 				->whereIn('id', $cid);
+
+			$subscribeTableFields = array_keys($db->getTableColumns('#__osmembership_subscribers'));
+
+			$extraReminderSentFields = [
+				'fourth_reminder_sent',
+				'fifth_reminder_sent',
+				'sixth_reminder_sent',
+			];
+
+			foreach ($extraReminderSentFields as $extraField)
+			{
+				if (in_array($extraField, $subscribeTableFields))
+				{
+					$query->set($extraField . ' = 1')
+						->set($extraField . '_at = NULL');
+				}
+			}
+
 			$db->setQuery($query)
 				->execute();
 		}
@@ -1098,7 +1156,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 	{
 		$id = $this->input->post->getInt('id', 0);
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 		$query->select('*')
@@ -1124,7 +1182,11 @@ class OSMembershipControllerSubscription extends OSMembershipController
 			catch (Exception $e)
 			{
 				$this->app->enqueueMessage($e->getMessage(), 'error');
-				$this->setRedirect('index.php?option=com_osmembership&view=subscription&id=' . $rowSubscription->id, $e->getMessage(), 'error');
+				$this->setRedirect(
+					'index.php?option=com_osmembership&view=subscription&id=' . $rowSubscription->id,
+					$e->getMessage(),
+					'error'
+				);
 			}
 		}
 		else
@@ -1190,7 +1252,7 @@ class OSMembershipControllerSubscription extends OSMembershipController
 
 		$id = $this->input->getInt('id');
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 		$query->select('a.*, b.username')

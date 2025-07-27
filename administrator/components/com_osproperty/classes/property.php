@@ -4,7 +4,7 @@
 # property.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -706,28 +706,28 @@ class OspropertyProperties
 		$lists['nrooms'] = HTMLHelper::_('select.genericlist',$roomsArr,'nrooms','style="width:130px;" class="'.$class.' input-mini form-select" onChange="javascript:document.adminForm.submit();"','value','text',$nrooms);
 		
 		//feature
-		$featureArr	   = array();
+		$featureArr	   = [];
 		$featureArr[]  = HTMLHelper::_('select.option','',Text::_('OS_FEATURED_PROPERTIES'));
 		$featureArr[]  = HTMLHelper::_('select.option','0',Text::_('OS_NO'));
 		$featureArr[]  = HTMLHelper::_('select.option','1',Text::_('OS_YES'));
 		$lists['isfeature'] = HTMLHelper::_('select.genericlist',$featureArr,'isfeature','class="'.$class.' input-medium form-select" onChange="javascript:document.adminForm.submit();"','value','text',$isfeature);
 		
 		//feature
-		$requestApprovalArr	   = array();
+		$requestApprovalArr	   = [];
 		$requestApprovalArr[]  = HTMLHelper::_('select.option','',Text::_('OS_REQUEST_TO_APPROVAL'));
 		$requestApprovalArr[]  = HTMLHelper::_('select.option','0',Text::_('OS_NO'));
 		$requestApprovalArr[]  = HTMLHelper::_('select.option','1',Text::_('OS_YES'));
 		$lists['request_to_approval'] = HTMLHelper::_('select.genericlist',$requestApprovalArr,'request_to_approval','class="'.$class.' input-medium form-select" onChange="javascript:document.adminForm.submit();"','value','text',$request_to_approval);
 		
 		//published
-		$stateArr = array();
+		$stateArr = [];
 		$stateArr[]  = HTMLHelper::_('select.option','',Text::_('OS_PUBLISH_STATE'));
 		$stateArr[]  = HTMLHelper::_('select.option','1',Text::_('OS_PUBLISHED'));
 		$stateArr[]  = HTMLHelper::_('select.option','0',Text::_('OS_UNPUBLISHED'));
 		$lists['state'] = HTMLHelper::_('select.genericlist',$stateArr,'state','style="width:120px;" class="'.$class.' input-medium form-select" onChange="javascript:document.adminForm.submit();"','value','text',$state);
 		
 		// Request
-		$option_request = array();
+		$option_request = [];
 		$option_request[] = HTMLHelper::_('select.option','',' - '.Text::_('OS_STATE_APPROVAL').' - ');
 		$option_request[] = HTMLHelper::_('select.option',1,Text::_('OS_APPROVAL'));
 		$option_request[] = HTMLHelper::_('select.option',0,Text::_('OS_UNAPPROVAL'));
@@ -744,7 +744,7 @@ class OspropertyProperties
 		
 		//agent type
 		/*
-		$optionArr = array();
+		$optionArr = [];
 		$optionArr[] = HTMLHelper::_('select.option','-1',Text::_('OS_SELECT_USER_TYPE'));
 		$optionArr[] = HTMLHelper::_('select.option','0',Text::_('OS_AGENT'));
 		$optionArr[] = HTMLHelper::_('select.option','1',Text::_('OS_OWNER'));
@@ -802,13 +802,13 @@ class OspropertyProperties
 		$country_code = "de";
 		$db->setQuery("Select * from t_region where fk_c_country_code = '$country_code'");
 		$regions = $db->loadObjectList();
-		$exportArr = array();
+		$exportArr = [];
 		for($i=0;$i<count($regions);$i++){
 			$export = "";
 			$region = $regions[$i];
 			$db->setQuery("Select * from t_city where fk_c_country_code = '$country_code' and fk_i_region_id = '$region->pk_i_id'");
 			$cities = $db->loadObjectList();
-			$cityArr = array();
+			$cityArr = [];
 			for($j=0;$j<count($cities);$j++){
 				$city = $cities[$j];
 				$cityArr[] = $city->s_name;
@@ -819,7 +819,7 @@ class OspropertyProperties
 		}
 		$location = implode("\n",$exportArr);
 		$filename = "de_germany.txt";
-		$fh = fopen(JPATH_ROOT."/tmp".DS.$filename, 'w');
+		$fh = fopen(JPATH_ROOT."/tmp/".$filename, 'w');
 		@fwrite($fh,$location);
 		fclose($fh);
 	}
@@ -830,7 +830,7 @@ class OspropertyProperties
 	 * @param unknown_type $option
 	 */
 	static function updateLocationForm($option){
-		global $jinput, $mainframe,$langArr;
+		global $jinput, $mainframe;
 		$db = Factory::getDbo();
 		$country_id = $jinput->getInt('country_id',0);
 		$db->setQuery("Select * from #__osrs_countries where id = '$country_id'");
@@ -840,10 +840,10 @@ class OspropertyProperties
 		$db->setQuery("Select count(id) from #__osrs_cities where country_id = '$country_id'");
 		$country->ncities = $db->loadResult();
 		
-		$optionArr = array();
+		$optionArr = [];
 		$optionArr[] = HTMLHelper::_('select.option','1',Text::_('OS_PUBLISHED'));
 		$optionArr[] = HTMLHelper::_('select.option','0',Text::_('OS_UNPUBLISHED'));
-		$lists['state'] = HTMLHelper::_('select.genericlist',$optionArr,'state','class="input-medium"','value','text');
+		$lists['state'] = HTMLHelper::_('select.genericlist',$optionArr,'state','class="input-medium form-select"','value','text');
 		
 		HTML_OspropertyProperties::updateLocationForm($option,$country,$lists);
 	}
@@ -864,13 +864,13 @@ class OspropertyProperties
 		$db->execute();
 		if(is_uploaded_file($_FILES['filename']['tmp_name'])){
 			$filename = $_FILES['filename']['name'];
-			move_uploaded_file($_FILES['filename']['tmp_name'],JPATH_ROOT."/tmp".DS.$filename);
-			$fh = fopen(JPATH_ROOT."/tmp".DS.$filename, 'r');
-			$filesize = filesize(JPATH_ROOT."/tmp".DS.$filename);
+			move_uploaded_file($_FILES['filename']['tmp_name'],JPATH_ROOT."/tmp/".$filename);
+			$fh = fopen(JPATH_ROOT."/tmp/".$filename, 'r');
+			$filesize = filesize(JPATH_ROOT."/tmp/".$filename);
 			$location = fread($fh, $filesize);
 			fclose($fh);
 			//echo $location;
-			$location = self::file_get_contents_utf8(JPATH_ROOT."/tmp".DS.$filename);
+			$location = self::file_get_contents_utf8(JPATH_ROOT."/tmp/".$filename);
 			$locationArr = explode("\n",$location);
 			if(count($locationArr) > 0){
 				for($i=0;$i<count($locationArr);$i++){
@@ -900,7 +900,7 @@ class OspropertyProperties
 						if(count($cities) > 0){
 							$db->setQuery("Delete from #__osrs_cities where state_id = '$state_id' and country_id = '$country_id'");
 							$db->execute();
-							$cityArr = array();
+							$cityArr = [];
 							for($j=0;$j<count($cities);$j++){
 								$city = $cities[$j];
 								if(function_exists('mb_convert_encoding')){
@@ -1036,7 +1036,7 @@ class OspropertyProperties
 		$lists['country'] = HTMLHelper::_('select.genericlist',$countryArr,'country_id','class="input-medium form-select" onChange="javascript:document.adminForm.submit();"','value','text',$country_id);
 		
 		//state
-		$stateArr = array();
+		$stateArr = [];
 		$stateArr[] = HTMLHelper::_('select.option','',Text::_('OS_SELECT_STATE'));
 		$query  = "Select id as value,state_name as text from #__osrs_states where 1=1 ";
 		if($country_id != ""){
@@ -1129,7 +1129,7 @@ class OspropertyProperties
 			$allowedExt = array('jpg','jpeg','gif','png');
 			if(is_uploaded_file($_FILES['photopackage']['tmp_name'])){
 				$filename = time().$_FILES['photopackage']['name'];
-				move_uploaded_file($_FILES['photopackage']['tmp_name'],JPATH_ROOT."/tmp".DS.$filename);
+				move_uploaded_file($_FILES['photopackage']['tmp_name'],JPATH_ROOT."/tmp/".$filename);
                 if (version_compare(JVERSION, '4.0.0-dev', 'ge'))
                 {
                     $archive = new Archive(array('tmp_path' => Factory::getConfig()->get('tmp_path')));
@@ -1151,7 +1151,7 @@ class OspropertyProperties
 				        	$entryArr = explode(".",$entry);
 				        	$ext = strtolower($entryArr[count($entryArr)-1]);
 				        	if(in_array($ext,$allowedExt)){
-				        		File::copy($category_link.DS.$entry,JPATH_ROOT."/images/osproperty/category".DS.$entry);
+				        		File::copy($category_link."/".$entry,JPATH_ROOT."/images/osproperty/category/".$entry);
 				        	}
 						}
 				    }
@@ -1164,7 +1164,7 @@ class OspropertyProperties
 				        	$entryArr = explode(".",$entry);
 				        	$ext = strtolower($entryArr[count($entryArr)-1]);
 				        	if(in_array($ext,$allowedExt)){
-				        		File::copy($category_thumb_link.DS.$entry,JPATH_ROOT."/images/osproperty/category/thumbnail".DS.$entry);
+				        		File::copy($category_thumb_link."/".$entry,JPATH_ROOT."/images/osproperty/category/thumbnail/".$entry);
 				        	}
 						}
 				    }
@@ -1181,7 +1181,7 @@ class OspropertyProperties
 				        	$entryArr = explode(".",$entry);
 				        	$ext = strtolower($entryArr[count($entryArr)-1]);
 				        	if(in_array($ext,$allowedExt)){
-				        		File::copy($property_link.DS.$entry,JPATH_ROOT."/images/osproperty/properties".DS.$entry);
+				        		File::copy($property_link."/".$entry,JPATH_ROOT."/images/osproperty/properties/".$entry);
 				        	}
 						}
 				    }
@@ -1194,7 +1194,7 @@ class OspropertyProperties
 				        	$entryArr = explode(".",$entry);
 				        	$ext = strtolower($entryArr[count($entryArr)-1]);
 				        	if(in_array($ext,$allowedExt)){
-				        		File::copy($property_thumb_link.DS.$entry,JPATH_ROOT."/images/osproperty/properties/thumb".DS.$entry);
+				        		File::copy($property_thumb_link."/".$entry,JPATH_ROOT."/images/osproperty/properties/thumb/".$entry);
 				        	}
 						}
 				    }
@@ -1208,7 +1208,7 @@ class OspropertyProperties
 				        	$entryArr = explode(".",$entry);
 				        	$ext = strtolower($entryArr[count($entryArr)-1]);
 				        	if(in_array($ext,$allowedExt)){
-				        		File::copy($property_medium_link.DS.$entry,JPATH_ROOT."/images/osproperty/properties/medium".DS.$entry);
+				        		File::copy($property_medium_link."/".$entry,JPATH_ROOT."/images/osproperty/properties/medium/".$entry);
 				        	}
 						}
 				    }
@@ -1227,7 +1227,7 @@ class OspropertyProperties
 			    	}
 			    }
 				
-				File::delete(JPATH_ROOT."/tmp".DS.$filename);
+				File::delete(JPATH_ROOT."/tmp/".$filename);
 				Folder::delete(JPATH_ROOT."/tmp/osphotos");
 			}
 		}
@@ -1669,7 +1669,7 @@ class OspropertyProperties
 		$mitems = $db->loadObjectList();
 
 		// establish the hierarchy of the menu
-		$children = array();
+		$children = [];
 
 		if ( $mitems )
 		{
@@ -1686,7 +1686,7 @@ class OspropertyProperties
 		// second pass - get an indent list of the items
 		$list = HTMLHelper::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0 );
 		// assemble menu items to the array
-		$parentArr 	= array();
+		$parentArr 	= [];
 		$parentArr[] 	= HTMLHelper::_('select.option',  '', Text::_( 'OS_ALL_CATEGORIES' ) );
 		
 		foreach ( $list as $item ) {
@@ -1718,7 +1718,7 @@ class OspropertyProperties
 		$mitems = $db->loadObjectList();
 
 		// establish the hierarchy of the menu
-		$children = array();
+		$children = [];
 
 		if ( $mitems )
 		{
@@ -1735,7 +1735,7 @@ class OspropertyProperties
 		// second pass - get an indent list of the items
 		$list = HTMLHelper::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0 );
 		// assemble menu items to the array
-		$parentArr 	= array();
+		$parentArr 	= [];
 		//$parentArr[] 	= HTMLHelper::_('select.option',  '', Text::_( 'OS_ALL_CATEGORIES' ) );
 		
 		foreach ( $list as $item ) {
@@ -1791,7 +1791,7 @@ class OspropertyProperties
 		$mitems = $db->loadObjectList();
 
 		// establish the hierarchy of the menu
-		$children = array();
+		$children = [];
 
 		if ( $mitems )
 		{
@@ -1808,7 +1808,7 @@ class OspropertyProperties
 		// second pass - get an indent list of the items
 		$list = HTMLHelper::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0 );
 		// assemble menu items to the array
-		$parentArr 	= array();
+		$parentArr 	= [];
 		
 		foreach ( $list as $item ) {
 			if($item->treename != ""){
@@ -1854,12 +1854,12 @@ class OspropertyProperties
 			$row->load((int)$id);
 			$db->setQuery("Select amen_id from #__osrs_property_amenities where pro_id = '$row->id'");
 			$amenitylists = $db->loadOBjectList();
-			$amenitylists1 = array();
+			$amenitylists1 = [];
 			if(count($amenitylists) > 0){
 				for($i=0;$i<count($amenitylists);$i++){
 					$amenitylists1[$i] = $amenitylists[$i]->amen_id;
 				}
-				$amenitylists = array();
+				$amenitylists = [];
 				$amenitylists = $amenitylists1;
 			}
 			
@@ -1879,7 +1879,7 @@ class OspropertyProperties
 			$row->approved			= 1;
 			$row->agent_id			= OSPHelper::getDefaultAgent();
 		}
-		$optionArr = array();
+		$optionArr = [];
 		$optionArr[] = HTMLHelper::_('select.option',1,Text::_('OS_YES'));
 		$optionArr[] = HTMLHelper::_('select.option',0,Text::_('OS_NO'));
 		
@@ -1890,7 +1890,7 @@ class OspropertyProperties
 		//$lists['approved'] = HTMLHelper::_('select.genericlist',$optionArr,'approved','class="input-mini form-control"','value','text',$row->approved);
 		$lists['approved'] = OSPHelper::getBooleanInput('approved',$row->approved);
 
-		$optionArr1 = array();
+		$optionArr1 = [];
 		$optionArr1[] = HTMLHelper::_('select.option',1,Text::_('OS_YES'));
 		$optionArr1[] = HTMLHelper::_('select.option',0,Text::_('OS_NO'));
 		$lists['price_call'] = HTMLHelper::_('select.genericlist',$optionArr,'price_call','class="input-mini form-select" onChange="javascript:showPriceFields()"','value','text',(int)$row->price_call);
@@ -2036,10 +2036,10 @@ class OspropertyProperties
 
 		if($configClass['more_bath_infor']== 1 && $configClass['use_bathrooms']== 1)
 		{
-			$bathInfor = array();
+			$bathInfor = [];
 			if($id > 0)
 			{
-				$bathLabelArray = array('OS_FULL','OS_THREE_QUARTER','OS_HALF','OS_QUARTER','OS_ENSUITE');
+				$bathLabelArray = ['OS_FULL','OS_THREE_QUARTER','OS_HALF','OS_QUARTER','OS_ENSUITE'];
 				foreach($bathLabelArray as $label)
 				{
 					$bathInfor[$label] = 0;
@@ -2056,7 +2056,7 @@ class OspropertyProperties
 
 		
 		$document->addScript(Uri::root().'media/com_osproperty/assets/js/djuploader.js');
-		$settings					= array();
+		$settings					= [];
 		$settings['max_file_size']	= '10240kb';
 		$settings['chunk_size']		= '1024kb';
 		$settings['resize']			= false;
@@ -2078,7 +2078,7 @@ class OspropertyProperties
         {
 			$onchange = "";
 			// Initialize variables.
-			$html = array();
+			$html = [];
 			//$groups = $this->getGroups();
 			//$excluded = $this->getExcluded();
 			$link = 'index.php?option=com_osproperty&task=agent_list&tmpl=component&field=agent_id';
@@ -2095,7 +2095,7 @@ class OspropertyProperties
 			HTMLHelper::_('behavior.modal', 'a.modal_user_id');
 
 			// Build the script.
-			$script = array();
+			$script = [];
 			$script[] = '	static function jSelectUser_agent_id(id, title, object) {';
 			$script[] = '		var old_id = document.getElementById("agent_id").value;';
 			$script[] = '		if (old_id != id) {';
@@ -2161,7 +2161,7 @@ class OspropertyProperties
 		global $jinput, $mainframe;
 		$db = Factory::getDBO();
 		$country_id = $jinput->getInt('country_id',0);
-		$stateArr = array();
+		$stateArr = [];
 		$stateArr[] = HTMLHelper::_('select.option','',Text::_('OS_SELECT_STATE'));
 		$query  = "Select id as value,state_name as text from #__osrs_states where 1=1 ";
 		if($country_id != ""){
@@ -2389,10 +2389,10 @@ class OspropertyProperties
 		
 		//prepare copy photos
 		//create photo folder
-		if(!Folder::exists(JPATH_ROOT."/images/osproperty/properties".DS.$newId)){
-			Folder::create(JPATH_ROOT."/images/osproperty/properties".DS.$newId);
-			Folder::create(JPATH_ROOT."/images/osproperty/properties".DS.$newId."/medium");
-			Folder::create(JPATH_ROOT."/images/osproperty/properties".DS.$newId."/thumb");
+		if(!Folder::exists(JPATH_ROOT."/images/osproperty/properties/".$newId)){
+			Folder::create(JPATH_ROOT."/images/osproperty/properties/".$newId);
+			Folder::create(JPATH_ROOT."/images/osproperty/properties/".$newId."/medium");
+			Folder::create(JPATH_ROOT."/images/osproperty/properties/".$newId."/thumb");
 		}
 		if(count($photos) > 0){
 			for($i=0;$i<count($photos);$i++){
@@ -2401,12 +2401,12 @@ class OspropertyProperties
 				$image_desc = $photo->image_desc;
 				$ordering = $photo->ordering;
 				$newimage = "copy".$image;
-				$imagepath = JPATH_ROOT."/images/osproperty/properties".DS.$id;
-				$newimagepath = JPATH_ROOT."/images/osproperty/properties".DS.$newId;
-				if(File::exists($imagepath.DS.$image)){
-					File::copy($imagepath.DS.$image,$newimagepath.DS.$newimage);
-					File::copy($imagepath."/thumb".DS.$image,$newimagepath."/thumb".DS.$newimage);
-					File::copy($imagepath."/medium".DS.$image,$newimagepath."/medium".DS.$newimage);
+				$imagepath = JPATH_ROOT."/images/osproperty/properties/".$id;
+				$newimagepath = JPATH_ROOT."/images/osproperty/properties/".$newId;
+				if(File::exists($imagepath."/".$image)){
+					File::copy($imagepath."/".$image,$newimagepath."/".$newimage);
+					File::copy($imagepath."/thumb/".$image,$newimagepath."/thumb/".$newimage);
+					File::copy($imagepath."/medium/".$image,$newimagepath."/medium/".$newimage);
 					$image_desc = addslashes($image_desc);
 					$db->setQuery("INSERT INTO #__osrs_photos (id,pro_id,image,image_desc,ordering) VALUES (NULL,'$newId','$newimage','$image_desc','$ordering')");
 					$db->execute();
@@ -2862,9 +2862,9 @@ class OspropertyProperties
             //$db->execute();
             OSPHelper::addPropertyToQueue($id, true);
 
-			Folder::create(JPATH_ROOT."/images/osproperty/properties".DS.$id);
-			Folder::create(JPATH_ROOT."/images/osproperty/properties".DS.$id."/thumb");
-			Folder::create(JPATH_ROOT."/images/osproperty/properties".DS.$id."/medium");
+			Folder::create(JPATH_ROOT."/images/osproperty/properties/".$id);
+			Folder::create(JPATH_ROOT."/images/osproperty/properties/".$id."/thumb");
+			Folder::create(JPATH_ROOT."/images/osproperty/properties/".$id."/medium");
 			if($row->approved == 1){
 				//setup the expired time
 				OspropertyProperties::updateStatus($option,"approved",1,$id);
@@ -3015,10 +3015,11 @@ class OspropertyProperties
 		}
 
 		//collect the id of the photos
-		$photoIds = array();
+		$photoIds = [];
 		
 		//save photos and extra fields
-		if($isNew == 0){
+		if($isNew == 0)
+		{
 			$db->setQuery("Select * from #__osrs_photos where pro_id = '$id' order by ordering");
 			$photos = $db->loadObjectList();
 			if(count($photos) > 0){
@@ -3046,24 +3047,27 @@ class OspropertyProperties
 						}
 						else
 						{
-							$image_name = $_FILES[$photo_name]['name'];
-							$image_name = OSPHelper::processImageName($id.time().$image_name);
-							$original_image_link = JPATH_ROOT."/images/osproperty/properties".DS.$id.DS.$image_name;
+							$image_name		= $_FILES[$photo_name]['name'];
+							$image_name		= OSPHelper::processImageName($id.time().$image_name);
+							$original_image_link = JPATH_ROOT."/images/osproperty/properties/".$id."/".$image_name;
 							move_uploaded_file($_FILES[$photo_name]['tmp_name'],$original_image_link);
+
+							OSPHelper::adjustPhotoOriginal($original_image_link);
+
 							//check to resize the max (width or height) size
 							HelperOspropertyCommon::returnMaxsize($original_image_link);
 							//copy and resize
 							//thumb
 							$thumb_width = $configClass['images_thumbnail_width'];
 							$thumb_height = $configClass['images_thumbnail_height'];
-							$thumb_image_link = JPATH_ROOT."/images/osproperty/properties".DS.$id."/thumb".DS.$image_name;
+							$thumb_image_link = JPATH_ROOT."/images/osproperty/properties/".$id."/thumb/".$image_name;
 							File::copy($original_image_link,$thumb_image_link);
 							OSPHelper::resizePhoto($thumb_image_link,$thumb_width,$thumb_height);
 							
 							//medium
 						    $medium_width = $configClass['images_large_width'];
 						    $medium_height = $configClass['images_large_height'];
-						    $medium_image_link = JPATH_ROOT."/images/osproperty/properties".DS.$id."/medium".DS.$image_name;
+						    $medium_image_link = JPATH_ROOT."/images/osproperty/properties/".$id."/medium/".$image_name;
 						    File::copy($original_image_link,$medium_image_link);
 						    OSPHelper::resizePhoto($medium_image_link,$medium_width,$medium_height);
 						    
@@ -3077,9 +3081,9 @@ class OspropertyProperties
 					if($remove == 1){
 						$db->setQuery("Select image from #__osrs_photos where id = '$photo->id'");
 						$image_link = $db->loadResult();
-						$original_image = JPATH_ROOT."/images/osproperty/properties".DS.$id.DS.$image_link;
-						$medium_image = JPATH_ROOT."/images/osproperty/properties".DS.$id."/medium".DS.$image_link;
-						$thumb_image = JPATH_ROOT."/images/osproperty/properties".DS.$id."/thumb".DS.$image_link;
+						$original_image = JPATH_ROOT."/images/osproperty/properties/".$id."/".$image_link;
+						$medium_image = JPATH_ROOT."/images/osproperty/properties/".$id."/medium/".$image_link;
+						$thumb_image = JPATH_ROOT."/images/osproperty/properties/".$id."/thumb/".$image_link;
 						@unlink($original_image);
 						@unlink($medium_image);
 						@unlink($thumb_image);
@@ -3123,22 +3127,24 @@ class OspropertyProperties
 				}else{
 					$image_name = $_FILES[$photo_name]['name'];
 					$image_name = OSPHelper::processImageName($id.time().$image_name);
-					$original_image_link = JPATH_ROOT."/images/osproperty/properties".DS.$id.DS.$image_name;
+					$original_image_link = JPATH_ROOT."/images/osproperty/properties/".$id."/".$image_name;
 					move_uploaded_file($_FILES[$photo_name]['tmp_name'],$original_image_link);
+
+					OSPHelper::adjustPhotoOriginal($original_image_link);
 					
 					HelperOspropertyCommon::returnMaxsize($original_image_link);
 					//copy and resize
 					//thumb
 					$thumb_width = $configClass['images_thumbnail_width'];
 					$thumb_height = $configClass['images_thumbnail_height'];
-					$thumb_image_link = JPATH_ROOT."/images/osproperty/properties".DS.$id."/thumb".DS.$image_name;
+					$thumb_image_link = JPATH_ROOT."/images/osproperty/properties/".$id."/thumb/".$image_name;
 					File::copy($original_image_link,$thumb_image_link);
 					OSPHelper::resizePhoto($thumb_image_link,$thumb_width,$thumb_height);
 					
 					//medium
 				    $medium_width = $configClass['images_large_width'];
 				    $medium_height = $configClass['images_large_height'];
-				    $medium_image_link = JPATH_ROOT."/images/osproperty/properties".DS.$id."/medium".DS.$image_name;
+				    $medium_image_link = JPATH_ROOT."/images/osproperty/properties/".$id."/medium/".$image_name;
 				    File::copy($original_image_link,$medium_image_link);
 				    OSPHelper::resizePhoto($medium_image_link,$medium_width,$medium_height);
 					
@@ -3226,14 +3232,14 @@ class OspropertyProperties
 							//thumb
 							$thumb_width = $configClass['images_thumbnail_width'];
 							$thumb_height = $configClass['images_thumbnail_height'];
-							$thumb_image_link = JPATH_ROOT."/images/osproperty/properties".DS.$id."/thumb".DS.$new_img_n;
+							$thumb_image_link = JPATH_ROOT."/images/osproperty/properties/".$id."/thumb/".$new_img_n;
 							File::copy($original_image_link,$thumb_image_link);
 							OSPHelper::resizePhoto($thumb_image_link,$thumb_width,$thumb_height);
 							
 							//medium
 						    $medium_width = $configClass['images_large_width'];
 						    $medium_height = $configClass['images_large_height'];
-						    $medium_image_link = JPATH_ROOT."/images/osproperty/properties".DS.$id."/medium".DS.$new_img_n;
+						    $medium_image_link = JPATH_ROOT."/images/osproperty/properties/".$id."/medium/".$new_img_n;
 						    File::copy($original_image_link,$medium_image_link);
 						    OSPHelper::resizePhoto($medium_image_link,$medium_width,$medium_height);
 
@@ -3552,7 +3558,7 @@ class OspropertyProperties
 		if(is_uploaded_file($_FILES['zip_file']['tmp_name']))
 		{
 			$filename = time().$_FILES['zip_file']['name'];
-			@move_uploaded_file($_FILES['zip_file']['tmp_name'],JPATH_ROOT."/tmp".DS.$filename);
+			@move_uploaded_file($_FILES['zip_file']['tmp_name'],JPATH_ROOT."/tmp/".$filename);
             if (version_compare(JVERSION, '4.0.0-dev', 'ge'))
             {
                 $archive = new Archive(array('tmp_path' => Factory::getConfig()->get('tmp_path')));
@@ -3569,7 +3575,7 @@ class OspropertyProperties
 			$images = OSPHelper::getImages($folder);
 			foreach ($images as $image)
 			{
-				OSPHelper::checkImage($folder.DS.$image->name);
+				OSPHelper::checkImage($folder."/".$image->name);
 			}
 		}	
 	}
@@ -4164,12 +4170,12 @@ class OspropertyProperties
 			$row->load((int)$id);
 			$db->setQuery("Select amen_id from #__osrs_property_amenities where pro_id = '$row->id'");
 			$amenitylists = $db->loadOBjectList();
-			$amenitylists1 = array();
+			$amenitylists1 = [];
 			if(count($amenitylists) > 0){
 				for($i=0;$i<count($amenitylists);$i++){
 					$amenitylists1[$i] = $amenitylists[$i]->amen_id;
 				}
-				$amenitylists = array();
+				$amenitylists = [];
 				$amenitylists = $amenitylists1;
 			}
 			
@@ -4294,7 +4300,7 @@ class OspropertyProperties
 
         if ($continue)
         {
-            File::delete($backupPath.DS.$dateCheckFile);
+            File::delete($backupPath."/".$dateCheckFile);
             $deletefile		= false;
             $compress		= 1;
             $backuppath		= 0;
@@ -4403,7 +4409,7 @@ class OspropertyProperties
         $objBackup->username 	    = $user;
         $objBackup->password 	    = $password;
         $objBackup->database 	    = $db;
-        $objBackup->tables          = array();
+        $objBackup->tables          = [];
         $objBackup->drop_tables 	= $drop_tables;
         $objBackup->create_tables 	= $create_tables;
         $objBackup->struct_only 	= $struct_only;
@@ -4434,14 +4440,14 @@ class OspropertyProperties
     	global $jinput, $mainframe;
     	jimport('joomla.filesystem.folder');
     	$filelist      = Folder::files(JPATH_SITE.'/components/com_osproperty/backup', '.sql.gz');
-		$filelistArr   = array();
+		$filelistArr   = [];
 		$i                 = 1;
 		foreach ($filelist as $file):
 			$filelistArr[] = HTMLHelper::_('select.option', $i, $file);
 			$i++;
 		endforeach;
 		
-		$lists = array();
+		$lists = [];
 		$lists['bkfiles'] = HTMLHelper::_('select.genericlist', $filelistArr, 'bkfile', 'size="10" class="input-small form-control" style="width: 300px;"', 'text', 'text');
 		HTML_OspropertyProperties::restoreForm($option,$lists);
     }
@@ -4576,7 +4582,7 @@ class OspropertyProperties
             $mainframe->redirect('index.php?option=com_osproperty&task=properties_restore');
         }
 
-        $tmp = array();
+        $tmp = [];
         if(version_compare($jversion->getShortVersion(), '3.0', 'ge')){
         	$queries = $database->splitSql($bquery);
 	        foreach($queries as $query){
@@ -4647,14 +4653,312 @@ class OspropertyProperties
      *
      * @param unknown_type $option
      */
-    static function doOptimizeSefUrls($option){
+    static function doOptimizeSefUrls($option)
+	{
     	global $jinput, $mainframe;
     	$db = Factory::getDbo();
     	$db->setQuery("Delete from #__osrs_urls");
     	$db->execute();
+
+		// Lấy danh sách property_id đã được publish
+		$query = $db->getQuery(true)
+			->select($db->quoteName('id'))
+			->from($db->quoteName('#__osrs_properties'))
+			->where($db->quoteName('published') . ' = 1');
+
+		$db->setQuery($query);
+		$properties = $db->loadColumn();
+
+		if (!empty($properties)) {
+			// Chuyển mảng ID thành chuỗi để sử dụng trong câu lệnh IN()
+			$propertyIds = implode(',', array_map('intval', $properties));
+
+			// Truy vấn lấy thông tin chi tiết của các property
+			$query = $db->getQuery(true)
+				->select([
+					'a.id AS pid',
+					'a.agent_id',
+					'a.pro_type',
+					'a.city',
+					'a.state',
+					'a.country',
+					'a.isFeatured',
+					'b.agent_type',
+					'c.company_id'
+				])
+				->from($db->quoteName('#__osrs_properties', 'a'))
+				->innerJoin($db->quoteName('#__osrs_agents', 'b') . ' ON b.id = a.agent_id')
+				->leftJoin($db->quoteName('#__osrs_company_agents', 'c') . ' ON c.agent_id = b.id')
+				->where('a.id IN (' . $propertyIds . ')');
+
+			$db->setQuery($query);
+			$propertyList = $db->loadObjectList('pid'); // Trả về danh sách property theo ID
+
+			// Kiểm tra nếu Multilanguage được kích hoạt
+			$langs = Multilanguage::isEnabled() ? OSPHelper::getLanguages() : [];
+
+			foreach ($propertyList as $pid => $property) {
+				if($pid > 0)
+				{
+					$category_id = (array)OSPHelper::getCategoryIdsOfProperty($pid);
+
+					if (!empty($langs)) {
+						foreach ($langs as $lang) {
+							$language_sql = " AND (`language` LIKE '{$lang->lang_code}' OR `language` LIKE '*' OR `language` = '')";
+							self::findPropertyItemId($property, $category_id, $language_sql, $lang->lang_code);
+						}
+					} else {
+						self::findPropertyItemId($property, $category_id, '', '');
+					}
+				}
+			}
+		}
+
     	$mainframe->enqueueMessage(Text::_('OS_SEF_URLS_OPTIMIZATION_HAS_BEEN_COMPLETED'));
     	$mainframe->redirect("index.php?option=com_osproperty&task=cpanel_list");
     }
+
+
+	public static function findPropertyItemId($property, $category_id , $language_sql, $language = '')
+	{
+		global $mainframe;
+		$db				= Factory::getDbo();
+		$pid			= $property->pid;
+		$pro_type		= $property->pro_type;
+		$state			= $property->state;
+		$city			= $property->city;
+		$agent_id		= $property->agent_id;
+		$country		= $property->country;
+		$isFeatured		= $property->isFeatured;
+		$company_id		= (int)$property->company_id;
+		$agent_type		= (int) $property->agent_type;
+
+		//checking details link directly
+		$db->setQuery("Select * from #__menu where published = '1' and ((`link` like '%view=ldetails&id=".$pid."%') or (`link` like '%view=ldetails&ampid=".$pid."%')) $language_sql");
+		$founded_menu = $db->loadObject();
+		if($founded_menu->id > 0)
+		{
+			//return $founded_menu;
+			$db->setQuery("Select count(id) from #__osrs_property_itemid where pid = '$pid' and itemid = '$founded_menu->id'");
+			$count = $db->loadResult();
+			if((int) $count == 0)
+			{
+				$db->setQuery("insert into #__osrs_property_itemid (id, pid, itemid, lang, `access`, created) values (NULL, '$pid', '$founded_menu->id','$language', '$founded_menu->access','".gmdate("Y-m-d")."')");
+				$db->execute();
+			}
+
+		}
+
+		$db->setQuery("Select * from #__menu where published = '1' and `home` = '0' and `link` like '%view=ltype%' $language_sql");
+		$menus_found = $db->loadObjectList();
+
+		if(count($menus_found) == 0)
+		{
+			$db->setQuery("Select * from #__menu where published = '1' and `home` = '0' and `link` like '%view=lcity%' and `link` like '%id=".$property->city."%' $language_sql");
+			$menus_found = $db->loadObjectList();
+			if(count($menus_found) > 0)
+			{
+				$founded_menu = $menus_found[0];
+
+				$db->setQuery("Select count(id) from #__osrs_property_itemid where pid = '$pid' and itemid = '$founded_menu->id'");
+				$count = $db->loadResult();
+				if((int) $count == 0)
+				{
+					$db->setQuery("insert into #__osrs_property_itemid (id, pid, itemid, lang, `access`, created) values (NULL, '$pid', '$founded_menu->id','$language', '$founded_menu->access','".gmdate("Y-m-d")."')");
+					$db->execute();
+				}
+			}
+		}
+		
+		$jmenu = Factory::getApplication()->getMenu();
+		
+		if(count($menus_found) > 0)
+		{
+			$tmp = [];
+			foreach($menus_found as $found)
+			{
+				$tmp[] = $found->id;
+			}
+			$menuArr = [];
+			$menus	= $mainframe->getMenu('site');
+			$active = $menus->getActive();
+			
+
+			if(in_array($active->id, $tmp))
+			{
+				$menuid_active = $active->id;
+			}
+			else
+			{
+				$menuid_active = $tmp[0];
+			}
+
+
+			for($i=0;$i<count($menus_found);$i++)
+			{
+				$return				= 0;
+				$menu				= $menus_found[$i];
+				
+				$mid				= $menu->id;
+				$mobj				= $jmenu->getItem( $mid );
+
+				$find_pro_type		=  $mobj->query['type_id'];
+				$find_category_id	= (array)$mobj->query['catIds'];
+				$find_company_id	= $mobj->query['company_id'];
+				$find_country		= $mobj->query['country_id'];
+
+				$params				= $menu->params;
+				$params				= json_decode($params);
+				$find_isFeatured	= $params->isFeatured;
+				$find_state_id		= $params->state_id;
+				$find_city_id		= $params->city_id;
+				
+				$find_agent_type	= $params->agenttype;
+				//find itemid now
+				if($find_pro_type > 0)
+				{
+					if($find_pro_type == $pro_type){ //ok
+						$type = 1;
+						$return++;
+					}
+					else
+					{
+						$type = 0;
+					}
+				}else{
+					$type = 0;
+				}
+				if(count($find_category_id) > 0 && count($category_id) > 0)
+				{
+					$show = 0;
+					foreach($category_id as $cid)
+					{
+						if(in_array($cid,$find_category_id))
+						{
+							$show = 1;
+						}
+					}
+					if($show == 1){
+						$cat = 1;
+						$return++;
+						
+						if(count($find_category_id) == count($category_id)){
+							$return++; //use for case: Parent menu contains several sub cats. And there is other link for one sub cat. The system must get Itemid of that sub cat. 
+						}
+					}else{
+						$return = -1000; //we won't care this menu
+					}
+				}else{
+					$cat = 0;
+				}
+				if($find_country > 0){
+					if($find_country == $country){ //ok
+						$c = 1;
+						$return++;
+					}else{
+						$c = 0;
+					}
+				}else{
+					$c = 0;
+				}
+				
+				if($find_state_id > 0){
+					if($find_state_id == $state){ //ok
+						$s = 1;
+						$return++;
+					}else{
+						$s = 0;
+					}
+				}else{
+					$s = 0;
+				}
+
+				if($find_city_id > 0){
+					if($find_city_id == $city){ //ok
+						$s = 1;
+						$return++;
+					}else{
+						$s = 0;
+					}
+				}else{
+					$s = 0;
+				}
+				
+				
+				if($find_company_id > 0){
+					if($find_company_id == $company_id){ //ok
+						$company = 1;
+						$return++;
+					}else{
+						$company = 0;
+					}
+				}else{
+					$company = 0;
+				}
+				
+				if($find_isFeatured > 0){
+					if($find_isFeatured == $isFeatured){ //ok
+						$featured = 1;
+						if($return > 0){
+							$return = $return + 2;
+						}
+					}else{
+						$featured = 0;
+					}
+				}else{
+					$featured = 0;
+				}
+
+				if($find_agent_type > 0){
+					if($find_agent_type == $agent_type){ //ok
+						if($return > 0){
+							$return = $return + 1;
+						}
+					}
+				}
+				
+				$count = count($menuArr);
+				$menuArr[$count] = new stdClass();
+				$menuArr[$count]->point = $return;
+				$menuArr[$count]->menu_id = $menu->id;
+				
+			}//end for
+			$max = 0;
+			//$menus	= $app->getMenu('site');
+			$menuid = $default_itemid;
+			if($menuid == 0){
+				$menuid = $default_itemid;
+			}
+
+			for($i=0;$i<count($menuArr);$i++)
+			{
+				if($menuArr[$i]->point > $max)
+				{
+					$max = $menuArr[$i]->point;
+					$menuid = $menuArr[$i]->menu_id;
+				}
+			}
+			if($max == 0)
+			{
+				$menuid = $menuid_active;
+			}
+			if($menuid > 0)
+			{
+				//return $menuid;
+				$db->setQuery("Select * from #__menu where id = '$menuid'");
+				$founded_menu = $db->loadObject();
+
+				$db->setQuery("Select count(id) from #__osrs_property_itemid where pid = '$pid' and itemid = '$founded_menu->id'");
+				$count = $db->loadResult();
+				if((int) $count == 0)
+				{
+					$db->setQuery("insert into #__osrs_property_itemid (id, pid, itemid, lang, `access`, created) values (NULL, '$pid', '$founded_menu->id','$language', '$founded_menu->access','".gmdate("Y-m-d")."')");
+					$db->execute();
+				}
+			}
+			
+		}
+	}
     
     
     static function syncdatabase($option){
@@ -5130,7 +5434,7 @@ class OspropertyProperties
                 $query->select('pid')->from('#__osrs_property_categories')->where('category_id = "'.$row->category_id.'"');
                 $db->setQuery($query);
                 $properties = $db->loadObjectList();
-                $tempArr = array();
+                $tempArr = [];
                 foreach($properties as $property){
                     $tempArr[] = $property->pid;
                 }

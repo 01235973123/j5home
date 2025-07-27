@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
@@ -12,14 +12,21 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
+// Little command to allow viewing plan data easier without having to edit code during support
+if ($this->input->getInt('debug'))
+{
+	print_r($this->item);
+}
+
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
-$app = Factory::getApplication();
-$app->getDocument()->getWebAssetManager()->useScript('showon');
-$app->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/js/admin-plan-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->useScript('showon')
+	->registerAndUseScript('com_osmembership.admin-plan-default', 'media/com_osmembership/js/admin-plan-default.min.js');
 
 $keys = ['OSM_ENTER_PLAN_TITLE', 'OSM_ENTER_SUBSCRIPTION_LENGTH', 'OSM_PRICE_REQUIRED'];
 OSMembershipHelperHtml::addJSStrings($keys);

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -19,7 +19,7 @@ use Joomla\CMS\Language\Text;
         <div class="control-label"><?php echo Text::_('OSM_TITLE'); ?></div>
         <div class="controls">
             <input type="text" name="title" value="<?php echo $this->escape($this->item->title); ?>"
-                   class="input-xlarge form-control w-100" size="70"/>
+                   class="form-control" size="70"/>
         </div>
     </div>
     <div class="control-group">

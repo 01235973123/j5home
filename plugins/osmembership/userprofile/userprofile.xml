@@ -4,10 +4,10 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 3, or later</license>
     <creationDate>Nov 2012</creationDate>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin is used to Add Subscribers to Userprofile when they subscribe for a subscription plan.
     </description>
     <files>
@@ -22,6 +22,16 @@
                         label="Update User Profile When Admin Update A Subscription"
                         description="If set to Yes, the system will update user profile data when admin update a subscription record from backend"
                         default="0"
+                >
+                    <option value="1">JYES</option>
+                    <option value="0">JNO</option>
+                </field>
+                <field
+                        name="update_name"
+                        type="radio"
+                        label="Update Name Of User"
+                        description="If you do not want the plugin to update name of user base on data from first_name and last_name, set this parameter to No"
+                        default="1"
                 >
                     <option value="1">JYES</option>
                     <option value="0">JNO</option>

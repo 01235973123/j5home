@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -125,9 +125,21 @@ class OSMembershipViewCouponHtml extends MPFViewItem
 
 		$options                          = [];
 		$options[]                        = HTMLHelper::_('select.option', '', Text::_('All'));
-		$options[]                        = HTMLHelper::_('select.option', 'subscribe', Text::_('OSM_NEW_SUBSCRIPTION'));
-		$options[]                        = HTMLHelper::_('select.option', 'renew', Text::_('OSM_SUBSCRIPTION_RENEWAL'));
-		$options[]                        = HTMLHelper::_('select.option', 'upgrade', Text::_('OSM_SUBSCRIPTION_UPGRADE'));
+		$options[]                        = HTMLHelper::_(
+			'select.option',
+			'subscribe',
+			Text::_('OSM_NEW_SUBSCRIPTION')
+		);
+		$options[]                        = HTMLHelper::_(
+			'select.option',
+			'renew',
+			Text::_('OSM_SUBSCRIPTION_RENEWAL')
+		);
+		$options[]                        = HTMLHelper::_(
+			'select.option',
+			'upgrade',
+			Text::_('OSM_SUBSCRIPTION_UPGRADE')
+		);
 		$this->lists['subscription_type'] = HTMLHelper::_(
 			'select.genericlist',
 			$options,
@@ -154,7 +166,10 @@ class OSMembershipViewCouponHtml extends MPFViewItem
 			}
 		}
 
-		$this->lists['plan_id'] = OSMembershipHelperHtml::getChoicesJsSelect($this->lists['plan_id'], Text::_('OSM_TYPE_OR_SELECT_SOME_PLANS'));
+		$this->lists['plan_id'] = OSMembershipHelperHtml::getChoicesJsSelect(
+			$this->lists['plan_id'],
+			Text::_('OSM_TYPE_OR_SELECT_SOME_PLANS')
+		);
 	}
 
 	/**

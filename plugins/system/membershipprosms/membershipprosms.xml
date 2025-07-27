@@ -3,11 +3,11 @@
     <name>System - Membership Pro SMS</name>
     <author>Tuan Pham Ngoc</author>
     <creationDate>August 2020</creationDate>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 2 or later; see LICENSE.txt</license>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>www.joomdonation.com</authorUrl>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin is used to send SMS reminder to your subscribers. It also sends SMS notification to admin
         when someone subscribes for your subscription plans.
     </description>
@@ -17,7 +17,7 @@
     <config>
         <fields name="params">
             <fieldset name="basic">
-                <field name="last_run" label="Last Run Time" type="text" readonly="true" size="30"
+                <field name="last_run" label="Last Run Time" type="hidden" readonly="true" size="30"
                        description="Store Last Run Time of the plugin"/>
                 <field name="phones" label="Administrator Phone Numbers" type="text" class="input-xlarge" default=""
                        description="Enter phone numbers of administrators who want to receive SMS notification when someone subscribe for a subscription plan on the site. Multiple phone numbers are supported, just separate them by comment."/>

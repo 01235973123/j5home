@@ -25,7 +25,8 @@ class SimpleImage {
    var $image;
    var $image_type;
  
-   function load($filename) {
+   function load($filename) 
+   {
       $image_info = getimagesize($filename);
       $this->image_type = $image_info[2];
       if( $this->image_type == IMAGETYPE_JPEG ) {

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
+use Joomla\Database\DatabaseDriver;
 
 class OSMembershipControllerProfile extends OSMembershipController
 {
@@ -66,7 +67,11 @@ class OSMembershipControllerProfile extends OSMembershipController
 		}
 
 		//Redirect to the profile page
-		$this->setRedirect(Route::_('index.php?option=com_osmembership&view=profile&Itemid=' . $Itemid, false), $message, $type);
+		$this->setRedirect(
+			Route::_('index.php?option=com_osmembership&view=profile&Itemid=' . $Itemid, false),
+			$message,
+			$type
+		);
 	}
 
 	/**
@@ -95,7 +100,11 @@ class OSMembershipControllerProfile extends OSMembershipController
 		}
 
 		//Redirect to the profile page
-		$this->setRedirect(Route::_('index.php?option=com_osmembership&view=profile&Itemid=' . $Itemid), $message, $type);
+		$this->setRedirect(
+			Route::_('index.php?option=com_osmembership&view=profile&Itemid=' . $Itemid),
+			$message,
+			$type
+		);
 	}
 
 	/**
@@ -120,7 +129,9 @@ class OSMembershipControllerProfile extends OSMembershipController
 		{
 			$this->setRedirect(
 				Route::_('index.php?option=com_osmembesrhip&view=profile'),
-				Text::_('You need to subscribe for at least one subscription plan in our system to download member card')
+				Text::_(
+					'You need to subscribe for at least one subscription plan in our system to download member card'
+				)
 			);
 
 			return;
@@ -154,7 +165,9 @@ class OSMembershipControllerProfile extends OSMembershipController
 		{
 			$this->setRedirect(
 				Route::_('index.php?option=com_osmembership&view=profile'),
-				Text::_('You need to subscribe for at least one subscription plan in our system to download member card')
+				Text::_(
+					'You need to subscribe for at least one subscription plan in our system to download member card'
+				)
 			);
 
 			return;
@@ -162,7 +175,7 @@ class OSMembershipControllerProfile extends OSMembershipController
 
 		$planId = $this->input->getInt('plan_id');
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 		$query->select('a.*, b.username')
@@ -186,7 +199,11 @@ class OSMembershipControllerProfile extends OSMembershipController
 		}
 
 		// Generate member card and save it
-		$path = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'generatePlanMemberCard', [$item, $config]);
+		$path = OSMembershipHelper::callOverridableHelperMethod(
+			'Subscription',
+			'generatePlanMemberCard',
+			[$item, $config]
+		);
 
 		$this->processDownloadFile($path, $item->username . '_' . $item->plan_id . '.pdf');
 	}

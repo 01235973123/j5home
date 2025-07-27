@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -11,13 +11,16 @@ defined('_JEXEC') or die;
 
 use Joomla\Archive\Archive;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\UserHelper;
+use Joomla\Database\DatabaseDriver;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use OSSolution\MembershipPro\Admin\Event\Subscription\AfterStoreSubscription;
@@ -43,7 +46,7 @@ class OSMembershipControllerTool extends MPFController
 		$start  = $this->input->getInt('start', 0);
 		$userId = $this->input->getInt('user_id', 0);
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('user_id, MIN(id) AS profile_id')
@@ -63,7 +66,10 @@ class OSMembershipControllerTool extends MPFController
 		if (count($rows) == 0)
 		{
 			// OK, job done
-			$this->setRedirect('index.php?option=com_osmembership&view=subscriptions', 'Profile Data Successfully Corrected');
+			$this->setRedirect(
+				'index.php?option=com_osmembership&view=subscriptions',
+				'Profile Data Successfully Corrected'
+			);
 		}
 		else
 		{
@@ -109,7 +115,9 @@ class OSMembershipControllerTool extends MPFController
 		{
 			$query->clear()
 				->update('#__osmembership_subscribers')
-				->set('formatted_invoice_number = ' . $db->quote(OSMembershipHelper::formatInvoiceNumber($row, $config)))
+				->set(
+					'formatted_invoice_number = ' . $db->quote(OSMembershipHelper::formatInvoiceNumber($row, $config))
+				)
 				->where('id = ' . $row->id);
 			$db->setQuery($query)
 				->execute();
@@ -218,7 +226,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$tmpPath = $this->app->get('tmp_path');
 
-		if (!Folder::exists($tmpPath))
+		if (!is_dir(Path::clean($tmpPath)))
 		{
 			$tmpPath = JPATH_ROOT . '/tmp';
 		}
@@ -274,7 +282,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$tmpPath = $this->app->get('tmp_path');
 
-		if (!Folder::exists($tmpPath))
+		if (!is_dir(Path::clean($tmpPath)))
 		{
 			$tmpPath = JPATH_ROOT . '/tmp';
 		}
@@ -296,7 +304,10 @@ class OSMembershipControllerTool extends MPFController
 		// Delete the downloaded zip file
 		File::delete($fontPackage);
 
-		$this->setRedirect('index.php?option=com_osmembership&view=subscriptions', 'ttfonts for MPDF is downloaded and extracted');
+		$this->setRedirect(
+			'index.php?option=com_osmembership&view=subscriptions',
+			'ttfonts for MPDF is downloaded and extracted'
+		);
 	}
 
 	public function download_mpdf_font_full()
@@ -314,7 +325,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$tmpPath = $this->app->get('tmp_path');
 
-		if (!Folder::exists($tmpPath))
+		if (!is_dir(Path::clean($tmpPath)))
 		{
 			$tmpPath = JPATH_ROOT . '/tmp';
 		}
@@ -336,7 +347,10 @@ class OSMembershipControllerTool extends MPFController
 		// Delete the downloaded zip file
 		File::delete($fontPackage);
 
-		$this->setRedirect('index.php?option=com_osmembership&view=subscriptions', 'ttfonts for MPDF is downloaded and extracted');
+		$this->setRedirect(
+			'index.php?option=com_osmembership&view=subscriptions',
+			'ttfonts for MPDF is downloaded and extracted'
+		);
 	}
 
 	public function update_recurring_payment_amounts()
@@ -484,7 +498,15 @@ class OSMembershipControllerTool extends MPFController
 
 		if (count($languages))
 		{
-			$mailer   = Factory::getMailer();
+			if (version_compare(JVERSION, '4.4.0', 'ge'))
+			{
+				$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
+			}
+			else
+			{
+				$mailer = Factory::getMailer();
+			}
+
 			$app      = $this->app;
 			$mailFrom = $app->get('mailfrom');
 			$fromName = $app->get('fromname');
@@ -498,7 +520,10 @@ class OSMembershipControllerTool extends MPFController
 
 				if (file_exists(JPATH_ROOT . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini'))
 				{
-					$mailer->addAttachment(JPATH_ROOT . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini', $tag . '.com_osmembership.ini');
+					$mailer->addAttachment(
+						JPATH_ROOT . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini',
+						$tag . '.com_osmembership.ini'
+					);
 				}
 
 				if (file_exists(JPATH_ADMINISTRATOR . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini'))
@@ -561,7 +586,10 @@ class OSMembershipControllerTool extends MPFController
 	{
 		$db = Factory::getContainer()->get('db');
 		$db->truncateTable('#__osmembership_sefurls');
-		$this->setRedirect('index.php?option=com_osmembership&view=dashboard', Text::_('SEF urls has successfully been reset'));
+		$this->setRedirect(
+			'index.php?option=com_osmembership&view=dashboard',
+			Text::_('SEF urls has successfully been reset')
+		);
 	}
 
 	public function trigger_store_event()
@@ -739,7 +767,9 @@ class OSMembershipControllerTool extends MPFController
 
 			sleep(3);
 
-			$this->setRedirect('index.php?option=com_osmembership&task=tool.trigger_active_event_for_joomlagroups&start=' . $start);
+			$this->setRedirect(
+				'index.php?option=com_osmembership&task=tool.trigger_active_event_for_joomlagroups&start=' . $start
+			);
 		}
 	}
 
@@ -905,7 +935,10 @@ class OSMembershipControllerTool extends MPFController
 			}
 		}
 
-		$this->setRedirect('index.php?option=com_osmembership&view=taxes', Text::_('EU Tax Rules were successfully created'));
+		$this->setRedirect(
+			'index.php?option=com_osmembership&view=taxes',
+			Text::_('EU Tax Rules were successfully created')
+		);
 	}
 
 	/**
@@ -1035,7 +1068,9 @@ class OSMembershipControllerTool extends MPFController
 					}
 					catch (Exception $e)
 					{
-						$this->app->enqueueMessage(sprintf('Field %s already exist in table %s', $fieldName, '#__osmembership_categories'));
+						$this->app->enqueueMessage(
+							sprintf('Field %s already exist in table %s', $fieldName, '#__osmembership_categories')
+						);
 					}
 				}
 
@@ -1081,7 +1116,9 @@ class OSMembershipControllerTool extends MPFController
 					}
 					catch (Exception $e)
 					{
-						$this->app->enqueueMessage(sprintf('Field %s already exist in table %s', $fieldName, '#__osmembership_plans'));
+						$this->app->enqueueMessage(
+							sprintf('Field %s already exist in table %s', $fieldName, '#__osmembership_plans')
+						);
 					}
 				}
 
@@ -1116,7 +1153,9 @@ class OSMembershipControllerTool extends MPFController
 					}
 					catch (Exception $e)
 					{
-						$this->app->enqueueMessage(sprintf('Field %s already exist in table %s', $fieldName, '#__eb_fields'));
+						$this->app->enqueueMessage(
+							sprintf('Field %s already exist in table %s', $fieldName, '#__eb_fields')
+						);
 					}
 				}
 			}
@@ -1557,7 +1596,9 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($sql)
 			->execute();
 
-		OSMembershipHelper::executeSqlFile(JPATH_ADMINISTRATOR . '/components/com_osmembership/sql/countries_states.sql');
+		OSMembershipHelper::executeSqlFile(
+			JPATH_ADMINISTRATOR . '/components/com_osmembership/sql/countries_states.sql'
+		);
 
 		echo 'Countries, States database successfully updated';
 	}
@@ -1688,7 +1729,10 @@ class OSMembershipControllerTool extends MPFController
 
 		foreach ($rows as $row)
 		{
-			$subscriptionCode = OSMembershipHelper::getUniqueCodeForField('subscription_code', '#__osmembership_subscribers');
+			$subscriptionCode = OSMembershipHelper::getUniqueCodeForField(
+				'subscription_code',
+				'#__osmembership_subscribers'
+			);
 			$query->clear()
 				->update('#__osmembership_subscribers')
 				->set('subscription_code = ' . $db->quote($subscriptionCode))
@@ -1930,7 +1974,9 @@ class OSMembershipControllerTool extends MPFController
 		$query = $db->getQuery(true)
 			->select('*')
 			->from('#__users')
-			->where('id IN (SELECT user_id FROM #__user_usergroup_map WHERE group_id IN (' . implode(',', $groupIds) . '))');
+			->where(
+				'id IN (SELECT user_id FROM #__user_usergroup_map WHERE group_id IN (' . implode(',', $groupIds) . '))'
+			);
 		$db->setQuery($query);
 		$users = $db->loadObjectList();
 
@@ -2065,5 +2111,471 @@ class OSMembershipControllerTool extends MPFController
 			->execute();
 
 		echo sprintf('%s records deleted', $db->getAffectedRows());
+	}
+
+	/**
+	 * Tool to convert important tables to use utf8mb4
+	 *
+	 * @return void
+	 */
+	public function convert_to_utf8mb4()
+	{
+		/* @var DatabaseDriver $db */
+		$db = Factory::getContainer()->get('db');
+
+		$tablesToConvert = [
+			'#__osmembership_categories',
+			'#__osmembership_plans',
+			'#__osmembership_messages',
+			'#__osmembership_fields',
+			'#__osmembership_subscribers',
+			'#__osmembership_field_value',
+			'#__osmembership_mmtemplates',
+			'#__osmembership_emails',
+		];
+
+		foreach ($tablesToConvert as $table)
+		{
+			// Convert table
+			$sql = "ALTER TABLE $table CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
+			$db->setQuery($sql)
+				->execute();
+		}
+	}
+
+
+	/**
+	 * Method to add fields to database to support up to 4 reminders
+	 *
+	 * @return void
+	 */
+	public function add_fourth_reminder_fields()
+	{
+		/* @var DatabaseDriver $db */
+		$db = Factory::getContainer()->get('db');
+
+		$categoryTableFields  = array_keys($db->getTableColumns('#__osmembership_categories'));
+		$planTableFields      = array_keys($db->getTableColumns('#__osmembership_plans'));
+		$subscribeTableFields = array_keys($db->getTableColumns('#__osmembership_subscribers'));
+
+		$newFieldsToCategoryTable = [
+			'fourth_reminder_email_body' => 'text',
+		];
+
+		foreach ($newFieldsToCategoryTable as $fieldName => $type)
+		{
+			if (in_array($fieldName, $categoryTableFields))
+			{
+				continue;
+			}
+
+			if ($type == 'varchar')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` VARCHAR( 255 );";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type == 'text')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` TEXT NULL;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+		}
+
+		$newFieldsToPlanTable = [
+			'send_fourth_reminder'          => 'int',
+			'fourth_reminder_email_subject' => 'varchar',
+			'fourth_reminder_email_body'    => 'text',
+		];
+
+		foreach ($newFieldsToPlanTable as $fieldName => $type)
+		{
+			if (in_array($fieldName, $planTableFields))
+			{
+				continue;
+			}
+
+			if ($type == 'varchar')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` VARCHAR( 255 );";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type == 'int')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` INT NOT NULL DEFAULT 0;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type == 'text')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` TEXT NULL;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+		}
+
+		$newFieldsToSubscribersTable = [
+			'fourth_reminder_sent'    => 'tinyint',
+			'fourth_reminder_sent_at' => 'datetime',
+		];
+
+		foreach ($newFieldsToSubscribersTable as $fieldName => $type)
+		{
+			if (in_array($fieldName, $subscribeTableFields))
+			{
+				continue;
+			}
+
+			if ($type === 'tinyint')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` TINYINT NOT NULL DEFAULT 0;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type === 'datetime')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` datetime;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+		}
+
+		// Add extra reminder messages
+		$items = [
+			[
+				'name'         => 'fourth_reminder_email_subject',
+				'title'        => 'OSM_FOURTH_REMINDER_EMAIL_SUBJECT',
+				'title_en'     => 'Fourth Reminder Email Subject',
+				'type'         => 'text',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+			[
+				'name'         => 'fourth_reminder_email_body',
+				'title'        => 'OSM_FOURTH_REMINDER_EMAIL_BODY',
+				'title_en'     => 'Fourth Reminder Email Body',
+				'type'         => 'editor',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+		];
+
+		require_once JPATH_ADMINISTRATOR . '/components/com_osmembership/install.osmembership.php';
+
+		com_osmembershipInstallerScript::insertMessageItems($items);
+	}
+
+	/**
+	 * Method to add fields to database to support up to 6 reminders
+	 *
+	 * @return void
+	 */
+	public function add_fifth_reminder_fields()
+	{
+		/* @var DatabaseDriver $db */
+		$db = Factory::getContainer()->get('db');
+
+		$categoryTableFields  = array_keys($db->getTableColumns('#__osmembership_categories'));
+		$planTableFields      = array_keys($db->getTableColumns('#__osmembership_plans'));
+		$subscribeTableFields = array_keys($db->getTableColumns('#__osmembership_subscribers'));
+
+		$newFieldsToCategoryTable = [
+			'fourth_reminder_email_body' => 'text',
+			'fifth_reminder_email_body'  => 'text',
+		];
+
+		foreach ($newFieldsToCategoryTable as $fieldName => $type)
+		{
+			if (in_array($fieldName, $categoryTableFields))
+			{
+				continue;
+			}
+
+			if ($type == 'varchar')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` VARCHAR( 255 );";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type == 'text')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` TEXT NULL;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+		}
+
+		$newFieldsToPlanTable = [
+			'send_fourth_reminder'          => 'int',
+			'fourth_reminder_email_subject' => 'varchar',
+			'fourth_reminder_email_body'    => 'text',
+			'send_fifth_reminder'           => 'int',
+			'fifth_reminder_email_subject'  => 'varchar',
+			'fifth_reminder_email_body'     => 'text',
+		];
+
+		foreach ($newFieldsToPlanTable as $fieldName => $type)
+		{
+			if (in_array($fieldName, $planTableFields))
+			{
+				continue;
+			}
+
+			if ($type == 'varchar')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` VARCHAR( 255 );";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type == 'int')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` INT NOT NULL DEFAULT 0;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type == 'text')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` TEXT NULL;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+		}
+
+		$newFieldsToSubscribersTable = [
+			'fourth_reminder_sent'    => 'tinyint',
+			'fourth_reminder_sent_at' => 'datetime',
+			'fifth_reminder_sent'     => 'tinyint',
+			'fifth_reminder_sent_at'  => 'datetime',
+		];
+
+		foreach ($newFieldsToSubscribersTable as $fieldName => $type)
+		{
+			if (in_array($fieldName, $subscribeTableFields))
+			{
+				continue;
+			}
+
+			if ($type === 'tinyint')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` TINYINT NOT NULL DEFAULT 0;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type === 'datetime')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` datetime;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+		}
+
+		// Add extra reminder messages
+		$items = [
+			[
+				'name'         => 'fourth_reminder_email_subject',
+				'title'        => 'OSM_FOURTH_REMINDER_EMAIL_SUBJECT',
+				'title_en'     => 'Fourth Reminder Email Subject',
+				'type'         => 'text',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+			[
+				'name'         => 'fourth_reminder_email_body',
+				'title'        => 'OSM_FOURTH_REMINDER_EMAIL_BODY',
+				'title_en'     => 'Fourth Reminder Email Body',
+				'type'         => 'editor',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+			[
+				'name'         => 'fifth_reminder_email_subject',
+				'title'        => 'OSM_FIFTH_REMINDER_EMAIL_SUBJECT',
+				'title_en'     => 'Fifth Reminder Email Subject',
+				'type'         => 'text',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+			[
+				'name'         => 'fifth_reminder_email_body',
+				'title'        => 'OSM_FIFTH_REMINDER_EMAIL_BODY',
+				'title_en'     => 'Fifth Reminder Email Body',
+				'type'         => 'editor',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+		];
+
+		require_once JPATH_ADMINISTRATOR . '/components/com_osmembership/install.osmembership.php';
+
+		com_osmembershipInstallerScript::insertMessageItems($items);
+	}
+
+	/**
+	 * Method to add fields to database to support up to 6 reminders
+	 *
+	 * @return void
+	 */
+	public function add_sixth_reminder_fields()
+	{
+		/* @var DatabaseDriver $db */
+		$db = Factory::getContainer()->get('db');
+
+		$categoryTableFields  = array_keys($db->getTableColumns('#__osmembership_categories'));
+		$planTableFields      = array_keys($db->getTableColumns('#__osmembership_plans'));
+		$subscribeTableFields = array_keys($db->getTableColumns('#__osmembership_subscribers'));
+
+		$newFieldsToCategoryTable = [
+			'fourth_reminder_email_body' => 'text',
+			'fifth_reminder_email_body'  => 'text',
+			'sixth_reminder_email_body'  => 'text',
+		];
+
+		foreach ($newFieldsToCategoryTable as $fieldName => $type)
+		{
+			if (in_array($fieldName, $categoryTableFields))
+			{
+				continue;
+			}
+
+			if ($type == 'varchar')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` VARCHAR( 255 );";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type == 'text')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` TEXT NULL;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+		}
+
+		$newFieldsToPlanTable = [
+			'send_fourth_reminder'          => 'int',
+			'fourth_reminder_email_subject' => 'varchar',
+			'fourth_reminder_email_body'    => 'text',
+			'send_fifth_reminder'           => 'int',
+			'fifth_reminder_email_subject'  => 'varchar',
+			'fifth_reminder_email_body'     => 'text',
+			'send_sixth_reminder'           => 'int',
+			'sixth_reminder_email_subject'  => 'varchar',
+			'sixth_reminder_email_body'     => 'text',
+		];
+
+		foreach ($newFieldsToPlanTable as $fieldName => $type)
+		{
+			if (in_array($fieldName, $planTableFields))
+			{
+				continue;
+			}
+
+			if ($type == 'varchar')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` VARCHAR( 255 );";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type == 'int')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` INT NOT NULL DEFAULT 0;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type == 'text')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` TEXT NULL;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+		}
+
+		$newFieldsToSubscribersTable = [
+			'fourth_reminder_sent'    => 'tinyint',
+			'fourth_reminder_sent_at' => 'datetime',
+			'fifth_reminder_sent'     => 'tinyint',
+			'fifth_reminder_sent_at'  => 'datetime',
+			'sixth_reminder_sent'     => 'tinyint',
+			'sixth_reminder_sent_at'  => 'datetime',
+		];
+
+		foreach ($newFieldsToSubscribersTable as $fieldName => $type)
+		{
+			if (in_array($fieldName, $subscribeTableFields))
+			{
+				continue;
+			}
+
+			if ($type === 'tinyint')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` TINYINT NOT NULL DEFAULT 0;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+			elseif ($type === 'datetime')
+			{
+				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` datetime;";
+				$db->setQuery($sql);
+				$db->execute();
+			}
+		}
+
+		// Add extra reminder messages
+		$items = [
+			[
+				'name'         => 'fourth_reminder_email_subject',
+				'title'        => 'OSM_FOURTH_REMINDER_EMAIL_SUBJECT',
+				'title_en'     => 'Fourth Reminder Email Subject',
+				'type'         => 'text',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+			[
+				'name'         => 'fourth_reminder_email_body',
+				'title'        => 'OSM_FOURTH_REMINDER_EMAIL_BODY',
+				'title_en'     => 'Fourth Reminder Email Body',
+				'type'         => 'editor',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+			[
+				'name'         => 'fifth_reminder_email_subject',
+				'title'        => 'OSM_FIFTH_REMINDER_EMAIL_SUBJECT',
+				'title_en'     => 'Fifth Reminder Email Subject',
+				'type'         => 'text',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+			[
+				'name'         => 'fifth_reminder_email_body',
+				'title'        => 'OSM_FIFTH_REMINDER_EMAIL_BODY',
+				'title_en'     => 'Fifth Reminder Email Body',
+				'type'         => 'editor',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+			[
+				'name'         => 'sixth_reminder_email_subject',
+				'title'        => 'OSM_SIXTH_REMINDER_EMAIL_SUBJECT',
+				'title_en'     => 'Sixth Reminder Email Subject',
+				'type'         => 'text',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+			[
+				'name'         => 'sixth_reminder_email_body',
+				'title'        => 'OSM_SIXTH_REMINDER_EMAIL_BODY',
+				'title_en'     => 'Sixth Reminder Email Body',
+				'type'         => 'editor',
+				'group'        => 5,
+				'translatable' => 1,
+			],
+		];
+
+		require_once JPATH_ADMINISTRATOR . '/components/com_osmembership/install.osmembership.php';
+
+		com_osmembershipInstallerScript::insertMessageItems($items);
 	}
 }

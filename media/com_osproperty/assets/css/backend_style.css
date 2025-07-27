@@ -355,3 +355,41 @@ td.csvmodificationformpart2
 {
 	display:inline;
 }
+
+
+#propertyContent input[type="text"], #propertyContent select, #propertyContent textarea
+{
+	width:100% !important;
+}
+
+#propertyContent .field-calendar .input-group input
+{
+	width:80% !important;
+}
+
+#propertyContent #neighbor-page input[type="text"]
+{
+	width:75px !important;
+}
+
+.currency-input {
+  position: relative;
+  display: inline-block;
+}
+
+.currency-input input {
+  padding-left: 30px;
+  height: 36px;
+  font-size: 16px;
+}
+
+.currency-input::before {
+  content: "$";
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #555;
+  font-size: 16px;
+  pointer-events: none;
+}

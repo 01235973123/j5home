@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -110,7 +110,11 @@ class OSMembershipViewMembersHtml extends MPFViewHtml
 		$model = $this->getModel();
 		$state = $model->getState();
 
-		$this->fields          = OSMembershipHelper::getCustomFieldsForPlans($state->id, true, ['show_on_members_list = 1']);
+		$this->fields          = OSMembershipHelper::getCustomFieldsForPlans(
+			$state->id,
+			true,
+			['show_on_members_list = 1']
+		);
 		$this->state           = $state;
 		$this->items           = $model->getData();
 		$this->pagination      = $model->getPagination();
@@ -149,7 +153,8 @@ class OSMembershipViewMembersHtml extends MPFViewHtml
 					$query->clear()
 						->select('DISTINCT country')
 						->from('#__osmembership_subscribers')
-						->where('LENGTH(country) > 0');
+						->where('LENGTH(country) > 0')
+						->order('country');
 					$db->setQuery($query);
 					$fieldOptions = $db->loadColumn();
 				}
@@ -158,7 +163,8 @@ class OSMembershipViewMembersHtml extends MPFViewHtml
 					$query->clear()
 						->select('DISTINCT state')
 						->from('#__osmembership_subscribers')
-						->where('LENGTH(state) > 0');
+						->where('LENGTH(state) > 0')
+						->order('state');
 					$db->setQuery($query);
 					$fieldOptions = $db->loadColumn();
 				}

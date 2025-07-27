@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -22,9 +22,9 @@ class OSMembershipModelCountry extends MPFModelAdmin
 	/**
 	 * Update country_id make it the same with id
 	 *
-	 * @param   Table  $row
-	 * @param   MPFInput                 $input
-	 * @param   bool                     $isNew
+	 * @param   Table     $row
+	 * @param   MPFInput  $input
+	 * @param   bool      $isNew
 	 */
 	protected function afterStore($row, $input, $isNew)
 	{

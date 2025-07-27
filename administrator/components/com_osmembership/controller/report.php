@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -12,6 +12,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseDriver;
 
 /**
  * OSMembership Plugin controller
@@ -46,8 +47,8 @@ class OSMembershipControllerReport extends OSMembershipController
 
 		$config = OSMembershipHelper::getConfig();
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
-		$db     = Factory::getContainer()->get('db');
+		/* @var DatabaseDriver $db */
+		$db = Factory::getContainer()->get('db');
 
 		$ids = [];
 
@@ -133,8 +134,16 @@ class OSMembershipControllerReport extends OSMembershipController
 					break;
 			}
 
-			$row->plan_subscription_from_date = HTMLHelper::_('date', $row->plan_subscription_from_date, $config->date_format);
-			$row->plan_subscription_to_date   = HTMLHelper::_('date', $row->plan_subscription_to_date, $config->date_format);
+			$row->plan_subscription_from_date = HTMLHelper::_(
+				'date',
+				$row->plan_subscription_from_date,
+				$config->date_format
+			);
+			$row->plan_subscription_to_date   = HTMLHelper::_(
+				'date',
+				$row->plan_subscription_to_date,
+				$config->date_format
+			);
 
 			if ($row->membership_id)
 			{
@@ -161,7 +170,11 @@ class OSMembershipControllerReport extends OSMembershipController
 
 		$filename = 'subscribers_report_' . Factory::getDate('now', $this->app->get('offset'))->format('Y_m_d_H_i_s');
 
-		$filePath = OSMembershipHelper::callOverridableHelperMethod('Data', 'excelExport', [$fields, $rows, $filename, $headers]);
+		$filePath = OSMembershipHelper::callOverridableHelperMethod(
+			'Data',
+			'excelExport',
+			[$fields, $rows, $filename, $headers]
+		);
 
 		if ($filePath)
 		{

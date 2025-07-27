@@ -25,6 +25,7 @@
 				<option value="1">Top</option>
 				<option value="2">Bottom</option>
 			</field>
+			<field name="list_limit" type="text" default="" label="Number Plans Per Page" />
 			<field type="editor" buttons="yes" name="intro_text" filter="raw" label="Intro Text" description="If you enter some text here, it will be displayed at the top of plans list." />
 		</fieldset>
 	</fields>

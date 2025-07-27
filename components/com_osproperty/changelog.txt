@@ -1,3 +1,15 @@
+13th March 2025 - New version 4.0.0
+===============================
+- Improve layouts of Theme Default, Theme1, Theme2, Theme 3
+- Improve Locator search function and layout
+- Improve Categories listing layout
+- Improve Advanced search layout
+- Add Nnew slideshow in property details page
+- Fully support OpenStreetMap
+- Add Virtual tour field for properties
+- Improve Property printing layout
+- Improve Sef router functions
+
 16th November 2024 - New version 3.21.6
 ===============================
 - Improve Backend layout - Joomla 5

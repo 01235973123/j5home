@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -113,13 +113,17 @@ class OSMembershipHelperPayments
 		{
 			foreach ($methods as $method)
 			{
-				$jsString .= " method = new PaymentMethod('" . $method->getName() . "'," . $method->getCreditCard() . ',' . $method->getCardType(
-					) . ',' . $method->getCardCvv() . ',' . $method->getCardHolderName() . ");\n";
+				$jsString .= " method = new PaymentMethod('" . $method->getName() . "'," . $method->getCreditCard(
+					) . ',' . $method->getCardType() . ',' . $method->getCardCvv() . ',' . $method->getCardHolderName(
+					) . ");\n";
 				$jsString .= " methods.Add(method);\n";
 			}
 		}
 
-		Factory::getApplication()->getDocument()->addScriptDeclaration($jsString);
+		Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager()
+			->addInlineScript($jsString);
 	}
 
 	/**
@@ -147,8 +151,11 @@ class OSMembershipHelperPayments
 	 *
 	 * @return string
 	 */
-	public static function getDefautPaymentMethod($methodIds = null, $onlyRecurring = false, $excludeOfflinePayment = false)
-	{
+	public static function getDefautPaymentMethod(
+		$methodIds = null,
+		$onlyRecurring = false,
+		$excludeOfflinePayment = false
+	) {
 		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);

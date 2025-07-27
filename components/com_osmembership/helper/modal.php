@@ -3,14 +3,13 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Uri\Uri;
 
 abstract class OSMembershipHelperModal
 {
@@ -25,11 +24,21 @@ abstract class OSMembershipHelperModal
 
 		static $loadedSelectors = [];
 
+		$wa = Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager();
+
 		if ($scriptLoaded === false)
 		{
-			$rootUri = Uri::root(true);
-			Factory::getApplication()->getDocument()->addScript($rootUri . '/media/com_osmembership/assets/js/tingle/tingle.min.js')
-				->addStyleSheet($rootUri . '/media/com_osmembership/assets/js/tingle/tingle.min.css');
+			$wa->registerAndUseScript(
+				'com_osmembership.tingle',
+				'media/com_osmembership/assets/js/tingle/tingle.min.js'
+			)
+				->registerAndUseStyle(
+					'com_osmembership.tingle',
+					'media/com_osmembership/assets/js/tingle/tingle.min.css'
+				);
+
 			$scriptLoaded = true;
 		}
 
@@ -62,7 +71,7 @@ abstract class OSMembershipHelperModal
 		    });
 SCRIPT;
 
-		Factory::getApplication()->getDocument()->addScriptDeclaration($script);
+		$wa->addInlineScript($script);
 
 		$loadedSelectors[$selector] = true;
 	}

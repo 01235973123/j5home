@@ -3,7 +3,7 @@
  * @package     MPF
  * @subpackage  View
  *
- * @copyright   Copyright (C) 2016 - 2024 Ossolution Team, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2016 - 2025 Ossolution Team, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -38,6 +38,6 @@ $attributes = $attributes ?? [];
 		?>
 	</div>
 	<div class="controls">
-		<input class="<?php echo $class; ?>" type="<?php echo $type; ?>" name="<?php echo $name; ?>>" id="<?php echo $name; ?>" value="<?php echo $this->item->{$name};?>"<?php echo $this->getAttributesString($attributes); ?> />
+		<input class="<?php echo $class; ?>" type="<?php echo $type; ?>" name="<?php echo $name; ?>" id="<?php echo $name; ?>" value="<?php echo $this->item->{$name};?>"<?php echo $this->getAttributesString($attributes); ?> />
 	</div>
 </div>

@@ -16,18 +16,17 @@ use Joomla\Registry\Registry;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\Uri\Uri;
 
-
-error_reporting(E_ERROR | E_PARSE | E_COMPILE_ERROR | E_CORE_ERROR);
-//error_reporting(E_ALL);
+error_reporting(E_ERROR || E_PARSE || E_COMPILE_ERROR || E_CORE_ERROR);
 if (!defined('DS')) define('DS',DIRECTORY_SEPARATOR);
 
 global $configClass, $bootstrapHelper, $jinput;
 $jinput				 = Factory::getApplication()->input;
 $db = Factory::getDbo();
 $document = Factory::getDocument();
-$document->addStyleSheet(JURI::root().'modules/mod_ospropertysearch/asset/style.css');
-$document->addScript(JURI::root().'media/com_osproperty/assets/js/ajax.js');
+$document->addStyleSheet(Uri::root().'modules/mod_ospropertysearch/asset/style.css');
+$document->addScript(Uri::root().'media/com_osproperty/assets/js/ajax.js');
 
 include_once(JPATH_ROOT."/components/com_osproperty/helpers/common.php");
 include_once(JPATH_ROOT."/components/com_osproperty/helpers/helper.php");
@@ -166,9 +165,8 @@ if(($show_type == 1 && $type_id == 0) || $layout == "horizontal")
                 $menus = Factory::getApplication()->getMenu();
                 $menu = $menus->getActive();
                 if (is_object($menu)) {
-                    //$params = new Registry();
-					$params = new Registry($menu->params);
-                    //$params->loadString($menu->params);
+                    $params = new Registry();
+                    $params->loadString($menu->params);
                     $property_type = $params->get('type_id', 0);
                 }
             break;
@@ -176,17 +174,17 @@ if(($show_type == 1 && $type_id == 0) || $layout == "horizontal")
     }
 	if($show_labels == 0)
 	{
-		$typeArr[] = JHTML::_('select.option','',Text::_('OS_PROPERTY_TYPE'));
+		$typeArr[] = HTMLHelper::_('select.option','',Text::_('OS_PROPERTY_TYPE'));
 	}
 	else
 	{
-		$typeArr[] = JHTML::_('select.option','',Text::_('OS_ANY'));
+		$typeArr[] = HTMLHelper::_('select.option','',Text::_('OS_ANY'));
 	}
 	$db->setQuery("Select id as value,type_name$lang_suffix as text from #__osrs_types where published = '1' order by type_name");
 	$protypes = $db->loadObjectList();
 	$typeArr   = array_merge($typeArr,$protypes);
 
-	$lists['type'] = JHTML::_('select.genericlist',$typeArr,'property_type','style="'.$widthStyle.'" class="input-medium form-control form-select'. $chosenStyle.'"' ,'value','text',$property_type,'property_type'.$module->id);
+	$lists['type'] = HTMLHelper::_('select.genericlist',$typeArr,'property_type','style="'.$widthStyle.'" class="input-medium form-control form-select'. $chosenStyle.'"' ,'value','text',$property_type,'property_type'.$module->id);
 
 	$lists['marketstatus'] = OSPHelper::buildDropdownMarketStatus($isSold);
 }
@@ -207,7 +205,16 @@ if($opengroups == 1){
     $iclass = "osicon-chevron-down icon-chevron-down";
 }
 //list the custom fields for searching
-if($show_customfields == 1){
+if($show_customfields == 1)
+{
+	$db->setQuery("Select id from #__osrs_types where published = '1' order by ordering");
+	$types = $db->loadObjectList();
+	if(count($types) > 0){
+		foreach ($types as $type){
+			$db->setQuery("Select fid from #__osrs_extra_field_types where type_id = '$type->id'");
+			$type->fields = $db->loadColumn(0);
+		}
+	}
 	//checked do search through extra field
 	//get the list of the field groups
 	$user = Factory::getUser();
@@ -229,14 +236,7 @@ if($show_customfields == 1){
 		}
 	}
 }
-$db->setQuery("Select id from #__osrs_types where published = '1' order by ordering");
-$types = $db->loadObjectList();
-if(count($types) > 0){
-   	foreach ($types as $type){
-   		$db->setQuery("Select fid from #__osrs_extra_field_types where type_id = '$type->id'");
-   		$type->fields = $db->loadColumn(0);
-   	}
-}
+
 
 
 if($show_category == 1){
@@ -252,55 +252,55 @@ $price			= $jinput->getInt('price',0);
 // number bath room
 $nbath = $jinput->getInt('nbath',0);
 if($show_labels == 0){
-	$bathArr[] = JHTML::_('select.option','',Text::_('OS_BATH'));
+	$bathArr[] = HTMLHelper::_('select.option','',Text::_('OS_BATH'));
 }else{
-	$bathArr[] = JHTML::_('select.option','',Text::_('OS_ANY'));
+	$bathArr[] = HTMLHelper::_('select.option','',Text::_('OS_ANY'));
 }
 for($i=1;$i<=5;$i++){
-	$bathArr[] = JHTML::_('select.option',$i,$i.'+');
+	$bathArr[] = HTMLHelper::_('select.option',$i,$i.'+');
 }
-$lists['nbath'] = JHTML::_('select.genericlist',$bathArr,'nbath',' class="input-mini form-control form-select '. $chosenStyle.'"  style="'.$widthStyle.'"','value','text',$nbath);
+$lists['nbath'] = HTMLHelper::_('select.genericlist',$bathArr,'nbath',' class="input-mini form-control form-select '. $chosenStyle.'"  style="'.$widthStyle.'"','value','text',$nbath);
 
 
 //number bed room
 $nbed = $jinput->getInt('nbed',0);
 $lists['nbed'] = $nbed;
 if($show_labels == 0){
-	$bedArr[] = JHTML::_('select.option','',Text::_('OS_BED'));
+	$bedArr[] = HTMLHelper::_('select.option','',Text::_('OS_BED'));
 }else{
-	$bedArr[] = JHTML::_('select.option','',Text::_('OS_ANY'));
+	$bedArr[] = HTMLHelper::_('select.option','',Text::_('OS_ANY'));
 }
 for($i=1;$i<=5;$i++){
-	$bedArr[] = JHTML::_('select.option',$i,$i.'+');
+	$bedArr[] = HTMLHelper::_('select.option',$i,$i.'+');
 }
-$lists['nbed'] = JHTML::_('select.genericlist',$bedArr,'nbed','class="input-mini form-control form-select '. $chosenStyle.'" style="'.$widthStyle.'"','value','text',$nbed);
+$lists['nbed'] = HTMLHelper::_('select.genericlist',$bedArr,'nbed','class="input-mini form-control form-select '. $chosenStyle.'" style="'.$widthStyle.'"','value','text',$nbed);
 
 //number bed room
 $nroom = $jinput->getInt('nroom',0);
 $lists['room'] = $nroom;
 if($show_labels == 0){
-	$roomArr[] = JHTML::_('select.option','',Text::_('OS_ROOMS'));
+	$roomArr[] = HTMLHelper::_('select.option','',Text::_('OS_ROOMS'));
 }else{
-	$roomArr[] = JHTML::_('select.option','',Text::_('OS_ANY'));
+	$roomArr[] = HTMLHelper::_('select.option','',Text::_('OS_ANY'));
 }
 for($i=1;$i<=5;$i++){
-	$roomArr[] = JHTML::_('select.option',$i,$i.'+');
+	$roomArr[] = HTMLHelper::_('select.option',$i,$i.'+');
 }
-$lists['nroom'] = JHTML::_('select.genericlist',$roomArr,'nroom','class="input-mini form-control form-select '. $chosenStyle.'" style="'.$widthStyle.'"','value','text',$nroom);
+$lists['nroom'] = HTMLHelper::_('select.genericlist',$roomArr,'nroom','class="input-mini form-control form-select '. $chosenStyle.'" style="'.$widthStyle.'"','value','text',$nroom);
 
 
 //number bed floors
 $nfloors = $jinput->getInt('nfloors',0);
 $lists['nfloors'] = $nfloors;
 if($show_labels == 0){
-	$floorArr[] = JHTML::_('select.option','',Text::_('OS_FLOORS'));
+	$floorArr[] = HTMLHelper::_('select.option','',Text::_('OS_FLOORS'));
 }else{
-	$floorArr[] = JHTML::_('select.option','',Text::_('OS_ANY'));
+	$floorArr[] = HTMLHelper::_('select.option','',Text::_('OS_ANY'));
 }
 for($i=1;$i<=5;$i++){
-	$floorArr[] = JHTML::_('select.option',$i,$i.'+');
+	$floorArr[] = HTMLHelper::_('select.option',$i,$i.'+');
 }
-$lists['nfloor'] = JHTML::_('select.genericlist',$floorArr,'nfloors','class="input-mini form-control form-select '. $chosenStyle.'" style="'.$widthStyle.'"','value','text',$nfloors);
+$lists['nfloor'] = HTMLHelper::_('select.genericlist',$floorArr,'nfloors','class="input-mini form-control form-select '. $chosenStyle.'" style="'.$widthStyle.'"','value','text',$nfloors);
 
 if($show_labels == 0){
 	$first_option = Text::_('OS_COUNTRY');
@@ -341,46 +341,46 @@ $user_types = explode(",",$user_types);
 $optionArr = [];
 $agent_type = $jinput->getInt('agent_type',-1);
 if($show_labels == 0){
-	$optionArr[] = JHTML::_('select.option',-1,Text::_('OS_PROPERTIES_POSTED_BY'));
+	$optionArr[] = HTMLHelper::_('select.option',-1,Text::_('OS_PROPERTIES_POSTED_BY'));
 }else{
-	$optionArr[] = JHTML::_('select.option',-1,Text::_('OS_ANY'));
+	$optionArr[] = HTMLHelper::_('select.option',-1,Text::_('OS_ANY'));
 }
 if(in_array(0,$user_types)){
-	$optionArr[] = JHTML::_('select.option', '0', Text::_('OS_AGENT'));
+	$optionArr[] = HTMLHelper::_('select.option', '0', Text::_('OS_AGENT'));
 }
 if(in_array(1,$user_types)){
-	$optionArr[] = JHTML::_('select.option', '1', Text::_('OS_OWNER'));
+	$optionArr[] = HTMLHelper::_('select.option', '1', Text::_('OS_OWNER'));
 }
 if(in_array(2,$user_types)){
-	$optionArr[] = JHTML::_('select.option', '2', Text::_('OS_REALTOR'));
+	$optionArr[] = HTMLHelper::_('select.option', '2', Text::_('OS_REALTOR'));
 }
 if(in_array(3,$user_types)){
-	$optionArr[] = JHTML::_('select.option', '3', Text::_('OS_BROKER'));
+	$optionArr[] = HTMLHelper::_('select.option', '3', Text::_('OS_BROKER'));
 }
 if(in_array(4,$user_types)){
-	$optionArr[] = JHTML::_('select.option', '4', Text::_('OS_BUILDER'));
+	$optionArr[] = HTMLHelper::_('select.option', '4', Text::_('OS_BUILDER'));
 }
 if(in_array(5,$user_types)){
-	$optionArr[] = JHTML::_('select.option', '5', Text::_('OS_LANDLORD'));
+	$optionArr[] = HTMLHelper::_('select.option', '5', Text::_('OS_LANDLORD'));
 }
 if(in_array(6,$user_types)){
-	$optionArr[] = JHTML::_('select.option', '6', Text::_('OS_SELLER'));
+	$optionArr[] = HTMLHelper::_('select.option', '6', Text::_('OS_SELLER'));
 }
 
-$lists['agenttype'] = JHTML::_('select.genericlist',$optionArr,'agent_type','style="width:'.$inputbox_width_site.'px !important;" class="input-medium chosen form-control form-select"','value','text',$agent_type);
+$lists['agenttype'] = HTMLHelper::_('select.genericlist',$optionArr,'agent_type','style="width:'.$inputbox_width_site.'px !important;" class="input-medium chosen form-control form-select"','value','text',$agent_type);
 
 $optionArr = [];
-$optionArr[] = JHTML::_('select.option','a.isFeatured',Text::_('OS_FEATURED'));
-$optionArr[] = JHTML::_('select.option','a.ref',Text::_('Ref'));
-$optionArr[] = JHTML::_('select.option','a.pro_name',Text::_('OS_PROPERTY_TITLE'));
-$optionArr[] = JHTML::_('select.option','a.id',Text::_('OS_LISTDATE'));
-$optionArr[] = JHTML::_('select.option','a.price',Text::_('OS_PRICE'));
-$optionArr[] = JHTML::_('select.option','a.ordering',Text::_('OS_ORDERING'));
+$optionArr[] = HTMLHelper::_('select.option','a.isFeatured',Text::_('OS_FEATURED'));
+$optionArr[] = HTMLHelper::_('select.option','a.ref',Text::_('Ref'));
+$optionArr[] = HTMLHelper::_('select.option','a.pro_name',Text::_('OS_PROPERTY_TITLE'));
+$optionArr[] = HTMLHelper::_('select.option','a.id',Text::_('OS_LISTDATE'));
+$optionArr[] = HTMLHelper::_('select.option','a.price',Text::_('OS_PRICE'));
+$optionArr[] = HTMLHelper::_('select.option','a.ordering',Text::_('OS_ORDERING'));
 $lists['sortby'] = HTMLHelper::_('select.genericlist',$optionArr,'sortby','class="input-medium form-select"','value','text',$sortby);
 
 $optionArr = [];
-$optionArr[] = JHTML::_('select.option','desc',Text::_('OS_DESC'));
-$optionArr[] = JHTML::_('select.option','asc',Text::_('OS_ASC'));
+$optionArr[] = HTMLHelper::_('select.option','desc',Text::_('OS_DESC'));
+$optionArr[] = HTMLHelper::_('select.option','asc',Text::_('OS_ASC'));
 $lists['orderby'] =  HTMLHelper::_('select.genericlist',$optionArr,'orderby','class="input-medium form-select"','value','text',$orderby);
 
 

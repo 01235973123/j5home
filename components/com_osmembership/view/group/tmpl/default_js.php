@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -13,15 +13,19 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
+/**
+ * @var string $selectedState
+ */
 
-$rootUri = Uri::root(true);
+HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
 OSMembershipHelper::addLangLinkForAjax();
 OSMembershipHelperJquery::validateForm();
-Factory::getApplication()->getDocument()->addScriptDeclaration('var siteUrl = "' . Uri::root(true) . '/";')
+Factory::getApplication()->getDocument()
 	->addScriptOptions('selectedState', $selectedState)
 	->addScriptOptions('maxErrorsPerField', (int) $this->config->max_errors_per_field)
-	->addScript($rootUri . '/media/com_osmembership/assets/js/paymentmethods.min.js')
-	->addScript($rootUri . '/media/com_osmembership/js/site-group-default.min.js');
+	->getWebAssetManager()
+	->useScript('core')
+	->addInlineScript('var siteUrl = "' . Uri::root(true) . '/";')
+	->registerAndUseScript('com_osmembership.paymentmethods', 'media/com_osmembership/assets/js/paymentmethods.min.js')
+	->registerAndUseScript('com_osmembership.site-group-default', 'media/com_osmembership/js/site-group-default.min.js');

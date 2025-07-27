@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Membership Pro
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2012 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -13,7 +13,6 @@ use Joomla\CMS\Captcha\Captcha;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\CMS\Uri\Uri;
 
 trait OSMembershipViewRegister
 {
@@ -86,7 +85,10 @@ trait OSMembershipViewRegister
 
 		if (file_exists($customJSFile) && filesize($customJSFile) > 0)
 		{
-			Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/assets/js/custom.js');
+			Factory::getApplication()
+				->getDocument()
+				->getWebAssetManager()
+				->registerAndUseScript('com_osmembership.custom', 'media/com_osmembership/assets/js/custom.js');
 		}
 	}
 }

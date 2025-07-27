@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.21.3" position="left" method="upgrade" client="site">
+<extension type="module" version="4.0.0" position="left" method="upgrade" client="site">
     <name>Search properties</name>
     <author>Dam Dang Thuc</author>
     <authorEmail>damdt@joomservices.com</authorEmail>
     <authorUrl>http://www.joomservices.com</authorUrl>
-    <version>3.21.3</version>
+    <version>4.0.0</version>
     <creationDate>Feb 2012</creationDate>
-    <copyright>2024 http://www.joomdonation.com</copyright>
+    <copyright>2025 http://www.joomdonation.com</copyright>
     <license>http://www.joomdonation.com</license>
     <description>Display Advanced Search Form of OS Property component</description>
     <files>

@@ -15,8 +15,13 @@ use Joomla\CMS\Toolbar\ToolbarHelper;
 
 ToolbarHelper::title(Text::_('OSM_DASHBOARD'), 'generic.png');
 
-HTMLHelper::_('behavior.core');
-$user = Factory::getApplication()->getIdentity();
+$app = Factory::getApplication();
+
+$app->getDocument()
+	->getWebAssetManager()
+	->useScript('core');
+
+$user            = $app->getIdentity();
 $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 ?>
 <form action="index.php" method="post" name="adminForm" id="adminForm">

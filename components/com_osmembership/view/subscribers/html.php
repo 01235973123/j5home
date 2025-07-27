@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -203,7 +203,11 @@ class OSMembershipViewSubscribersHtml extends MPFViewList
 		);
 
 		$options                          = [];
-		$options[]                        = HTMLHelper::_('select.option', 'tbl.created_date', Text::_('OSM_CREATED_DATE'));
+		$options[]                        = HTMLHelper::_(
+			'select.option',
+			'tbl.created_date',
+			Text::_('OSM_CREATED_DATE')
+		);
 		$options[]                        = HTMLHelper::_('select.option', 'tbl.from_date', Text::_('OSM_START_DATE'));
 		$options[]                        = HTMLHelper::_('select.option', 'tbl.to_date', Text::_('OSM_END_DATE'));
 		$this->lists['filter_date_field'] = HTMLHelper::_(

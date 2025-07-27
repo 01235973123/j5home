@@ -7,7 +7,7 @@ use Joomla\CMS\Uri\Uri;
 		<tr>
 			<td width="400" height="35" align="left" style="margin-top:10px;text-align:left;background-color:#7eaeb3;color:white;">
 				<div>
-					<strong><font size="14" style='font-size:25pt;font-weight:bold;'><?php if(($row->ref != "") and ($configClass['show_ref'] == 1)){ echo "# ".$row->ref .", "; } echo strtoupper(OSPHelper::getLanguageFieldValue($row,'pro_name'));?></font></strong>
+					<strong><font size="14" style='font-size:25pt;font-weight:bold;'><?php if(($row->ref != "") && ($configClass['show_ref'] == 1)){ echo "# ".$row->ref .", "; } echo strtoupper(OSPHelper::getLanguageFieldValue($row,'pro_name'));?></font></strong>
 				</div>
 			</td>
 			
@@ -67,17 +67,24 @@ use Joomla\CMS\Uri\Uri;
 				<td width="240" valign="top">
 					<table width="100%">
 						<?php
-						if(($row->show_address == 1) && ($row->lat_add != "") && ($row->long_add != "") && ($configClass['goole_aip_key'] != "") && ($configClass['show_googlemap_pdf'] == 1)){
+						if($row->show_address == 1 && $row->lat_add != "" && $row->long_add != "" && $configClass['goole_aip_key'] != "" && $configClass['show_googlemap_pdf'] == 1)
+						{
 							$mphoto = 3;
-						}else{
+						}
+						else
+						{
 							$mphoto = 4;
 						}
-						if(count($photos) > $mphoto){
+						if(count($photos) > $mphoto)
+						{
 							$maxphoto = $mphoto;
-						}else{
+						}
+						else
+						{
 							$maxphoto = count($photos);
 						}
-						for($i=1;$i<$maxphoto;$i++){
+						for($i=1;$i<$maxphoto;$i++)
+						{
 							$j++;
 							$photo = $photos[$i];
 							$image = explode(".",$photo->image);
@@ -89,13 +96,11 @@ use Joomla\CMS\Uri\Uri;
 									<td width="230" style="margin:10px;" ALIGN="CENTER">
 								
 										<?php
-										if($photo->image != ""){
-											if(file_exists(JPATH_ROOT.DS."images/osproperty/properties/".$row->id."/thumb/".$photo->image)){
-												?>
-												<!--<img src="<?php echo Uri::root(true)?>/images/osproperty/properties/<?php echo $row->id;?>/thumb/<?php echo $photo->image?>" width="170" /> -->
-												<img src="<?php echo Uri::root()?>images/osproperty/properties/<?php echo $row->id;?>/thumb/<?php echo $photo->image?>" width="170" />
-												<?php
-											}
+										if($photo->image != "" && file_exists(JPATH_ROOT.DS."images/osproperty/properties/".$row->id."/thumb/".$photo->image))
+										{
+											?>
+											<img src="<?php echo Uri::root()?>images/osproperty/properties/<?php echo $row->id;?>/thumb/<?php echo $photo->image?>" width="170" />
+											<?php
 										}
 										?>
 									</td>
@@ -103,20 +108,60 @@ use Joomla\CMS\Uri\Uri;
 								<?php
 							}
 						}
-						if(($row->show_address == 1) && ($row->lat_add != "") && ($row->long_add != "") && ($configClass['goole_aip_key'] != "") && ($configClass['show_googlemap_pdf'] == 1)){
-							$picturelink = "https://maps.googleapis.com/maps/api/staticmap?center=".$row->lat_add.",".$row->long_add."&zoom=12&scale=1&size=170x100"."&maptype=roadmap&format=jpg&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:1%7C".$row->lat_add.",".$row->long_add;
-							$time = time();
-							$desFolder = JPATH_ROOT.'/tmp/';
-							$imageName = 'google-map_'.$time.'.JPG';
-							$imagePath = $desFolder.$imageName;
-							file_put_contents($imagePath,file_get_contents($picturelink));
-							?>
-							<tr>
-								<td width="230" style="margin:10px;" ALIGN="CENTER">
-									<img src="<?php echo Uri::root().'tmp/'.$imageName; ?>" width="170" />
-								</td>
-							</tr>
-							<?php
+						if($row->show_address == 1 && $row->lat_add != "" && $row->long_add != "" && $configClass['show_googlemap_pdf'] == 1)
+						{
+
+							if($configClass['map_type'] == 0 && $configClass['goole_aip_key'] != "")
+							{
+								$picturelink = "https://maps.googleapis.com/maps/api/staticmap?center=".$row->lat_add.",".$row->long_add."&zoom=10&scale=1&size=170x100"."&maptype=roadmap&format=jpg&visual_refresh=true&markers=size:mid%7Ccolor:0xff0000%7Clabel:1%7C".$row->lat_add.",".$row->long_add."&key=".$configClass['goole_aip_key'];
+								
+								$time		= time();
+								$desFolder	= JPATH_ROOT.'/tmp/';
+								$imageName	= 'google-map_'.$time.'.JPG';
+								$imagePath	= $desFolder.$imageName;
+
+								$imgData	= file_get_contents($picturelink);
+
+								if ($imgData !== false) 
+								{
+									file_put_contents($imagePath,$imgData);
+									?>
+									<tr>
+										<td width="230" style="margin:10px;" ALIGN="CENTER">
+											<img src="<?php echo Uri::root().'tmp/'.$imageName; ?>" width="170" />
+										</td>
+									</tr>
+									<?php
+								}
+							}
+							else
+							{
+								$latitude = $row->lat_add;
+								$longitude = $row->long_add;
+								$zoom = 14;           
+
+								
+								$tileSize = 256;
+								$worldSize = pow(2, $zoom) * $tileSize;
+								$xTile = floor(($longitude + 180) / 360 * pow(2, $zoom));
+								$yTile = floor((1 - log(tan(deg2rad($latitude)) + 1 / cos(deg2rad($latitude))) / pi()) / 2 * pow(2, $zoom));
+
+								$mapUrl = "https://tile.openstreetmap.org/$zoom/$xTile/$yTile.png";
+								$imgData = file_get_contents($mapUrl);
+
+								if ($imgData !== false) 
+								{
+									file_put_contents($imagePath,$imgData);
+									?>
+									<tr>
+										<td width="230" style="margin:10px;" ALIGN="CENTER">
+											<img src="<?php echo Uri::root().'tmp/'.$imageName; ?>" width="170" />
+										</td>
+									</tr>
+									<?php
+								}
+
+							}
 						}
 						?>
 					</table>
@@ -130,6 +175,7 @@ use Joomla\CMS\Uri\Uri;
 	?>
 
 	<table cellpadding="5" cellspacing="5" width="660" border="0" bgcolor="#cde3fe">
+		
 		<tr>
 			<td valign = "top" width="450" align="left">
 				<table cellpadding="0" cellspacing="0" width="100%" border="0">
@@ -144,6 +190,7 @@ use Joomla\CMS\Uri\Uri;
 						<?php
 						}
 					?>
+					
 					<tr>
 						<td width="100%" align="left">
 							<?php
@@ -186,7 +233,7 @@ use Joomla\CMS\Uri\Uri;
 													if($field->value != ""){
 													?> 
 													<?php
-													if(($field->displaytitle == 1) or ($field->displaytitle == 2)){
+													if(($field->displaytitle == 1) || ($field->displaytitle == 2)){
 													?>
 														<?php echo $field->field_label;?>
 													<?php } ?>
@@ -196,7 +243,7 @@ use Joomla\CMS\Uri\Uri;
 														:
 													<?php } ?>
 													<?php
-													if(($field->displaytitle == 1) or ($field->displaytitle == 3)){?>
+													if(($field->displaytitle == 1) || ($field->displaytitle == 3)){?>
 													<span><?php echo $field->value;?></span> <?php } ?> &nbsp;
 													<?php 
 													}
@@ -222,7 +269,7 @@ use Joomla\CMS\Uri\Uri;
 							$query->select("*")->from("#__osrs_property_price_history")->where("pid = '$row->id'")->order("`date` desc");
 							$db->setQuery($query);
 							$prices = $db->loadObjectList();
-							if(($configClass['use_property_history'] == 1) and (count($prices) > 0)){ ?>
+							if(($configClass['use_property_history'] == 1) && (count($prices) > 0)){ ?>
 							<!-- History -->
 							<BR /><BR />
 							<table width="100%" border="0">
@@ -281,7 +328,7 @@ use Joomla\CMS\Uri\Uri;
 							$query->select("*")->from("#__osrs_property_history_tax")->where("pid = '$row->id'")->order("`tax_year` desc");
 							$db->setQuery($query);
 							$taxes = $db->loadObjectList();
-							if(($configClass['use_property_history'] == 1) and (count($taxes) > 0)){ ?>
+							if(($configClass['use_property_history'] == 1) && (count($taxes) > 0)){ ?>
 							<!-- tax -->
 							<BR />
 							<table width="100%" border="0">
@@ -437,7 +484,7 @@ use Joomla\CMS\Uri\Uri;
 											<?php
 											}
 											
-											if(($row->agent->phone != "") and ($configClass['show_agent_phone'] == 1)){
+											if(($row->agent->phone != "") && ($configClass['show_agent_phone'] == 1)){
 											?>
 											<tr>
 												<td width="15%" BGCOLOR='#FFF'>
@@ -476,7 +523,7 @@ use Joomla\CMS\Uri\Uri;
 			<td valign = "top" width="200">
 				<table cellpadding="0" cellspacing="5" width="100%" border="0">
 					<?php
-					if((($configClass['use_rooms'] == 1) and ($row->rooms > 0)) or (($configClass['use_bedrooms'] == 1) and ($row->bed_room > 0)) or (($configClass['use_bathrooms'] == 1) and ($row->bath_room > 0)) or ($row->living_areas != "")){
+					if((($configClass['use_rooms'] == 1) && ($row->rooms > 0)) || (($configClass['use_bedrooms'] == 1) && ($row->bed_room > 0)) || (($configClass['use_bathrooms'] == 1) && ($row->bath_room > 0)) || ($row->living_areas != "")){
 						?>
 						<tr>
 							<td width="100%">
@@ -487,7 +534,7 @@ use Joomla\CMS\Uri\Uri;
 										</td>
 									</tr>
 									<?php
-									if(($configClass['use_rooms'] == 1) and ($row->rooms > 0)){ ?>
+									if(($configClass['use_rooms'] == 1) && ($row->rooms > 0)){ ?>
 									<tr>
 										<td width="30%" BGCOLOR="#FFFFFF">
 											<?php echo Text::_('OS_ROOMS');?>
@@ -500,7 +547,7 @@ use Joomla\CMS\Uri\Uri;
 									}
 									?>
 									<?php
-									if(($configClass['use_bedrooms'] == 1) and ($row->bed_room > 0)){?>
+									if(($configClass['use_bedrooms'] == 1) && ($row->bed_room > 0)){?>
 									<tr>
 										<td width="30%" BGCOLOR="#EFEFEF">
 											<?php echo Text::_('OS_BED');?>
@@ -513,7 +560,7 @@ use Joomla\CMS\Uri\Uri;
 									}
 									?>
 									<?php
-									if(($configClass['use_bathrooms'] == 1) and ($row->bath_room > 0)){ ?>
+									if(($configClass['use_bathrooms'] == 1) && ($row->bath_room > 0)){ ?>
 									<tr>
 										<td width="30%" BGCOLOR="#FFFFFF">
 											<?php echo Text::_('OS_BATH');?>
@@ -694,7 +741,7 @@ use Joomla\CMS\Uri\Uri;
 						}
 					}
 
-					if(($configClass['show_amenity_group'] == 1) and (count($amenities) > 0)){
+					if(($configClass['show_amenity_group'] == 1) && (count($amenities) > 0)){
 						?>
 						<tr>
 							<td width="100%">

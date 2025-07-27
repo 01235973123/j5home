@@ -1,10 +1,9 @@
 <?php
-
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -42,7 +41,8 @@ class plgContentMembershipPlans extends CMSPlugin implements SubscriberInterface
 	{
 		[$context, $article, $params, $limitstart] = array_values($event->getArguments());
 
-		if (!str_contains($article->text, '{membershipplans')) {
+		if (!str_contains($article->text, '{membershipplans'))
+		{
 			return;
 		}
 
@@ -100,11 +100,13 @@ class plgContentMembershipPlans extends CMSPlugin implements SubscriberInterface
 	 */
 	public function registerListeners()
 	{
-		if (!ComponentHelper::isEnabled('com_osmembership')) {
+		if (!ComponentHelper::isEnabled('com_osmembership'))
+		{
 			return;
 		}
 
-		if (!$this->app->isClient('site')) {
+		if (!$this->app->isClient('site'))
+		{
 			return;
 		}
 

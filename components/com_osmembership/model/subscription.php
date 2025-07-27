@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -34,7 +34,7 @@ class OSMembershipModelSubscription extends MPFModel
 		$query = $db->getQuery(true);
 		$query->select('tbl.*')
 			->select(
-				'b.lifetime_membership, b.title AS plan_title, b.enable_renewal, b.recurring_subscription, DATEDIFF(NOW(), from_date) AS presence'
+				'b.lifetime_membership, b.title AS plan_title, b.currency, b.currency_symbol, b.enable_renewal, b.recurring_subscription, DATEDIFF(NOW(), from_date) AS presence'
 			)
 			->from('#__osmembership_subscribers AS tbl')
 			->leftJoin('#__osmembership_plans AS b ON tbl.plan_id = b.id')

@@ -187,7 +187,7 @@ function doGrabImageAjax(live_site,url){
         return
     }
 
-    link = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_grabImagess&url=" + url;
+    link = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_grabImagess&url=" + url;
     xmlHttp.onreadystatechange=ajaxreturngrab;
     xmlHttp.open("GET",link,true)
     xmlHttp.send(null)
@@ -199,7 +199,7 @@ function cancelGrab(live_site){
         alert ("Browser does not support HTTP Request")
         return
     }
-    link = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_cancelgrabImagess";
+    link = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_cancelgrabImagess";
     xmlHttp.onreadystatechange=ajaxreturngrab;
     xmlHttp.open("GET",link,true)
     xmlHttp.send(null)
@@ -212,7 +212,7 @@ function updateSendEmailStatusAjax(list_id,send_status,live_site){
         return
     }
 
-    url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_updateSendEmailStatus&list_id=" + list_id + "&send_status=" + send_status;
+    url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_updateSendEmailStatus&list_id=" + list_id + "&send_status=" + send_status;
     xmlHttp.onreadystatechange=ajax4j;
     xmlHttp.open("GET",url,true)
     xmlHttp.send(null)
@@ -246,7 +246,7 @@ function loadLocationInfoStateCity(country_id,state_id,city_id,country_name,stat
 		 alert ("Browser does not support HTTP Request")
 	 	 return
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&tmpl=component&task=ajax_loadstatecity&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&tmpl=component&format=raw&task=ajax_loadstatecity&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id;
 	xmlHttp.onreadystatechange=ajax4e;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -263,7 +263,7 @@ function loadLocationInfoStateCityAddProperty(country_id,state_id,city_id,countr
 	{
 		langVar = "&lang=" + lang;
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&tmpl=component&task=ajax_loadstatecity&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + langVar;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&tmpl=component&format=raw&task=ajax_loadstatecity&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + langVar;
 	xmlHttp.onreadystatechange=ajax4e2;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -275,7 +275,7 @@ function loadLocationInfoStateCityBackend(country_id,state_id,city_id,country_na
 		 alert ("Browser does not support HTTP Request")
 	 	 return
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&tmpl=component&task=ajax_loadstatecityBackend&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&tmpl=component&format=raw&task=ajax_loadstatecityBackend&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id;
 	xmlHttp.onreadystatechange=ajax4e2;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -295,7 +295,7 @@ function updateCurrencyListing(pid,curr,show_label,item){
 	}
 	var live_site = document.getElementById('live_site');
 	live_site = live_site.value;
-	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_updateCurrency&pid=' + pid + '&curr=' + curr + '&show_label=' + show_label + '&item=' + item;
+	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_updateCurrency&pid=' + pid + '&curr=' + curr + '&show_label=' + show_label + '&item=' + item;
 	xmlHttp.onreadystatechange=ajax5c;
 	xmlHttp.open("GET",url,true);
 	xmlHttp.send(null);
@@ -309,7 +309,7 @@ function convertCurrency(pid,curr,show_label){
 	}
 	var live_site = document.getElementById('live_site');
 	live_site = live_site.value;
-	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_convertCurrency&pid=' + pid + '&curr=' + curr + '&show_label=' + show_label;
+	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_convertCurrency&pid=' + pid + '&curr=' + curr + '&show_label=' + show_label;
 	xmlHttp.onreadystatechange=ajax5c;
 	xmlHttp.open("GET",url,true);
 	xmlHttp.send(null);
@@ -327,7 +327,7 @@ function convertCurrencyDefault(pid,curr,show_label){
 	if(currency_item != null){
 		currency_item.value = pid;
 	}
-	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_convertCurrency&pid=' + pid + '&curr=' + curr + '&show_label=0&theme=default';
+	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_convertCurrency&pid=' + pid + '&curr=' + curr + '&show_label=0&theme=default';
 	xmlHttp.onreadystatechange=ajax5c;
 	xmlHttp.open("GET",url,true);
 	xmlHttp.send(null);
@@ -342,7 +342,7 @@ function convertCurrencyDefaultDetails(pid,curr,show_label){
 	}
 	var live_site = document.getElementById('live_site');
 	live_site = live_site.value;
-	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_convertCurrency&pid=' + pid + '&curr=' + curr + '&show_label=0&theme=defaultdetails';
+	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_convertCurrency&pid=' + pid + '&curr=' + curr + '&show_label=0&theme=defaultdetails';
 	xmlHttp.onreadystatechange=ajax5c;
 	xmlHttp.open("GET",url,true);
 	xmlHttp.send(null);
@@ -360,7 +360,7 @@ function loadLocationInfoStateCityLocator(country_id,state_id,city_id,country_na
 	{
 		langVar = "&lang=" + lang;
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadstatecitylocator&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + langVar;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadstatecitylocator&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + langVar;
 	xmlHttp.onreadystatechange=ajax4e;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -387,7 +387,7 @@ function loadLocationInfoCity(state_id,city_id,state_name,live_site,lang=''){
 	{
 		langVar = "&lang=" + lang;
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadcity" + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + langVar + cityVar;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadcity" + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + langVar + cityVar;
 	//alert(url); 
 	xmlHttp.onreadystatechange=ajax4g;
 	xmlHttp.open("GET",url,true)
@@ -400,7 +400,7 @@ function loadLocationInfoCityInstallSampleData(state_id,city_id,state_name,live_
 		 alert ("Browser does not support HTTP Request")
 	 	 return
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadcity" + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + "&useConfig=0";
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadcity" + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + "&useConfig=0";
 	xmlHttp.onreadystatechange=ajax4g;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -417,7 +417,7 @@ function loadLocationInfoCityAddProperty(state_id,city_id,state_name,live_site,l
 	{
 		langVar = "&lang=" + lang;
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadcityAddProperty" + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + langVar;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadcityAddProperty" + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + langVar;
 	xmlHttp.onreadystatechange=ajax4g2;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -434,7 +434,7 @@ function loadLocationInfoStateCityLocatorModule(country_id,state_id,city_id,coun
 	{
 		langVar = "&lang=" + lang;
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadstatecitylocatorModule&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + "&random_id=" + random_id + langVar;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadstatecitylocatorModule&country_id=" + country_id + "&country_name=" + country_name + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + "&random_id=" + random_id + langVar;
 	xmlHttp.onreadystatechange=ajax4e1;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -448,7 +448,7 @@ function initLocation(){
 	}
 	live_site = document.getElementById('live_site');
 	live_site = live_site.value;
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadLocationInformation";
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadLocationInformation";
 	xmlHttp.onreadystatechange=ajax4e3;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -462,7 +462,7 @@ function checkingVersion(current_version){
 	}
 	live_site = document.getElementById('live_site');
 	live_site = live_site.value;
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_checkingVersion&current_version=" + current_version;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_checkingVersion&current_version=" + current_version;
 	xmlHttp.onreadystatechange=ajax4e4;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -498,7 +498,7 @@ function loadLocationInfoCityModule(state_id,city_id,state_name,live_site,random
 	{
 		langVar = "&lang=" + lang;
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadcityModule" + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + "&random_id=" + random_id + langVar;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadcityModule" + "&state_name=" + state_name + "&state_id=" + state_id + "&city_id=" + city_id + "&random_id=" + random_id + langVar;
 	xmlHttp.onreadystatechange=ajax4g1;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -624,7 +624,7 @@ function checkCouponcode(id,coupon_code,live_site){
 	 	 return
 	}
 	
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_checkcouponcode&coupon_code=" + coupon_code + "&id=" + id;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_checkcouponcode&coupon_code=" + coupon_code + "&id=" + id;
 	xmlHttp.onreadystatechange=ajax3;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -644,7 +644,7 @@ function loadStateInListPageAjax(country_id,live_site){
 	 	 return
 	}
 	
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadStateInListPage&country_id=" + country_id;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadStateInListPage&country_id=" + country_id;
 	xmlHttp.onreadystatechange=ajax4a;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -837,7 +837,7 @@ function changeCountryAjax(pid,country,live_site){
 		 alert ("Browser does not support HTTP Request")
 	 	 return
 	}
-	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadStateBackend&pid=' + pid + '&country=' + country;
+	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadStateBackend&pid=' + pid + '&country=' + country;
 	xmlHttp.onreadystatechange=ajax5a;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -858,7 +858,7 @@ function changeStateAjax(pid,state,live_site){
 		 alert ("Browser does not support HTTP Request")
 	 	 return
 	}
-	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadCityBackend&pid=' + pid + '&state=' + state;
+	var url = live_site + 'index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadCityBackend&pid=' + pid + '&state=' + state;
 	xmlHttp.onreadystatechange=ajax5b;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -943,7 +943,7 @@ function loadPriceListOptionAjax(property_type,live_site){
 		 alert ("Browser does not support HTTP Request")
 	 	 return
 	}
-	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&task=ajax_loadPriceListOption&property_type=" + property_type;
+	url = live_site + "index.php?option=com_osproperty&no_html=1&tmpl=component&format=raw&task=ajax_loadPriceListOption&property_type=" + property_type;
 	xmlHttp.onreadystatechange=loadPriceAjaxReturn;
 	xmlHttp.open("GET",url,true)
 	xmlHttp.send(null)
@@ -966,7 +966,7 @@ function ajax4e3(){
 		if(location_div != null){
 			location_div.innerHTML = res1;
 		}
-		document.getElementById("ospversion").innerHTML = res2;
+		//document.getElementById("ospversion").innerHTML = res2;
 	}else{
 		live_site = document.getElementById('live_site');
 		live_site = live_site.value;
@@ -974,7 +974,7 @@ function ajax4e3(){
 		if(location_div != null){
 			location_div.innerHTML = "<center><img src='" + live_site + "media/com_osproperty/assets/images/loading.gif'/></center>";
 		}
-		document.getElementById("ospversion").innerHTML = "<img src='" + live_site + "media/com_osproperty/assets/images/updated_failure.png'/>";
+		//document.getElementById("ospversion").innerHTML = "<img src='" + live_site + "media/com_osproperty/assets/images/updated_failure.png'/>";
 	}
 }
 

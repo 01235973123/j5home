@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
@@ -11,6 +11,7 @@ defined('_JEXEC') or die ;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Router\Route;
 
 Factory::getApplication()->getDocument()->getWebAssetManager()
 	->useScript('table.columns')
@@ -55,6 +56,9 @@ $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 					<th class="title" width="40%">
 						<?php echo $this->searchToolsSort('OSM_TITLE', 'tbl.title'); ?>
 					</th>
+                    <th class="center">
+                        <?php echo Text::_('OSM_NUMBER_PLANS'); ?>
+                    </th>
 					<th width="5%">
 						<?php echo $this->searchToolsSort('JGRID_HEADING_ACCESS', 'tbl.access'); ?>
 					</th>
@@ -68,7 +72,7 @@ $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 			</thead>
 			<tfoot>
 				<tr>
-					<td colspan="6">
+					<td colspan="7">
 						<?php echo $this->pagination->getListFooter(); ?>
 					</td>
 				</tr>
@@ -96,6 +100,9 @@ $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 					<td>
 						<a href="<?php echo $link; ?>"><?php echo $row->treename ; ?></a>
 					</td>
+                    <td class="center">
+                        <a href="<?php echo Route::_('index.php?option=com_osmembership&view=plans&filter_category_id=' . $row->id); ?>"><?php echo $row->number_plans; ?></a>
+                    </td>
 					<td>
 						<?php echo $row->access_level; ?>
 					</td>

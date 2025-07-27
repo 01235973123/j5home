@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -22,6 +22,9 @@ class OSMembershipControllerDiscount extends OSMembershipController
 		$model = $this->getModel('Discount');
 		$model->batch($this->input);
 
-		$this->setRedirect('index.php?option=com_osmembership&view=discounts', Text::_('OSM_DISCOUNTS_SUCCESSFULLY_GENERATED'));
+		$this->setRedirect(
+			'index.php?option=com_osmembership&view=discounts',
+			Text::_('OSM_DISCOUNTS_SUCCESSFULLY_GENERATED')
+		);
 	}
 }

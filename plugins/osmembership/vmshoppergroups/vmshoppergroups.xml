@@ -4,10 +4,10 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://www.joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 3, or later</license>
     <creationDate>March 2019</creationDate>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin is used to assign users to Virtuemart Shopper Groups when they subscribe to a Subscription
         Plan in Membership Pro and remove them from the selected groups when their subscription expired.
     </description>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
- <extension type="package" version="3.21.6" method="upgrade">
+ <extension type="package" version="4.0.0" method="upgrade">
 	 <name>OS Property Package</name>
 	  <packagename>osproperty</packagename>
 	  <creationDate>September 2011</creationDate>
 	  <author>Dang Thuc Dam</author>
 	  <authorEmail>damdt@joomservices.=.com</authorEmail>
 	  <authorUrl>http://www.joomdonation.com</authorUrl>
-	  <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+	  <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
 	  <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	  <version>3.21.6</version>
+	  <version>4.0.0</version>
 	  <scriptfile>script.php</scriptfile>
 	 <files folder="packages">
 	   <file type="module" id="osproperty" client="site">mod_oscategorymenu.zip</file>

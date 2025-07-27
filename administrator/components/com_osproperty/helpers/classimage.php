@@ -3,7 +3,7 @@
 # clasimage.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -44,6 +44,8 @@ class Image {
 			return imagecreatefrompng($image);
 		} elseif ($mime == 'image/jpeg') {
 			return imagecreatefromjpeg($image);
+		} elseif ($mime == 'image/webp') {
+			return imagecreatefromxbm($image);
 		}
     }	
 	
@@ -59,6 +61,8 @@ class Image {
 				imagepng($this->image, $file);
 			} elseif($extension == 'gif') {
 				imagegif($this->image, $file);
+			} elseif($extension == 'webp') {
+				imagexbm($this->image, $file);
 			}
 			   
 			imagedestroy($this->image);

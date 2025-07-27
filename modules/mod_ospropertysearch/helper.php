@@ -32,9 +32,9 @@ class modOspropertySearchHelper
         }
         $cityArr = array();
         if($show_labels == 0){
-            $cityArr[]= JHTML::_('select.option',0,Text::_('OS_CITY'));
+            $cityArr[]= HTMLHelper::_('select.option',0,Text::_('OS_CITY'));
         }else{
-            $cityArr[]= JHTML::_('select.option',0,Text::_('OS_ANY'));
+            $cityArr[]= HTMLHelper::_('select.option',0,Text::_('OS_ANY'));
         }
         if($state_id > 0){
             $db->setQuery("Select id as value, city".$suffix." as text from #__osrs_cities where  published = '1' and state_id = '$state_id' order by city");
@@ -44,7 +44,7 @@ class modOspropertySearchHelper
         }else{
             $disabled  = "disabled";
         }
-        return JHTML::_('select.genericlist',$cityArr,'city'.$random_id,'class="input-medium form-control form-select" '.$disabled,'value','text',$city_id);
+        return HTMLHelper::_('select.genericlist',$cityArr,'city'.$random_id,'class="input-medium form-control form-select" '.$disabled,'value','text',$city_id);
     }
 
     static function listCategories($category_ids,$onChangeScript,$inputbox_width_site){
@@ -75,7 +75,7 @@ class modOspropertySearchHelper
 
         $parentArr = self::loadCategoryOptions($onChangeScript);
         //print_r($parentArr);
-        $output = JHTML::_('select.genericlist', $parentArr, 'category_ids[]', 'style="min-height:100px;'.$width_style.'" class="input-large chosen" multiple '.$onChangeScript, 'value', 'text', $category_ids );
+        $output = HTMLHelper::_('select.genericlist', $parentArr, 'category_ids[]', 'style="min-height:100px;'.$width_style.'" class="input-large chosen" multiple '.$onChangeScript, 'value', 'text', $category_ids );
         return $output;
     }
 
@@ -87,7 +87,7 @@ class modOspropertySearchHelper
         $firstoption = ARRAY();
         $firstoption[] = HTMLHelper::_('select.option','',Text::_('OS_CATEGORY'));
         $firstoption   = array_merge($firstoption,$parentArr);
-        $output = JHTML::_('select.genericlist', $firstoption, 'category_id', 'class="input-medium form-select" '.$onChangeScript, 'value', 'text', $category_id );
+        $output = HTMLHelper::_('select.genericlist', $firstoption, 'category_id', 'class="input-medium form-select" '.$onChangeScript, 'value', 'text', $category_id );
         return $output;
     }
 
@@ -122,7 +122,7 @@ class modOspropertySearchHelper
         }
 
         // second pass - get an indent list of the items
-        $list = JHTML::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0 );
+        $list = HTMLHelper::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0 );
         // assemble menu items to the array
         $parentArr 	= array();
 
@@ -136,7 +136,7 @@ class modOspropertySearchHelper
                 $treename .= " - ";
             }
             $text = $item->treename;
-            $parentArr[] = JHTML::_('select.option',  $item->id,$text);
+            $parentArr[] = HTMLHelper::_('select.option',  $item->id,$text);
         }
         return $parentArr;
     }

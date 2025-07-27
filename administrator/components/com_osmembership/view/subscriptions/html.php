@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -109,7 +109,10 @@ class OSMembershipViewSubscriptionsHtml extends MPFViewList
 			'title',
 			$this->state->plan_id
 		);
-		$this->lists['plan_id'] = OSMembershipHelperHtml::getChoicesJsSelect($this->lists['plan_id'], Text::_('OSM_TYPE_OR_SELECT_ONE_PLAN'));
+		$this->lists['plan_id'] = OSMembershipHelperHtml::getChoicesJsSelect(
+			$this->lists['plan_id'],
+			Text::_('OSM_TYPE_OR_SELECT_ONE_PLAN')
+		);
 
 		$options   = [];
 		$options[] = HTMLHelper::_('select.option', 'H', Text::_('OSM_HOURS'));
@@ -140,7 +143,13 @@ class OSMembershipViewSubscriptionsHtml extends MPFViewList
 		if (count($categories) > 0)
 		{
 			$options                           = [];
-			$options[]                         = HTMLHelper::_('select.option', 0, Text::_('OSM_SELECT_CATEGORY'), 'id', 'title');
+			$options[]                         = HTMLHelper::_(
+				'select.option',
+				0,
+				Text::_('OSM_SELECT_CATEGORY'),
+				'id',
+				'title'
+			);
 			$options                           = array_merge($options, $categories);
 			$this->lists['filter_category_id'] = HTMLHelper::_(
 				'select.genericlist',
@@ -166,7 +175,7 @@ class OSMembershipViewSubscriptionsHtml extends MPFViewList
 			'select.genericlist',
 			$options,
 			'subscription_type',
-			' class="form-select input-medium" onchange="submit();" ',
+			' class="form-select" onchange="submit();" ',
 			'value',
 			'text',
 			$this->state->subscription_type
@@ -183,14 +192,18 @@ class OSMembershipViewSubscriptionsHtml extends MPFViewList
 			'select.genericlist',
 			$options,
 			'published',
-			' class="form-select input-medium" onchange="submit();" ',
+			' class="form-select" onchange="submit();" ',
 			'value',
 			'text',
 			$this->state->published
 		);
 
 		$options                          = [];
-		$options[]                        = HTMLHelper::_('select.option', 'tbl.created_date', Text::_('OSM_CREATED_DATE'));
+		$options[]                        = HTMLHelper::_(
+			'select.option',
+			'tbl.created_date',
+			Text::_('OSM_CREATED_DATE')
+		);
 		$options[]                        = HTMLHelper::_('select.option', 'tbl.from_date', Text::_('OSM_START_DATE'));
 		$options[]                        = HTMLHelper::_('select.option', 'tbl.to_date', Text::_('OSM_END_DATE'));
 		$this->lists['filter_date_field'] = HTMLHelper::_(
@@ -220,7 +233,7 @@ class OSMembershipViewSubscriptionsHtml extends MPFViewList
 			'select.genericlist',
 			$options,
 			'filter_subscription_duration',
-			' class="form-select input-medium" onchange="submit()" ',
+			' class="form-select" onchange="submit()" ',
 			'value',
 			'text',
 			$this->state->filter_subscription_duration
@@ -278,7 +291,7 @@ class OSMembershipViewSubscriptionsHtml extends MPFViewList
 					'select.genericlist',
 					$options,
 					'filter_fields[field_' . $rowField->id . ']',
-					' class="form-select input-medium" onchange="submit();" ',
+					' class="form-select" onchange="submit();" ',
 					'value',
 					'text',
 					ArrayHelper::getValue($filterFieldsValues, 'field_' . $rowField->id)

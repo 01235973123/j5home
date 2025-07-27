@@ -79,7 +79,7 @@ class MPFPaymentOmnipay extends OmnipayPayment
 
 		$Itemid = Factory::getApplication()->getInput()->getInt('Itemid', OSMembershipHelper::getItemid());
 
-		$this->paymentFailureUrl = Route::_('index.php?option=com_osmembership&view=failure&id=' . $id . '&Itemid=' . $Itemid, false, false);
+		$this->paymentFailureUrl = Route::_('index.php?option=com_osmembership&view=failure&id=' . $id . '&Itemid=' . $Itemid, false);
 	}
 
 	/**

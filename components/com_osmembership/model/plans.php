@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -31,6 +31,13 @@ class OSMembershipModelPlans extends MPFModelList
 
 		$this->state->insert('id', 'int', 0)
 			->insert('filter_plan_ids', 'string', '');
+
+		$numberPlansPerPage = $this->getParams()->get('list_limit');
+
+		if ($numberPlansPerPage > 0)
+		{
+			$this->state->setDefault('limit', $numberPlansPerPage);
+		}
 	}
 
 	/**

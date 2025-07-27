@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -93,7 +93,7 @@ class PlgUserOSMembership extends CMSPlugin implements SubscriberInterface
 			return;
 		}
 
-		if ($this->app->input->getCmd('option') == 'com_osmembership')
+		if ($this->app->input->getCmd('option') === 'com_osmembership')
 		{
 			return;
 		}

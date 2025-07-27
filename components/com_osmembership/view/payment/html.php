@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Membership Pro
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2012 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -324,7 +324,9 @@ class OSMembershipViewPaymentHtml extends MPFViewHtml
 		$message     = OSMembershipHelper::getMessages();
 		$fieldSuffix = OSMembershipHelper::getFieldSuffix();
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'subscription_payment_thanks_message' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'subscription_payment_thanks_message' . $fieldSuffix}
+			))
 		{
 			$thankMessage = $message->{'subscription_payment_thanks_message' . $fieldSuffix};
 		}
@@ -357,11 +359,7 @@ class OSMembershipViewPaymentHtml extends MPFViewHtml
 
 		$replaces = OSMembershipHelper::callOverridableHelperMethod('Helper', 'buildTags', [$row, $config]);
 
-		foreach ($replaces as $key => $value)
-		{
-			$value        = (string) $value;
-			$thankMessage = str_ireplace("[$key]", $value, $thankMessage);
-		}
+		$thankMessage = OSMembershipHelper::replaceCaseInsensitiveTags($thankMessage, $replaces);
 
 		$this->message = $thankMessage;
 

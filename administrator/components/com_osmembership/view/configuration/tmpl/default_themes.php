@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -91,6 +91,14 @@ use Joomla\CMS\Language\Text;
 		</div>
 	</div>
 	<div class="control-group">
+		<div class="control-label">
+            <?php echo OSMembershipHelperHtml::getFieldLabel('setup_price_including_tax', Text::_('OSM_SETUP_PRICE_INCLUDING_TAX'), Text::_('OSM_SETUP_PRICE_INCLUDING_TAX_EXPLAIN')); ?>
+		</div>
+		<div class="controls">
+            <?php echo OSMembershipHelperHtml::getBooleanInput('setup_price_including_tax', $config->get('setup_price_including_tax', 0)); ?>
+		</div>
+	</div>
+	<div class="control-group" data-showon='<?php echo OSMembershipHelperHtml::renderShowon(['setup_price_including_tax' => ['0']]); ?>'>
 		<div class="control-label">
 			<?php echo OSMembershipHelperHtml::getFieldLabel('show_price_including_tax', Text::_('OSM_SHOW_PRICE_INCLUDING_TAX'), ''); ?>
 		</div>

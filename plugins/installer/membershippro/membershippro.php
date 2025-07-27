@@ -3,19 +3,15 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Uri\Uri;
-
-if (!file_exists(JPATH_ADMINISTRATOR . '/components/com_osmembership/osmembership.php'))
-{
-	return;
-}
 
 class plgInstallerMembershipPro extends CMSPlugin
 {
@@ -62,5 +58,20 @@ class plgInstallerMembershipPro extends CMSPlugin
 		}
 
 		return true;
+	}
+
+	/**
+	 * Register listeners
+	 *
+	 * @return void
+	 */
+	public function registerListeners()
+	{
+		if (!ComponentHelper::isEnabled('com_osmembership'))
+		{
+			return;
+		}
+
+		parent::registerListeners();
 	}
 }

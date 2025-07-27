@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -27,8 +27,35 @@ class plgOSMembershipHttp extends CMSPlugin implements SubscriberInterface
 	public static function getSubscribedEvents(): array
 	{
 		return [
-			'onMembershipActive' => 'onMembershipActive',
+			'onAfterStoreSubscription' => 'onAfterStoreSubscription',
+			'onMembershipActive'       => 'onMembershipActive',
+			'onMembershipExpire'       => 'onMembershipExpire',
 		];
+	}
+
+	/**
+	 * Subscription Store
+	 *
+	 * @param   Event  $event
+	 *
+	 * @return void
+	 */
+	public function onAfterStoreSubscription(Event $event): void
+	{
+		if (!in_array(0, (array) $this->params->get('send_webhook_on', [1])))
+		{
+			return;
+		}
+
+		/* @var OSMembershipTableSubscriber $row */
+		[$row] = array_values($event->getArguments());
+
+		if (!str_contains($row->payment_method, 'os_offline'))
+		{
+			return;
+		}
+
+		$this->sendRequest($row, 'onAfterStoreSubscription');
 	}
 
 	/**
@@ -40,10 +67,35 @@ class plgOSMembershipHttp extends CMSPlugin implements SubscriberInterface
 	 */
 	public function onMembershipActive(Event $event): void
 	{
+		if (!in_array(1, (array) $this->params->get('send_webhook_on', [1])))
+		{
+			return;
+		}
+
 		/* @var OSMembershipTableSubscriber $row */
 		[$row] = array_values($event->getArguments());
 
 		$this->sendRequest($row, 'onMembershipActive');
+	}
+
+	/**
+	 * Subscription Expired
+	 *
+	 * @param   Event  $event
+	 *
+	 * @return void
+	 */
+	public function onMembershipExpire(Event $event): void
+	{
+		if (!in_array(2, (array) $this->params->get('send_webhook_on', [1])))
+		{
+			return;
+		}
+
+		/* @var OSMembershipTableSubscriber $row */
+		[$row] = array_values($event->getArguments());
+
+		$this->sendRequest($row, 'onMembershipExpire');
 	}
 
 	/**
@@ -83,6 +135,7 @@ class plgOSMembershipHttp extends CMSPlugin implements SubscriberInterface
 			'profile_id',
 			'from_date',
 			'to_date',
+			'created_date',
 			'subscription_id',
 			'amount',
 			'discount_amount',
@@ -91,13 +144,12 @@ class plgOSMembershipHttp extends CMSPlugin implements SubscriberInterface
 			'payment_processing_fee',
 			'transaction_id',
 			'tax_rate',
-			'from_date',
-			'to_date',
-			'created_date',
 			'payment_method',
 			'coupon_id',
 			'vies_registered',
 			'coupon_id',
+			'published',
+			'email',// Should not be needed here, just a special case for a customer
 		];
 
 		foreach ($subscriptionRelatedFields as $field)
@@ -167,6 +219,23 @@ class plgOSMembershipHttp extends CMSPlugin implements SubscriberInterface
 			$data['category'] = '';
 		}
 
+		if ($row->published == 0)
+		{
+			$data['subscription_status'] = 'Pending';
+		}
+		elseif ($row->published == 1)
+		{
+			$data['subscription_status'] = 'Active';
+		}
+		elseif ($row->published == 2)
+		{
+			$data['subscription_status'] = 'Expired';
+		}
+		else
+		{
+			$data['subscription_status'] = 'Unknown';
+		}
+
 		$data['event'] = $event;
 
 		// OK, we will now make a post request with json data
@@ -199,7 +268,9 @@ class plgOSMembershipHttp extends CMSPlugin implements SubscriberInterface
 
 		foreach ($this->params->get('headers', []) as $header)
 		{
-			if (is_string($header->name) && is_string($header->value) && strlen(trim($header->name)) > 0 && strlen(trim($header->value)) > 0)
+			if (is_string($header->name) && is_string($header->value) && strlen(trim($header->name)) > 0 && strlen(
+					trim($header->value)
+				) > 0)
 			{
 				$headers[$header->name] = $header->value;
 			}

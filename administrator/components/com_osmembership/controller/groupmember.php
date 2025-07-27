@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -13,6 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
@@ -50,7 +51,7 @@ class OSMembershipControllerGroupmember extends OSMembershipController
 
 		$planId = (int) $model->get('filter_plan_id');
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('id, name, is_core')
@@ -140,7 +141,11 @@ class OSMembershipControllerGroupmember extends OSMembershipController
 			}
 		}
 
-		$filePath = OSMembershipHelper::callOverridableHelperMethod('Data', 'excelExport', [$fields, $rows, 'group_members_list']);
+		$filePath = OSMembershipHelper::callOverridableHelperMethod(
+			'Data',
+			'excelExport',
+			[$fields, $rows, 'group_members_list']
+		);
 
 		if ($filePath)
 		{
@@ -168,7 +173,7 @@ class OSMembershipControllerGroupmember extends OSMembershipController
 				$row->group_admin_id = 0;
 				$row->store();
 
-				/* @var \Joomla\Database\DatabaseDriver $db */
+				/* @var DatabaseDriver $db */
 				$db    = Factory::getContainer()->get('db');
 				$query = $db->getQuery(true);
 
@@ -195,7 +200,7 @@ class OSMembershipControllerGroupmember extends OSMembershipController
 
 						if ($excludeGroupIds)
 						{
-							$currentGroups   = $oldGroupAdmin->get('groups');
+							$currentGroups = $oldGroupAdmin->get('groups');
 
 							if (is_string($excludeGroupIds))
 							{
@@ -239,6 +244,8 @@ class OSMembershipControllerGroupmember extends OSMembershipController
 			}
 		}
 
-		$this->setRedirect('index.php?option=com_osmembership&view=groupmembers&filter_group_admin_id=' . $row->user_id);
+		$this->setRedirect(
+			'index.php?option=com_osmembership&view=groupmembers&filter_group_admin_id=' . $row->user_id
+		);
 	}
 }

@@ -3,22 +3,36 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-JLoader::register('OSMembershipControllerSubscription', JPATH_ADMINISTRATOR . '/components/com_osmembership/controller/subscription.php');
-JLoader::register('OSMembershipModelOverrideSubscriptions', JPATH_ADMINISTRATOR . '/components/com_osmembership/model/override/subscriptions.php');
-JLoader::register('OSMembershipModelSubscriptions', JPATH_ADMINISTRATOR . '/components/com_osmembership/model/subscriptions.php');
-JLoader::register('OSMembershipModelSubscription', JPATH_ADMINISTRATOR . '/components/com_osmembership/model/subscription.php');
-JLoader::register('OSMembershipController', JPATH_ADMINISTRATOR . '/components/com_osmembership/controller/controller.php');
-
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use OSSolution\MembershipPro\Admin\Event\Subscriptions\AfterImportSubscriptions;
+
+JLoader::register(
+	'OSMembershipControllerSubscription',
+	JPATH_ADMINISTRATOR . '/components/com_osmembership/controller/subscription.php'
+);
+JLoader::register(
+	'OSMembershipModelOverrideSubscriptions',
+	JPATH_ADMINISTRATOR . '/components/com_osmembership/model/override/subscriptions.php'
+);
+JLoader::register(
+	'OSMembershipModelSubscriptions',
+	JPATH_ADMINISTRATOR . '/components/com_osmembership/model/subscriptions.php'
+);
+JLoader::register(
+	'OSMembershipModelSubscription',
+	JPATH_ADMINISTRATOR . '/components/com_osmembership/model/subscription.php'
+);
+JLoader::register(
+	'OSMembershipController',
+	JPATH_ADMINISTRATOR . '/components/com_osmembership/controller/controller.php'
+);
 
 class OSMembershipControllerSubscriber extends OSMembershipControllerSubscription
 {
@@ -85,8 +99,8 @@ class OSMembershipControllerSubscriber extends OSMembershipControllerSubscriptio
 	 *
 	 * Extended classes can override this if necessary.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key; default is id.
+	 * @param   array  $data  An array of input data.
+	 * @param   string  $key  The name of the key for the primary key; default is id.
 	 *
 	 * @return  bool
 	 */
@@ -156,16 +170,22 @@ class OSMembershipControllerSubscriber extends OSMembershipControllerSubscriptio
 
 		$inputFile = $this->input->files->get('input_file');
 		$fileName  = $inputFile ['name'];
-		$fileExt   = strtolower(File::getExt($fileName));
+		$fileExt   = strtolower(OSMembershipHelper::getFileExt($fileName));
 
 		if (!in_array($fileExt, ['csv', 'xls', 'xlsx']))
 		{
-			$this->setRedirect($this->getViewListUrl(), Text::_('Invalid File Type. Only CSV, XLS and XLS file types are supported'));
+			$this->setRedirect(
+				$this->getViewListUrl(),
+				Text::_('Invalid File Type. Only CSV, XLS and XLS file types are supported')
+			);
 
 			return;
 		}
 
-		JLoader::register('OSMembershipModelImport', JPATH_ADMINISTRATOR . '/components/com_osmembership/model/import.php');
+		JLoader::register(
+			'OSMembershipModelImport',
+			JPATH_ADMINISTRATOR . '/components/com_osmembership/model/import.php'
+		);
 
 		/* @var OSMembershipModelImport $model */
 		$model = $this->getModel('import');
@@ -188,7 +208,10 @@ class OSMembershipControllerSubscriber extends OSMembershipControllerSubscriptio
 			]);
 
 			$this->getApplication()->triggerEvent($event->getName(), $event);
-			$this->setRedirect($this->getViewListUrl(), Text::sprintf('OSM_NUMBER_SUBSCRIBERS_IMPORTED', $numberSubscribers));
+			$this->setRedirect(
+				$this->getViewListUrl(),
+				Text::sprintf('OSM_NUMBER_SUBSCRIBERS_IMPORTED', $numberSubscribers)
+			);
 		}
 		catch (Exception $e)
 		{

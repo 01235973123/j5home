@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -101,8 +101,14 @@ class OSMembershipModelRegister extends MPFModel
 			$data['ip_address'] = '';
 		}
 
-		$data['subscription_code'] = OSMembershipHelper::getUniqueCodeForField('subscription_code', '#__osmembership_subscribers');
-		$data['transaction_id']    = OSMembershipHelper::getUniqueCodeForField('transaction_id', '#__osmembership_subscribers');
+		$data['subscription_code'] = OSMembershipHelper::getUniqueCodeForField(
+			'subscription_code',
+			'#__osmembership_subscribers'
+		);
+		$data['transaction_id']    = OSMembershipHelper::getUniqueCodeForField(
+			'transaction_id',
+			'#__osmembership_subscribers'
+		);
 
 		$row->bind($data);
 
@@ -159,12 +165,24 @@ class OSMembershipModelRegister extends MPFModel
 			$row->vies_registered = 0;
 		}
 
-		// Update coupon usage if there is coupon uses for the subscription
 		$couponCode = $input->getString('coupon_code');
 
 		if ($couponCode && $fees['coupon_valid'])
 		{
-			$this->updateAndStoreCouponUsage($row, $fees, $couponCode);
+			if (!empty($fees['coupon_id']))
+			{
+				$row->coupon_id = $fees['coupon_id'];
+			}
+			else
+			{
+				$db    = $this->getDbo();
+				$query = $db->getQuery(true)
+					->select('id')
+					->from('#__osmembership_coupons')
+					->where('code = ' . $db->quote($couponCode));
+				$db->setQuery($query);
+				$row->coupon_id = (int) $db->loadResult();
+			}
 		}
 
 		// Mark subscription as free trial if needed to make it easier for payment processing
@@ -200,7 +218,10 @@ class OSMembershipModelRegister extends MPFModel
 		OSMembershipHelperSubscription::synchronizeProfileData($row, $rowFields);
 
 		/* Accept privacy consent to avoid Joomla require users to accept it again */
-		if (PluginHelper::isEnabled('system', 'privacyconsent') && $row->user_id > 0 && $config->show_privacy_policy_checkbox)
+		if (PluginHelper::isEnabled(
+				'system',
+				'privacyconsent'
+			) && $row->user_id > 0 && $config->show_privacy_policy_checkbox)
 		{
 			OSMembershipHelperSubscription::acceptPrivacyConsent($row);
 		}
@@ -563,7 +584,11 @@ class OSMembershipModelRegister extends MPFModel
 			{
 				// Make sure the provided coupon is valid for the plan
 				$fees   = [];
-				$coupon = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getSubscriptionCoupon', [$plan, $data, &$fees]);
+				$coupon = OSMembershipHelper::callOverridableHelperMethod(
+					'Subscription',
+					'getSubscriptionCoupon',
+					[$plan, $data, &$fees]
+				);
 
 				if (!$coupon)
 				{
@@ -573,7 +598,9 @@ class OSMembershipModelRegister extends MPFModel
 		}
 
 		// While renewing membership for a group membership plan, make sure number selected members is greater than current nummbers member in the group
-		if ($userId > 0 && $input->getCmd('act') === 'renew' && $plan->number_members_field && !$plan->number_group_members)
+		if ($userId > 0 && $input->getCmd(
+				'act'
+			) === 'renew' && $plan->number_members_field && !$plan->number_group_members)
 		{
 			// Get name of field
 			$query->clear()
@@ -784,12 +811,7 @@ class OSMembershipModelRegister extends MPFModel
 		// Build tags
 		$replaces = OSMembershipHelper::callOverridableHelperMethod('Helper', 'buildTags', [$row, $config]);
 
-		foreach ($replaces as $key => $value)
-		{
-			$key      = strtoupper($key);
-			$value    = (string) $value;
-			$itemName = str_replace('[' . $key . ']', $value, $itemName);
-		}
+		$itemName = OSMembershipHelper::replaceUpperCaseTags($itemName, $replaces);
 
 		$data['item_name'] = $itemName;
 

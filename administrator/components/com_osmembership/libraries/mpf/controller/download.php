@@ -9,8 +9,6 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Filesystem\File;
-
 trait MPFControllerDownload
 {
 	/**
@@ -1348,7 +1346,7 @@ trait MPFControllerDownload
 			'123'          => ['application/vnd.lotus-1-2-3'],
 		];
 
-		$fileExt = strtolower(File::getExt($filename));
+		$fileExt = strtolower(OSMembershipHelper::getFileExt($filename));
 
 		return $mimeTypes[$fileExt] ?? 'application/octet-stream';
 	}

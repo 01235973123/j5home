@@ -3,16 +3,16 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Image\Image;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Filesystem\File;
 use Joomla\String\StringHelper;
 
 trait OSMembershipModelSubscriptioncommon
@@ -27,9 +27,9 @@ trait OSMembershipModelSubscriptioncommon
 	{
 		$config   = OSMembershipHelper::getConfig();
 		$fileName = File::makeSafe($avatar['name']);
-		$fileExt  = StringHelper::strtoupper(File::getExt($fileName));
+		$fileExt  = StringHelper::strtoupper(OSMembershipHelper::getFileExt($fileName));
 
-		if (File::exists(JPATH_ROOT . '/media/com_osmembership/avatars/' . $fileName) && $fileName != $row->avatar)
+		if (is_file(JPATH_ROOT . '/media/com_osmembership/avatars/' . $fileName) && $fileName != $row->avatar)
 		{
 			$fileName = uniqid('avatar_') . $fileName;
 		}

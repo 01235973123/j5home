@@ -35,6 +35,13 @@ class OSMembershipViewGroupmemberHtml extends MPFViewItem
 	protected $datePickerFormat;
 
 	/**
+	 * The selected state, we need to pass it to javascript
+	 *
+	 * @var string
+	 */
+	protected $selectedState = '';
+
+	/**
 	 * Prepare view data
 	 *
 	 * @return void
@@ -53,7 +60,6 @@ class OSMembershipViewGroupmemberHtml extends MPFViewItem
 		}
 
 		$item   = $this->item;
-		$lists  = &$this->lists;
 		$config = OSMembershipHelper::getConfig();
 
 		// Plan section
@@ -64,10 +70,18 @@ class OSMembershipViewGroupmemberHtml extends MPFViewItem
 			->order('ordering');
 
 		$db->setQuery($query);
-		$options          = [];
-		$options[]        = HTMLHelper::_('select.option', 0, Text::_('OSM_SELECT_PLAN'), 'id', 'title');
-		$options          = array_merge($options, $db->loadObjectList());
-		$lists['plan_id'] = HTMLHelper::_('select.genericlist', $options, 'plan_id', 'class="form-select"', 'id', 'title', $item->plan_id);
+		$options                = [];
+		$options[]              = HTMLHelper::_('select.option', 0, Text::_('OSM_SELECT_PLAN'), 'id', 'title');
+		$options                = array_merge($options, $db->loadObjectList());
+		$this->lists['plan_id'] = HTMLHelper::_(
+			'select.genericlist',
+			$options,
+			'plan_id',
+			'class="form-select"',
+			'id',
+			'title',
+			$item->plan_id
+		);
 
 		// Group selection
 		$options   = [];
@@ -142,7 +156,17 @@ class OSMembershipViewGroupmemberHtml extends MPFViewItem
 
 		$this->datePickerFormat = $config->get('date_field_format', '%Y-%m-%d');
 
-		$this->lists['plan_id']        = OSMembershipHelperHtml::getChoicesJsSelect($this->lists['plan_id'], Text::_('OSM_TYPE_OR_SELECT_ONE_PLAN'));
+		$fields = $form->getFields();
+
+		if (isset($fields['state']))
+		{
+			$this->selectedState = $fields['state']->value;
+		}
+
+		$this->lists['plan_id']        = OSMembershipHelperHtml::getChoicesJsSelect(
+			$this->lists['plan_id'],
+			Text::_('OSM_TYPE_OR_SELECT_ONE_PLAN')
+		);
 		$this->lists['group_admin_id'] = OSMembershipHelperHtml::getChoicesJsSelect($this->lists['group_admin_id']);
 	}
 }

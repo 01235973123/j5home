@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -14,15 +14,16 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\Toolbar;
-use Joomla\CMS\Uri\Uri;
 
 HTMLHelper::_('formbehavior.chosen', 'select');
-HTMLHelper::_('behavior.core');
 Text::script('OSM_SELECT_PLAN_TO_ADD_SUBSCRIPTION', true);
 
-$document = Factory::getApplication()->getDocument();
-$document->addScript(Uri::root(true) . '/media/com_osmembership/js/site-subscribers-default.min.js');
-$document->addScriptOptions('force_select_plan', (int) $this->config->force_select_plan);
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('force_select_plan', (int) $this->config->force_select_plan)
+	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('com_osmembership.site-subscribers-default', 'media/com_osmembership/js/site-subscribers-default.min.js');
 
 $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 $centerClass  = $bootstrapHelper->getClassMapping('center');

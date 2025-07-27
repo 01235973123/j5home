@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
@@ -23,7 +23,7 @@ $saveOrderingUrl = 'index.php?option=com_osmembership&task=field.save_order_ajax
 ?>
 <form action="<?php echo $this->getFormAction(); ?>" method="post" name="adminForm" id="adminForm">
 	<div id="j-main-container">
-        <?php echo $this->loadTemplate('filter'); ?>
+		<?php echo $this->renderSearchTools(); ?>
 		<div class="clearfix"> </div>
 	    <table class="adminlist table table-striped" id="fieldList">
             <thead>

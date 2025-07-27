@@ -7,9 +7,9 @@
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
-use Joomla\CMS\Event;
+use Joomla\CMS\Event\AbstractEvent;
 
-abstract class MPFEventBase extends Event\AbstractEvent
+abstract class MPFEventBase extends AbstractEvent
 {
 	/**
 	 * Required arguments for event

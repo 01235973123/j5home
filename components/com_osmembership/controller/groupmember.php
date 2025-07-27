@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -14,6 +14,7 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\User\UserHelper;
+use Joomla\Database\DatabaseDriver;
 use Joomla\Utilities\ArrayHelper;
 use OSSolution\MembershipPro\Admin\Event\Profile\GetProfileData;
 
@@ -122,7 +123,10 @@ class OSMembershipControllerGroupmember extends OSMembershipController
 			if ($task === 'apply' && !empty($post['id']))
 			{
 				$this->setRedirect(
-					Route::_('index.php?option=com_osmembership&view=groupmember&id=' . $post['id'] . '&Itemid=' . $Itemid, false),
+					Route::_(
+						'index.php?option=com_osmembership&view=groupmember&id=' . $post['id'] . '&Itemid=' . $Itemid,
+						false
+					),
 					Text::_('OSM_GROUP_MEMBER_WAS_SUCCESSFULL_CREATED')
 				);
 			}
@@ -210,7 +214,7 @@ class OSMembershipControllerGroupmember extends OSMembershipController
 			{
 				$rowFields = OSMembershipHelper::getProfileFields($planId, true);
 
-				/* @var \Joomla\Database\DatabaseDriver $db */
+				/* @var DatabaseDriver $db */
 				$db    = Factory::getContainer()->get('db');
 				$query = $db->getQuery(true);
 				$query->clear();
@@ -363,10 +367,17 @@ class OSMembershipControllerGroupmember extends OSMembershipController
 
 		if ($canProcess)
 		{
-			OSMembershipHelper::callOverridableHelperMethod('Mail', 'sendJoinGroupMembershipInvite', [$planId, $emails, $subject, $message]);
+			OSMembershipHelper::callOverridableHelperMethod(
+				'Mail',
+				'sendJoinGroupMembershipInvite',
+				[$planId, $emails, $subject, $message]
+			);
 
 			$this->setRedirect(
-				Route::_('index.php?option=com_osmembership&view=groupmembers&Itemid=' . $this->input->getInt('Itemid', 0), false),
+				Route::_(
+					'index.php?option=com_osmembership&view=groupmembers&Itemid=' . $this->input->getInt('Itemid', 0),
+					false
+				),
 				Text::_('OSM_INVITE_SENT_TO_USERS_SUCCESSFULLY')
 			);
 		}

@@ -4,10 +4,10 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 3, or later</license>
     <creationDate>Nov 2012</creationDate>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin check and send reminder emails to subscribers to inform them about membership expire so
         that they can login to renew their membership
     </description>
@@ -19,7 +19,7 @@
             <fieldset name="basic">
                 <field name="cache_time" label="Cache Time (Hours)" type="number" min="0" max="100" step="1"
                        default="2"/>
-                <field name="last_run" label="Last Run Time" type="text" readonly="true" size="30"
+                <field name="last_run" label="Last Run Time" type="hidden" readonly="true" size="30"
                        description="Store Last Run Time of the plugin"/>
                 <field name="number_subscribers" label="Number Subscribers" type="text" size="30" default="10"
                        description="Number of subscribers which we will send reminder each time the plugin run"/>

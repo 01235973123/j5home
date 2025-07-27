@@ -29,7 +29,7 @@ class HTML_OspropertyCategories{
 	 */
 	static function listCategories($option,$rows,$pageNav){
 		global $bootstrapHelper, $mainframe,$jinput,$ismobile,$configClass,$languages;
-		OSPHelperJquery::colorbox('modal');
+		//OSPHelperJquery::colorbox('modal');
 		jimport('joomla.filesystem.file');
 		if(File::exists(JPATH_ROOT.'/templates/'.$mainframe->getTemplate().'/html/com_osproperty/layouts/listcategories.php')){
 			$tpl = new OspropertyTemplate(JPATH_ROOT.'/templates/'.$mainframe->getTemplate().'/html/com_osproperty/layouts/');

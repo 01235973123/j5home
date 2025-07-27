@@ -3,16 +3,16 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\Folder;
 
 class OSMembershipViewConfigurationHtml extends MPFViewHtml
 {
@@ -31,6 +31,13 @@ class OSMembershipViewConfigurationHtml extends MPFViewHtml
 	 * @var MPFConfig
 	 */
 	protected $config;
+
+	/**
+	 * Store a copy of $config option to allow uses utility methods to render inputs
+	 *
+	 * @var MPFConfig
+	 */
+	protected $item;
 
 	/**
 	 * The none default languages
@@ -74,7 +81,15 @@ class OSMembershipViewConfigurationHtml extends MPFViewHtml
 		{
 			if (in_array(
 				$file,
-				['abstract.php', 'bootstrap2.php', 'uikit3.php', 'bootstrap3.php', 'bootstrap4.php', 'bootstrap5.php', 'interface.php']
+				[
+					'abstract.php',
+					'bootstrap2.php',
+					'uikit3.php',
+					'bootstrap3.php',
+					'bootstrap4.php',
+					'bootstrap5.php',
+					'interface.php'
+				]
 			))
 			{
 				continue;
@@ -136,7 +151,7 @@ class OSMembershipViewConfigurationHtml extends MPFViewHtml
 			'select.genericlist',
 			$options,
 			'subscription_form_layout',
-			'class="input-large form-select"',
+			'class="form-select"',
 			'value',
 			'text',
 			$config->get('subscription_form_layout', '')
@@ -150,7 +165,7 @@ class OSMembershipViewConfigurationHtml extends MPFViewHtml
 			'select.genericlist',
 			$options,
 			'form_format',
-			'class="input-large form-select"',
+			'class="form-select"',
 			'value',
 			'text',
 			$config->get('form_format', 'horizontal')
@@ -357,7 +372,7 @@ class OSMembershipViewConfigurationHtml extends MPFViewHtml
 			'select.genericlist',
 			$options,
 			'subscription_renew_behavior',
-			' class="input-xlarge form-select" ',
+			' class="form-select" ',
 			'value',
 			'text',
 			$config->subscription_renew_behavior ?: 'create_subscription'
@@ -500,6 +515,7 @@ class OSMembershipViewConfigurationHtml extends MPFViewHtml
 
 		$this->lists     = $lists;
 		$this->config    = $config;
+		$this->item      = $config;
 		$this->languages = OSMembershipHelper::getLanguages();
 
 		parent::display();

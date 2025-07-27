@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -69,7 +69,14 @@ class plgOSMembershipDeleteAccount extends CMSPlugin implements SubscriberInterf
 		if (!$db->loadResult())
 		{
 			$user              = Factory::getUser($row->user_id);
-			$excludeUserGroups = array_unique(array_merge($this->params->get('exclude_user_groups', [3, 4, 5, 6, 7, 8]), [7, 8]));
+			$excludeUserGroups = $this->params->get('exclude_user_groups', [3, 4, 5, 6, 7, 8]);
+
+			if (is_string($excludeUserGroups))
+			{
+				$excludeUserGroups = explode(',', $excludeUserGroups);
+			}
+
+			$excludeUserGroups = array_unique(array_merge($excludeUserGroups, [7, 8]));
 
 			if ($user->id && count(array_intersect($user->groups, $excludeUserGroups)) === 0)
 			{

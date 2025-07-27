@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -184,6 +184,66 @@ class plgSystemOSMembershipReminder extends CMSPlugin implements SubscriberInter
 			OSMembershipHelper::callOverridableHelperMethod('Mail', 'sendReminderEmails', [$rows, $bccEmail, 3]);
 		}
 
+		// Send fourth reminder if available
+		$fields = array_keys($this->db->getTableColumns('#__osmembership_plans'));
+
+		if (in_array('send_fourth_reminder', $fields))
+		{
+			$rows = $this->getSubscriptionsToSendReminder(4, $numberEmailSendEachTime);
+
+			if (count($rows) > 0)
+			{
+				$reminderType = 'fourth_reminder';
+
+				$event = new BeforeSendingReminderEmails([
+					'rows'         => $rows,
+					'reminderType' => $reminderType,
+				]);
+				$this->app->triggerEvent($event->getName(), $event);
+
+				OSMembershipHelper::callOverridableHelperMethod('Mail', 'sendReminderEmails', [$rows, $bccEmail, 4]);
+			}
+		}
+
+		// Send fifth reminder if available
+		if (in_array('send_fifth_reminder', $fields))
+		{
+			$rows = $this->getSubscriptionsToSendReminder(5, $numberEmailSendEachTime);
+
+			if (count($rows) > 0)
+			{
+				$reminderType = 'fifth_reminder';
+
+				$event = new BeforeSendingReminderEmails([
+					'rows'         => $rows,
+					'reminderType' => $reminderType,
+				]);
+				$this->app->triggerEvent($event->getName(), $event);
+
+				OSMembershipHelper::callOverridableHelperMethod('Mail', 'sendReminderEmails', [$rows, $bccEmail, 5]);
+			}
+		}
+
+		// Send sixth reminder if available
+		if (in_array('send_sixth_reminder', $fields))
+		{
+			$rows = $this->getSubscriptionsToSendReminder(6, $numberEmailSendEachTime);
+
+			if (count($rows) > 0)
+			{
+				$reminderType = 'sixth_reminder';
+
+				$event = new BeforeSendingReminderEmails([
+					'rows'         => $rows,
+					'reminderType' => $reminderType,
+				]);
+				$this->app->triggerEvent($event->getName(), $event);
+
+				OSMembershipHelper::callOverridableHelperMethod('Mail', 'sendReminderEmails', [$rows, $bccEmail, 6]);
+			}
+		}
+
+
 		if (empty($message->subscription_end_email_subject))
 		{
 			return;
@@ -192,7 +252,9 @@ class plgSystemOSMembershipReminder extends CMSPlugin implements SubscriberInter
 		// Subscription end
 		$query->clear()
 			->select('a.*, b.title AS plan_title, b.recurring_subscription, b.number_payments, c.username')
-			->select('IF(b.send_subscription_end > 0, DATEDIFF(to_date, NOW()), DATEDIFF(NOW(), to_date)) AS number_days')
+			->select(
+				'IF(b.send_subscription_end > 0, DATEDIFF(to_date, NOW()), DATEDIFF(NOW(), to_date)) AS number_days'
+			)
 			->from('#__osmembership_subscribers AS a')
 			->innerJoin('#__osmembership_plans AS b ON a.plan_id = b.id')
 			->leftJoin('#__users AS c  ON a.user_id = c.id')
@@ -215,7 +277,8 @@ class plgSystemOSMembershipReminder extends CMSPlugin implements SubscriberInter
 
 			if (!empty($rows))
 			{
-				OSMembershipHelper::callOverridableHelperMethod('Mail', 'sendSubscriptionEndEmails', [$rows, $bccEmail]);
+				OSMembershipHelper::callOverridableHelperMethod('Mail', 'sendSubscriptionEndEmails', [$rows, $bccEmail]
+				);
 			}
 		}
 		catch (Exception $e)
@@ -233,7 +296,7 @@ class plgSystemOSMembershipReminder extends CMSPlugin implements SubscriberInter
 	 */
 	private function getSubscriptionsToSendReminder($reminderNumber, $numberEmailSendEachTime)
 	{
-		if (!in_array($reminderNumber, [1, 2, 3]))
+		if (!in_array($reminderNumber, [1, 2, 3, 4, 5, 6]))
 		{
 			return [];
 		}
@@ -248,9 +311,21 @@ class plgSystemOSMembershipReminder extends CMSPlugin implements SubscriberInter
 				$sendReminderField = 'b.send_second_reminder';
 				$reminderSentField = 'a.second_reminder_sent';
 				break;
-			default:
+			case 3:
 				$sendReminderField = 'b.send_third_reminder';
 				$reminderSentField = 'a.third_reminder_sent';
+				break;
+			case 4:
+				$sendReminderField = 'b.send_fourth_reminder';
+				$reminderSentField = 'a.fourth_reminder_sent';
+				break;
+			case 5:
+				$sendReminderField = 'b.send_fifth_reminder';
+				$reminderSentField = 'a.fifth_reminder_sent';
+				break;
+			case 6:
+				$sendReminderField = 'b.send_sixth_reminder';
+				$reminderSentField = 'a.sixth_reminder_sent';
 				break;
 		}
 
@@ -267,7 +342,7 @@ class plgSystemOSMembershipReminder extends CMSPlugin implements SubscriberInter
 			->where("$reminderSentField = 0")
 			->where('a.group_admin_id = 0')
 			->where(
-				"IF($sendReminderField > 0, $sendReminderField >= DATEDIFF(to_date, NOW()) AND DATEDIFF(to_date, NOW()) >= 0, DATEDIFF(NOW(), to_date) >= ABS($sendReminderField) AND DATEDIFF(NOW(), to_date) <= 120)"
+				"IF($sendReminderField > 0, $sendReminderField >= DATEDIFF(to_date, NOW()) AND DATEDIFF(to_date, NOW()) >= 0, DATEDIFF(NOW(), to_date) >= ABS($sendReminderField) AND DATEDIFF(NOW(), to_date) <= (ABS($sendReminderField) + 10))"
 			)
 			->order('a.to_date');
 		$db->setQuery($query, 0, $numberEmailSendEachTime);
@@ -291,7 +366,9 @@ class plgSystemOSMembershipReminder extends CMSPlugin implements SubscriberInter
 	{
 		// If trigger reminder code is set, we will only process sending reminder from cron job
 		if (trim($this->params->get('trigger_reminder_code', ''))
-			&& trim($this->params->get('trigger_reminder_code', '')) != $this->app->input->getString('trigger_reminder_code'))
+			&& trim($this->params->get('trigger_reminder_code', '')) != $this->app->input->getString(
+				'trigger_reminder_code'
+			))
 		{
 			return false;
 		}

@@ -1337,15 +1337,8 @@ class HelperOspropertyFields{
 				<BR />
 				<!--  <textarea name="<?php echo $field->field_name?>_<?php echo $sef?>" id="<?php echo $field->field_name?>_<?php echo $sef?>" cols="<?php echo $field->ncols?>" rows="<?php echo $field->nrows?>" class="input-large" <?php echo $readonly?>><?php echo OSPHelper::getLanguageFieldValueBackend($obj,'value','_'.$sef);?></textarea>-->
 				<?php 
-				if($field->{'field_name_'.$sef} == "")
-				{
-					$field_name = $field->field_name;
-				}
-				else
-				{
-					$field_name = $field->{'field_name_'.$sef};
-				}
-				echo $editor->display( $field_name,  OSPHelper::getLanguageFieldValueBackend($obj,'value','_'.$sef) , '95%', '100', '75', '10' ,false) ;
+				
+				echo $editor->display( $field_name = $field->field_name,  OSPHelper::getLanguageFieldValueBackend($obj,'value','_'.$sef) , '95%', '100', '75', '10' ,false) ;
 				?>
 				<BR /><BR />
 				<?php

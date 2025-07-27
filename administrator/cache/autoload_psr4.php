@@ -240,8 +240,7 @@ return [
 	'Joomla\\Plugin\\Task\\DeleteActionLogs\\' => [JPATH_PLUGINS . '/task/deleteactionlogs/src'],
 	'Joomla\\Plugin\\Task\\EBHouseKeeping\\' => [JPATH_PLUGINS . '/task/ebhousekeeping/src'],
 	'Joomla\\Plugin\\Task\\Globalcheckin\\' => [JPATH_PLUGINS . '/task/globalcheckin/src'],
-	'Joomla\\Plugin\\Task\\MPHouseKeeping\\' => [JPATH_PLUGINS . '/task/mphousekeeping/src'],
-	'Joomla\\Plugin\\Task\\MPOfflinePaymentReminder\\' => [JPATH_PLUGINS . '/task/mpofflinepaymentreminder/src'],
+	'Joomla\\Plugin\\Task\\MembershipPro\\' => [JPATH_PLUGINS . '/task/membershippro/src'],
 	'Joomla\\Plugin\\Task\\PrivacyConsent\\' => [JPATH_PLUGINS . '/task/privacyconsent/src'],
 	'Joomla\\Plugin\\Task\\Requests\\' => [JPATH_PLUGINS . '/task/requests/src'],
 	'Joomla\\Plugin\\Task\\RotateLogs\\' => [JPATH_PLUGINS . '/task/rotatelogs/src'],
@@ -273,4 +272,8 @@ return [
 	'Joomla\\Plugin\\Workflow\\Featuring\\' => [JPATH_PLUGINS . '/workflow/featuring/src'],
 	'Joomla\\Plugin\\Workflow\\Notification\\' => [JPATH_PLUGINS . '/workflow/notification/src'],
 	'Joomla\\Plugin\\Workflow\\Publishing\\' => [JPATH_PLUGINS . '/workflow/publishing/src'],
+	'OSSolution\\MembershipPro\\Module\\EasyView\\Site\\' => [JPATH_SITE . '/modules/mod_membershippro_easyview/src'],
+	'OSSolution\\MembershipPro\\Module\\MembershipPlans\\Site\\' => [JPATH_SITE . '/modules/mod_membershipplans/src'],
+	'OSSolution\\MembershipPro\\Module\\MembershipStatus\\Site\\' => [JPATH_SITE . '/modules/mod_membershipstatus/src'],
+	'OSSolution\\MembershipPro\\Module\\Subscriptions\\Administrator\\' => [JPATH_ADMINISTRATOR . '/modules/mod_mp_subscriptions/src'],
 ];

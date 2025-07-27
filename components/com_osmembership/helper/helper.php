@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -11,11 +11,10 @@ defined('_JEXEC') or die;
 
 use CB\Database\Table\UserTable;
 use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Editor\Editor;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Form\FormHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -32,6 +31,8 @@ use Joomla\CMS\User\User;
 use Joomla\CMS\User\UserHelper;
 use Joomla\Component\Users\Site\Model\RegistrationModel;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use Joomla\Utilities\ArrayHelper;
@@ -106,6 +107,40 @@ class OSMembershipHelper
 	public static function isJoomla5()
 	{
 		return version_compare(JVERSION, '4.4.99', '>');
+	}
+
+	/**
+	 * Method to get file extension
+	 *
+	 * @param   string  $file
+	 *
+	 * @return string
+	 */
+	public static function getFileExt($file)
+	{
+		// Use framework code if available
+		if (is_callable([File::class, 'getExt']))
+		{
+			return File::getExt($file);
+		}
+
+		// String manipulation should be faster than pathinfo() on newer PHP versions.
+		$dot = strrpos($file, '.');
+
+		if ($dot === false)
+		{
+			return '';
+		}
+
+		$ext = substr($file, $dot + 1);
+
+		// Extension cannot contain slashes.
+		if (strpos($ext, '/') !== false || (DIRECTORY_SEPARATOR === '\\' && strpos($ext, '\\') !== false))
+		{
+			return '';
+		}
+
+		return $ext;
 	}
 
 	/**
@@ -300,9 +335,12 @@ class OSMembershipHelper
 			}
 		}
 
-		Factory::getApplication()->getDocument()->addScriptDeclaration(
-			'var langLinkForAjax="' . $langLink . '";'
-		);
+		Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager()
+			->addInlineScript(
+				'var langLinkForAjax="' . $langLink . '";'
+			);
 	}
 
 	/**
@@ -355,6 +393,27 @@ class OSMembershipHelper
 	}
 
 	/**
+	 * Check if a field is published
+	 *
+	 * @param   string  $name
+	 *
+	 * @return bool
+	 */
+	public static function isFieldPublished(string $name): bool
+	{
+		/* @var DatabaseDriver $db */
+		$db    = Factory::getContainer()->get('db');
+		$query = $db->getQuery(true)
+			->select('COUNT(*)')
+			->from('#__osmembership_fields')
+			->where('name = ' . $db->quote($name))
+			->where('published = 1');
+		$db->setQuery($query);
+
+		return $db->loadResult() > 0;
+	}
+
+	/**
 	 * Check to see if the given user only has unique subscription plan
 	 *
 	 * @param $userId
@@ -394,7 +453,10 @@ class OSMembershipHelper
 		$userId = $user->id;
 
 		if ($row
-			&& (($row->user_id == $userId && $userId) || $user->authorise('membershippro.subscriptions', 'com_osmembership'))
+			&& (($row->user_id == $userId && $userId) || $user->authorise(
+					'membershippro.subscriptions',
+					'com_osmembership'
+				))
 			&& !$row->recurring_subscription_cancelled)
 		{
 			return true;
@@ -618,7 +680,10 @@ class OSMembershipHelper
 					$db->setQuery($query);
 					$rowSubscription = $db->loadObject();
 
-					if ($rowSubscription && $rowSubscription->subscription_id && !str_contains($rowSubscription->payment_method, 'os_offline'))
+					if ($rowSubscription && $rowSubscription->subscription_id && !str_contains(
+							$rowSubscription->payment_method,
+							'os_offline'
+						))
 					{
 						return false;
 					}
@@ -725,7 +790,10 @@ class OSMembershipHelper
 	{
 		if (!PluginHelper::isEnabled('osmembership', 'groupmembership'))
 		{
-			Factory::getApplication()->enqueueMessage('Please enable plugin Membership Pro - Group Membership Plugin to use this feature', 'notice');
+			Factory::getApplication()->enqueueMessage(
+				'Please enable plugin Membership Pro - Group Membership Plugin to use this feature',
+				'notice'
+			);
 
 			return 0;
 		}
@@ -754,7 +822,10 @@ class OSMembershipHelper
 			return 0;
 		}
 
-		[$managePlanIds, $addNewMemberPlanIds] = OSMembershipHelperGroupmembership::getGroupMembershipSubscriptionsForUser($userId);
+		[
+			$managePlanIds,
+			$addNewMemberPlanIds
+		] = OSMembershipHelperGroupmembership::getGroupMembershipSubscriptionsForUser($userId);
 
 		if (count($addNewMemberPlanIds) > 0)
 		{
@@ -1223,8 +1294,13 @@ class OSMembershipHelper
 	 *
 	 * @return int
 	 */
-	public static function calculateMaxTaxRate($planId, $country = '', $state = '', $vies = 2, $useDefaultCountryIfEmpty = true)
-	{
+	public static function calculateMaxTaxRate(
+		$planId,
+		$country = '',
+		$state = '',
+		$vies = 2,
+		$useDefaultCountryIfEmpty = true
+	) {
 		if (empty($country) && $useDefaultCountryIfEmpty)
 		{
 			$country = self::getConfigValue('default_country');
@@ -1312,8 +1388,14 @@ class OSMembershipHelper
 	 *
 	 * @return mixed
 	 */
-	public static function getProfileFields($planId, $loadCoreFields = true, $language = null, $action = null, $view = null, $userId = null)
-	{
+	public static function getProfileFields(
+		$planId,
+		$loadCoreFields = true,
+		$language = null,
+		$action = null,
+		$view = null,
+		$userId = null
+	) {
 		static $cache = [];
 
 		$cacheKey = md5(serialize(func_get_args()));
@@ -1350,7 +1432,9 @@ class OSMembershipHelper
 				$query->where(
 					'(plan_id = 0 OR id IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $planId . ' OR plan_id < 0))'
 				)
-					->where('id NOT IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $negPlanId . ')');
+					->where(
+						'id NOT IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $negPlanId . ')'
+					);
 			}
 			else
 			{
@@ -1454,7 +1538,9 @@ class OSMembershipHelper
 				$query->where(
 					'(plan_id = 0 OR id IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $planId . ' OR plan_id < 0))'
 				)
-					->where('id NOT IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $negPlanId . ')');
+					->where(
+						'id NOT IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $negPlanId . ')'
+					);
 			}
 
 			if (!$user->authorise('core.admin', 'com_osmembership')
@@ -1737,7 +1823,10 @@ class OSMembershipHelper
 	 */
 	public static function getSubscriptions($profileId)
 	{
-		JLoader::register('OSMembershipHelperSubscription', JPATH_ROOT . '/components/com_osmembership/helper/subscription.php');
+		JLoader::register(
+			'OSMembershipHelperSubscription',
+			JPATH_ROOT . '/components/com_osmembership/helper/subscription.php'
+		);
 
 		return OSMembershipHelperSubscription::getSubscriptions($profileId);
 	}
@@ -1925,8 +2014,14 @@ class OSMembershipHelper
 				}
 
 				#Process for #__osmembership_plans table
-
-				if ($config->activate_simple_multilingual)
+				if ($config->activate_super_simple_multilingual)
+				{
+					$varcharFields = [
+						'alias',
+						'title',
+					];
+				}
+				elseif ($config->activate_simple_multilingual)
 				{
 					$varcharFields = [
 						'alias',
@@ -1960,7 +2055,17 @@ class OSMembershipHelper
 					{
 						$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` VARCHAR( 255 );";
 						$db->setQuery($sql);
-						$db->execute();
+
+						try
+						{
+							$db->execute();
+						}
+						catch (\RuntimeException $e)
+						{
+							Factory::getApplication()->enqueueMessage($sql, CMSApplicationInterface::MSG_ERROR);
+
+							return;
+						}
 					}
 				}
 
@@ -2002,7 +2107,17 @@ class OSMembershipHelper
 					{
 						$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` TEXT NULL;";
 						$db->setQuery($sql);
-						$db->execute();
+
+						try
+						{
+							$db->execute();
+						}
+						catch (\RuntimeException $e)
+						{
+							Factory::getApplication()->enqueueMessage($sql, CMSApplicationInterface::MSG_ERROR);
+
+							return;
+						}
 					}
 				}
 
@@ -2022,7 +2137,16 @@ class OSMembershipHelper
 					{
 						$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `$fieldName` VARCHAR( 255 );";
 						$db->setQuery($sql);
-						$db->execute();
+						try
+						{
+							$db->execute();
+						}
+						catch (\RuntimeException $e)
+						{
+							Factory::getApplication()->enqueueMessage($sql, CMSApplicationInterface::MSG_ERROR);
+
+							return;
+						}
 					}
 				}
 
@@ -2042,7 +2166,17 @@ class OSMembershipHelper
 					{
 						$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `$fieldName` TEXT NULL;";
 						$db->setQuery($sql);
-						$db->execute();
+
+						try
+						{
+							$db->execute();
+						}
+						catch (\RuntimeException $e)
+						{
+							Factory::getApplication()->enqueueMessage($sql, CMSApplicationInterface::MSG_ERROR);
+
+							return;
+						}
 					}
 				}
 
@@ -2058,7 +2192,17 @@ class OSMembershipHelper
 					{
 						$sql = "ALTER TABLE  `#__osmembership_countries` ADD  `$fieldName` VARCHAR( 255 ) DEFAULT '';";
 						$db->setQuery($sql);
-						$db->execute();
+
+						try
+						{
+							$db->execute();
+						}
+						catch (\RuntimeException $e)
+						{
+							Factory::getApplication()->enqueueMessage($sql, CMSApplicationInterface::MSG_ERROR);
+
+							return;
+						}
 					}
 				}
 			}
@@ -2078,7 +2222,10 @@ class OSMembershipHelper
 		}
 
 		// Only load twitter bootstrap css if it is configured to use Bootstrap 2 or Bootstrap 5
-		if ($config->load_twitter_bootstrap_in_frontend !== '0' && in_array($config->get('twitter_bootstrap_version', 2), [2, 5]))
+		if ($config->load_twitter_bootstrap_in_frontend !== '0' && in_array(
+				$config->get('twitter_bootstrap_version', 2),
+				[2, 5]
+			))
 		{
 			HTMLHelper::_('bootstrap.loadCss');
 		}
@@ -2313,8 +2460,11 @@ class OSMembershipHelper
 	 *
 	 * @return string
 	 */
-	public static function getUniqueCodeForField($fieldName = 'transaction_id', $table = '#__osmemberhsip_subscribers', $length = 16)
-	{
+	public static function getUniqueCodeForField(
+		$fieldName = 'transaction_id',
+		$table = '#__osmemberhsip_subscribers',
+		$length = 16
+	) {
 		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
@@ -2344,7 +2494,9 @@ class OSMembershipHelper
 	public static function displayCopyRight()
 	{
 		echo '<div class="copyright" style="text-align: center;margin-top: 5px;"><a href="http://joomdonation.com/joomla-extensions/membership-pro-joomla-membership-subscription.html" target="_blank"><strong>Membership Pro</strong></a> version ' . self::getInstalledVersion(
-			) . ', Copyright (C) 2012-' . date('Y') . ' <a href="http://joomdonation.com" target="_blank"><strong>Ossolution Team</strong></a></div>';
+			) . ', Copyright (C) 2012-' . date(
+				'Y'
+			) . ' <a href="http://joomdonation.com" target="_blank"><strong>Ossolution Team</strong></a></div>';
 	}
 
 	public static function validateEngine()
@@ -2386,14 +2538,21 @@ class OSMembershipHelper
 			'custom[email]',
 			'custom[url]',
 			'custom[phone]',
+			'custom[date]',
 			"custom[date],past[$dateNow]",
+			"custom[date],future[$dateNow]",
 			'custom[ipv4]',
+			'custom[ipv6]',
 			'minSize[6]',
 			'maxSize[12]',
 			'custom[integer],min[-5]',
-			'custom[integer],max[50]',
-			"custom[date]",
-			"custom[date],future[$dateNow]",
+			'custom[integer],max[50]]',
+			'minCheckbox[2]',
+			'maxCheckbox[2]',
+			'custom[onlyNumberSp]',
+			'custom[onlyLetterSp]',
+			'custom[onlyLetterNumber]',
+			'equals[FIELD_NAME]',
 		];
 	}
 
@@ -2421,7 +2580,10 @@ class OSMembershipHelper
 	 */
 	public static function getActiveMembershipPlans($userId = 0, $excludes = [])
 	{
-		JLoader::register('OSMembershipHelperSubscription', JPATH_ROOT . '/components/com_osmembership/helper/subscription.php');
+		JLoader::register(
+			'OSMembershipHelperSubscription',
+			JPATH_ROOT . '/components/com_osmembership/helper/subscription.php'
+		);
 
 		return OSMembershipHelperSubscription::getActiveMembershipPlans($userId, $excludes);
 	}
@@ -2495,7 +2657,10 @@ class OSMembershipHelper
 	 */
 	public static function processUpgradeMembership($row)
 	{
-		JLoader::register('OSMembershipHelperSubscription', JPATH_ROOT . '/components/com_osmembership/helper/subscription.php');
+		JLoader::register(
+			'OSMembershipHelperSubscription',
+			JPATH_ROOT . '/components/com_osmembership/helper/subscription.php'
+		);
 
 		OSMembershipHelperSubscription::processUpgradeMembership($row);
 	}
@@ -2648,7 +2813,10 @@ class OSMembershipHelper
 		if (!isset($plans[$row->plan_id . '.' . $row->language]))
 		{
 			$fieldSuffix                                 = OSMembershipHelper::getFieldSuffix($row->language);
-			$plans[$row->plan_id . '.' . $row->language] = OSMembershipHelperDatabase::getPlan($row->plan_id, $fieldSuffix);
+			$plans[$row->plan_id . '.' . $row->language] = OSMembershipHelperDatabase::getPlan(
+				$row->plan_id,
+				$fieldSuffix
+			);
 		}
 
 		$rowPlan = $plans[$row->plan_id . '.' . $row->language];
@@ -2700,16 +2868,36 @@ class OSMembershipHelper
 		$replaces['setup_fee']              = self::formatCurrency($row->setup_fee, $config, $rowPlan->currency_symbol);
 		$replaces['invoice_status']         = $invoiceStatus;
 		$replaces['item_quantity']          = 1;
-		$replaces['item_amount']            = $replaces['item_sub_total'] = self::formatCurrency($row->amount, $config, $rowPlan->currency_symbol);
-		$replaces['discount_amount']        = self::formatCurrency($row->discount_amount, $config, $rowPlan->currency_symbol);
+		$replaces['item_amount']            = $replaces['item_sub_total'] = self::formatCurrency(
+			$row->amount,
+			$config,
+			$rowPlan->currency_symbol
+		);
+		$replaces['discount_amount']        = self::formatCurrency(
+			$row->discount_amount,
+			$config,
+			$rowPlan->currency_symbol
+		);
 		$replaces['sub_total']              = self::formatCurrency(
 			$row->amount + $row->setup_fee - $row->discount_amount,
 			$config,
 			$rowPlan->currency_symbol
 		);
-		$replaces['tax_amount']             = self::formatCurrency($row->tax_amount, $config, $rowPlan->currency_symbol);
-		$replaces['payment_processing_fee'] = self::formatCurrency($row->payment_processing_fee, $config, $rowPlan->currency_symbol);
-		$replaces['total_amount']           = self::formatCurrency($row->gross_amount, $config, $rowPlan->currency_symbol);
+		$replaces['tax_amount']             = self::formatCurrency(
+			$row->tax_amount,
+			$config,
+			$rowPlan->currency_symbol
+		);
+		$replaces['payment_processing_fee'] = self::formatCurrency(
+			$row->payment_processing_fee,
+			$config,
+			$rowPlan->currency_symbol
+		);
+		$replaces['total_amount']           = self::formatCurrency(
+			$row->gross_amount,
+			$config,
+			$rowPlan->currency_symbol
+		);
 		$replaces['tax_rate']               = self::formatAmount($row->tax_rate, $config) . '%';
 
 		switch ($row->act)
@@ -2744,7 +2932,8 @@ class OSMembershipHelper
 		if ($row->published == 0)
 		{
 			$Itemid = OSMembershipHelperRoute::findView('payment', static::getItemid());
-			$link   = Uri::root() . 'index.php?option=com_osmembership&view=payment&transaction_id=' . $row->transaction_id . '&Itemid=' . $Itemid;
+			$link   = Uri::root(
+				) . 'index.php?option=com_osmembership&view=payment&transaction_id=' . $row->transaction_id . '&Itemid=' . $Itemid;
 
 			$replaces['payment_link_url'] = $link;
 			$replaces['payment_link']     = '<a href="' . $link . '">' . $link . '</a>';
@@ -2758,12 +2947,7 @@ class OSMembershipHelper
 		// Support [SUBSCRIPTION_DETAIL] tag
 		$replaces['SUBSCRIPTION_DETAIL'] = OSMembershipHelper::getEmailContent($config, $row, false, 'register');
 
-		foreach ($replaces as $key => $value)
-		{
-			$key           = strtoupper($key);
-			$value         = (string) $value;
-			$invoiceOutput = str_replace("[$key]", $value, $invoiceOutput);
-		}
+		$invoiceOutput = self::replaceUpperCaseTags($invoiceOutput, $replaces);
 
 		return OSMembershipHelperHtml::processConditionalText($invoiceOutput);
 	}
@@ -2792,7 +2976,11 @@ class OSMembershipHelper
 		$config = OSMembershipHelper::getConfig();
 
 		$invoiceNumber = self::formatInvoiceNumber($row, $config);
-		$invoiceOutput = static::getSubscriptionInvoiceOutput($row);
+		$invoiceOutput = OSMembershipHelper::callOverridableHelperMethod(
+			'Helper',
+			'getSubscriptionInvoiceOutput',
+			[$row]
+		);
 
 		//Filename
 		$filePath = JPATH_ROOT . '/media/com_osmembership/invoices/' . File::makeSafe($invoiceNumber . '.pdf');
@@ -2813,14 +3001,21 @@ class OSMembershipHelper
 	 */
 	public static function generateSubscriptionsPDF($rows, $fields)
 	{
-		$pdfOutput = OSMembershipHelperHtml::loadSharedLayout('common/tmpl/subscriptions_pdf.php', ['rows' => $rows, 'fields' => $fields]);
+		$pdfOutput = OSMembershipHelperHtml::loadSharedLayout(
+			'common/tmpl/subscriptions_pdf.php',
+			['rows' => $rows, 'fields' => $fields]
+		);
 
 		$pdfOutput = OSMembershipHelperHtml::processConditionalText($pdfOutput);
 
 		//Filename
 		$filePath = JPATH_ROOT . '/media/com_osmembership/subscriptions.pdf';
 
-		OSMembershipHelperPdf::generatePDFFile($pdfOutput, $filePath, ['type' => 'subscriptions', 'title' => 'Subscriptions List']);
+		OSMembershipHelperPdf::generatePDFFile(
+			$pdfOutput,
+			$filePath,
+			['type' => 'subscriptions', 'title' => 'Subscriptions List']
+		);
 
 		return $filePath;
 	}
@@ -2869,7 +3064,11 @@ class OSMembershipHelper
 		$filename = File::makeSafe('subscriptions_invoices_' . Factory::getDate()->toSql() . '.pdf');
 		$filePath = JPATH_ROOT . '/media/com_osmembership/invoices/' . $filename;
 
-		OSMembershipHelperPdf::generatePDFFile($pdfContents, $filePath, ['type' => 'invoice', 'title' => 'Subscriptions Invoices']);
+		OSMembershipHelperPdf::generatePDFFile(
+			$pdfContents,
+			$filePath,
+			['type' => 'invoice', 'title' => 'Subscriptions Invoices']
+		);
 
 		return $filePath;
 	}
@@ -2981,23 +3180,58 @@ class OSMembershipHelper
 		$replaces['payment_processing_fee'] = self::formatAmount($row->payment_processing_fee, $config);
 		$replaces['currency']               = $rowPlan->currency_symbol ?: $config->currency_symbol;
 
-		$replaces['amount_with_currency']                 = self::formatCurrency($row->amount, $config, $rowPlan->currency_symbol);
-		$replaces['discount_amount_with_currency']        = self::formatCurrency($row->discount_amount, $config, $rowPlan->currency_symbol);
-		$replaces['tax_amount_with_currency']             = self::formatCurrency($row->tax_amount, $config, $rowPlan->currency_symbol);
-		$replaces['gross_amount_with_currency']           = self::formatCurrency($row->gross_amount, $config, $rowPlan->currency_symbol);
-		$replaces['payment_processing_fee_with_currency'] = self::formatCurrency($row->payment_processing_fee, $config, $rowPlan->currency_symbol);
+		$replaces['amount_with_currency']                 = self::formatCurrency(
+			$row->amount,
+			$config,
+			$rowPlan->currency_symbol
+		);
+		$replaces['discount_amount_with_currency']        = self::formatCurrency(
+			$row->discount_amount,
+			$config,
+			$rowPlan->currency_symbol
+		);
+		$replaces['tax_amount_with_currency']             = self::formatCurrency(
+			$row->tax_amount,
+			$config,
+			$rowPlan->currency_symbol
+		);
+		$replaces['gross_amount_with_currency']           = self::formatCurrency(
+			$row->gross_amount,
+			$config,
+			$rowPlan->currency_symbol
+		);
+		$replaces['payment_processing_fee_with_currency'] = self::formatCurrency(
+			$row->payment_processing_fee,
+			$config,
+			$rowPlan->currency_symbol
+		);
 
-		$replaces['tax_rate']            = self::formatAmount($row->tax_rate, $config);
-		$replaces['from_date']           = HTMLHelper::_('date', $row->from_date, $config->date_format);
-		$replaces['to_date']             = HTMLHelper::_('date', $row->to_date, $config->date_format);
-		$replaces['created_date']        = HTMLHelper::_('date', $row->created_date, $config->date_format);
-		$replaces['created_hour']        = HTMLHelper::_('date', $row->created_date, 'H');
-		$replaces['created_minute']      = HTMLHelper::_('date', $row->created_date, 'i');
-		$replaces['date']                = HTMLHelper::_('date', 'Now', $config->date_format);
-		$replaces['end_date']            = $replaces['to_date'];
-		$replaces['published']           = $row->published;
-		$replaces['payment_method_name'] = $row->payment_method;
-		$replaces['subscription_code']   = $row->subscription_code;
+		$replaces['tax_rate']                  = self::formatAmount($row->tax_rate, $config);
+		$replaces['from_date']                 = HTMLHelper::_('date', $row->from_date, $config->date_format);
+		$replaces['to_date']                   = HTMLHelper::_('date', $row->to_date, $config->date_format);
+		$replaces['created_date']              = HTMLHelper::_('date', $row->created_date, $config->date_format);
+		$replaces['created_hour']              = HTMLHelper::_('date', $row->created_date, 'H');
+		$replaces['created_minute']            = HTMLHelper::_('date', $row->created_date, 'i');
+		$replaces['date']                      = HTMLHelper::_('date', 'Now', $config->date_format);
+		$replaces['end_date']                  = $replaces['to_date'];
+		$replaces['published']                 = $row->published;
+		$replaces['payment_method_name']       = $row->payment_method;
+		$replaces['subscription_code']         = $row->subscription_code;
+		$replaces['renew_option_id']           = (int) $row->renew_option_id;
+		$replaces['upgrade_option_id']         = (int) $row->upgrade_option_id;
+		$replaces['upgrade_from_plan_to_plan'] = '';
+
+		$upgradeOption = null;
+
+		if ($row->upgrade_option_id > 0)
+		{
+			$upgradeOption = OSMembershipHelperDatabase::getUpgradeRule($row->upgrade_option_id);
+		}
+
+		if ($upgradeOption)
+		{
+			$replaces['upgrade_from_plan_to_plan'] = $upgradeOption->from_plan_id . '_' . $upgradeOption->to_plan_id;
+		}
 
 		if ($row->payment_method && $method = OSMembershipHelperPayments::loadPaymentMethod($row->payment_method))
 		{
@@ -3133,6 +3367,15 @@ class OSMembershipHelper
 			$replaces['invoice_number'] = '';
 		}
 
+		if ($row->formatted_invoice_number)
+		{
+			$replaces['formatted_invoice_number'] = $row->formatted_invoice_number;
+		}
+		else
+		{
+			$replaces['formatted_invoice_number'] = '';
+		}
+
 		if ($row->refunded)
 		{
 			$replaces['refunded'] = Text::_('JYES');
@@ -3209,11 +3452,19 @@ class OSMembershipHelper
 		if ($rowPlan->recurring_subscription && $rowPlan->number_payments > 0)
 		{
 			$totalPaymentAmount               = $rowPlan->number_payments * $row->gross_amount;
-			$replaces['total_payment_amount'] = static::formatCurrency($totalPaymentAmount, $config, $rowPlan->currency_symbol);
+			$replaces['total_payment_amount'] = static::formatCurrency(
+				$totalPaymentAmount,
+				$config,
+				$rowPlan->currency_symbol
+			);
 		}
 		else
 		{
-			$replaces['total_payment_amount'] = static::formatCurrency($row->gross_amount, $config, $rowPlan->currency_symbol);
+			$replaces['total_payment_amount'] = static::formatCurrency(
+				$row->gross_amount,
+				$config,
+				$rowPlan->currency_symbol
+			);
 		}
 
 		if ($rowPlan->number_group_members > 0 || $rowPlan->number_members_field)
@@ -3234,7 +3485,10 @@ class OSMembershipHelper
 			$db->setQuery($query);
 			$rowMembers = $db->loadObjectList();
 
-			$replaces['group_members'] = OSMembershipHelperHtml::loadCommonLayout('common/tmpl/group_members.php', ['rowMembers' => $rowMembers]);
+			$replaces['group_members'] = OSMembershipHelperHtml::loadCommonLayout(
+				'common/tmpl/group_members.php',
+				['rowMembers' => $rowMembers]
+			);
 		}
 		else
 		{
@@ -3274,32 +3528,34 @@ class OSMembershipHelper
 					$fieldValue = implode(', ', json_decode($fieldValue));
 				}
 
-				if ($fieldValue && $rowField->fieldtype == 'Date')
+				if ($fieldValue)
 				{
-					try
+					switch ($rowField->fieldtype)
 					{
-						$replaces[$rowField->name] = HTMLHelper::_('date', $fieldValue, $config->date_format, null);
+						case 'Date':
+							try
+							{
+								$fieldValue = HTMLHelper::_('date', $fieldValue, $config->date_format, null);
+							}
+							catch (Exception $e)
+							{
+								// Do nothing;
+							}
+							break;
+						case 'File':
+							if ($fieldValue && OSMembershipHelper::isImageFilename($fieldValue))
+							{
+								$imgSrc     = Uri::root(true) . '/media/com_osmembership/upload/' . $fieldValue;
+								$fieldValue = '<img src="' . $imgSrc . '" class="osm-uploaded-image"/>';
+							}
+							break;
+						case 'Textarea':
+							$fieldValue = nl2br($fieldValue);
+							break;
 					}
-					catch (Exception $e)
-					{
-						$replaces[$rowField->name] = $fieldValue;
-					}
-				}
-				else
-				{
-					$replaces[$rowField->name] = $fieldValue;
 				}
 
-				if ($rowField->fieldtype === 'File' && $fieldValue && OSMembershipHelper::isImageFilename($fieldValue))
-				{
-					$imgSrc = Uri::root(true) . '/media/com_osmembership/upload/' . $fieldValue;
-
-					$replaces[$rowField->name . '_img'] = '<img src="' . $imgSrc . '" class="osm-uploaded-image"/>';
-				}
-				else
-				{
-					$replaces[$rowField->name . '_img'] = '';
-				}
+				$replaces[$rowField->name] = $fieldValue;
 			}
 			else
 			{
@@ -3328,7 +3584,11 @@ class OSMembershipHelper
 			);
 		}
 
-		$Itemid = OSMembershipHelperRoute::getPlanMenuId($rowPlan->id, $rowPlan->category_id, OSMembershipHelperRoute::getDefaultMenuItem());
+		$Itemid = OSMembershipHelperRoute::getPlanMenuId(
+			$rowPlan->id,
+			$rowPlan->category_id,
+			OSMembershipHelperRoute::getDefaultMenuItem()
+		);
 
 		if ($rowPlan->category_id > 0)
 		{
@@ -3420,6 +3680,42 @@ class OSMembershipHelper
 		if (!array_key_exists('language', $replaces))
 		{
 			$replaces['language'] = $row->language;
+		}
+
+		$replaces['eb_coupon_code']          = '';
+		$replaces['eb_coupon_amount']        = '';
+		$replaces['eb_coupon_discount_type'] = '';
+
+		if ($row->eb_coupon_id > 0)
+		{
+			$query->clear()
+				->select('*')
+				->from('#__eb_coupons')
+				->where('id = ' . $row->eb_coupon_id);
+			$db->setQuery($query);
+			$rowCoupon = $db->loadObject();
+
+			if ($rowCoupon)
+			{
+				$replaces['eb_coupon_code']   = $rowCoupon->code;
+				$replaces['eb_coupon_amount'] = OSMembershipHelper::formatAmount($rowCoupon->discount, $config);
+
+				if (ComponentHelper::isEnabled('com_eventbooking'))
+				{
+					require_once JPATH_ADMINISTRATOR . '/components/com_eventbooking/libraries/rad/bootstrap.php';
+
+					$ebConfig = \EventbookingHelper::getConfig();
+
+					if ($rowCoupon->coupon_type == 0)
+					{
+						$replaces['eb_coupon_discount_type'] = '%';
+					}
+					else
+					{
+						$replaces['eb_coupon_discount_type'] = $ebConfig->currency_symbol;
+					}
+				}
+			}
 		}
 
 		return $replaces;
@@ -3548,7 +3844,12 @@ class OSMembershipHelper
 		$thousands_sep = $config->thousands_sep ?? ',';
 		$symbol        = $currencySymbol ?: $config->currency_symbol;
 
-		return $config->currency_position ? (number_format((float) $amount, $decimals, $dec_point, $thousands_sep) . $symbol) : ($symbol .
+		return $config->currency_position ? (number_format(
+				(float) $amount,
+				$decimals,
+				$dec_point,
+				$thousands_sep
+			) . $symbol) : ($symbol .
 			number_format((float) $amount, $decimals, $dec_point, $thousands_sep));
 	}
 
@@ -3628,7 +3929,14 @@ class OSMembershipHelper
 			$userId = null;
 		}
 
-		$rowFields = OSMembershipHelper::getProfileFields($row->plan_id, true, $row->language, $row->act, $view, $userId);
+		$rowFields = OSMembershipHelper::getProfileFields(
+			$row->plan_id,
+			true,
+			$row->language,
+			$row->act,
+			$view,
+			$userId
+		);
 		$formData  = OSMembershipHelper::getProfileData($row, $row->plan_id, $rowFields);
 		$form      = new MPFForm($rowFields);
 		$form->setData($formData)->bindData();
@@ -3693,7 +4001,13 @@ class OSMembershipHelper
 
 		if (!empty($config->use_cb_api))
 		{
-			return static::userRegistrationCB($data['first_name'], $data['last_name'], $data['email'], $data['username'], $data['password1']);
+			return static::userRegistrationCB(
+				$data['first_name'],
+				$data['last_name'],
+				$data['email'],
+				$data['username'],
+				$data['password1']
+			);
 		}
 
 		//Need to load com_users language file
@@ -3791,7 +4105,11 @@ class OSMembershipHelper
 		unset($data['password'], $data['password1'], $data['password2']);
 
 		// Log the error
-		OSMembershipHelper::logData(JPATH_ROOT . '/components/com_osmembership/user_creation_error.txt', $data, $errorMessage);
+		OSMembershipHelper::logData(
+			JPATH_ROOT . '/components/com_osmembership/user_creation_error.txt',
+			$data,
+			$errorMessage
+		);
 	}
 
 	/**
@@ -3995,11 +4313,15 @@ class OSMembershipHelper
 	public static function getPluginRestrictionRedirectUrl($params, $planIds)
 	{
 		// Try to find the best redirect URL
-		$redirectUrl = OSMembershipHelper::callOverridableHelperMethod('Helper', 'getRestrictionRedirectUrl', [$planIds]);
+		$redirectUrl = OSMembershipHelper::callOverridableHelperMethod('Helper', 'getRestrictionRedirectUrl', [$planIds]
+		);
 
 		if (empty($redirectUrl))
 		{
-			$redirectUrl = $params->get('redirect_url', OSMembershipHelper::getViewUrl(['categories', 'plans', 'plan', 'register']));
+			$redirectUrl = $params->get(
+				'redirect_url',
+				OSMembershipHelper::getViewUrl(['categories', 'plans', 'plan', 'register'])
+			);
 		}
 
 		if (!$redirectUrl)
@@ -4103,7 +4425,10 @@ class OSMembershipHelper
 			$script[] = '		Joomla.Modal.getCurrent().close();';
 			$script[] = '	}';
 
-			Factory::getApplication()->getDocument()->addScriptDeclaration(implode("\n", $script));
+			Factory::getApplication()
+				->getDocument()
+				->getWebAssetManager()
+				->addInlineScript(implode("\n", $script));
 
 			$input = str_replace('com_users', 'com_osmembership', $input);
 		}
@@ -4152,7 +4477,10 @@ class OSMembershipHelper
 	 */
 	public static function passFieldPaymentMethodDataToJS($rowFields)
 	{
-		HTMLHelper::_('behavior.core');
+		$document = Factory::getApplication()->getDocument();
+
+		$document->getWebAssetManager()
+			->useScript('core');
 
 		$allFields           = [];
 		$paymentMethodFields = [];
@@ -4168,7 +4496,6 @@ class OSMembershipHelper
 			$paymentMethodFields[$rowField->payment_method][] = $rowField->name;
 		}
 
-		$document = Factory::getApplication()->getDocument();
 		$document->addScriptOptions('mp_all_payment_method_fields', $allFields);
 
 		foreach ($paymentMethodFields as $paymentMethod => $fields)
@@ -4203,11 +4530,11 @@ class OSMembershipHelper
 
 		$path = $params->get('documents_path', 'media/com_osmembership/documents');
 
-		if (Folder::exists(JPATH_ROOT . '/' . $path))
+		if (is_dir(Path::clean(JPATH_ROOT . '/' . $path)))
 		{
 			$documentsPath = JPATH_ROOT . '/' . $path;
 		}
-		elseif (Folder::exists($path))
+		elseif (is_dir(Path::clean($path)))
 		{
 			$documentsPath = $path;
 		}
@@ -4263,7 +4590,7 @@ class OSMembershipHelper
 	 */
 	public static function getInstalledVersion()
 	{
-		return '4.1.0';
+		return '4.2.2';
 	}
 
 	/**
@@ -4511,7 +4838,10 @@ class OSMembershipHelper
 			&& $config->get('display_php_version_warning', 1)
 		)
 		{
-			Factory::getApplication()->enqueueMessage(Text::_('OSM_RAISE_PHP_VERSION_WARNING', PHP_VERSION, $minPHPVersion), 'warning');
+			Factory::getApplication()->enqueueMessage(
+				Text::_('OSM_RAISE_PHP_VERSION_WARNING', PHP_VERSION, $minPHPVersion),
+				'warning'
+			);
 		}
 	}
 
@@ -4580,8 +4910,76 @@ class OSMembershipHelper
 	 */
 	public static function isImageFilename(string $filename): bool
 	{
-		$fileExt = File::getExt($filename);
+		$fileExt = OSMembershipHelper::getFileExt($filename);
 
 		return in_array($fileExt, ['png', 'jpg', 'jpeg', 'gif', 'webp']);
+	}
+
+	/**
+	 * Replaces tags from subject with it's value
+	 *
+	 * @param   string  $subject
+	 * @param   array   $replaces
+	 *
+	 * @return string
+	 */
+	public static function replaceCaseInsensitiveTags($subject, $replaces)
+	{
+		if ($subject === null || trim($subject) === '')
+		{
+			return $subject;
+		}
+
+		foreach ($replaces as $key => $value)
+		{
+			$value = self::ensureValueIsString($value);
+
+			$subject = str_ireplace("[$key]", $value, $subject);
+		}
+
+		return $subject;
+	}
+
+	/**
+	 * Replaces tags from subject with it's value
+	 *
+	 * @param   string  $subject
+	 * @param   array   $replaces
+	 *
+	 * @return string
+	 */
+	public static function replaceUpperCaseTags($subject, $replaces)
+	{
+		if ($subject === null || trim($subject) === '')
+		{
+			return $subject;
+		}
+
+		foreach ($replaces as $key => $value)
+		{
+			$key   = strtoupper($key);
+			$value = self::ensureValueIsString($value);
+
+			$subject = str_replace("[$key]", $value, $subject);
+		}
+
+		return $subject;
+	}
+
+	/**
+	 * Method to make sure $value is a string
+	 *
+	 * @param   mixed  $value
+	 *
+	 * @return string
+	 */
+	public static function ensureValueIsString($value)
+	{
+		if (!is_scalar($value))
+		{
+			return '';
+		}
+
+		return $value ?? '';
 	}
 }

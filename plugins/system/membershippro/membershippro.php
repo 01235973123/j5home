@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -18,6 +18,7 @@ use Joomla\CMS\User\User;
 use Joomla\Database\ParameterType;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
+use Joomla\Registry\Registry;
 use OSSolution\MembershipPro\Admin\Event\Subscription\MembershipExpire;
 
 class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
@@ -95,6 +96,9 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 			{
 				$this->generateMembershipId($row);
 			}
+
+			// Update coupon usage statistic
+			$this->updateCouponUsage($row);
 		}
 
 		// Move data of the fields which are not being shown on renewal form to renewal subscription
@@ -150,6 +154,9 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 			$this->updateSubscriptionOnRenew($row);
 		}
 
+		// Update coupon usage statistic
+		$this->updateCouponUsage($row);
+
 		/*
 		 * Generate Membership ID for the subscription if it was not generated before (For example, when admin approve
 		 * the offline payment subscription
@@ -178,6 +185,22 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 				->where('user_id = ' . $row->user_id)
 				->whereIn('plan_id', $groupingPlans)
 				->where('id != ' . $row->id);
+
+
+			$extraReminderSentFields = [
+				'fourth_reminder_sent',
+				'fifth_reminder_sent',
+				'sixth_reminder_sent',
+			];
+
+			foreach ($extraReminderSentFields as $field)
+			{
+				if (property_exists($row, $field))
+				{
+					$query->set($field . ' = 1');
+				}
+			}
+
 			$db->setQuery($query)
 				->execute();
 		}
@@ -409,7 +432,9 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 			}
 		}
 
-		if (!$app->getInput()->post->getInt('login_from_mp_subscription_form') && $loginRedirectUrl = OSMembershipHelper::getLoginRedirectUrl())
+		if (!$app->getInput()->post->getInt(
+				'login_from_mp_subscription_form'
+			) && $loginRedirectUrl = OSMembershipHelper::getLoginRedirectUrl())
 		{
 			$app->setUserState('users.login.form.return', $loginRedirectUrl);
 		}
@@ -462,6 +487,20 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 				->update('#__osmembership_subscribers')
 				->set('email = ' . $db->quote($user['email']))
 				->where('user_id = ' . $userId);
+			$db->setQuery($query);
+			$db->execute();
+		}
+
+		// Assign subscription records to user account in case they have existing subscription records before registering for new user account
+		if (in_array($option, ['com_users', 'com_comprofiler']))
+		{
+			$db    = $this->db;
+			$query = $db->getQuery(true)
+				->update('#__osmembership_subscribers')
+				->set('user_id = ' . $userId)
+				->where('user_id = 0')
+				->where('email = ' . $db->quote($user['email']));
+			
 			$db->setQuery($query);
 			$db->execute();
 		}
@@ -642,7 +681,9 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 			->select($db->quoteName(['id', 'name', 'is_core', 'access', 'hide_on_membership_renewal']))
 			->from('#__osmembership_fields')
 			->where('published = 1')
-			->where('(plan_id = 0 OR id IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $row->plan_id . ' OR plan_id < 0))')
+			->where(
+				'(plan_id = 0 OR id IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $row->plan_id . ' OR plan_id < 0))'
+			)
 			->where('id NOT IN (SELECT field_id FROM #__osmembership_field_plan WHERE plan_id = ' . $negPlanId . ')');
 		$db->setQuery($query);
 		$rowFields = $db->loadObjectList();
@@ -661,7 +702,10 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 		foreach ($rowFields as $rowField)
 		{
 			// The field is show on renewal form, no need to process it further
-			if (!$rowField->hide_on_membership_renewal && (in_array($rowField->access, $viewLevels) || $this->app->isClient('administrator')))
+			if (!$rowField->hide_on_membership_renewal && (in_array(
+						$rowField->access,
+						$viewLevels
+					) || $this->app->isClient('administrator')))
 			{
 				continue;
 			}
@@ -929,7 +973,10 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 			return;
 		}
 
-		$subscriptionStatus = OSMembershipHelperSubscription::getPlanSubscriptionStatusForUser($row->profile_id, $row->plan_id);
+		$subscriptionStatus = OSMembershipHelperSubscription::getPlanSubscriptionStatusForUser(
+			$row->profile_id,
+			$row->plan_id
+		);
 		$db                 = $this->db;
 		$query              = $db->getQuery(true);
 		$query->update('#__osmembership_subscribers')
@@ -968,6 +1015,22 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 			->where('user_id = ' . $row->user_id)
 			->where('plan_id = ' . $row->plan_id)
 			->where('id != ' . $row->id);
+
+
+		$extraReminderSentFields = [
+			'fourth_reminder_sent',
+			'fifth_reminder_sent',
+			'sixth_reminder_sent',
+		];
+
+		foreach ($extraReminderSentFields as $extraField)
+		{
+			if (property_exists($row, $extraField))
+			{
+				$query->set($extraField . ' = 1')
+					->set($extraField . '_at = ' . $now);
+			}
+		}
 
 		$db->setQuery($query);
 		$db->execute();
@@ -1077,7 +1140,19 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 	 */
 	protected function updateSubscriptionsFromUserProfile($user, $subscriptionIds)
 	{
-		$profileFields = ['address1', 'address2', 'city', 'region', 'country', 'postal_code', 'phone', 'website', 'favoritebook', 'aboutme', 'dob'];
+		$profileFields = [
+			'address1',
+			'address2',
+			'city',
+			'region',
+			'country',
+			'postal_code',
+			'phone',
+			'website',
+			'favoritebook',
+			'aboutme',
+			'dob'
+		];
 
 		$db    = $this->db;
 		$query = $db->getQuery(true)
@@ -1344,5 +1419,41 @@ class plgSystemMembershipPro extends CMSPlugin implements SubscriberInterface
 				$row->avatar = $avatar;
 			}
 		}
+	}
+
+	/**
+	 * Update coupon used statistic
+	 *
+	 * @param   OSMembershipTableSubscriber  $row
+	 *
+	 * @return void
+	 */
+	protected function updateCouponUsage($row): void
+	{
+		// Early return if there is no coupon used for the coupon
+		if (!$row->coupon_id)
+		{
+			return;
+		}
+
+		$params = new Registry($row->params ?? '{}');
+
+		// Early return if the usage is already calculated for the coupon
+		if ($params->get('coupon_usage_calculated'))
+		{
+			return;
+		}
+
+		// Update the usage
+		$query = $this->db->getQuery(true)
+			->update('#__osmembership_coupons')
+			->set('used = used + 1')
+			->where('id = ' . $row->coupon_id);
+		$this->db->setQuery($query);
+		$this->db->execute();
+
+		$params->set('coupon_usage_calculated', 1);
+		$row->params = $params->toString();
+		$row->store();
 	}
 }

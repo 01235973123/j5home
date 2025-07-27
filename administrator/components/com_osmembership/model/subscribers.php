@@ -1,10 +1,9 @@
 <?php
-
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -21,8 +20,15 @@ class OSMembershipModelSubscribers extends MPFModelList
 	 */
 	public function __construct($config)
 	{
-		$config['clear_join']    = false;
-		$config['search_fields'] = ['tbl.first_name', 'tbl.last_name', 'tbl.email', 'tbl.membership_id', 'b.username', 'b.name'];
+		$config['clear_join'] = false;
+		$config['search_fields'] = [
+			'tbl.first_name',
+			'tbl.last_name',
+			'tbl.email',
+			'tbl.membership_id',
+			'b.username',
+			'b.name'
+		];
 
 		parent::__construct($config);
 
@@ -44,7 +50,8 @@ class OSMembershipModelSubscribers extends MPFModelList
 	{
 		$rows = parent::getData();
 
-		foreach ($rows as $row) {
+		foreach ($rows as $row)
+		{
 			$row->plans = OSMembershipHelperSubscription::getSubscriptions($row->id);
 		}
 
@@ -96,7 +103,8 @@ class OSMembershipModelSubscribers extends MPFModelList
 
 		$config = OSMembershipHelper::getConfig();
 
-		if (!$config->get('show_incomplete_payment_subscriptions', 1)) {
+		if (!$config->get('show_incomplete_payment_subscriptions', 1))
+		{
 			$query->where('(tbl.published != 0 OR gross_amount = 0 OR tbl.payment_method LIKE "os_offline%")');
 		}
 

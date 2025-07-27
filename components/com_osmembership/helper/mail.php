@@ -3,22 +3,23 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Mail\Mail;
+use Joomla\CMS\Mail\MailerFactoryInterface;
 use Joomla\CMS\Mail\MailHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 use OSSolution\MembershipPro\Admin\Event\Mail\BeforeSendingEmail;
 
@@ -98,8 +99,19 @@ class OSMembershipHelperMail
 
 		$replaces['SUBSCRIPTION_DETAIL'] = $emailContent;
 
+		$isOfflinePaymentSubscription = str_contains($row->payment_method, 'os_offline') && $row->published == 0;
+
 		// New Subscription Email Subject
-		if ($fieldSuffix && trim($plan->{'user_email_subject' . $fieldSuffix}))
+		if ($fieldSuffix && $isOfflinePaymentSubscription
+			&& trim($message->{'user_email_subject_offline' . $fieldSuffix}))
+		{
+			$subject = $message->{'user_email_subject_offline' . $fieldSuffix};
+		}
+		elseif ($isOfflinePaymentSubscription && trim($message->user_email_subject_offline))
+		{
+			$subject = $message->user_email_subject_offline;
+		}
+		elseif ($fieldSuffix && trim($plan->{'user_email_subject' . $fieldSuffix}))
 		{
 			$subject = $plan->{'user_email_subject' . $fieldSuffix};
 		}
@@ -117,7 +129,7 @@ class OSMembershipHelperMail
 		}
 
 		// New Subscription Email Body
-		if (str_contains($row->payment_method, 'os_offline') && $row->published == 0)
+		if ($isOfflinePaymentSubscription)
 		{
 			$offlineSuffix = str_replace('os_offline', '', $row->payment_method);
 			if ($offlineSuffix && $fieldSuffix && OSMembershipHelper::isValidMessage(
@@ -126,15 +138,21 @@ class OSMembershipHelperMail
 			{
 				$body = $message->{'user_email_body_offline' . $offlineSuffix . $fieldSuffix};
 			}
-			elseif ($offlineSuffix && OSMembershipHelper::isValidMessage($message->{'user_email_body_offline' . $offlineSuffix}))
+			elseif ($offlineSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'user_email_body_offline' . $offlineSuffix}
+				))
 			{
 				$body = $message->{'user_email_body_offline' . $offlineSuffix};
 			}
-			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($plan->{'user_email_body_offline' . $fieldSuffix}))
+			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$plan->{'user_email_body_offline' . $fieldSuffix}
+				))
 			{
 				$body = $plan->{'user_email_body_offline' . $fieldSuffix};
 			}
-			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'user_email_body_offline' . $fieldSuffix}))
+			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'user_email_body_offline' . $fieldSuffix}
+				))
 			{
 				$body = $message->{'user_email_body_offline' . $fieldSuffix};
 			}
@@ -164,13 +182,8 @@ class OSMembershipHelperMail
 			$body = $message->user_email_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		$invoicePath = '';
 
@@ -223,7 +236,6 @@ class OSMembershipHelperMail
 			$mailer->addAttachment($invoicePath);
 		}
 
-
 		$emails = explode(',', $config->notification_emails);
 
 		if ($fieldSuffix && strlen($message->{'admin_email_subject' . $fieldSuffix}))
@@ -254,17 +266,17 @@ class OSMembershipHelperMail
 
 		$body = str_replace('[SUBSCRIPTION_DETAIL]', $emailContent, $body);
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		if ($config->send_attachments_to_admin)
 		{
 			self::addAttachments($mailer, $rowFields, $replaces);
+		}
+
+		if (!self::isReplyToDisabledForPlan($plan) && $row->email && MailHelper::isEmailAddress($row->email))
+		{
+			$mailer->addReplyTo($row->email);
 		}
 
 		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'new_subscription_emails', $row);
@@ -295,7 +307,14 @@ class OSMembershipHelperMail
 	{
 		if (OSMembershipHelper::isMethodOverridden('OSMembershipHelperOverrideMail', 'sendMembershipRenewalEmails'))
 		{
-			OSMembershipHelperOverrideMail::sendMembershipRenewalEmails($mailer, $row, $plan, $config, $message, $fieldSuffix);
+			OSMembershipHelperOverrideMail::sendMembershipRenewalEmails(
+				$mailer,
+				$row,
+				$plan,
+				$config,
+				$message,
+				$fieldSuffix
+			);
 
 			return;
 		}
@@ -327,8 +346,19 @@ class OSMembershipHelperMail
 		$replaces['number_days']         = $numberDays;
 		$replaces['SUBSCRIPTION_DETAIL'] = $emailContent;
 
+		$isOfflinePaymentSubscription = str_contains($row->payment_method, 'os_offline') && $row->published == 0;
+
 		// Subscription Renewal Email Subject
-		if ($fieldSuffix && trim($plan->{'user_renew_email_subject' . $fieldSuffix}))
+		if ($fieldSuffix && $isOfflinePaymentSubscription
+			&& trim($message->{'user_renew_email_subject_offline' . $fieldSuffix}))
+		{
+			$subject = $message->{'user_renew_email_subject_offline' . $fieldSuffix};
+		}
+		elseif ($isOfflinePaymentSubscription && trim($message->user_renew_email_subject_offline))
+		{
+			$subject = trim($message->user_renew_email_subject_offline);
+		}
+		elseif ($fieldSuffix && trim($plan->{'user_renew_email_subject' . $fieldSuffix}))
 		{
 			$subject = $plan->{'user_renew_email_subject' . $fieldSuffix};
 		}
@@ -346,7 +376,7 @@ class OSMembershipHelperMail
 		}
 
 		// Subscription Renewal Email Body
-		if (str_contains($row->payment_method, 'os_offline') && $row->published == 0)
+		if ($isOfflinePaymentSubscription)
 		{
 			$offlineSuffix = str_replace('os_offline', '', $row->payment_method);
 			if ($offlineSuffix && $fieldSuffix && OSMembershipHelper::isValidMessage(
@@ -355,15 +385,21 @@ class OSMembershipHelperMail
 			{
 				$body = $message->{'user_renew_email_body_offline' . $offlineSuffix . $fieldSuffix};
 			}
-			elseif ($offlineSuffix && OSMembershipHelper::isValidMessage($message->{'user_renew_email_body_offline' . $offlineSuffix}))
+			elseif ($offlineSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'user_renew_email_body_offline' . $offlineSuffix}
+				))
 			{
 				$body = $message->{'user_renew_email_body_offline' . $offlineSuffix};
 			}
-			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($plan->{'user_renew_email_body_offline' . $fieldSuffix}))
+			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$plan->{'user_renew_email_body_offline' . $fieldSuffix}
+				))
 			{
 				$body = $plan->{'user_renew_email_body_offline' . $fieldSuffix};
 			}
-			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'user_renew_email_body_offline' . $fieldSuffix}))
+			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'user_renew_email_body_offline' . $fieldSuffix}
+				))
 			{
 				$body = $message->{'user_renew_email_body_offline' . $fieldSuffix};
 			}
@@ -393,13 +429,8 @@ class OSMembershipHelperMail
 			$body = $message->user_renew_email_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		$invoicePath = '';
 
@@ -484,18 +515,18 @@ class OSMembershipHelperMail
 			$replaces['SUBSCRIPTION_DETAIL'] = $emailContent;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		//We will need to get attachment data here
 		if ($config->send_attachments_to_admin)
 		{
 			static::addAttachments($mailer, $rowFields, $replaces);
+		}
+
+		if (!self::isReplyToDisabledForPlan($plan) && $row->email && MailHelper::isEmailAddress($row->email))
+		{
+			$mailer->addReplyTo($row->email);
 		}
 
 		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'subscription_renewal_emails', $row);
@@ -515,7 +546,14 @@ class OSMembershipHelperMail
 	{
 		if (OSMembershipHelper::isMethodOverridden('OSMembershipHelperOverrideMail', 'sendMembershipUpgradeEmails'))
 		{
-			OSMembershipHelperOverrideMail::sendMembershipUpgradeEmails($mailer, $row, $plan, $config, $message, $fieldSuffix);
+			OSMembershipHelperOverrideMail::sendMembershipUpgradeEmails(
+				$mailer,
+				$row,
+				$plan,
+				$config,
+				$message,
+				$fieldSuffix
+			);
 
 			return;
 		}
@@ -542,8 +580,20 @@ class OSMembershipHelperMail
 		$replaces['plan_title']    = $planTitle;
 		$replaces['to_plan_title'] = $plan->title;
 
+		$isOfflinePaymentSubscription = str_contains($row->payment_method, 'os_offline') && $row->published == 0;
+
 		// Subscription Upgrade Email Subject
-		if ($fieldSuffix && $message->{'user_upgrade_email_subject' . $fieldSuffix})
+		if ($fieldSuffix && $isOfflinePaymentSubscription && trim(
+				$message->{'user_upgrade_email_subject_offline' . $fieldSuffix}
+			))
+		{
+			$subject = $message->{'user_upgrade_email_subject_offline' . $fieldSuffix};
+		}
+		elseif ($isOfflinePaymentSubscription && trim($message->user_upgrade_email_subject_offline))
+		{
+			$subject = $message->user_upgrade_email_subject_offline;
+		}
+		elseif ($fieldSuffix && $message->{'user_upgrade_email_subject' . $fieldSuffix})
 		{
 			$subject = $message->{'user_upgrade_email_subject' . $fieldSuffix};
 		}
@@ -553,7 +603,7 @@ class OSMembershipHelperMail
 		}
 
 		// Subscription Renewal Email Body
-		if (str_contains($row->payment_method, 'os_offline') && $row->published == 0)
+		if ($isOfflinePaymentSubscription)
 		{
 			$offlineSuffix = str_replace('os_offline', '', $row->payment_method);
 			if ($offlineSuffix && $fieldSuffix && OSMembershipHelper::isValidMessage(
@@ -562,15 +612,21 @@ class OSMembershipHelperMail
 			{
 				$body = $message->{'user_upgrade_email_body_offline' . $offlineSuffix . $fieldSuffix};
 			}
-			elseif ($offlineSuffix && OSMembershipHelper::isValidMessage($message->{'user_upgrade_email_body_offline' . $offlineSuffix}))
+			elseif ($offlineSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'user_upgrade_email_body_offline' . $offlineSuffix}
+				))
 			{
 				$body = $message->{'user_upgrade_email_body_offline' . $offlineSuffix};
 			}
-			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($plan->{'user_upgrade_email_body_offline' . $fieldSuffix}))
+			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$plan->{'user_upgrade_email_body_offline' . $fieldSuffix}
+				))
 			{
 				$body = $plan->{'user_upgrade_email_body_offline' . $fieldSuffix};
 			}
-			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'user_upgrade_email_body_offline' . $fieldSuffix}))
+			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'user_upgrade_email_body_offline' . $fieldSuffix}
+				))
 			{
 				$body = $message->{'user_upgrade_email_body_offline' . $fieldSuffix};
 			}
@@ -582,7 +638,9 @@ class OSMembershipHelperMail
 			{
 				$body = $message->user_upgrade_email_body_offline;
 			} // The conditions below is for keep backward compatible
-			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'user_upgrade_email_body' . $fieldSuffix}))
+			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'user_upgrade_email_body' . $fieldSuffix}
+				))
 			{
 				$body = $message->{'user_upgrade_email_body' . $fieldSuffix};
 			}
@@ -599,7 +657,9 @@ class OSMembershipHelperMail
 		{
 			$body = $plan->{'user_upgrade_email_body' . $fieldSuffix};
 		}
-		elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'user_upgrade_email_body' . $fieldSuffix}))
+		elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'user_upgrade_email_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'user_upgrade_email_body' . $fieldSuffix};
 		}
@@ -615,13 +675,8 @@ class OSMembershipHelperMail
 		$subject = str_replace('[TO_PLAN_TITLE]', $plan->title, $subject);
 		$subject = str_replace('[PLAN_TITLE]', $planTitle, $subject);
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		$invoicePath = '';
 
@@ -708,18 +763,18 @@ class OSMembershipHelperMail
 			$replaces['SUBSCRIPTION_DETAIL'] = $emailContent;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		// Add attachments which subscriber upload to notification emails
 		if ($config->send_attachments_to_admin)
 		{
 			static::addAttachments($mailer, $rowFields, $replaces);
+		}
+
+		if (!self::isReplyToDisabledForPlan($plan) && $row->email && MailHelper::isEmailAddress($row->email))
+		{
+			$mailer->addReplyTo($row->email);
 		}
 
 		static::send($mailer, $emails, $subject, $body, $logEmails, 2, 'subscription_upgrade_emails', $row);
@@ -794,11 +849,15 @@ class OSMembershipHelperMail
 			$subject = $message->subscription_approved_email_subject;
 		}
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($plan->{'subscription_approved_email_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$plan->{'subscription_approved_email_body' . $fieldSuffix}
+			))
 		{
 			$body = $plan->{'subscription_approved_email_body' . $fieldSuffix};
 		}
-		elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'subscription_approved_email_body' . $fieldSuffix}))
+		elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'subscription_approved_email_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'subscription_approved_email_body' . $fieldSuffix};
 		}
@@ -811,13 +870,8 @@ class OSMembershipHelperMail
 			$body = $message->subscription_approved_email_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		if (MailHelper::isEmailAddress($row->email))
 		{
@@ -866,7 +920,9 @@ class OSMembershipHelperMail
 		}
 
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'admin_subscription_approved_email_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'admin_subscription_approved_email_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'admin_subscription_approved_email_body' . $fieldSuffix};
 		}
@@ -885,13 +941,8 @@ class OSMembershipHelperMail
 		$replaces['APPROVAL_NAME']     = $user->name;
 		$replaces['APPROVAL_EMAIL']    = $user->email;
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		static::send($mailer, $emails, $subject, $body, $logEmails, 2, 'subscription_approved_emails', $row);
 
@@ -968,7 +1019,9 @@ class OSMembershipHelperMail
 			$subject = $message->subscription_payment_user_email_subject;
 		}
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'subscription_payment_user_email_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'subscription_payment_user_email_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'subscription_payment_user_email_body' . $fieldSuffix};
 		}
@@ -984,13 +1037,8 @@ class OSMembershipHelperMail
 			$mailer->addAttachment($invoicePath);
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		if (MailHelper::isEmailAddress($row->email))
 		{
@@ -1011,7 +1059,9 @@ class OSMembershipHelperMail
 			$subject = $message->subscription_payment_admin_email_subject;
 		}
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'subscription_payment_admin_email_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'subscription_payment_admin_email_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'subscription_payment_admin_email_body' . $fieldSuffix};
 		}
@@ -1020,13 +1070,8 @@ class OSMembershipHelperMail
 			$body = $message->subscription_payment_admin_email_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'subscription_payment_emails', $row);
 	}
@@ -1136,7 +1181,9 @@ class OSMembershipHelperMail
 			$subject = $message->user_recurring_subscription_cancel_subject;
 		}
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'user_recurring_subscription_cancel_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'user_recurring_subscription_cancel_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'user_recurring_subscription_cancel_body' . $fieldSuffix};
 		}
@@ -1147,13 +1194,8 @@ class OSMembershipHelperMail
 
 		$subject = str_replace('[PLAN_TITLE]', $plan->title, $subject);
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		if (MailHelper::isEmailAddress($row->email))
 		{
@@ -1175,7 +1217,9 @@ class OSMembershipHelperMail
 
 		$subject = str_replace('[PLAN_TITLE]', $plan->title, $subject);
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'admin_recurring_subscription_cancel_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'admin_recurring_subscription_cancel_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'admin_recurring_subscription_cancel_body' . $fieldSuffix};
 		}
@@ -1184,13 +1228,8 @@ class OSMembershipHelperMail
 			$body = $message->admin_recurring_subscription_cancel_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'subscription_cancel_emails', $row);
 	}
@@ -1283,16 +1322,12 @@ class OSMembershipHelperMail
 		}
 		$replaces['SUBSCRIPTION_END_DATE'] = $subscriptionEndDate;
 		$replaces['SUBSCRIPTION_DETAIL']   = OSMembershipHelper::getEmailContent($config, $row);
-		$profileUrl                        = Uri::root() . 'administrator/index.php?option=com_osmembership&view=subscriber&id=' . $row->profile_id;
+		$profileUrl                        = Uri::root(
+			) . 'administrator/index.php?option=com_osmembership&view=subscriber&id=' . $row->profile_id;
 		$replaces['profile_link']          = '<a href="' . $profileUrl . '">' . $profileUrl . '</a>';
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		$emails = explode(',', $config->notification_emails);
 
@@ -1350,6 +1385,18 @@ class OSMembershipHelperMail
 				$fieldPrefix = 'third_reminder_';
 				$emailType   = 'third_reminder_emails';
 				break;
+			case 4:
+				$fieldPrefix = 'fourth_reminder_';
+				$emailType   = 'fourth_reminder_emails';
+				break;
+			case 5:
+				$fieldPrefix = 'fifth_reminder_';
+				$emailType   = 'fifth_reminder_emails';
+				break;
+			case 6:
+				$fieldPrefix = 'sixth_reminder_';
+				$emailType   = 'sixth_reminder_emails';
+				break;
 			default:
 				$fieldPrefix = 'first_reminder_';
 				$emailType   = 'first_reminder_emails';
@@ -1359,6 +1406,32 @@ class OSMembershipHelperMail
 		$message   = OSMembershipHelper::getMessages();
 		$timeSent  = $db->quote(Factory::getDate()->toSql());
 		$logEmails = static::loggingEnabled($emailType, $config);
+
+		$fieldsToSetFromCategoryToPlan = [
+			'first_reminder_email_body',
+			'second_reminder_email_body',
+			'third_reminder_email_body',
+		];
+
+		if (count($plans))
+		{
+			$plan = array_values($plans)[0];
+
+			if (property_exists($plan, 'fourth_reminder_email_body'))
+			{
+				$fieldsToSetFromCategoryToPlan[] = 'fourth_reminder_email_body';
+			}
+
+			if (property_exists($plan, 'fifth_reminder_email_body'))
+			{
+				$fieldsToSetFromCategoryToPlan[] = 'fifth_reminder_email_body';
+			}
+
+			if (property_exists($plan, 'sixth_reminder_email_body'))
+			{
+				$fieldsToSetFromCategoryToPlan[] = 'sixth_reminder_email_body';
+			}
+		}
 
 		foreach ($rows as $row)
 		{
@@ -1372,6 +1445,7 @@ class OSMembershipHelperMail
 				->where('((user_id > 0 AND user_id = ' . (int) $row->user_id . ') OR email="' . $row->email . '")');
 			$db->setQuery($query);
 			$total = (int) $db->loadResult();
+
 			if ($total)
 			{
 				$query->clear()
@@ -1383,7 +1457,9 @@ class OSMembershipHelperMail
 
 				continue;
 			}
+
 			$fieldSuffix = '';
+
 			if ($row->language)
 			{
 				if (!isset($fieldSuffixes[$row->language]))
@@ -1393,21 +1469,26 @@ class OSMembershipHelperMail
 
 				$fieldSuffix = $fieldSuffixes[$row->language];
 			}
+
 			$plan = $plans[$row->plan_id];
+
 			if ($plan->category_id && isset($categories[$plan->category_id]))
 			{
 				$category = $categories[$plan->category_id];
 
-				OSMembershipHelper::setPlanMessagesDataFromCategory($plan, $category, [
-					'first_reminder_email_body',
-					'second_reminder_email_body',
-					'third_reminder_email_body',
-				]);
+				OSMembershipHelper::setPlanMessagesDataFromCategory($plan, $category, $fieldsToSetFromCategoryToPlan);
 			}
-			$rowFields               = OSMembershipHelper::getProfileFields($row->plan_id);
-			$replaces                = OSMembershipHelper::callOverridableHelperMethod('Helper', 'buildTags', [$row, $config]);
+
+			$rowFields = OSMembershipHelper::getProfileFields($row->plan_id);
+
+			$replaces                = OSMembershipHelper::callOverridableHelperMethod(
+				'Helper',
+				'buildTags',
+				[$row, $config]
+			);
 			$replaces['number_days'] = $row->number_days;
 			$replaces['expire_date'] = HTMLHelper::_('date', $row->to_date, $config->date_format);
+
 			if (strlen($plan->{$fieldPrefix . 'email_subject'}) > 0)
 			{
 				$subject = $plan->{$fieldPrefix . 'email_subject'};
@@ -1420,6 +1501,7 @@ class OSMembershipHelperMail
 			{
 				$subject = $message->{$fieldPrefix . 'email_subject'};
 			}
+
 			if (self::isValidEmailBody($plan->{$fieldPrefix . 'email_body'}))
 			{
 				$body = $plan->{$fieldPrefix . 'email_body'};
@@ -1432,13 +1514,10 @@ class OSMembershipHelperMail
 			{
 				$body = $message->{$fieldSuffix . 'email_body'};
 			}
-			foreach ($replaces as $key => $value)
-			{
-				$key     = strtoupper($key);
-				$value   = (string) $value;
-				$body    = str_ireplace("[$key]", $value, $body);
-				$subject = str_ireplace("[$key]", $value, $subject);
-			}
+
+			$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+			$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
+
 			if (MailHelper::isEmailAddress($row->email))
 			{
 				$receiptEmails = array_merge([$row->email], self::getEmailsFromSubscriptionData($rowFields, $replaces));
@@ -1452,6 +1531,7 @@ class OSMembershipHelperMail
 
 				$mailer->clearAllRecipients();
 			}
+
 			$query->clear()
 				->update('#__osmembership_subscribers')
 				->set($fieldPrefix . 'sent = 1')
@@ -1586,13 +1666,10 @@ class OSMembershipHelperMail
 			{
 				$body = $message->{'subscription_end_email_body'};
 			}
-			foreach ($replaces as $key => $value)
-			{
-				$key     = strtoupper($key);
-				$value   = (string) $value;
-				$body    = str_ireplace("[$key]", $value, $body);
-				$subject = str_ireplace("[$key]", $value, $subject);
-			}
+
+			$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+			$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
+
 			if (MailHelper::isEmailAddress($row->email))
 			{
 				static::send($mailer, [$row->email], $subject, $body, $logEmails, 2, 'subscription_end_emails');
@@ -1663,7 +1740,9 @@ class OSMembershipHelperMail
 				$subject = $message->{'offline_payment_reminder_email_subject'};
 			}
 
-			if ($fieldSuffix && self::isValidEmailBody($message->{'offline_payment_reminder_email_body' . $fieldSuffix}))
+			if ($fieldSuffix && self::isValidEmailBody(
+					$message->{'offline_payment_reminder_email_body' . $fieldSuffix}
+				))
 			{
 				$body = $message->{'offline_payment_reminder_email_body' . $fieldSuffix};
 			}
@@ -1672,12 +1751,8 @@ class OSMembershipHelperMail
 				$body = $message->{'offline_payment_reminder_email_body'};
 			}
 
-			foreach ($replaces as $key => $value)
-			{
-				$value   = (string) $value;
-				$body    = str_ireplace("[$key]", $value, $body);
-				$subject = str_ireplace("[$key]", $value, $subject);
-			}
+			$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+			$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 			if (MailHelper::isEmailAddress($row->email))
 			{
@@ -1759,7 +1834,9 @@ class OSMembershipHelperMail
 			$subject = $message->new_group_member_email_subject;
 		}
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'new_group_member_email_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'new_group_member_email_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'new_group_member_email_body' . $fieldSuffix};
 		}
@@ -1768,13 +1845,8 @@ class OSMembershipHelperMail
 			$body = $message->new_group_member_email_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		if (MailHelper::isEmailAddress($row->email))
 		{
@@ -1793,7 +1865,9 @@ class OSMembershipHelperMail
 			$subject = $message->admin_new_group_member_email_subject;
 		}
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'admin_new_group_member_email_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'admin_new_group_member_email_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'admin_new_group_member_email_body' . $fieldSuffix};
 		}
@@ -1802,13 +1876,8 @@ class OSMembershipHelperMail
 			$body = $message->admin_new_group_member_email_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		if ($plan->notification_emails)
 		{
@@ -1878,17 +1947,21 @@ class OSMembershipHelperMail
 			$body = $message->join_group_user_email_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		if (MailHelper::isEmailAddress($row->email))
 		{
-			static::send($mailer, [$row->email], $subject, $body, $logEmails, 2, 'user_join_group_notification_emails', $row);
+			static::send(
+				$mailer,
+				[$row->email],
+				$subject,
+				$body,
+				$logEmails,
+				2,
+				'user_join_group_notification_emails',
+				$row
+			);
 		}
 
 		$mailer->clearAllRecipients();
@@ -1903,7 +1976,9 @@ class OSMembershipHelperMail
 			$subject = $message->join_group_group_admin_email_subject;
 		}
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'join_group_group_admin_email_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$message->{'join_group_group_admin_email_body' . $fieldSuffix}
+			))
 		{
 			$body = $message->{'join_group_group_admin_email_body' . $fieldSuffix};
 		}
@@ -1912,13 +1987,8 @@ class OSMembershipHelperMail
 			$body = $message->join_group_group_admin_email_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		if (MailHelper::isEmailAddress($groupAdmin->email))
 		{
@@ -1995,7 +2065,7 @@ class OSMembershipHelperMail
 			if ($secondAttachment['name'])
 			{
 				$fileName = File::makeSafe($secondAttachment['name']);
-				$fileExt  = strtolower(File::getExt($fileName));
+				$fileExt  = strtolower(OSMembershipHelper::getFileExt($fileName));
 
 				if (in_array($fileExt, $allowedExtensions))
 				{
@@ -2006,7 +2076,7 @@ class OSMembershipHelperMail
 			if ($thirdAttachment['name'])
 			{
 				$fileName = File::makeSafe($thirdAttachment['name']);
-				$fileExt  = strtolower(File::getExt($fileName));
+				$fileExt  = strtolower(OSMembershipHelper::getFileExt($fileName));
 
 				if (in_array($fileExt, $allowedExtensions))
 				{
@@ -2017,7 +2087,7 @@ class OSMembershipHelperMail
 			if ($fourthAttachment['name'])
 			{
 				$fileName = File::makeSafe($fourthAttachment['name']);
-				$fileExt  = strtolower(File::getExt($fileName));
+				$fileExt  = strtolower(OSMembershipHelper::getFileExt($fileName));
 
 				if (in_array($fileExt, $allowedExtensions))
 				{
@@ -2045,12 +2115,8 @@ class OSMembershipHelperMail
 
 			$replaces = OSMembershipHelper::callOverridableHelperMethod('Helper', 'buildTags', [$row, $config]);
 
-			foreach ($replaces as $key => $value)
-			{
-				$value   = (string) $value;
-				$subject = str_ireplace("[$key]", $value, $subject);
-				$message = str_ireplace("[$key]", $value, $message);
-			}
+			$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+			$message = OSMembershipHelper::replaceCaseInsensitiveTags($message, $replaces);
 
 			$message = OSMembershipHelper::convertImgTags($message);
 
@@ -2126,15 +2192,15 @@ class OSMembershipHelperMail
 			$body = $message->offline_recurring_email_body;
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		//add Attachment
-		if ($config->activate_invoice_feature && OSMembershipHelper::callOverridableHelperMethod('Helper', 'needToCreateInvoice', [$row]))
+		if ($config->activate_invoice_feature && OSMembershipHelper::callOverridableHelperMethod(
+				'Helper',
+				'needToCreateInvoice',
+				[$row]
+			))
 		{
 			$invoicePath = OSMembershipHelper::generateInvoicePDF($row);
 			$mailer->addAttachment($invoicePath);
@@ -2210,12 +2276,8 @@ class OSMembershipHelperMail
 
 		$body = str_replace('[SUBSCRIPTION_DETAIL]', $emailContent, $body);
 
-		foreach ($replaces as $key => $value)
-		{
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		static::send($mailer, [$row->email], $subject, $body, true, 2, 'request_payment_email', $row);
 	}
@@ -2259,12 +2321,8 @@ class OSMembershipHelperMail
 
 		$body = $message;
 
-		foreach ($replaces as $key => $value)
-		{
-			$value   = (string) $value;
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		static::send($mailer, $emails, $subject, $body, true, 2, 'group_membership_invite_email');
 	}
@@ -2317,11 +2375,8 @@ class OSMembershipHelperMail
 			'links' => implode(', ', $links),
 		];
 
-		foreach ($replaces as $key => $value)
-		{
-			$subject = str_ireplace("[$key]", $value, $subject);
-			$body    = str_ireplace("[$key]", $value, $body);
-		}
+		$subject = OSMembershipHelper::replaceCaseInsensitiveTags($subject, $replaces);
+		$body    = OSMembershipHelper::replaceCaseInsensitiveTags($body, $replaces);
 
 		static::send($mailer, $emails, $subject, $body, $logEmails, 1, 'icps_notify_email');
 	}
@@ -2335,7 +2390,15 @@ class OSMembershipHelperMail
 	 */
 	public static function getMailer($config)
 	{
-		$mailer = Factory::getMailer();
+		if (version_compare(JVERSION, '4.4.0', 'ge'))
+		{
+			$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
+		}
+		else
+		{
+			$mailer = Factory::getMailer();
+		}
+
 		$mailer->isHtml(true);
 
 		if (MailHelper::isEmailAddress($config->from_email))
@@ -2349,7 +2412,10 @@ class OSMembershipHelperMail
 		}
 		elseif (Factory::getApplication()->get('replyto'))
 		{
-			$mailer->addReplyTo(Factory::getApplication()->get('replyto'), trim(Factory::getApplication()->get('replytoname')));
+			$mailer->addReplyTo(
+				Factory::getApplication()->get('replyto'),
+				trim(Factory::getApplication()->get('replytoname'))
+			);
 		}
 
 		// Set default notification emails
@@ -2432,7 +2498,9 @@ class OSMembershipHelperMail
 		$query = $db->getQuery(true)
 			->select('a.attachment')
 			->from('#__osmembership_documents AS a')
-			->where('a.id IN (SELECT document_id FROM #__osmembership_plan_documents WHERE plan_id =  ' . $row->plan_id . ')');
+			->where(
+				'a.id IN (SELECT document_id FROM #__osmembership_plan_documents WHERE plan_id =  ' . $row->plan_id . ')'
+			);
 		$db->setQuery($query);
 		$documents = $db->loadColumn();
 
@@ -2482,7 +2550,9 @@ class OSMembershipHelperMail
 
 		foreach ($rowFields as $rowField)
 		{
-			if ($rowField->receive_emails && isset($data[$rowField->name]) && MailHelper::isEmailAddress($data[$rowField->name]))
+			if ($rowField->receive_emails && isset($data[$rowField->name]) && MailHelper::isEmailAddress(
+					$data[$rowField->name]
+				))
 			{
 				$emails[] = $data[$rowField->name];
 			}
@@ -2503,8 +2573,16 @@ class OSMembershipHelperMail
 	 * @param   string                       $emailType
 	 * @param   OSMembershipTableSubscriber  $row  Optional subscription record
 	 */
-	public static function send($mailer, $emails, $subject, $body, $logEmails = false, $sentTo = 0, $emailType = '', $row = null)
-	{
+	public static function send(
+		$mailer,
+		$emails,
+		$subject,
+		$body,
+		$logEmails = false,
+		$sentTo = 0,
+		$emailType = '',
+		$row = null
+	) {
 		if (empty($subject))
 		{
 			return;
@@ -2545,7 +2623,10 @@ class OSMembershipHelperMail
 
 		// Trigger content plugin for email body
 		$body      = OSMembershipHelper::convertImgTags($body);
-		$emailBody = OSMembershipHelperHtml::loadSharedLayout('emailtemplates/tmpl/container.php', ['body' => $body, 'subject' => $subject]);
+		$emailBody = OSMembershipHelperHtml::loadSharedLayout(
+			'emailtemplates/tmpl/container.php',
+			['body' => $body, 'subject' => $subject]
+		);
 		$emailBody = OSMembershipHelperHtml::processConditionalText($emailBody);
 
 
@@ -2620,6 +2701,22 @@ class OSMembershipHelperMail
 		}
 
 		if (!empty($config->log_email_types) && in_array($emailType, explode(',', $config->log_email_types)))
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * @param   stdClass  $plan
+	 *
+	 * @return bool
+	 */
+	protected static function isReplyToDisabledForPlan($plan): bool
+	{
+		if (property_exists($plan, 'disable_reply_to_for_email_send_to_admin')
+			&& $plan->disable_reply_to_for_email_send_to_admin)
 		{
 			return true;
 		}

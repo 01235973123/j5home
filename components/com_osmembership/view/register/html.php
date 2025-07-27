@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -324,7 +324,11 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 						}
 						else
 						{
-							$app->redirect(Route::_('index.php?option=com_osmembership&view=renewmembership&Itemid=' . $this->Itemid));
+							$app->redirect(
+								Route::_(
+									'index.php?option=com_osmembership&view=renewmembership&Itemid=' . $this->Itemid
+								)
+							);
 						}
 					}
 					else
@@ -347,7 +351,10 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 			}
 		}
 
-		$defaultPaymentMethod = OSMembershipHelperPayments::getDefautPaymentMethod($plan->payment_methods, $plan->recurring_subscription);
+		$defaultPaymentMethod = OSMembershipHelperPayments::getDefautPaymentMethod(
+			$plan->payment_methods,
+			$plan->recurring_subscription
+		);
 		$paymentMethod        = $input->post->get('payment_method', $defaultPaymentMethod, 'cmd');
 
 		if (!$paymentMethod)
@@ -363,7 +370,11 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 			$app->redirect(Uri::root());
 		}
 
-		$rowFields = OSMembershipHelper::callOverridableHelperMethod('Helper', 'getProfileFields', [$planId, true, null, $action, 'register']);
+		$rowFields = OSMembershipHelper::callOverridableHelperMethod(
+			'Helper',
+			'getProfileFields',
+			[$planId, true, null, $action, 'register']
+		);
 
 		$params = new Registry($plan->params ?? '{}');
 
@@ -533,7 +544,10 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 		}
 
 		if ($config->get('enable_select_show_hide_members_list')
-			&& $config->get('enable_select_show_hide_members_list_on_signup', $config->get('enable_select_show_hide_members_list')))
+			&& $config->get(
+				'enable_select_show_hide_members_list_on_signup',
+				$config->get('enable_select_show_hide_members_list')
+			))
 		{
 			$existingSubscriptionsCount = 0;
 
@@ -591,12 +605,7 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 				$replaces['payment_processing_fee'] = $fees['payment_processing_fee'];
 			}
 
-			foreach ($replaces as $key => $value)
-			{
-				$key          = strtoupper($key);
-				$value        = (string) $value;
-				$trackingCode = str_replace("[$key]", $value, $trackingCode);
-			}
+			$trackingCode = OSMembershipHelper::replaceUpperCaseTags($trackingCode, $replaces);
 		}
 
 		$this->params->def('page_title', $this->pageTitle);
@@ -711,7 +720,10 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 				// Redirect to membership profile page
 				$profileItemId = OSMembershipHelperRoute::findView('profile', $this->Itemid);
 				$redirectUrl   = Route::_('index.php?option=com_osmembership&view=profile&Itemid=' . $profileItemId);
-				$this->displayOrRedirect(Text::sprintf('OSM_COULD_NOT_RENEWAL', $config->number_days_before_renewal), $redirectUrl);
+				$this->displayOrRedirect(
+					Text::sprintf('OSM_COULD_NOT_RENEWAL', $config->number_days_before_renewal),
+					$redirectUrl
+				);
 
 				return false;
 			}
@@ -931,7 +943,9 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 		{
 			$this->pageTitle = Text::_('OSM_RENEW_SUBSCRIPTION_PAGE_TITLE');
 
-			if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'subscription_renew_form_msg' . $fieldSuffix}))
+			if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'subscription_renew_form_msg' . $fieldSuffix}
+				))
 			{
 				$formMessage = $message->{'subscription_renew_form_msg' . $fieldSuffix};
 			}
@@ -964,7 +978,10 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 				$renewOptionLength    = $renewOption->renew_option_length;
 			}
 
-			$renewOptionDuration = OSMembershipHelperSubscription::getDurationText($renewOptionLength, $renewOptionFrequency);
+			$renewOptionDuration = OSMembershipHelperSubscription::getDurationText(
+				$renewOptionLength,
+				$renewOptionFrequency
+			);
 
 			$replaces['[NUMBER_DAYS] days'] = $renewOptionDuration;
 			$replaces['RENEW_OPTION']       = $renewOptionDuration;
@@ -975,7 +992,9 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 		{
 			$this->pageTitle = Text::_('OSM_UPGRADE_SUBSCRIPTION_PAGE_TITLE');
 
-			if ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'subscription_upgrade_form_msg' . $fieldSuffix}))
+			if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'subscription_upgrade_form_msg' . $fieldSuffix}
+				))
 			{
 				$formMessage = $message->{'subscription_upgrade_form_msg' . $fieldSuffix};
 			}
@@ -1003,11 +1022,15 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 		{
 			$this->pageTitle = Text::_('OSM_NEW_SUBSCRIPTION_PAGE_TITLE');
 
-			if (OSMembershipHelper::isValidMessage($plan->{'subscription_form_message' . $fieldSuffix}) || OSMembershipHelper::isValidMessage(
+			if (OSMembershipHelper::isValidMessage(
+					$plan->{'subscription_form_message' . $fieldSuffix} ?? ''
+				) || OSMembershipHelper::isValidMessage(
 					$plan->subscription_form_message
 				))
 			{
-				if ($fieldSuffix && OSMembershipHelper::isValidMessage($plan->{'subscription_form_message' . $fieldSuffix}))
+				if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+						$plan->{'subscription_form_message' . $fieldSuffix} ?? ''
+					))
 				{
 					$formMessage = $plan->{'subscription_form_message' . $fieldSuffix};
 				}
@@ -1016,7 +1039,9 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 					$formMessage = $plan->subscription_form_message;
 				}
 			}
-			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($message->{'subscription_form_msg' . $fieldSuffix}))
+			elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+					$message->{'subscription_form_msg' . $fieldSuffix} ?? ''
+				))
 			{
 				$formMessage = $message->{'subscription_form_msg' . $fieldSuffix};
 			}
@@ -1035,7 +1060,10 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 		}
 		else
 		{
-			$planDuration = OSMembershipHelperSubscription::getDurationText($plan->subscription_length, $plan->subscription_length_unit);
+			$planDuration = OSMembershipHelperSubscription::getDurationText(
+				$plan->subscription_length,
+				$plan->subscription_length_unit
+			);
 		}
 
 		$replaces['PLAN_DURATION'] = $planDuration;
@@ -1050,12 +1078,11 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 			$replaces['CATEGORY_TITLE'] = '';
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$value           = (string) $value;
-			$formMessage     = str_replace('[' . strtoupper($key) . ']', $value, $formMessage);
-			$this->pageTitle = str_replace('[' . strtoupper($key) . ']', $value, $this->pageTitle);
-		}
+		$replaces['plan_short_description'] = $plan->short_description;
+		$replaces['plan_description']       = $plan->description;
+
+		$formMessage     = OSMembershipHelper::replaceUpperCaseTags($formMessage, $replaces);
+		$this->pageTitle = OSMembershipHelper::replaceUpperCaseTags($this->pageTitle, $replaces);
 
 		$this->message        = $formMessage;
 		$this->currencySymbol = $symbol;
@@ -1138,14 +1165,21 @@ class OSMembershipViewRegisterHtml extends MPFViewHtml
 
 			if ($category)
 			{
-				$pathway->addItem($category->title, Route::_(OSMembershipHelperRoute::getCategoryRoute($category->id, $this->Itemid)));
+				$pathway->addItem(
+					$category->title,
+					Route::_(OSMembershipHelperRoute::getCategoryRoute($category->id, $this->Itemid))
+				);
 			}
 		}
 
 		// Add link to plan details
 		if (in_array($active->query['view'], ['categories', 'plans']))
 		{
-			$planMenuId = OSMembershipHelperRoute::getPlanMenuId($this->plan->id, $this->plan->category_id, $this->Itemid);
+			$planMenuId = OSMembershipHelperRoute::getPlanMenuId(
+				$this->plan->id,
+				$this->plan->category_id,
+				$this->Itemid
+			);
 			$pathway->addItem(
 				$this->plan->title,
 				Route::_(

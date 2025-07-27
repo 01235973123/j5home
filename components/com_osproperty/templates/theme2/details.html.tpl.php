@@ -4,7 +4,7 @@
 # details.html.tpl.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -59,7 +59,7 @@ else
 					{
 						?>
 						<li class="direction">
-							<a href="<?php echo Route::_("index.php?option=com_osproperty&task=direction_map&id=".$row->id)?>" title="<?php echo Text::_('OS_GET_DIRECTIONS')?>" class="get_direction_link">
+							<a href="<?php echo Route::_("index.php?option=com_osproperty&task=direction_map&id=".$row->id."&Itemid=".Factory::getApplication()->input->getInt('Itemid'))?>" title="<?php echo Text::_('OS_GET_DIRECTIONS')?>" class="get_direction_link">
 								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-compass" viewBox="0 0 16 16">
 								  <path d="M8 16.016a7.5 7.5 0 0 0 1.962-14.74A1 1 0 0 0 9 0H7a1 1 0 0 0-.962 1.276A7.5 7.5 0 0 0 8 16.016zm6.5-7.5a6.5 6.5 0 1 1-13 0 6.5 6.5 0 0 1 13 0z"/>
 								  <path d="m6.94 7.44 4.95-2.83-2.83 4.95-4.949 2.83 2.828-4.95z"/>
@@ -211,17 +211,6 @@ else
 							?>
 						</div>
 					</li>
-					<li class="date">
-						<div class="g5ere__property-date">
-							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
-							  <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-							  <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-							</svg>
-							<?php
-							echo OSPHelper::timeago($row->created);
-							?>
-						</div>
-					</li>
 					<li class="view">
 						<div class="g5ere__property-view-count">
 							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye" viewBox="0 0 16 16">
@@ -279,11 +268,6 @@ else
 		?>
 			<script type="text/javascript" src="<?php echo Uri::root()?>media/com_osproperty/assets/js/colorbox/jquery.colorbox.js"></script>
 			 <link rel="stylesheet" href="<?php echo Uri::root()?>media/com_osproperty/assets/js/colorbox/colorbox.css" type="text/css" media="screen" />
-			 <script type="text/javascript">
-			  jQuery(document).ready(function(){
-				  jQuery(".propertyphotogroup").colorbox({rel:'colorbox',maxWidth:'95%', maxHeight:'95%'});
-			  });
-			</script>
 			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> no-gutters" id="propertyGallery">
 				<div class="<?php echo $bootstrapHelper->getClassMapping('span8'); ?>">
 					<div class="g5core__embed-responsive g5core__post-featured g5core__metro g5core__image-size-6x3">
@@ -293,7 +277,7 @@ else
 							{
 							?>
 								<div class="g5core__entry-thumbnail w-100 h-100" style="background-image:url(<?php echo Uri::root()?>images/osproperty/properties/<?php echo $row->id;?>/<?php echo $photos[0]->image?>);">
-									<a data-g5core-mfp href="<?php echo Uri::root()?>images/osproperty/properties/<?php echo $row->id;?>/<?php echo $photos[0]->image?>" class="g5core__zoom-image propertyphotogroup">
+									<a data-g5core-mfp href="#" onClick="openSlideshow(0)" data-index="0" class="g5core__zoom-image propertyphotogroup">
 										<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#FFFFFF" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
 										  <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/>
 										</svg>
@@ -349,7 +333,7 @@ else
 									<div class="g5core__embed-responsive g5core__post-featured g5core__metro g5core__image-size-1x1">
 										<div class="g5core__metro-inner">
 											<div class="g5core__entry-thumbnail w-100 h-100" style="background-image:url(<?php echo Uri::root()?>images/osproperty/properties/<?php echo $row->id;?>/thumb/<?php echo $photo->image?>);">
-												 <a data-g5core-mfp href="<?php echo Uri::root()?>images/osproperty/properties/<?php echo $row->id;?>/<?php echo $photo->image?>" class="g5core__zoom-image propertyphotogroup">
+												 <a data-g5core-mfp href="#" class="g5core__zoom-image" onClick="openSlideshow(<?php echo $i;?>)" data-index="<?php echo $i;?>">
 													<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#FFFFFF" class="bi bi-arrows-fullscreen" viewBox="0 0 16 16">
 													  <path fill-rule="evenodd" d="M5.828 10.172a.5.5 0 0 0-.707 0l-4.096 4.096V11.5a.5.5 0 0 0-1 0v3.975a.5.5 0 0 0 .5.5H4.5a.5.5 0 0 0 0-1H1.732l4.096-4.096a.5.5 0 0 0 0-.707zm4.344 0a.5.5 0 0 1 .707 0l4.096 4.096V11.5a.5.5 0 1 1 1 0v3.975a.5.5 0 0 1-.5.5H11.5a.5.5 0 0 1 0-1h2.768l-4.096-4.096a.5.5 0 0 1 0-.707zm0-4.344a.5.5 0 0 0 .707 0l4.096-4.096V4.5a.5.5 0 1 0 1 0V.525a.5.5 0 0 0-.5-.5H11.5a.5.5 0 0 0 0 1h2.768l-4.096 4.096a.5.5 0 0 0 0 .707zm-4.344 0a.5.5 0 0 1-.707 0L1.025 1.732V4.5a.5.5 0 0 1-1 0V.525a.5.5 0 0 1 .5-.5H4.5a.5.5 0 0 1 0 1H1.732l4.096 4.096a.5.5 0 0 1 0 .707z"/>
 													</svg>
@@ -361,21 +345,6 @@ else
 								<?php
 							}
 						}
-						?>
-					</div>
-					<div style="display:none;" id="remainPictures">
-						<?php
-						if(count($photos) > 10)
-							{
-								for($i = 10;$i < count($photos) ; $i++)
-								{
-									$photo = $photos[$i];
-									?>
-									<a href="<?php echo Uri::root()?>images/osproperty/properties/<?php echo $row->id;?>/<?php echo $photo->image?>" class="propertyphotogroup"><?php echo $photo->image?>
-									</a>
-									<?php
-								}
-							}		
 						?>
 					</div>
 				</div>
@@ -611,7 +580,7 @@ else
 							<i class="edicon edicon-paragraph-justify"></i>
 						</li>
 						<?php
-						if(($configClass['show_amenity_group'] == 1) or ($fieldok == 1) or ($configClass['show_neighborhood_group'] == 1)){
+						if(($configClass['show_amenity_group'] == 1) || ($fieldok == 1) || ($configClass['show_neighborhood_group'] == 1)){
 							?>
 							<li>
 								<a href="#shellfeatures"><?php echo Text::_('OS_FEATURES');?></a>
@@ -680,279 +649,281 @@ else
 		?>
 
 		<?php
-		if(($configClass['show_amenity_group'] == 1) or ($fieldok == 1) or ($configClass['show_neighborhood_group'] == 1)){
+		if(($configClass['show_amenity_group'] == 1) || ($fieldok == 1) || ($configClass['show_neighborhood_group'] == 1)){
 		?>
-		<div id="shellfeatures">
-			<h2>
-				<i class="edicon edicon-clipboard"></i>&nbsp;<?php echo Text::_('OS_FEATURES')?>
-			</h2>
-			<div class="listing-features">
-				<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-					<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-						<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> corefields">
-							<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-								<?php
-								echo $row->core_fields1;
-								?>
-							</div>
-						</div>
-						<?php
-
-						if(($configClass['show_amenity_group'] == 1) and ($row->amens_str1 != "")){
-						?>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> amenitiesfields">
-							<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-								<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-									<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-										<h4>
-											<?php echo Text::_('OS_AMENITIES')?>
-										</h4>
-									</div>
-								</div>
-								<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-									<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-										<?php echo $row->amens_str1;?>
-									</div>
-								</div>
-							</div>
-						</div>
-						<?php
-						}
-						?>
-						<?php
-						if(($configClass['show_neighborhood_group'] == 1) and ($row->neighborhood != "")){
-						?>
-						<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> neighborfields">
-							<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-								<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-									<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-										<h4>
-											<?php echo Text::_('OS_NEIGHBORHOOD')?>
-										</h4>
-									</div>
-								</div>
-								<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-									<?php 
-									echo $row->neighborhood;
+		<div id="shellfeatures <?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>" class="overview">
+			<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+				<h3>
+					<?php echo Text::_('OS_FEATURES')?>
+				</h3>
+				<div class="listing-features">
+					<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+						<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+							<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> corefields">
+								<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+									<?php
+									echo $row->core_fields1;
 									?>
 								</div>
 							</div>
-						</div>
-						
-						<?php } ?>
-						<?php
-						if($row->pro_pdf != "" || $row->pro_pdf_file != "" || $row->pro_pdf_file1 != "" || $row->pro_pdf_file2 != ""|| $row->pro_pdf_file3 != ""|| $row->pro_pdf_file4 != ""|| $row->pro_pdf_file5 != ""|| $row->pro_pdf_file6 != ""|| $row->pro_pdf_file7 != ""|| $row->pro_pdf_file8 != ""|| $row->pro_pdf_file9 != ""){
-						?>
-							<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> documentfields">
+							<?php
+
+							if(($configClass['show_amenity_group'] == 1) && ($row->amens_str1 != "")){
+							?>
+							<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> amenitiesfields">
 								<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 									<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 										<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-											<h4><?php echo Text::_('OS_DOCUMENT')?></h4>
+											<h4>
+												<?php echo Text::_('OS_AMENITIES')?>
+											</h4>
 										</div>
 									</div>
 									<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-										<?php
-											if($row->pro_pdf != "")
-											{
-												?>
-												<div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> documentElement">
-													<figure class="media-thumb">
-														<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
-														  <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
-														  <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
-														</svg>
-													</figure>
-													<div class="media-info">
-														<p>
-															<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>
-														</p>
-														<a href="<?php echo $row->pro_pdf?>" title="<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>" alt="<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>" target="_blank" class="btn btn-primary btn-download">
-														<?php echo Text::_('OS_OPEN_DOCUMENT');?>
-														<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
-														  <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
-														  <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
-														</svg>
-														</a>
-													</div>
-												</div>
-												<?php
-											}
-											for($f = 0; $f < 10 ; $f++)
-											{
-												if($f == 0)
+										<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+											<?php echo $row->amens_str1;?>
+										</div>
+									</div>
+								</div>
+							</div>
+							<?php
+							}
+							?>
+							<?php
+							if(($configClass['show_neighborhood_group'] == 1) && ($row->neighborhood != "")){
+							?>
+							<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> neighborfields">
+								<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+									<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+										<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+											<h4>
+												<?php echo Text::_('OS_NEIGHBORHOOD')?>
+											</h4>
+										</div>
+									</div>
+									<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+										<?php 
+										echo $row->neighborhood;
+										?>
+									</div>
+								</div>
+							</div>
+							
+							<?php } ?>
+							<?php
+							if($row->pro_pdf != "" || $row->pro_pdf_file != "" || $row->pro_pdf_file1 != "" || $row->pro_pdf_file2 != ""|| $row->pro_pdf_file3 != ""|| $row->pro_pdf_file4 != ""|| $row->pro_pdf_file5 != ""|| $row->pro_pdf_file6 != ""|| $row->pro_pdf_file7 != ""|| $row->pro_pdf_file8 != ""|| $row->pro_pdf_file9 != ""){
+							?>
+								<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> documentfields">
+									<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+										<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+											<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+												<h4><?php echo Text::_('OS_DOCUMENT')?></h4>
+											</div>
+										</div>
+										<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+											<?php
+												if($row->pro_pdf != "")
 												{
-													$fname = "";
-												}
-												else
-												{
-													$fname = $f;
-												}
-												$name = "pro_pdf_file".$fname;
-												if($row->{$name} != "")
-												{
-													if(file_exists(JPATH_ROOT.'/media/com_osproperty/document/'.$row->{$name}))
-													{
-														$fileUrl = Uri::root().'media/com_osproperty/document/'.$row->{$name};
-													}
-													else
-													{
-														$fileUrl = Uri::root().'components/com_osproperty/document/'.$row->{$name};
-													}
 													?>
 													<div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> documentElement">
-														
-
 														<figure class="media-thumb">
-															<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
-															  <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
-															  <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.697 19.697 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.188-.012.396-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.066.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.712 5.712 0 0 1-.911-.95 11.651 11.651 0 0 0-1.997.406 11.307 11.307 0 0 1-1.02 1.51c-.292.35-.609.656-.927.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.266.266 0 0 0 .035-.012c.137-.056.355-.235.635-.572a8.18 8.18 0 0 0 .45-.606zm1.64-1.33a12.71 12.71 0 0 1 1.01-.193 11.744 11.744 0 0 1-.51-.858 20.801 20.801 0 0 1-.5 1.05zm2.446.45c.15.163.296.3.435.41.24.19.407.253.498.256a.107.107 0 0 0 .07-.015.307.307 0 0 0 .094-.125.436.436 0 0 0 .059-.2.095.095 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a3.876 3.876 0 0 0-.612-.053zM8.078 7.8a6.7 6.7 0 0 0 .2-.828c.031-.188.043-.343.038-.465a.613.613 0 0 0-.032-.198.517.517 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822.024.111.054.227.09.346z"/>
+															<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file-earmark-text" viewBox="0 0 16 16">
+															  <path d="M5.5 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zM5 9.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5zm0 2a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5z"/>
+															  <path d="M9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.5L9.5 0zm0 1v2A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
 															</svg>
 														</figure>
 														<div class="media-info">
 															<p>
-																<?php echo $row->{$name}?>
-															</p>
-															<a href="<?php echo $fileUrl; ?>" title="<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>" alt="<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>" target="_blank" class="btn btn-primary btn-download">
 																<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>
-																
-																<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-down" viewBox="0 0 16 16">
-																  <path fill-rule="evenodd" d="M3.5 10a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 0 0 1h2A1.5 1.5 0 0 0 14 9.5v-8A1.5 1.5 0 0 0 12.5 0h-9A1.5 1.5 0 0 0 2 1.5v8A1.5 1.5 0 0 0 3.5 11h2a.5.5 0 0 0 0-1h-2z"/>
-																  <path fill-rule="evenodd" d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z"/>
-																</svg>
+															</p>
+															<a href="<?php echo $row->pro_pdf?>" title="<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>" alt="<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>" target="_blank" class="btn btn-primary btn-download">
+															<?php echo Text::_('OS_OPEN_DOCUMENT');?>
+															<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-link-45deg" viewBox="0 0 16 16">
+															  <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+															  <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+															</svg>
 															</a>
 														</div>
 													</div>
 													<?php
 												}
-											}
-											?>
-									</div>
-								</div>
-							</div>
-						<?php } ?>
-						<?php
-						if(count($row->extra_field_groups) > 0)
-						{
-							?>
-							<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> customfields">
-								<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-									<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-										<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-											<h4>
-												<?php echo Text::_('OS_OTHER_INFORMATION')?>
-											</h4>
-										</div>
-									</div>
-									<?php
-									if($extrafieldncolumns == 2){
-										$span = $bootstrapHelper->getClassMapping('span6');
-										$jump = 2;
-									}else{
-										$span = $bootstrapHelper->getClassMapping('span4');
-										$jump = 3;
-									}
-									$extra_field_groups = $row->extra_field_groups;
-									for($i=0;$i<count($extra_field_groups);$i++){
-										$group = $extra_field_groups[$i];
-										$group_name = $group->group_name;
-										$fields = $group->fields;
-										if(count($fields)> 0){
-										?>
-										<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-											<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-												<h5>
-													<?php echo $group_name;?>
-												</h5>
-											</div>
-										</div>
-										<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-											<?php
-											$k = 0;
-											for($j=0;$j<count($fields);$j++){
-												$field = $fields[$j];
-												if($field->field_type != "textarea"){
-													$k++;
-													?>
-													<div class="<?php echo $span; ?>">
-														<?php
-														if(($field->displaytitle == 1) or ($field->displaytitle == 2)){
-															?>
-															<?php
-															if($field->field_description != ""){
-																?>
-																<span class="editlinktip hasTooltip" title="<?php echo $field->field_label;?>::<?php echo $field->field_description?>">
-																	<?php echo $field->field_label;?>
-																</span>
-															<?php
-															}else{
-																echo $field->field_label;
-															}
+												for($f = 0; $f < 10 ; $f++)
+												{
+													if($f == 0)
+													{
+														$fname = "";
+													}
+													else
+													{
+														$fname = $f;
+													}
+													$name = "pro_pdf_file".$fname;
+													if($row->{$name} != "")
+													{
+														if(file_exists(JPATH_ROOT.'/media/com_osproperty/document/'.$row->{$name}))
+														{
+															$fileUrl = Uri::root().'media/com_osproperty/document/'.$row->{$name};
+														}
+														else
+														{
+															$fileUrl = Uri::root().'components/com_osproperty/document/'.$row->{$name};
 														}
 														?>
+														<div class="<?php echo $bootstrapHelper->getClassMapping('span3'); ?> documentElement">
+															
+
+															<figure class="media-thumb">
+																<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-file-earmark-pdf" viewBox="0 0 16 16">
+																  <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2zM9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5v2z"/>
+																  <path d="M4.603 14.087a.81.81 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.68 7.68 0 0 1 1.482-.645 19.697 19.697 0 0 0 1.062-2.227 7.269 7.269 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.188-.012.396-.047.614-.084.51-.27 1.134-.52 1.794a10.954 10.954 0 0 0 .98 1.686 5.753 5.753 0 0 1 1.334.05c.364.066.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.856.856 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.712 5.712 0 0 1-.911-.95 11.651 11.651 0 0 0-1.997.406 11.307 11.307 0 0 1-1.02 1.51c-.292.35-.609.656-.927.787a.793.793 0 0 1-.58.029zm1.379-1.901c-.166.076-.32.156-.459.238-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361.01.022.02.036.026.044a.266.266 0 0 0 .035-.012c.137-.056.355-.235.635-.572a8.18 8.18 0 0 0 .45-.606zm1.64-1.33a12.71 12.71 0 0 1 1.01-.193 11.744 11.744 0 0 1-.51-.858 20.801 20.801 0 0 1-.5 1.05zm2.446.45c.15.163.296.3.435.41.24.19.407.253.498.256a.107.107 0 0 0 .07-.015.307.307 0 0 0 .094-.125.436.436 0 0 0 .059-.2.095.095 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a3.876 3.876 0 0 0-.612-.053zM8.078 7.8a6.7 6.7 0 0 0 .2-.828c.031-.188.043-.343.038-.465a.613.613 0 0 0-.032-.198.517.517 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822.024.111.054.227.09.346z"/>
+																</svg>
+															</figure>
+															<div class="media-info">
+																<p>
+																	<?php echo $row->{$name}?>
+																</p>
+																<a href="<?php echo $fileUrl; ?>" title="<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>" alt="<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>" target="_blank" class="btn btn-primary btn-download">
+																	<?php echo Text::_('OS_PROPERTY_DOCUMENT')?>
+																	
+																	<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-down" viewBox="0 0 16 16">
+																	  <path fill-rule="evenodd" d="M3.5 10a.5.5 0 0 1-.5-.5v-8a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 .5.5v8a.5.5 0 0 1-.5.5h-2a.5.5 0 0 0 0 1h2A1.5 1.5 0 0 0 14 9.5v-8A1.5 1.5 0 0 0 12.5 0h-9A1.5 1.5 0 0 0 2 1.5v8A1.5 1.5 0 0 0 3.5 11h2a.5.5 0 0 0 0-1h-2z"/>
+																	  <path fill-rule="evenodd" d="M7.646 15.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 14.293V5.5a.5.5 0 0 0-1 0v8.793l-2.146-2.147a.5.5 0 0 0-.708.708l3 3z"/>
+																	</svg>
+																</a>
+															</div>
+														</div>
 														<?php
-														if($field->displaytitle == 1){
-															?>
-															:&nbsp;
-														<?php } ?>
-														<?php if(($field->displaytitle == 1) or ($field->displaytitle == 3)){?>
-															<?php echo $field->value;?> <?php } ?>
-													</div>
-													<?php
-													if($k == $jump){
-														?>
-														</div><div class='<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> minheight0'>
-														<?php
-														$k = 0;
 													}
 												}
-											}
-											?>
+												?>
+										</div>
+									</div>
+								</div>
+							<?php } ?>
+							<?php
+							if(count($row->extra_field_groups) > 0)
+							{
+								?>
+								<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> customfields">
+									<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+										<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+											<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+												<h4>
+													<?php echo Text::_('OS_OTHER_INFORMATION')?>
+												</h4>
+											</div>
 										</div>
 										<?php
-											for($j=0;$j<count($fields);$j++) {
-												$field = $fields[$j];
-												if ($field->field_type == "textarea") {
-													?>
-													<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-														<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+										if($extrafieldncolumns == 2){
+											$span = $bootstrapHelper->getClassMapping('span6');
+											$jump = 2;
+										}else{
+											$span = $bootstrapHelper->getClassMapping('span4');
+											$jump = 3;
+										}
+										$extra_field_groups = $row->extra_field_groups;
+										for($i=0;$i<count($extra_field_groups);$i++){
+											$group = $extra_field_groups[$i];
+											$group_name = $group->group_name;
+											$fields = $group->fields;
+											if(count($fields)> 0){
+											?>
+											<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+												<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+													<h5>
+														<?php echo $group_name;?>
+													</h5>
+												</div>
+											</div>
+											<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+												<?php
+												$k = 0;
+												for($j=0;$j<count($fields);$j++){
+													$field = $fields[$j];
+													if($field->field_type != "textarea"){
+														$k++;
+														?>
+														<div class="<?php echo $span; ?>">
 															<?php
-															if (($field->displaytitle == 1) or ($field->displaytitle == 2)) {
+															if(($field->displaytitle == 1) || ($field->displaytitle == 2)){
 																?>
 																<?php
-																if ($field->field_description != "") {
+																if($field->field_description != ""){
 																	?>
-																	<span class="editlinktip hasTooltip"
-																		  title="<?php echo $field->field_label;?>::<?php echo $field->field_description?>">
-																		<strong><?php echo $field->field_label;?></strong>
+																	<span class="editlinktip hasTooltip" title="<?php echo $field->field_label;?>::<?php echo $field->field_description?>">
+																		<?php echo $field->field_label;?>
 																	</span>
-																	<BR/>
 																<?php
-																} else {
-																	?>
-																	<strong><?php echo $field->field_label;?></strong>
-																<?php
+																}else{
+																	echo $field->field_label;
 																}
 															}
 															?>
-															<?php if (($field->displaytitle == 1) or ($field->displaytitle == 3)) { ?>
-																<?php echo $field->value; ?>
+															<?php
+															if($field->displaytitle == 1){
+																?>
+																:&nbsp;
 															<?php } ?>
+															<?php if(($field->displaytitle == 1) || ($field->displaytitle == 3)){?>
+																<?php echo $field->value;?> <?php } ?>
 														</div>
-													</div>
-												<?php
+														<?php
+														if($k == $jump){
+															?>
+															</div><div class='<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> minheight0'>
+															<?php
+															$k = 0;
+														}
+													}
+												}
+												?>
+											</div>
+											<?php
+												for($j=0;$j<count($fields);$j++) {
+													$field = $fields[$j];
+													if ($field->field_type == "textarea") {
+														?>
+														<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+															<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+																<?php
+																if (($field->displaytitle == 1) || ($field->displaytitle == 2)) {
+																	?>
+																	<?php
+																	if ($field->field_description != "") {
+																		?>
+																		<span class="editlinktip hasTooltip"
+																			  title="<?php echo $field->field_label;?>::<?php echo $field->field_description?>">
+																			<strong><?php echo $field->field_label;?></strong>
+																		</span>
+																		<BR/>
+																	<?php
+																	} else {
+																		?>
+																		<strong><?php echo $field->field_label;?></strong>
+																	<?php
+																	}
+																}
+																?>
+																<?php if (($field->displaytitle == 1) || ($field->displaytitle == 3)) { ?>
+																	<?php echo $field->value; ?>
+																<?php } ?>
+															</div>
+														</div>
+													<?php
+													}
 												}
 											}
+										?>
+										<div class='amenitygroup <?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>'></div>
+										<?php
 										}
 									?>
-									<div class='amenitygroup <?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>'></div>
-									<?php
-									}
-								?>
+									</div>
 								</div>
-							</div>
-							<?php
-						}
-						?>
+								<?php
+							}
+							?>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -996,16 +967,17 @@ else
 		?>
 		<!-- end des -->
 		<?php
-		if(($configClass['goole_use_map'] == 1) && ($row->lat_add != "") && ($row->long_add != "")){
+		if($row->show_address == 1 && $row->lat_add != "" && $row->long_add != "" && $row->lat_add != "0" && $row->long_add != "0")
+		{
 
 		$address = OSPHelper::generateAddress($row);
 		?>
-		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> location">
 			<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 				<div id="shelllocation">
-					<h2>
-						<i class="edicon edicon-location2"></i>&nbsp;<?php echo Text::_('OS_LOCATION')?>
-					</h2>
+					<h3>
+						<?php echo Text::_('OS_LOCATION')?>
+					</h3>
 					<?php
                     if($configClass['map_type'] == 1)
                     {
@@ -1023,14 +995,14 @@ else
 		}
 		?>
 		<?php
-		if(($configClass['show_walkscore'] == 1) and ($configClass['ws_id'] != "")){
+		if(($configClass['show_walkscore'] == 1) && ($configClass['ws_id'] != "")){
 			?>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> walkscore">
 				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 					<div id="shellwalkscore">
-						<h2>
-							<i class="edicon edicon-map"></i>&nbsp;<?php echo Text::_('OS_WALK_SCORE')?>
-						</h2>
+						<h3>
+							<?php echo Text::_('OS_WALK_SCORE')?>
+						</h3>
 						<?php
 						echo $row->ws;
 						?>
@@ -1041,16 +1013,56 @@ else
 		}
 		?>
 		<?php
-		if($row->pro_video != ""){
+		if($row->pro_video != "")
+		{
 			?>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> video">
 				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 					<div id="shellvideo">
-						<h2>
-							<i class="edicon edicon-play"></i>&nbsp;<?php echo Text::_('OS_VIDEO')?>
-						</h2>
+						<h3>
+							<?php echo Text::_('OS_VIDEO')?>
+						</h3>
 						<?php
-						echo stripslashes($row->pro_video);
+						if (stripos(strtolower($row->pro_video), "watch") !== false) 
+						{
+							$row->pro_video = OSPHelper::convertToEmbedLink($row->pro_video);
+						}
+						if (stripos(strtolower($row->pro_video), "iframe") === false) {
+							?>
+							<iframe src="<?php echo $row->pro_video; ?>" allowfullscreen="allowfullscreen" frameborder="0" height="480" width="100%"></iframe>
+							<?php
+						}
+						else
+						{
+							echo $row->pro_video;
+						}
+						?>
+					</div>
+				</div>
+			</div>
+			<?php
+		}
+
+		if($row->tour_link != "")
+		{
+			?>
+			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> virtual_tour">
+				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+					<div id="shelltour">
+						<h3 id="shelltourh3">
+							<?php echo Text::_('OS_VIRTUAL_TOUR')?>
+						</h3>
+						<?php
+						if (stripos(strtolower($row->tour_link), "iframe") === false) {
+		
+							?>
+							<iframe src="<?php echo $row->tour_link; ?>" allowfullscreen="allowfullscreen" frameborder="0" height="480" width="100%"></iframe>
+							<?php
+						}
+						else
+						{
+							echo $row->tour_link;
+						}
 						?>
 					</div>
 				</div>
@@ -1061,15 +1073,15 @@ else
 		<?php
 		if($configClass['comment_active_comment'] == 1){
 			?>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> comment">
 				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> noleftmargin">
 					<div id="shellcomments">
-						<h2>
-							<i class="edicon edicon-bubbles3"></i>&nbsp;<?php echo Text::_('OS_COMMENTS')?>
-						</h2>
+						<h3>
+							<?php echo Text::_('OS_COMMENTS')?>
+						</h3>
 						<?php
 						echo $row->comments;
-						if(($owner == 0) and ($can_add_cmt == 1)){
+						if(($owner == 0) && ($can_add_cmt == 1)){
 							HelperOspropertyCommon::reviewForm($row,$itemid,$configClass);
 						}
 						?>
@@ -1080,14 +1092,14 @@ else
 		}
 		?>
 		<?php
-		if(($configClass['use_property_history'] == 1) and (($row->price_history != "") or ($row->tax != ""))){
+		if(($configClass['use_property_history'] == 1) && (($row->price_history != "") || ($row->tax != ""))){
 			?>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> history">
 				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 					<div id="shellhistorytax">
-						<h2>
-							<i class="edicon edicon-history"></i>&nbsp;<?php echo Text::_('OS_HISTORY_TAX')?>
-						</h2>
+						<h3>
+							<?php echo Text::_('OS_HISTORY_TAX')?>
+						</h3>
 						<?php
 						if($row->price_history != ""){
 							echo $row->price_history;
@@ -1108,16 +1120,16 @@ else
 		?>
 		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> tellfrendform" id="shellsharing">
 			<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> tellfrendformsub">
-				<h2>
-					<i class="edicon edicon-share"></i>&nbsp;<?php echo Text::_('OS_TELL_A_FRIEND')?>
-				</h2>
+				<h3>
+					<?php echo Text::_('OS_TELL_A_FRIEND')?>
+				</h3>
 				<?php HelperOspropertyCommon::sharingForm($row,$itemid); ?>
 			</div>
 		</div>
 		<?php } ?>
 		<?php
 			if(file_exists(JPATH_ROOT.DS."components".DS."com_oscalendar".DS."oscalendar.php")){
-				if(($configClass['integrate_oscalendar'] == 1) and (in_array($row->pro_type,explode("|",$configClass['show_date_search_in'])))){
+				if(($configClass['integrate_oscalendar'] == 1) && (in_array($row->pro_type,explode("|",$configClass['show_date_search_in'])))){
 					?>
 					<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 						<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
@@ -1140,11 +1152,10 @@ else
 					<?php
 				}
 			}
-		?>
-		<?php
-		if(($configClass['show_agent_details'] == 1) or ($configClass['show_request_more_details'] == 1)){
+		
+		if($configClass['show_agent_details'] == 1 || $configClass['show_request_more_details'] == 1){
 			?>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> contactagent">
 				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 					<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> agentsharingform" id="agentsharing">
 						<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> agentsharingformsub">
@@ -1157,23 +1168,22 @@ else
 									$title = Text::_('OS_OWNER_INFO');
 								}
 							?>
-							<h2>
-								<i class="edicon edicon-user-tie"></i>&nbsp;
+							<h3>
 								<a href="<?php echo $link;?>" title="<?php echo $title;?>">
 									<?php echo $row->agent_name;?>
 								</a>
-							</h2>
+							</h3>
 							<?php 
 							}
-							if(($configClass['show_agent_details'] == 1) and ($configClass['show_request_more_details'] == 1)){
+							if(($configClass['show_agent_details'] == 1) && ($configClass['show_request_more_details'] == 1)){
 								$span1 = $bootstrapHelper->getClassMapping('span4');//"span4";
 								$span2 = "";
 								$span3 = $bootstrapHelper->getClassMapping('span8');//"span8";
-							}elseif(($configClass['show_agent_details'] == 1) and ($configClass['show_request_more_details'] == 0)){
+							}elseif(($configClass['show_agent_details'] == 1) && ($configClass['show_request_more_details'] == 0)){
 								$span1 = $bootstrapHelper->getClassMapping('span4');
 								$span2 = $bootstrapHelper->getClassMapping('span8');
 								$span3 = "";
-							}elseif(($configClass['show_agent_details'] == 0) and ($configClass['show_request_more_details'] == 1)){
+							}elseif(($configClass['show_agent_details'] == 0) && ($configClass['show_request_more_details'] == 1)){
 								$span1 = "";
 								$span2 = "";
 								$span3 = $bootstrapHelper->getClassMapping('span12');
@@ -1189,7 +1199,7 @@ else
 											<?php
 											if($configClass['show_agent_image'] == 1){
 												$agent_photo = $row->agentdetails->photo;
-												if(($agent_photo != "") and (file_exists(JPATH_ROOT.'/images/osproperty/agent/'.$agent_photo))){
+												if(($agent_photo != "") && (file_exists(JPATH_ROOT.'/images/osproperty/agent/'.$agent_photo))){
 													?>
 													<img src="<?php echo Uri::root(true)?>/images/osproperty/agent/<?php echo $agent_photo; ?>" class="agentphoto"/>
 													<?php
@@ -1208,7 +1218,7 @@ else
 										<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 											<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 												<ul class="marB0 agentbasicinformation divbottom">
-													<?php if(($row->agentdetails->phone != "") and ($configClass['show_agent_phone'] == 1)){?>
+													<?php if(($row->agentdetails->phone != "") && ($configClass['show_agent_phone'] == 1)){?>
 													<li class="marT3 marB0">
 														<span class="left">
 															<i class="edicon edicon-phone-hang-up"></i>
@@ -1216,7 +1226,7 @@ else
 														<span class="right"><?php echo $row->agentdetails->phone;?></span>
 													</li>
 													<?php } 
-													if(($row->agentdetails->mobile != "") and ($configClass['show_agent_mobile'] == 1)){
+													if(($row->agentdetails->mobile != "") && ($configClass['show_agent_mobile'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1225,7 +1235,7 @@ else
 														<span class="right"><?php echo $row->agentdetails->mobile;?></span>
 													</li>
 													<?php } 
-													if(($row->agentdetails->fax != "") and ($configClass['show_agent_fax'] == 1)){
+													if(($row->agentdetails->fax != "") && ($configClass['show_agent_fax'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1234,7 +1244,7 @@ else
 														<span class="right"><?php echo $row->agentdetails->fax;?></span>
 													</li>
 													<?php }
-													if(($row->agentdetails->email != "") and ($configClass['show_agent_email'] == 1)){
+													if(($row->agentdetails->email != "") && ($configClass['show_agent_email'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1243,7 +1253,7 @@ else
 														<span class="right"><a href="mailto:<?php echo $row->agentdetails->email;?>" target="_blank"><?php echo $row->agentdetails->email;?></a></span>
 													</li>
 													<?php }
-													if(($row->agentdetails->skype != "") and ($configClass['show_agent_skype'] == 1)){
+													if(($row->agentdetails->skype != "") && ($configClass['show_agent_skype'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1252,7 +1262,7 @@ else
 														<span class="right"><?php echo $row->agentdetails->skype;?></span>
 													</li>
 													<?php }
-													if(($row->agentdetails->msn != "") and ($configClass['show_agent_msn'] == 1)){
+													if(($row->agentdetails->msn != "") && ($configClass['show_agent_msn'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1269,7 +1279,7 @@ else
 											<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 												<ul class="social marT15 marL0">
 													<?php
-													if(($row->agentdetails->facebook != "") and ($configClass['show_agent_facebook'] == 1)){
+													if(($row->agentdetails->facebook != "") && ($configClass['show_agent_facebook'] == 1)){
 													?>
 													<li class="facebook">
 														<a href="<?php echo $row->agentdetails->facebook; ?>" target="_blank">
@@ -1277,7 +1287,7 @@ else
 														</a>
 													</li>
 													<?php }
-													if(($row->agentdetails->aim != "") and ($configClass['show_agent_twitter'] == 1)){
+													if(($row->agentdetails->aim != "") && ($configClass['show_agent_twitter'] == 1)){
 													?>
 													<li class="twitter">
 														<a href="<?php echo $row->agentdetails->aim; ?>" target="_blank">
@@ -1285,7 +1295,7 @@ else
 														</a>
 													</li>
 													<?php }
-													if(($row->agentdetails->yahoo != "") and ($configClass['show_agent_linkin'] == 1)){
+													if(($row->agentdetails->yahoo != "") && ($configClass['show_agent_linkin'] == 1)){
 													?>
 													<li class="linkin">
 														<a href="<?php echo $row->agentdetails->yahoo; ?>" target="_blank">
@@ -1293,7 +1303,7 @@ else
 														</a>
 													</li>
 													<?php }
-													if(($row->agentdetails->gtalk != "") and ($configClass['show_agent_gplus'] == 1)){
+													if(($row->agentdetails->gtalk != "") && ($configClass['show_agent_gplus'] == 1)){
 													?>
 													<li class="gplus">
 														<a href="<?php echo $row->agentdetails->gtalk; ?>" target="_blank">
@@ -1315,7 +1325,7 @@ else
 										<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 											<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 												<ul class="marB0 agentbasicinformation">
-													<?php if(($row->agentdetails->phone != "") and ($configClass['show_agent_phone'] == 1)){?>
+													<?php if(($row->agentdetails->phone != "") && ($configClass['show_agent_phone'] == 1)){?>
 													<li class="marT3 marB0">
 														<span class="left">
 															<i class="edicon edicon-phone-hang-up"></i>
@@ -1323,7 +1333,7 @@ else
 														<span class="right"><?php echo $row->agentdetails->phone;?></span>
 													</li>
 													<?php } 
-													if(($row->agentdetails->mobile != "") and ($configClass['show_agent_mobile'] == 1)){
+													if(($row->agentdetails->mobile != "") && ($configClass['show_agent_mobile'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1332,7 +1342,7 @@ else
 														<span class="right"><?php echo $row->agentdetails->mobile;?></span>
 													</li>
 													<?php } 
-													if(($row->agentdetails->fax != "") and ($configClass['show_agent_fax'] == 1)){
+													if(($row->agentdetails->fax != "") && ($configClass['show_agent_fax'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1341,7 +1351,7 @@ else
 														<span class="right"><?php echo $row->agentdetails->fax;?></span>
 													</li>
 													<?php }
-													if(($row->agentdetails->email != "") and ($configClass['show_agent_email'] == 1)){
+													if(($row->agentdetails->email != "") && ($configClass['show_agent_email'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1350,7 +1360,7 @@ else
 														<span class="right"><a href="mailto:<?php echo $row->agentdetails->email;?>" target="_blank"><?php echo $row->agentdetails->email;?></a></span>
 													</li>
 													<?php }
-													if(($row->agentdetails->skype != "") and ($configClass['show_agent_skype'] == 1)){
+													if(($row->agentdetails->skype != "") && ($configClass['show_agent_skype'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1359,7 +1369,7 @@ else
 														<span class="right"><?php echo $row->agentdetails->skype;?></span>
 													</li>
 													<?php }
-													if(($row->agentdetails->msn != "") and ($configClass['show_agent_msn'] == 1)){
+													if(($row->agentdetails->msn != "") && ($configClass['show_agent_msn'] == 1)){
 													?>
 													<li class="marT3 marB0">
 														<span class="left">
@@ -1376,7 +1386,7 @@ else
 											<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 												<ul class="social marT15 marL0">
 													<?php
-													if(($row->agentdetails->facebook != "") and ($configClass['show_agent_facebook'] == 1)){
+													if(($row->agentdetails->facebook != "") && ($configClass['show_agent_facebook'] == 1)){
 													?>
 													<li class="facebook">
 														<a href="<?php echo $row->agentdetails->facebook; ?>" target="_blank">
@@ -1384,7 +1394,7 @@ else
 														</a>
 													</li>
 													<?php }
-													if(($row->agentdetails->aim != "") and ($configClass['show_agent_twitter'] == 1)){
+													if(($row->agentdetails->aim != "") && ($configClass['show_agent_twitter'] == 1)){
 													?>
 													<li class="twitter">
 														<a href="<?php echo $row->agentdetails->aim; ?>" target="_blank">
@@ -1392,7 +1402,7 @@ else
 														</a>
 													</li>
 													<?php }
-													if(($row->agentdetails->yahoo != "") and ($configClass['show_agent_linkin'] == 1)){
+													if(($row->agentdetails->yahoo != "") && ($configClass['show_agent_linkin'] == 1)){
 													?>
 													<li class="linkin">
 														<a href="<?php echo $row->agentdetails->yahoo; ?>" target="_blank">
@@ -1400,7 +1410,7 @@ else
 														</a>
 													</li>
 													<?php }
-													if(($row->agentdetails->gtalk != "") and ($configClass['show_agent_gplus'] == 1)){
+													if(($row->agentdetails->gtalk != "") && ($configClass['show_agent_gplus'] == 1)){
 													?>
 													<li class="gplus">
 														<a href="<?php echo $row->agentdetails->gtalk; ?>" target="_blank">
@@ -1434,13 +1444,14 @@ else
 		}
 		?>
 		<?php
-		if(($configClass['relate_properties'] == 1) and ($row->relate != "")){
+		if($configClass['relate_properties'] == 1 && $row->relate != "")
+		{
 		?>
 			<div class="detailsBar clearfix">
-				<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+				<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> relate_properties">
 					<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 						<div class="shellrelatedproperties">
-							<h2><i class="edicon edicon-location2"></i>&nbsp;<?php echo Text::_('OS_RELATE_PROPERTY')?></h2>
+							<h3><?php echo Text::_('OS_RELATE_PROPERTY')?></h3>
 							<?php
 							echo $row->relate;
 							?>
@@ -1516,3 +1527,42 @@ if (!found) {
   console.log('No duplicate IDs found');
 }
 </script>
+
+<?php
+if(count($photos) > 0)
+{
+	?>
+	<div class="slideshow-container" id="slideshowContainer">
+		<div class="grid-close-container">
+			<button class="grid-btn" id="gridBtn">&#x2630;</button>
+			<button class="pause-btn" id="pauseBtn">❙❙</button>
+			<button class="close-btn" id="closeBtn">✖</button>
+		</div>
+		<div class="slideshow-wrapper">
+			<div class="slideshow-track" id="slideshowTrack"></div>
+		</div>
+		<div class="photo-description" id="photoDescription"></div>
+		<div class="thumbnail-container" id="thumbnailContainer"></div>
+		<button class="nav-buttons left" id="prevBtn">&#10094;</button>
+		<button class="nav-buttons right" id="nextBtn">&#10095;</button>
+	</div>
+	<?php
+	$srcArr = [];
+	foreach($photos as $photo)
+	{
+		$srcArr[] = '{src: "'.$photo->image.'", description: "'.$photo->image_desc.'"}';
+
+	}
+	$photoString = implode(",",$srcArr);
+?>
+	<script>
+		const images1 = [
+			<?php echo $photoString; ?>
+		];
+		const propertyId = <?php echo $row->id; ?>;
+		const baseUrl = "<?php echo Uri::base();?>";
+	</script>
+	<script src="<?php echo Uri::root(true)?>/components/com_osproperty/templates/<?php echo $themename;?>/js/scripts.js"></script>
+<?php
+} //end count photos
+?>

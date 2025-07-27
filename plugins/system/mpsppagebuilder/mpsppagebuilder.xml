@@ -4,10 +4,10 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://www.joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 3, or later</license>
     <creationDate>December 2019</creationDate>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin allow admin to restrict access to pages created by SP Page Builder extension for
         subscribers only.
     </description>

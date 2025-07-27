@@ -3,21 +3,21 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 use Joomla\Utilities\ArrayHelper;
 
 class plgOSMembershipDOcuments extends CMSPlugin implements SubscriberInterface
@@ -82,11 +82,11 @@ class plgOSMembershipDOcuments extends CMSPlugin implements SubscriberInterface
 
 		$path = $this->params->get('documents_path', 'media/com_osmembership/documents');
 
-		if (Folder::exists(JPATH_ROOT . '/' . $path))
+		if (is_dir(Path::clean(JPATH_ROOT . '/' . $path)))
 		{
 			$this->documentsPath = JPATH_ROOT . '/' . $path;
 		}
-		elseif (Folder::exists($path))
+		elseif (is_dir(Path::clean($path)))
 		{
 			$this->documentsPath = $path;
 		}
@@ -95,7 +95,7 @@ class plgOSMembershipDOcuments extends CMSPlugin implements SubscriberInterface
 			throw new InvalidArgumentException(sprintf('Invalid documents path %s', $path));
 		}
 
-		if (Folder::exists($this->documentsPath . '/update_packages'))
+		if (is_dir(Path::clean($this->documentsPath . '/update_packages')))
 		{
 			$this->updatePackagesPath = $this->documentsPath . '/update_packages';
 		}
@@ -198,7 +198,7 @@ class plgOSMembershipDOcuments extends CMSPlugin implements SubscriberInterface
 				if (is_uploaded_file($documentAttachments['tmp_name'][$i]))
 				{
 					$attachmentsFileName = File::makeSafe($documentAttachments['name'][$i]);
-					File::upload($documentAttachments['tmp_name'][$i], $pathUpload . $attachmentsFileName, false, true);
+					File::upload($documentAttachments['tmp_name'][$i], $pathUpload . $attachmentsFileName);
 				}
 
 				$documentId    = (int) $documentIds[$i];

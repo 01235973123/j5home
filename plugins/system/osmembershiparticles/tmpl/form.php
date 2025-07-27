@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -12,9 +12,11 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/js/plug-system-osmembershiparticles.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->registerAndUseScript('plug-system-osmembershiparticles', 'media/com_osmembership/js/plug-system-osmembershiparticles.min.js');
 /**
  * Layout variables
  * -----------------

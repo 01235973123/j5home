@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -66,10 +66,26 @@ class OSMembershipViewLanguageHtml extends MPFViewHtml
 
 		$options              = [];
 		$options[]            = HTMLHelper::_('select.option', '', Text::_('--Select Item--'));
-		$options[]            = HTMLHelper::_('select.option', 'com_osmembership', Text::_('Membership Pro - Frontend'));
-		$options[]            = HTMLHelper::_('select.option', 'admin.com_osmembership', Text::_('Membership Pro - Backend'));
-		$options[]            = HTMLHelper::_('select.option', 'admin.com_osmembershipcommon', Text::_('Membership Pro - Common'));
-		$options[]            = HTMLHelper::_('select.option', 'admin.com_osmembership.sys', Text::_('Membership Pro - System'));
+		$options[]            = HTMLHelper::_(
+			'select.option',
+			'com_osmembership',
+			Text::_('Membership Pro - Frontend')
+		);
+		$options[]            = HTMLHelper::_(
+			'select.option',
+			'admin.com_osmembership',
+			Text::_('Membership Pro - Backend')
+		);
+		$options[]            = HTMLHelper::_(
+			'select.option',
+			'admin.com_osmembershipcommon',
+			Text::_('Membership Pro - Common')
+		);
+		$options[]            = HTMLHelper::_(
+			'select.option',
+			'admin.com_osmembership.sys',
+			Text::_('Membership Pro - System')
+		);
 		$lists['filter_item'] = HTMLHelper::_(
 			'select.genericlist',
 			$options,

@@ -1,12 +1,10 @@
 <?php
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormField;
-use Joomla\CMS\Language\Text;
+
 /*------------------------------------------------------------------------
 # propertycategory.php - mod_ospropertyrandom
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2010 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -14,10 +12,11 @@ use Joomla\CMS\Language\Text;
 
 /** ensure this file is being included by a parent file */
 defined('_JEXEC') or die('Restricted access');
-error_reporting(0);
-define('DS',DIRECTORY_SEPARATOR);
-global $mainframe;
-$mainframe = Factory::getApplication();
+
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\HTML\HTMLHelper;
 
 include_once(JPATH_ADMINISTRATOR."/components/com_osproperty/classes/property.php");
 
@@ -36,7 +35,7 @@ class JFormFieldPropertycategory extends FormField
 		$mitems = $db->loadObjectList();
 
 		// establish the hierarchy of the menu
-		$children = array();
+		$children = [];
 
 		if ( $mitems )
 		{
@@ -51,10 +50,10 @@ class JFormFieldPropertycategory extends FormField
 		}
 
 		// second pass - get an indent list of the items
-		$list = JHTML::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0 );
+		$list = HTMLHelper::_('menu.treerecurse', 0, '', array(), $children, 9999, 0, 0 );
 		// assemble menu items to the array
-		$parentArr 	= array();
-		$parentArr[] 	= JHTML::_('select.option',  '', Text::_( 'OSPROPERTY_SELECT_CATEGORY' ) );
+		$parentArr 	= [];
+		$parentArr[] 	= HTMLHelper::_('select.option',  '', Text::_( 'OSPROPERTY_SELECT_CATEGORY' ) );
 		foreach ( $list as $item ) {
 			if($item->treename != ""){
 				$item->treename = str_replace("&nbsp;","",$item->treename);
@@ -68,10 +67,10 @@ class JFormFieldPropertycategory extends FormField
 				$treename = str_replace("&#160;","-",$item->treename);
 			}
 			$text = $treename.$item->name;
-			$parentArr[] = JHTML::_('select.option',  $item->id,$text);
+			$parentArr[] = HTMLHelper::_('select.option',  $item->id,$text);
 		}
 		 
-	    return JHTML::_('select.genericlist',  $parentArr, $this->name, 'class= "input-large form-control form-select"', 'value', 'text', $this->value, $control_name.$name );
+	    return HTMLHelper::_('select.genericlist',  $parentArr, $this->name, 'class= "input-large form-control form-select"', 'value', 'text', $this->value );
 	}
 }
 	

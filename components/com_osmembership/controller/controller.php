@@ -3,18 +3,20 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Database\DatabaseDriver;
+use Joomla\Filesystem\Exception\FilesystemException;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 use Joomla\Utilities\IpHelper;
 
 class OSMembershipController extends MPFController
@@ -94,12 +96,17 @@ class OSMembershipController extends MPFController
 
 		$id = $this->input->getInt('id');
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 		$query->select('a.*')
 			->from('#__osmembership_documents AS a')
-			->where('a.id IN (SELECT document_id FROM #__osmembership_plan_documents AS b WHERE b.plan_id  IN (' . implode(',', $planIds) . ') )')
+			->where(
+				'a.id IN (SELECT document_id FROM #__osmembership_plan_documents AS b WHERE b.plan_id  IN (' . implode(
+					',',
+					$planIds
+				) . ') )'
+			)
 			->where('a.id = ' . $id);
 		$db->setQuery($query);
 		$document = $db->loadObject();
@@ -130,7 +137,7 @@ class OSMembershipController extends MPFController
 	{
 		$id = $this->input->getInt('id', 0);
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('*')
@@ -201,7 +208,7 @@ class OSMembershipController extends MPFController
 			elseif ($user->id)
 			{
 				// User can only download the file uploaded by himself
-				/* @var \Joomla\Database\DatabaseDriver $db */
+				/* @var DatabaseDriver $db */
 				$db = Factory::getContainer()->get('db');
 
 				// Get list of published file upload custom fields
@@ -239,7 +246,11 @@ class OSMembershipController extends MPFController
 				return;
 			}
 
-			$this->processDownloadFile($filePath . $fileName, OSMembershipHelper::getOriginalFilename($fileName), $inline);
+			$this->processDownloadFile(
+				$filePath . $fileName,
+				OSMembershipHelper::getOriginalFilename($fileName),
+				$inline
+			);
 		}
 		else
 		{
@@ -257,7 +268,7 @@ class OSMembershipController extends MPFController
 		$json       = [];
 		$pathUpload = JPATH_ROOT . '/media/com_osmembership/upload';
 
-		if (!Folder::exists($pathUpload))
+		if (!is_dir($pathUpload))
 		{
 			Folder::create($pathUpload);
 		}
@@ -268,7 +279,7 @@ class OSMembershipController extends MPFController
 
 		if ($fieldId)
 		{
-			/* @var \Joomla\Database\DatabaseDriver $db */
+			/* @var DatabaseDriver $db */
 			$db    = Factory::getContainer()->get('db');
 			$query = $db->getQuery(true)
 				->select('allowed_file_types')
@@ -282,7 +293,7 @@ class OSMembershipController extends MPFController
 
 		$file     = $this->input->files->get('file', [], 'raw');
 		$fileName = $file['name'];
-		$fileExt  = File::getExt($fileName);
+		$fileExt  = OSMembershipHelper::getFileExt($fileName);
 
 		if (in_array(strtolower($fileExt), $allowedExtensions))
 		{
@@ -303,7 +314,7 @@ class OSMembershipController extends MPFController
 			{
 				$fileName = File::makeSafe($fileName);
 
-				if (File::exists($pathUpload . '/' . $fileName))
+				if (is_file($pathUpload . '/' . $fileName))
 				{
 					$targetFileName = time() . '_' . $fileName;
 				}
@@ -312,10 +323,18 @@ class OSMembershipController extends MPFController
 					$targetFileName = $fileName;
 				}
 
-				File::upload($file['tmp_name'], $pathUpload . '/' . $targetFileName, false, true);
+				// Todo: Check to see if we need to validate the upload file here
+				try
+				{
+					File::upload($file['tmp_name'], $pathUpload . '/' . $targetFileName);
 
-				$json['success'] = Text::sprintf('OSM_FILE_UPLOADED', $fileName);
-				$json['file']    = $targetFileName;
+					$json['success'] = Text::sprintf('OSM_FILE_UPLOADED', $fileName);
+					$json['file']    = $targetFileName;
+				}
+				catch (FilesystemException $e)
+				{
+					$json['error'] = Text::sprintf('OSM_FILE_UPLOAD_FAILED', $fileName);
+				}
 			}
 		}
 		else
@@ -339,12 +358,12 @@ class OSMembershipController extends MPFController
 		$documentsPath        = OSMembershipHelper::getDocumentsPath();
 		$updatePackagesFolder = Path::clean($documentsPath . '/update_packages');
 
-		if (!Folder::exists($updatePackagesFolder))
+		if (!is_dir($updatePackagesFolder))
 		{
 			throw new Exception('Joomla Update is not supported on this site', 403);
 		}
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db             = Factory::getContainer()->get('db');
 		$query          = $db->getQuery(true);
 		$domain         = $this->input->getString('domain');
@@ -395,7 +414,10 @@ class OSMembershipController extends MPFController
 
 		if ($validateDomain && $registeredDomain && $registeredDomain != $domain)
 		{
-			throw new Exception('This download ID as used for different domain already. You need to register a new download ID for this domain', 403);
+			throw new Exception(
+				'This download ID as used for different domain already. You need to register a new download ID for this domain',
+				403
+			);
 		}
 
 		$userId = $registeredId->user_id;
@@ -417,14 +439,21 @@ class OSMembershipController extends MPFController
 		$query->clear()
 			->select('a.*')
 			->from('#__osmembership_documents AS a')
-			->where('a.id IN (SELECT document_id FROM #__osmembership_plan_documents AS b WHERE b.plan_id  IN (' . implode(',', $planIds) . ') )')
+			->where(
+				'a.id IN (SELECT document_id FROM #__osmembership_plan_documents AS b WHERE b.plan_id  IN (' . implode(
+					',',
+					$planIds
+				) . ') )'
+			)
 			->where('a.id = ' . $documentId);
 		$db->setQuery($query);
 		$document = $db->loadObject();
 
 		if (!$document)
 		{
-			throw new Exception(Text::_('Update package not found or you are not allowed to download this update package'), 404);
+			throw new Exception(
+				Text::_('Update package not found or you are not allowed to download this update package'), 404
+			);
 		}
 
 		if (!$document->update_package)
@@ -434,7 +463,7 @@ class OSMembershipController extends MPFController
 
 		$filePath = $updatePackagesFolder . '/' . $document->update_package;
 
-		if (!File::exists($filePath))
+		if (!is_file(Path::clean($filePath)))
 		{
 			throw new Exception('Update package not found', 404);
 		}
@@ -494,11 +523,11 @@ class OSMembershipController extends MPFController
 
 		$basePath = JPATH_ROOT . '/media/com_osmembership/userfiles/';
 
-		if (Folder::exists($basePath . $user->id))
+		if (is_dir($basePath . $user->id))
 		{
 			$path = $basePath . $user->id . '/';
 		}
-		elseif (Folder::exists($basePath . $user->username))
+		elseif (is_dir($basePath . $user->username))
 		{
 			$path = $basePath . $user->username . '/';
 		}

@@ -220,6 +220,12 @@ OSMMaskInputs = function (form) {
 		}
 
 		MPShowPaymentMethodFields(paymentMethod);
+
+		document.dispatchEvent(new CustomEvent('OSMPaymentMethodChanged', {
+			detail: {
+				paymentMethod: paymentMethod
+			}
+		}));
 	});
 
 	MPShowPaymentMethodFields = function (paymentMethod) {
@@ -465,7 +471,7 @@ OSMMaskInputs = function (form) {
 				if (msg.show_payment_information == 0) {
 					$('.payment_information').css('display', 'none');
 				} else {
-					$('.payment_information').css('display', '');
+					$('.payment_information:not(.mp-credit-card-input)').css('display', '');
 					updatePaymentMethod();
 				}
 

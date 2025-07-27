@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -172,6 +172,13 @@ class plgOSMembershipSubscriptionControl extends CMSPlugin implements Subscriber
 		$rowSubscription = new OSMembershipTableSubscriber($db);
 		$now             = Factory::getDate()->toSql();
 
+		// Extra reminders
+		$extraReminderSentFields = [
+			'fourth_reminder_sent',
+			'fifth_reminder_sent',
+			'sixth_reminder_sent',
+		];
+
 		foreach ($ids as $id)
 		{
 			$rowSubscription->load($id);
@@ -180,6 +187,15 @@ class plgOSMembershipSubscriptionControl extends CMSPlugin implements Subscriber
 			$rowSubscription->first_reminder_sent  = 1;
 			$rowSubscription->second_reminder_sent = 1;
 			$rowSubscription->third_reminder_sent  = 1;
+
+			foreach ($extraReminderSentFields as $extraField)
+			{
+				if (property_exists($rowSubscription, $extraField))
+				{
+					$rowSubscription->{$extraField} = 1;
+				}
+			}
+
 			$rowSubscription->store();
 
 			$event = new MembershipExpire(['row' => $rowSubscription]);
@@ -217,7 +233,9 @@ class plgOSMembershipSubscriptionControl extends CMSPlugin implements Subscriber
 		$plan = new OSMembershipTablePlan($this->db);
 		$plan->load($row->plan_id);
 		$params           = new Registry($plan->params);
-		$subscribePlanIds = array_filter(ArrayHelper::toInteger(explode(',', $params->get('subscription_expired_subscribe_plan_ids', ''))));
+		$subscribePlanIds = array_filter(
+			ArrayHelper::toInteger(explode(',', $params->get('subscription_expired_subscribe_plan_ids', '')))
+		);
 
 		if (count($subscribePlanIds) === 0)
 		{

@@ -1,15 +1,14 @@
 <?php
-
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
+
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -28,7 +27,7 @@ class OSMembershipControllerCoupon extends OSMembershipController
 
 		$inputFile = $this->input->files->get('input_file');
 		$fileName  = $inputFile ['name'];
-		$fileExt   = strtolower(File::getExt($fileName));
+		$fileExt   = strtolower(OSMembershipHelper::getFileExt($fileName));
 
 		if (!in_array($fileExt, ['csv', 'xls', 'xlsx']))
 		{
@@ -137,7 +136,11 @@ class OSMembershipControllerCoupon extends OSMembershipController
 			return;
 		}
 
-		$filePath = OSMembershipHelper::callOverridableHelperMethod('Data', 'excelExport', [$fields, $rows, 'coupons_list']);
+		$filePath = OSMembershipHelper::callOverridableHelperMethod(
+			'Data',
+			'excelExport',
+			[$fields, $rows, 'coupons_list']
+		);
 
 		if ($filePath)
 		{
@@ -156,6 +159,9 @@ class OSMembershipControllerCoupon extends OSMembershipController
 		$model = $this->getModel('Coupon');
 		$model->batch($this->input);
 
-		$this->setRedirect('index.php?option=com_osmembership&view=coupons', Text::_('OSM_COUPONS_SUCCESSFULLY_GENERATED'));
+		$this->setRedirect(
+			'index.php?option=com_osmembership&view=coupons',
+			Text::_('OSM_COUPONS_SUCCESSFULLY_GENERATED')
+		);
 	}
 }

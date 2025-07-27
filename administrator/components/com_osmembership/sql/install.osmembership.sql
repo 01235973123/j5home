@@ -192,9 +192,9 @@ CREATE TABLE IF NOT EXISTS `#__osmembership_fields` (
 	`prompt_text` varchar(255) NOT NULL DEFAULT '',
 	`filterable` tinyint NOT NULL DEFAULT 0,
 	`pattern` varchar(255) NOT NULL DEFAULT '',
-	`min` int NOT NULL DEFAULT 0,
-	`max` int NOT NULL DEFAULT 0,
-	`step` int NOT NULL DEFAULT 0,
+	`min` decimal(10,2) DEFAULT NULL,
+	`max` decimal(10,2) DEFAULT NUll,
+	`step` decimal(10,2) DEFAULT 0.00,
 	`show_on_subscription_form` tinyint NOT NULL DEFAULT 1,
 	`show_on_subscriptions` tinyint NOT NULL DEFAULT 0,
 	`hide_on_membership_renewal` tinyint NOT NULL DEFAULT 0,
@@ -244,7 +244,7 @@ CREATE TABLE IF NOT EXISTS `#__osmembership_field_value` (
 	`subscriber_id` int NOT NULL DEFAULT 0,
 	`field_value` text,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__osmembership_k2items` (
 	`id` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -269,7 +269,7 @@ CREATE TABLE IF NOT EXISTS `#__osmembership_messages` (
 	`message_key` varchar(100) NOT NULL DEFAULT '',
 	`message` text,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__osmembership_mitems` (
 	`id` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -290,7 +290,7 @@ CREATE TABLE IF NOT EXISTS `#__osmembership_mmtemplates` (
 	`ordering` int NOT NULL DEFAULT 0,
 	`published` tinyint NOT NULL DEFAULT 1,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `#__osmembership_plans` (
 	`id` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -389,7 +389,7 @@ CREATE TABLE IF NOT EXISTS `#__osmembership_plans` (
 	`hidden` tinyint NOT NULL DEFAULT 0,
 	`custom_fields` text,
 	PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci ROW_FORMAT=DYNAMIC;
 
 CREATE TABLE IF NOT EXISTS `#__osmembership_plan_documents` (
 	`id` int UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -600,6 +600,7 @@ CREATE TABLE IF NOT EXISTS `#__osmembership_subscribers` (
 	`plan_subscription_to_date` datetime,
 	`setup_fee` decimal(10,2) DEFAULT '0.00',
 	`gateway_customer_id` varchar(100) NOT NULL DEFAULT '',
+    `eb_coupon_id` int NOT NULL DEFAULT 0,
 	PRIMARY KEY (`id`),
 	KEY `idx_plan_id` (`plan_id`),
 	KEY `idx_user_id` (`user_id`),

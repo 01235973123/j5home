@@ -26,7 +26,7 @@ class OspropertyCpanel
 {
 	static function cpanel($option)
 	{
-		global $mainframe,$configClass,$_jversion,$langArr;
+		global $mainframe,$configClass,$_jversion;
 		ini_set('auto_detect_line_endings',true);
 		$db = Factory::getDbo();
 		$db->setQuery("Select count(id) from #__osrs_properties where approved = '1' and published = '1'");
@@ -75,7 +75,9 @@ class OspropertyCpanel
 		$lists['mostcomments'] = $db->loadObjectList();
 		
 		
-		$countryArr = array();
+		$langArr = OSPHelper::returnSupportedCountries();
+		
+		$countryArr = [];
 		for($i=0;$i<count($langArr);$i++){
 			$countryArr[] = $langArr[$i]->country_id;
 		}

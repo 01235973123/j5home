@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
@@ -11,7 +11,6 @@ defined('_JEXEC') or die ;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
 // Little command to allow viewing subscription data easier without having to edit code during support
 if ($this->input->getInt('debug'))
@@ -19,10 +18,12 @@ if ($this->input->getInt('debug'))
 	print_r($this->item);
 }
 
-Factory::getApplication()->getDocument()->getWebAssetManager()->useScript('showon');
-
-HTMLHelper::_('behavior.core');
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/js/admin-coupon-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->useScript('showon')
+	->registerAndUseScript('com_osmembership.admin-coupon-default', 'media/com_osmembership/js/admin-coupon-default.min.js');
 
 $keys = [
 	'OSM_ENTER_COUPON',

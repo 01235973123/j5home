@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -329,6 +329,31 @@ class os_paypal extends MPFPayment
 					return true;
 				}
 
+				// Solution to use the right amount if recurring payment amount is changed
+
+				/*
+				$params = new Registry($row->params ?? '{}');
+
+				if ($params->get('regular_gross_amount') > 0)
+				{
+					$grossAmount = $params->get('regular_gross_amount');
+				}
+				else
+				{
+					$grossAmount = $row->gross_amount;
+				}
+
+				// Recurring payment amount changed
+				if ($amount != $grossAmount)
+				{
+					$params->set('regular_amount', $grossAmount);
+					$params->set('discount_amount', 0);
+					$params->set('tax_amount', 0);
+					$params->set('payment_processing_fee', 0);
+					$params->set('gross_amount', $amount);
+					$row->params = $params->toString();
+				}
+				*/
 				// Valid recurring payment, extend the subscription
 				$this->processRenewRecurringSubscription($row, $subscriptionId, $transactionId);
 				break;

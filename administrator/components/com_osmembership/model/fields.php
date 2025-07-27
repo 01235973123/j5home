@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -14,6 +14,16 @@ use Joomla\Database\DatabaseQuery;
 class OSMembershipModelFields extends MPFModelList
 {
 	protected $choicesStates = ['plan_id'];
+
+	/**
+	 * List of none standard states use in the filters
+	 *
+	 * @var string[]
+	 */
+	protected $includeStatesFromActiveFiltersCheck = [
+		'show_core_field',
+		'plan_id',
+	];
 
 	/**
 	 * Constructor, Instantiate the model.

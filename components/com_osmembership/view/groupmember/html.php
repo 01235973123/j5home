@@ -67,6 +67,13 @@ class OSMembershipViewGroupmemberHtml extends MPFViewHtml
 	protected $config;
 
 	/**
+	 * The selected state, we need it to pass to javascript
+	 *
+	 * @var string
+	 */
+	protected $selectedState = '';
+
+	/**
 	 * Display the view
 	 *
 	 * @return void
@@ -149,16 +156,21 @@ class OSMembershipViewGroupmemberHtml extends MPFViewHtml
 		}
 
 		OSMembershipHelper::addLangLinkForAjax();
-		$document = Factory::getApplication()->getDocument();
-		$rootUri  = Uri::root(true);
+
 		OSMembershipHelperJquery::loadjQuery();
-		$document->addScript($rootUri . '/media/com_osmembership/assets/js/paymentmethods.min.js');
+
+		$wa = Factory::getApplication()->getDocument()
+			->getWebAssetManager()
+			->registerAndUseScript(
+				'com_osmembership.paymentmethods',
+				'media/com_osmembership/assets/js/paymentmethods.min.js'
+			);
 
 		$customJSFile = JPATH_ROOT . '/media/com_osmembership/assets/js/custom.js';
 
 		if (file_exists($customJSFile) && filesize($customJSFile) > 0)
 		{
-			$document->addScript($rootUri . '/media/com_osmembership/assets/js/custom.js');
+			$wa->registerAndUseScript('com_osmembership.custom', 'media/com_osmembership/assets/js/custom.js');
 		}
 
 		if ($item->id)
@@ -227,6 +239,13 @@ class OSMembershipViewGroupmemberHtml extends MPFViewHtml
 		$form = new MPFForm($rowFields);
 		$form->setData($data)->bindData($setDefault);
 		$form->buildFieldsDependency();
+
+		$fields = $form->getFields();
+
+		if (isset($fields['state']))
+		{
+			$this->selectedState = $fields['state']->value;
+		}
 
 		$this->item            = $item;
 		$this->form            = $form;

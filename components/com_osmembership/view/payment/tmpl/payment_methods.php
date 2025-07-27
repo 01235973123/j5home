@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
@@ -125,7 +125,7 @@ else
 	$style = 'style = "display:none"';
 }
 ?>
-    <div class="<?php echo $controlGroupClass; ?> payment_information" id="tr_card_number" <?php echo $style; ?>>
+    <div class="<?php echo $controlGroupClass; ?> payment_information mp-credit-card-input" id="tr_card_number" <?php echo $style; ?>>
         <div class="<?php echo $controlLabelClass; ?>">
             <label><?php echo  Text::_('AUTH_CARD_NUMBER'); ?><span class="required">*</span></label>
         </div>
@@ -133,7 +133,7 @@ else
             <input type="text" name="x_card_num" class="validate[required]><?php echo $bootstrapHelper->getFrameworkClass('uk-input', 1); ?>" value="<?php echo $this->escape($this->input->post->getAlnum('x_card_num'));?>" size="20" />
         </div>
     </div>
-    <div class="<?php echo $controlGroupClass; ?> payment_information" id="tr_exp_date" <?php echo $style; ?>>
+    <div class="<?php echo $controlGroupClass; ?> payment_information mp-credit-card-input" id="tr_exp_date" <?php echo $style; ?>>
         <div class="<?php echo $controlLabelClass; ?>">
             <label>
 				<?php echo Text::_('AUTH_CARD_EXPIRY_DATE'); ?><span class="required">*</span>
@@ -143,7 +143,7 @@ else
 			<?php echo $this->lists['exp_month'] . '  /  ' . $this->lists['exp_year'] ; ?>
         </div>
     </div>
-    <div class="<?php echo $controlGroupClass; ?> payment_information" id="tr_cvv_code" <?php echo $style; ?>>
+    <div class="<?php echo $controlGroupClass; ?> payment_information mp-credit-card-input" id="tr_cvv_code" <?php echo $style; ?>>
         <div class="<?php echo $controlLabelClass; ?>">
             <label>
 				<?php echo Text::_('AUTH_CVV_CODE'); ?><span class="required">*</span>
@@ -163,7 +163,7 @@ else
 	$style = ' style = "display:none;" ' ;
 }
 ?>
-    <div class="<?php echo $controlGroupClass; ?> payment_information" id="tr_card_holder_name" <?php echo $style; ?>>
+    <div class="<?php echo $controlGroupClass; ?> payment_information mp-credit-card-input" id="tr_card_holder_name" <?php echo $style; ?>>
         <div class="<?php echo $controlLabelClass; ?>">
             <label>
 				<?php echo Text::_('OSM_CARD_HOLDER_NAME'); ?><span class="required">*</span>
@@ -226,4 +226,13 @@ if ($this->hasSquareCard)
     <input type="hidden" name="square_card_token" value="" />
     <input type="hidden" name="square_card_verification_token" value="" />
 	<?php
+}
+
+// Having a way for payment method to render input to collect it own payment information
+foreach ($this->methods as $paymentMethodObj)
+{
+	if (is_callable([$paymentMethodObj, 'renderCollectPaymentInformation']))
+	{
+		$paymentMethodObj->renderCollectPaymentInformation($method);
+	}
 }

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -11,7 +11,6 @@ defined('_JEXEC') or die ;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -35,21 +34,23 @@ if ($this->canRefundSubscription)
 	ToolbarHelper::custom('refund', 'delete', 'delete', Text::_('OSM_REFUND'), false);
 }
 
-HTMLHelper::_('behavior.core');
-
-$document = Factory::getApplication()->getDocument();
-$document->addScriptDeclaration('
-	var siteUrl = "' . Uri::root() . '";			
-');
-$document->addScriptOptions('MPBaseUrl', Uri::base(true));
 OSMembershipHelperJquery::loadjQuery();
-$document->addScript(Uri::root(true) . '/media/com_osmembership/assets/js/membershippro.min.js');
-
 OSMembershipHelper::loadLanguage();
 OSMembershipHelperJquery::validateForm();
-$document->addScript(Uri::root(true) . '/media/com_osmembership/js/admin-subscription-default.min.js');
 
-$document->addScriptOptions('validate_form_data', (bool) $this->config->get('validate_backend_subscription_form_data', 1));
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('selectedState', $this->selectedState)
+	->addScriptOptions('MPBaseUrl', Uri::base(true))
+	->addScriptOptions('validate_form_data', (bool) $this->config->get('validate_backend_subscription_form_data', 1))
+	->getWebAssetManager()
+	->useScript('core')
+	->addInlineScript(
+		'
+			var siteUrl = "' . Uri::root() . '";			
+		'
+	)->registerAndUseScript('com_osmembership.membershippro', 'media/com_osmembership/assets/js/membershippro.min.js')
+	->registerAndUseScript('com_osmembership.admin-subscription-default', 'media/com_osmembership/js/admin-subscription-default.min.js');
 
 $languageItems = [
 	'OSM_CANCEL_SUBSCRIPTION_CONFIRM',
@@ -191,34 +192,15 @@ $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 				<?php
 				}
 
-				$fields = $this->form->getFields();
-				$stateType = 0;
-
-				if (isset($fields['state']))
-				{
-					if ($fields['state']->type == 'State')
-					{
-						$stateType = 1;
-					}
-					else
-					{
-						$stateType = 0;
-					}
-
-					$selectedState = $fields['state']->value;
-				}
-				
 				// Fake class mapping to make the layout works well on J4
 				$bootstrapHelper->getUi()->addClassMapping('control-group', 'control-group')
 					->addClassMapping('control-label', 'control-label')
 					->addClassMapping('controls', 'controls');
 
-				foreach ($fields as $field)
+				foreach ($this->form->getFields() as $field)
 				{
 					echo $field->getControlGroup($bootstrapHelper);
 				}
-
-				$document->addScriptOptions('selectedState', $selectedState);
 
 				if ($this->item->ip_address)
 				{
@@ -482,7 +464,7 @@ $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 				echo $this->loadTemplate('recurring_payment_amounts');
 			}
 
-			if (File::exists(JPATH_ADMINISTRATOR . '/components/com_osmembership/view/subscription/tmpl/default_custom_settings.php'))
+			if (is_file(JPATH_ADMINISTRATOR . '/components/com_osmembership/view/subscription/tmpl/default_custom_settings.php'))
 			{
 				echo $this->loadTemplate('custom_settings');
 			}

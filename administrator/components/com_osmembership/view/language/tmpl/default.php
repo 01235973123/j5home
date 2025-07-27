@@ -12,11 +12,12 @@ defined('_JEXEC') or die ;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/js/admin-language-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('com_osmembership.admin-language-default', 'media/com_osmembership/js/admin-language-default.min.js');
 ?>
 <form action="index.php?option=com_osmembership&view=language" method="post" name="adminForm" id="adminForm">
     <div id="j-main-container" class="mp-joomla4-container">

@@ -4,10 +4,10 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 3, or later</license>
     <creationDate>Nov 2012</creationDate>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin check to see whether users can access to a k2 item. Only publish it if you use Membership
         Pro K2 Restriction Settings plugin to restrict access for subscribers
     </description>

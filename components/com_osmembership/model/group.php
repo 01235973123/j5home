@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -226,7 +226,10 @@ class OSMembershipModelGroup extends MPFModel
 
 		$row->bind($data);
 
-		$row->subscription_code = OSMembershipHelper::getUniqueCodeForField('subscription_code', '#__osmembership_subscribers');
+		$row->subscription_code = OSMembershipHelper::getUniqueCodeForField(
+			'subscription_code',
+			'#__osmembership_subscribers'
+		);
 		$row->user_id           = (int) $row->user_id;
 		$row->published         = $this->getGroupMembershipStatus($group);
 		$row->group_admin_id    = $group->user_id;

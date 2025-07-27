@@ -11,7 +11,6 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Session\Session;
 
@@ -428,7 +427,8 @@ class MPFController
 		$config['layout'] = $layout;
 
 		// Check and make sure view is available before creating view class
-		if ($this->app->isClient('site') && !Folder::exists(JPATH_ROOT . '/components/com_osmembership/view/' . $name))
+		if ($this->app->isClient('site')
+			&& !is_dir(JPATH_ROOT . '/components/com_osmembership/view/' . $name))
 		{
 			throw new Exception(Text::sprintf('View %s not found', $name), 404);
 		}

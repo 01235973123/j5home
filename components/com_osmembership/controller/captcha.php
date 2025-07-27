@@ -3,7 +3,7 @@
  * @package            Joomla
  * @subpackage         Membership Pro
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2012 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
@@ -36,7 +36,9 @@ trait OSMembershipControllerCaptcha
 			{
 				try
 				{
-					return Captcha::getInstance($captchaPlugin)->checkAnswer($input->post->get('recaptcha', null, 'string'));
+					return Captcha::getInstance($captchaPlugin)->checkAnswer(
+						$input->post->get('recaptcha', null, 'string')
+					);
 				}
 				catch (Exception $e)
 				{

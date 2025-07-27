@@ -4,7 +4,7 @@
 # mod_ospropertyrandom.php - mod_ospropertyrandom
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -14,9 +14,9 @@ defined('_JEXEC') or die('Restricted access');
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
+use Joomla\CMS\HTML\HTMLHelper;
 
 error_reporting(E_ERROR | E_PARSE | E_COMPILE_ERROR);
-define('DS',DIRECTORY_SEPARATOR);
 
 include_once(JPATH_ROOT."/components/com_osproperty/helpers/common.php");
 include_once(JPATH_ROOT."/components/com_osproperty/helpers/helper.php");
@@ -24,9 +24,9 @@ include_once(JPATH_ROOT."/components/com_osproperty/helpers/route.php");
 include_once(JPATH_ROOT.'/components/com_osproperty/helpers/bootstrap.php');
 if(!OSPHelper::isJoomla4())
 {
-	JHTML::_('behavior.tooltip');
+	HTMLHelper::_('behavior.tooltip');
 }
-require_once( dirname(__FILE__).DS.'helper.php' );
+require_once( dirname(__FILE__).'/helper.php' );
 global $lang_suffix;
 $lang_suffix = OSPHelper::getFieldSuffix();
 OSPHelper::loadMedia();
@@ -111,8 +111,8 @@ $max_properties			= $params->get('max_properties','');
 
 
 $document = Factory::getDocument();
-$document->addStyleSheet(JURI::root().'modules/mod_ospropertyrandom/asset/style.css');
-include_once(JPATH_ROOT.DS."components/com_osproperty/helpers/common.php");
+$document->getWebAssetManager()->registerAndUseStyle('mod_ospropertyrandom.style',Uri::root().'modules/mod_ospropertyrandom/asset/style.css');
+include_once(JPATH_ROOT."/components/com_osproperty/helpers/common.php");
 
 if($modulelayout == 0){
 	$layout = "default";

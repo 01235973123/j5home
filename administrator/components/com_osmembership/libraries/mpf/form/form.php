@@ -10,7 +10,6 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Uri\Uri;
 use Valitron\Validator;
 
 /**
@@ -87,7 +86,10 @@ class MPFForm
 
 		if ($hasInputMask)
 		{
-			Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/assets/js/imask/imask.min.js');
+			Factory::getApplication()
+				->getDocument()
+				->getWebAssetManager()
+				->registerAndUseScript('com_osmembership.imask', 'media/com_osmembership/assets/js/imask/imask.min.js');
 		}
 	}
 

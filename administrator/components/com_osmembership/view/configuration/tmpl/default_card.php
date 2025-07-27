@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -103,6 +103,10 @@ $tags = OSMembershipHelperHtml::getSupportedTags('card_layout');
             <?php echo OSMembershipHelperHtml::getBooleanInput('show_download_member_card', $config->show_download_member_card); ?>
         </div>
     </div>
+    <?php
+        echo $this->text('qrcode_image_width', 'QRCODE_IMAGE_WIDTH', 'QRCODE_IMAGE_WIDTH_EXPLAIN');
+        echo $this->text('qrcode_image_height', 'QRCODE_IMAGE_HEIGHT', 'QRCODE_IMAGE_HEIGHT_EXPLAIN');
+    ?>
     <div class="control-group">
         <div class="control-label">
             <?php echo OSMembershipHelperHtml::getFieldLabel('card_layout', Text::_('OSM_CARD_LAYOUT')); ?>

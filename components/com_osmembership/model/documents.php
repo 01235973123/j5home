@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -25,7 +25,10 @@ class OSMembershipModelDocuments extends MPFModelList
 		$activePlanIds = OSMembershipHelperSubscription::getActiveMembershipPlans();
 
 		$query->where(
-			'tbl.id IN (SELECT document_id FROM #__osmembership_plan_documents AS b WHERE b.plan_id  IN (' . implode(',', $activePlanIds) . ') )'
+			'tbl.id IN (SELECT document_id FROM #__osmembership_plan_documents AS b WHERE b.plan_id  IN (' . implode(
+				',',
+				$activePlanIds
+			) . ') )'
 		);
 
 		return $this;

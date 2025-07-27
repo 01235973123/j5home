@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -153,19 +153,7 @@ foreach ($items as $item)
 			<div class="osm-plan-price"<?php if ($planPriceBackgroundColor) echo ' style=" background-color:' . $planPriceBackgroundColor . '";'; ?>>
 				<h2>
 					<p class="price">
-						<span>
-						<?php
-							if ($item->price > 0)
-							{
-								$symbol = $item->currency_symbol ?: $item->currency;
-								echo str_replace('.01', '.00', OSMembershipHelper::formatCurrency($item->price, $config, $symbol));
-							}
-							else
-							{
-								echo Text::_('OSM_FREE');
-							}
-							?>
-						</span>
+						<?php echo OSMembershipHelperHtml::loadCommonLayout('common/tmpl/priceduration.php', ['item' => $item]); ?>
 					</p>
 				</h2>
 			</div>

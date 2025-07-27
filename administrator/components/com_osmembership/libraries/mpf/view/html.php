@@ -11,11 +11,10 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 
 /**
@@ -297,11 +296,11 @@ class MPFViewHtml extends MPFView
 		$app       = Factory::getApplication();
 		$themeFile = str_replace('/tmpl', '', $layout);
 
-		if (File::exists(JPATH_THEMES . '/' . $app->getTemplate() . '/html/com_osmembership/' . $themeFile))
+		if (is_file(JPATH_THEMES . '/' . $app->getTemplate() . '/html/com_osmembership/' . $themeFile))
 		{
 			$path = JPATH_THEMES . '/' . $app->getTemplate() . '/html/com_osmembership/' . $themeFile;
 		}
-		elseif (File::exists(JPATH_ROOT . '/components/com_osmembership/view/' . $layout))
+		elseif (is_file(JPATH_ROOT . '/components/com_osmembership/view/' . $layout))
 		{
 			$path = JPATH_ROOT . '/components/com_osmembership/view/' . $layout;
 		}

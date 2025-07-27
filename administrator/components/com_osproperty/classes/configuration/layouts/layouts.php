@@ -3,7 +3,7 @@
 # homepage.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -458,7 +458,7 @@ $inputSmallClass	= $bootstrapHelper->getClassMapping('input-small'). ' smallSize
 					$themeArr		= [];
 					$themeArr[]		= HTMLHelper::_('select.option','',Text::_('OS_INHERIT_FROM_GLOBAL_CONFIGURATION'));
 					$themeArr		= array_merge($themeArr, $themes);
-					echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist',$themeArr,'configuration[property_details_theme]','class=" imedium form-select"','value','text',(int)$configs['property_details_theme']));
+					echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist',$themeArr,'configuration[property_details_theme]','class=" imedium form-select"','value','text',$configs['property_details_theme']));
 					?>
 				</div>
 			</div>

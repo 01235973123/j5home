@@ -17,6 +17,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Component\Router\RouterBase;
 use Joomla\Utilities\ArrayHelper;
+use Joomla\CMS\Application\ApplicationHelper;
 
 error_reporting(E_ERROR | E_PARSE | E_COMPILE_ERROR | E_CORE_ERROR);
 
@@ -38,6 +39,7 @@ class OspropertyRouter extends RouterBase
 	{
 		$segments		= array();
 		require_once JPATH_ROOT . '/components/com_osproperty/helpers/helper.php';
+		require_once JPATH_ROOT . '/components/com_osproperty/helpers/common.php';
 		$configClass	= OSPHelper::loadConfig();
 		$db				= Factory::getDbo();
 		$queryArr		= $query;
@@ -539,8 +541,9 @@ class OspropertyRouter extends RouterBase
 				if(isset($query['country_id']))
 				{
 					$allproperty = 0;
-					$db->setQuery("Select id, country_name from #__osrs_countries where id = '".(int)$query['country_id']."'");
-					$country = $db->loadObject();
+					//$db->setQuery("Select id, country_name from #__osrs_countries where id = '".(int)$query['country_id']."'");
+					//$country = $db->loadObject();
+					$country_name = OSPHelper::getCountryName((int)$query['country_id']);
 					$segmentArr[] = Text::_('OS_COUNTRY')."_".$country->country_name;
 					unset($query['country_id']);
 				}
@@ -858,7 +861,7 @@ class OspropertyRouter extends RouterBase
 
 		if (count($segments))
 		{
-			$segments = array_map('JApplicationHelper::stringURLSafe', $segments);
+			$segments = array_map('Joomla\CMS\Application\ApplicationHelper::stringURLSafe', $segments);
 			$key = md5(implode('/', $segments));
 			$q = $db->getQuery(true);
 			$q->select('COUNT(id)')

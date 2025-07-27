@@ -683,7 +683,7 @@ table.osm-profile-data tr:first-child td {
     top: -0.75em;
 }
 
-.osm-pricing-table-flat .osm-plan-price p sub {
+.osm-pricing-table-flat .osm-plan-price p sub, .osm-pricing-table .osm-plan-price p sub{
     font-size: 14px;
     bottom: 0;
 }

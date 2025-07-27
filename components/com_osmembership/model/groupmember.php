@@ -99,7 +99,10 @@ class OSMembershipModelGroupmember extends MPFModel
 			$row->created_date      = gmdate('Y-m-d H:i:s');
 			$row->from_date         = gmdate('Y-m-d H:i:s');
 			$row->is_profile        = 1;
-			$row->subscription_code = OSMembershipHelper::getUniqueCodeForField('subscription_code', '#__osmembership_subscribers');
+			$row->subscription_code = OSMembershipHelper::getUniqueCodeForField(
+				'subscription_code',
+				'#__osmembership_subscribers'
+			);
 
 			$query->clear()
 				->select('MAX(to_date)')

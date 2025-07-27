@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -127,7 +127,12 @@ class OSMembershipHelperPdf
 		// True type font
 		if (substr($font, -4) == '.ttf')
 		{
-			$font = TCPDF_FONTS::addTTFfont(JPATH_ROOT . '/components/com_osmembership/tcpdf/fonts/' . $font, 'TrueTypeUnicode', '', 96);
+			$font = TCPDF_FONTS::addTTFfont(
+				JPATH_ROOT . '/components/com_osmembership/tcpdf/fonts/' . $font,
+				'TrueTypeUnicode',
+				'',
+				96
+			);
 		}
 
 		$pdf->SetFont($font, '', 8);

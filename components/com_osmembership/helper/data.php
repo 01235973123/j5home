@@ -12,8 +12,8 @@ use Box\Spout\Reader\CSV\Reader;
 use Box\Spout\Writer\Common\Creator\Style\StyleBuilder;
 use Box\Spout\Writer\Common\Creator\WriterEntityFactory;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Filesystem\File;
 use OSSolution\MembershipPro\Admin\Event\Import\BeforeGettingDataFromFile;
 
 class OSMembershipHelperData
@@ -142,7 +142,7 @@ class OSMembershipHelperData
 		}
 
 		//Delete the file if exist
-		if (File::exists($filePath))
+		if (is_file($filePath))
 		{
 			File::delete($filePath);
 		}

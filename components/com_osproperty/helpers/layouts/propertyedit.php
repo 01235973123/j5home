@@ -174,7 +174,7 @@ else
                                                     </span>
                                                 </label>
                                                 <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
-                                                    <?php echo $lists['category']; ?>
+                                                    <?php echo OSPHelper::getChoicesJsSelect($lists['category']); ?>
                                                 </div>
                                             </div>
                                             <?php
@@ -273,7 +273,9 @@ else
                                                     </label>
                                                     <div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
                                                     <span class="input-append">
-                                                    <input type="text" name="price" id="price" value="<?php echo $row->price?>" class="<?php echo $inputSmallClass; ?> inlinedisplay" placeholder="0.00" />
+														<div class="currency-input">
+															<input type="text" name="price" id="price" value="<?php echo $row->price?>" class="<?php echo $inputSmallClass; ?> inlinedisplay" placeholder="0.00" />
+														</div>
                                                         <?php
                                                         HelperOspropertyCommon::showCurrencySelectList($row->curr);
                                                         ?>
@@ -1497,6 +1499,16 @@ else
 										</label>
 										<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
 											<textarea class="inputbox" name="pro_video" id="pro_video" cols="50" rows="3" class="inputbox"><?php echo $row->pro_video?></textarea>
+										</div>
+									</div>
+									<div class="<?php echo $bootstrapHelper->getClassMapping('control-group'); ?>">
+										<label class="<?php echo $bootstrapHelper->getClassMapping('control-label'); ?>">
+											<span class="hasTip" title="<?php echo Text::_('OS_VIRTUAL_TOUR');?>::<?php echo Text::_('OS_VIRTUAL_TOUR_EXPLAIN');?>">
+												<?php echo Text::_('OS_VIRTUAL_TOUR')?>
+											</span>
+										</label>
+										<div class="<?php echo $bootstrapHelper->getClassMapping('controls'); ?>">
+											<textarea class="inputbox" name="tour_link" id="tour_link" cols="50" rows="3" class="inputbox"><?php echo $row->tour_link?></textarea>
 										</div>
 									</div>
 										

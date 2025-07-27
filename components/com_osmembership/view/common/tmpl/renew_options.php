@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -25,7 +25,7 @@ use Joomla\CMS\Language\Text;
 		$plan    = $this->plans[$planId];
 		$taxRate = 0;
 
-		if ($this->config->show_price_including_tax)
+		if ($this->config->show_price_including_tax && !$this->config->setup_price_including_tax)
 		{
 			$taxRate = OSMembershipHelper::calculateMaxTaxRate($planId);
 		}

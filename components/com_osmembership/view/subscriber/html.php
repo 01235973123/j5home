@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -57,6 +57,13 @@ class OSMembershipViewSubscriberHtml extends MPFViewItem
 	 * @var array
 	 */
 	protected $paramsViews = ['subscribers'];
+
+	/**
+	 * Store the selected state
+	 *
+	 * @var string
+	 */
+	protected $selectedState = '';
 
 	/**
 	 * Prepare view data before displaying
@@ -123,7 +130,15 @@ class OSMembershipViewSubscriberHtml extends MPFViewItem
 		$options[]          = HTMLHelper::_('select.option', 2, Text::_('OSM_EXPIRED'));
 		$options[]          = HTMLHelper::_('select.option', 3, Text::_('OSM_CANCELLED_PENDING'));
 		$options[]          = HTMLHelper::_('select.option', 4, Text::_('OSM_CANCELLED_REFUNDED'));
-		$lists['published'] = HTMLHelper::_('select.genericlist', $options, 'published', 'class="form-select"', 'value', 'text', $item->published);
+		$lists['published'] = HTMLHelper::_(
+			'select.genericlist',
+			$options,
+			'published',
+			'class="form-select"',
+			'value',
+			'text',
+			$item->published
+		);
 
 		//Get list of payment methods
 		$query->clear()
@@ -192,6 +207,13 @@ class OSMembershipViewSubscriberHtml extends MPFViewItem
 		$form->setData($data)->bindData($setDefault);
 		$form->buildFieldsDependency();
 		$form->handleFieldsDependOnPaymentMethod($item->payment_method);
+
+		$fields = $form->getFields();
+
+		if (isset($fields['state']))
+		{
+			$this->selectedState = $fields['state']->value;
+		}
 
 		//Custom fields processing goes here
 		if ($item->plan_id)

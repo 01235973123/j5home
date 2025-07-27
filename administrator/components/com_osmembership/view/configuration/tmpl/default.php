@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
@@ -27,13 +27,14 @@ if (Factory::getApplication()->getIdentity()->authorise('core.admin', 'com_osmem
 	ToolbarHelper::preferences('com_osmembership');
 }
 
-HTMLHelper::_('behavior.keepalive');
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
-/* @var \Joomla\CMS\Document\HtmlDocument $document */
-$document = Factory::getApplication()->getDocument();
-$document->addStyleDeclaration('.hasTip{display:block !important}');
-$document->getWebAssetManager()->useScript('showon');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('keepalive')
+	->useScript('showon')
+	->addInlineStyle('.hasTip{display:block !important}');
 
 $config = $this->config;
 $editor = OSMembershipHelper::getEditor();

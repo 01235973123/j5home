@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -43,7 +43,9 @@ class OSMembershipModelSchedulecontent extends MPFModelList
 	{
 		$query = $this->query;
 
-		$activePlanIds = array_keys(OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getUserSubscriptionsInfo'));
+		$activePlanIds = array_keys(
+			OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getUserSubscriptionsInfo')
+		);
 
 		if (empty($activePlanIds))
 		{
@@ -55,7 +57,9 @@ class OSMembershipModelSchedulecontent extends MPFModelList
 			$activePlanIds = [$this->state->id];
 		}
 
-		$query->select('a.id, a.catid, a.title, a.alias, a.hits, a.created, a.publish_up, c.title AS category_title, b.plan_id, b.number_days')
+		$query->select(
+			'a.id, a.catid, a.title, a.alias, a.hits, a.created, a.publish_up, c.title AS category_title, b.plan_id, b.number_days'
+		)
 			->from('#__content AS a')
 			->innerJoin('#__categories AS c ON a.catid = c.id')
 			->innerJoin('#__osmembership_schedulecontent AS b ON a.id = b.article_id')

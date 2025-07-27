@@ -3,12 +3,14 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
+use AcyMailing\Classes\ListClass;
+use AcyMailing\Classes\UserClass;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
@@ -257,7 +259,16 @@ class plgOSMembershipAcym extends CMSPlugin implements SubscriberInterface
 		require_once JPATH_ADMINISTRATOR . '/components/com_acym/helpers/helper.php';
 
 		/* @var acymUserClass $userClass */
-		$userClass               = acym_get('class.user');
+
+		if (class_exists(UserClass::class))
+		{
+			$userClass = new UserClass();
+		}
+		else
+		{
+			$userClass = acym_get('class.user');
+		}
+
 		$userClass->checkVisitor = false;
 
 		if (method_exists($userClass, 'getOneByEmail'))
@@ -350,8 +361,16 @@ class plgOSMembershipAcym extends CMSPlugin implements SubscriberInterface
 
 		require_once JPATH_ADMINISTRATOR . '/components/com_acym/helpers/helper.php';
 
-		/* @var acymUserClass $userClass */
-		$userClass               = acym_get('class.user');
+		if (class_exists(UserClass::class))
+		{
+			$userClass = new UserClass();
+		}
+		else
+		{
+			/* @var acymUserClass $userClass */
+			$userClass = acym_get('class.user');
+		}
+
 		$userClass->checkVisitor = false;
 
 		if (method_exists($userClass, 'getOneByEmail'))
@@ -429,8 +448,16 @@ class plgOSMembershipAcym extends CMSPlugin implements SubscriberInterface
 
 		require_once JPATH_ADMINISTRATOR . '/components/com_acym/helpers/helper.php';
 
-		/* @var acymuserClass $userClass */
-		$userClass               = acym_get('class.user');
+		if (class_exists(UserClass::class))
+		{
+			$userClass = new UserClass();
+		}
+		else
+		{
+			/* @var acymUserClass $userClass */
+			$userClass = acym_get('class.user');
+		}
+
 		$userClass->checkVisitor = false;
 
 		if (method_exists($userClass, 'getOneByEmail'))
@@ -615,9 +642,17 @@ class plgOSMembershipAcym extends CMSPlugin implements SubscriberInterface
 	{
 		require_once JPATH_ADMINISTRATOR . '/components/com_acym/helpers/helper.php';
 
-		/* @var acymlistClass $listClass */
-		$listClass = acym_get('class.list');
-		$allLists  = $listClass->getAllWithIdName();
+		if (class_exists(ListClass::class))
+		{
+			$listClass = new ListClass();
+		}
+		else
+		{
+			/* @var acymlistClass $listClass */
+			$listClass = acym_get('class.list');
+		}
+
+		$allLists = $listClass->getAllWithIdName();
 
 		$db    = $this->db;
 		$query = $db->getQuery(true);

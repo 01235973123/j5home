@@ -3,7 +3,7 @@
 # googlemap.lib.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -15,11 +15,13 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Http\HttpFactory;
 
 class HelperOspropertyOpenStreetMap
 {
     static private $url = "https://maps.google.com/maps/api/geocode/json";
-	public static function loadGoogleScript($suffix = false){
+	public static function loadGoogleScript($suffix = false)
+	{
 		global $configClass;
 		OSPHelper::loadGoogleJS($suffix);
 	}
@@ -30,25 +32,28 @@ class HelperOspropertyOpenStreetMap
 	 * @param unknown_type $address
 	 * @return unknown
 	 */
-	static function getLatlongAdd($address){
-		//$address = urlencode($address);
-		$base_url = "https://nominatim.openstreetmap.org/search?format=json&q=".$address;
-		if(self::_iscurlinstalled()){
-			$ch = curl_init();
-		    curl_setopt ($ch, CURLOPT_URL, $base_url);
-		    curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
-		    curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, 0);
-		    $fileContents = curl_exec($ch);
-		    curl_close($ch);
-			if(trim($fileContents) == "")
-			{
-                $fileContents = file_get_contents($base_url);
-			}
-		}else{
-			$fileContents = file_get_contents($base_url);
+	static function getLatlongAdd($address)
+	{
+		$address = urlencode($address);
+		$http    = HttpFactory::getHttp();
+		$base_url = "https://nominatim.openstreetmap.org/search?q=".$address."&format=json&addressdetails=1";
+		
+		$fileContents = $http->get($base_url)->body;
+		//echo $fileContents;die();
+		
+		
+		$data =  json_decode($fileContents, true);
+
+		if (isset($data[0])) 
+		{
+			// Lấy latitude và longitude từ kết quả
+			$latitude		= $data[0]['lat'];
+			$longitude		= $data[0]['lon'];
+
+			return array($latitude,$longitude);
 		}
-		$output =  json_decode($fileContents);
-        return array($output[0]['lat'], $output[0]['lon']);
+		//die();
+        //return array($output[0]['lat'], $output[0]['lon']);
 	}
 
     /**
@@ -403,7 +408,7 @@ center: new google.maps.LatLng(<?php echo $lat?>,<?php echo $long?>),mapTypeId: 
             var longArr     = [];
             var mymap       = L.map('map_canvas').setView([<?php echo $default_lat; ?>, <?php echo $default_long; ?>], <?php echo $zoomLevel;?>);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+                attribution: '',
                 maxZoom: 18,
                 id: 'mapbox.streets',
                 zoom: <?php echo $zoomLevel;?>,
@@ -440,7 +445,7 @@ center: new google.maps.LatLng(<?php echo $lat?>,<?php echo $long?>),mapTypeId: 
                         $needs[] = $row->id;
                         $itemid	 = OSPRoute::getItemid($needs);
                         $title = "";
-                        if(($row->ref!="") and ($configClass['show_ref'] == 1)){
+                        if(($row->ref!="") && ($configClass['show_ref'] == 1)){
                             $title .= $row->ref.",";
                         }
                         $title 		.= $row->pro_name;
@@ -517,7 +522,7 @@ center: new google.maps.LatLng(<?php echo $lat?>,<?php echo $long?>),mapTypeId: 
                         $itemIdArr[] = $itemid;
 
                         $title = "";
-                        if(($row->ref!="") and ($configClass['show_ref'] == 1)){
+                        if(($row->ref!="") && ($configClass['show_ref'] == 1)){
                             $title .= $row->ref.",";
                         }
                         $title 		.= $row->pro_name;
@@ -553,7 +558,7 @@ center: new google.maps.LatLng(<?php echo $lat?>,<?php echo $long?>),mapTypeId: 
                             $itemIdArr[] = $itemid;
 
                             $title = "";
-                            if(($dupItem->ref!="") and ($configClass['show_ref'] == 1)){
+                            if(($dupItem->ref!="") && ($configClass['show_ref'] == 1)){
                                 $title .= $dupItem->ref.",";
                             }
                             $title 		.= $dupItem->pro_name;
@@ -609,6 +614,42 @@ center: new google.maps.LatLng(<?php echo $lat?>,<?php echo $long?>),mapTypeId: 
             ?>
             mymap.addLayer(markers);
             <?php } ?>
+
+			const locationItems = document.querySelectorAll('.property_item');
+
+			// Thêm sự kiện hover vào từng item trong danh sách
+			locationItems.forEach(item => {
+				item.addEventListener('mouseover', function () {
+					// Lấy thông tin latitude, longitude và nội dung popup từ data attributes
+					const lat = parseFloat(item.getAttribute('data-lat'));
+					const lng = parseFloat(item.getAttribute('data-lng'));
+					//const popupContent = item.getAttribute('data-popup');
+					
+					if(lat != "" && lng != "")
+					{
+						const marker = findMarkerByLatLng(lat, lng);
+						// Tìm marker tương ứng và mở popup
+						//alert(marker.getLatLng().lat);
+						if (marker) {
+							marker.openPopup();
+							mymap.panTo([lat, lng]);
+						}
+					}
+				});
+			});
+
+			function findMarkerByLatLng(lat, lng) {
+				let foundMarker = null;
+				mymap.eachLayer(layer => {
+					if (layer instanceof L.Marker) {
+						const position = layer.getLatLng();
+						if (position.lat === lat) {
+							foundMarker = layer;
+						}
+					}
+				});
+				return foundMarker;
+			}
         });
         </script>
         <?php

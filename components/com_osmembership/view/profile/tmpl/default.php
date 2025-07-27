@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -15,13 +15,16 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-
 OSMembershipHelperJquery::validateForm();
 
-$document = Factory::getApplication()->getDocument();
-$document->addScriptDeclaration('var siteUrl = "' . OSMembershipHelper::getSiteUrl() . '";');
-$document->addScript(Uri::root(true) . '/media/com_osmembership/js/site-profile-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('selectedState', $this->selectedState)
+	->getWebAssetManager()
+	->useScript('core')
+	->addInlineScript('var siteUrl = "' . OSMembershipHelper::getSiteUrl() . '";')
+	->registerAndUseScript('com_osmembership.site-profile-default', 'media/com_osmembership/js/site-profile-default.min.js');
+
 Text::script('OSM_CANCEL_SUBSCRIPTION_CONFIRM', true);
 
 if ($this->config->use_https)
@@ -32,19 +35,6 @@ else
 {
 	$ssl = 0;
 }
-
-$fields = $this->form->getFields();
-
-if (isset($fields['state']))
-{
-	$selectedState = $fields['state']->value;
-}
-else
-{
-	$selectedState = '';
-}
-
-$document->addScriptOptions('selectedState', $selectedState);
 
 /* @var OSMembershipHelperBootstrap $bootstrapHelper*/
 $bootstrapHelper = $this->bootstrapHelper;

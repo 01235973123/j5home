@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -53,6 +53,9 @@ class OSMembershipViewEmailsHtml extends MPFViewList
 			'first_reminder_emails'               => Text::_('OSM_FIRST_REMINDER_EMAILS'),
 			'second_reminder_emails'              => Text::_('OSM_SECOND_REMINDER_EMAILS'),
 			'third_reminder_emails'               => Text::_('OSM_THIRD_REMINDER_EMAILS'),
+			'fourth_reminder_emails'              => Text::_('OSM_FOURTH_REMINDER_EMAILS'),
+			'fifth_reminder_emails'               => Text::_('OSM_FIFTH_REMINDER_EMAILS'),
+			'sixth_reminder_emails'               => Text::_('OSM_SIXTH_REMINDER_EMAILS'),
 			'subscription_end_emails'             => Text::_('OSM_SUBSCRIPTION_END_EMAILS'),
 			'mass_mails'                          => Text::_('OSM_MASS_EMAILS'),
 			'offline_recurring_email'             => Text::_('OSM_OFFLINE_RECURRING_EMAILS'),

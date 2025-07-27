@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -147,7 +147,11 @@ class OSMembershipModelArticles extends MPFModelList
 
 		if (Multilanguage::isEnabled())
 		{
-			$query->whereIn('a.language', [Factory::getApplication()->getLanguage()->getTag(), '*'], ParameterType::STRING);
+			$query->whereIn(
+				'a.language',
+				[Factory::getApplication()->getLanguage()->getTag(), '*'],
+				ParameterType::STRING
+			);
 		}
 
 		return $query;

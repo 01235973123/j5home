@@ -1,14 +1,10 @@
 <?php
-use Joomla\CMS\Version;
-use Joomla\CMS\Factory;
-use Joomla\CMS\Form\FormField;
-use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\CMS\Language\Text;
+
 /*------------------------------------------------------------------------
 # propertytype.php - mod_ospropertyrandom
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2010 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -16,24 +12,11 @@ use Joomla\CMS\Language\Text;
 
 /** ensure this file is being included by a parent file */
 defined('_JEXEC') or die('Restricted access');
-define('DS',DIRECTORY_SEPARATOR);
-global $_jversion;
-$version = new Version();
-$current_joomla_version = $version->getShortVersion();
-$three_first_char = substr($current_joomla_version,0,3);
-switch($three_first_char){
-	case "1.5":
-		global $mainframe;
-		$_jversion = "1.5";
-	break;
-	case "2.5":
-	case "1.6":
-	case "1.7":
-		global $mainframe;
-		$mainframe = Factory::getApplication();
-		$_jversion = "1.6";
-	break;
-}
+use Joomla\CMS\Factory;
+use Joomla\CMS\Form\FormField;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Text;
+
 include_once(JPATH_ADMINISTRATOR."/components/com_osproperty/classes/property.php");
 
 class JFormFieldPropertymarketstatus extends FormField
@@ -48,7 +31,7 @@ class JFormFieldPropertymarketstatus extends FormField
     	}
 		include_once JPATH_ROOT.'/components/com_osproperty/helpers/helper.php';
 		$configClass = OSPHelper::loadConfig();
-		$marketArr[] = JHTML::_('select.option','0','Select Market status');
+		$marketArr[] = HTMLHelper::_('select.option','0','Select Market status');
        	$market_status 		= $configClass['market_status'];
 		if($market_status != ""){
 			$market_status_array = explode(",",$market_status);

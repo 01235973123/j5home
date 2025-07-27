@@ -4,19 +4,20 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
+use Joomla\Database\DatabaseDriver;
 
 class OSMembershipControllerDatamigration extends OSMembershipController
 {
 	public function process()
 	{
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 
@@ -33,7 +34,10 @@ class OSMembershipControllerDatamigration extends OSMembershipController
 		if (empty($profileIds))
 		{
 			// No records left, redirect to complete page
-			$this->setRedirect('index.php?option=com_osmembership&view=dashboard', Text::_('The extension and data was successfully updated'));
+			$this->setRedirect(
+				'index.php?option=com_osmembership&view=dashboard',
+				Text::_('The extension and data was successfully updated')
+			);
 		}
 		else
 		{

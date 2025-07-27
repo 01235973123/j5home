@@ -69,6 +69,14 @@ class MPFViewList extends MPFViewHtml
 	protected $viewItem;
 
 	/**
+	 * Flag to to mark if filtes are active
+	 *
+	 * @var bool
+	 */
+
+	protected $filtersActive = false;
+
+	/**
 	 * Constructor
 	 *
 	 * @param   array  $config
@@ -85,9 +93,10 @@ class MPFViewList extends MPFViewHtml
 	 */
 	protected function prepareView()
 	{
-		$this->state      = $this->model->getState();
-		$this->items      = $this->model->getData();
-		$this->pagination = $this->model->getPagination();
+		$this->state         = $this->model->getState();
+		$this->items         = $this->model->getData();
+		$this->pagination    = $this->model->getPagination();
+		$this->filtersActive = $this->model->isFiltersActive();
 
 		if ($this->isAdminView)
 		{
@@ -132,14 +141,20 @@ class MPFViewList extends MPFViewHtml
 		}
 		else
 		{
-			$canDo = call_user_func(['MPFHelper', 'getActions'], $this->viewConfig['option'], $this->name, $this->state);
+			$canDo = call_user_func(['MPFHelper', 'getActions'],
+				$this->viewConfig['option'],
+				$this->name,
+				$this->state);
 		}
 
 		$languagePrefix = $this->viewConfig['language_prefix'];
 
 		if ($this->isAdminView)
 		{
-			ToolbarHelper::title(Text::_(strtoupper($languagePrefix . '_' . $this->name . '_MANAGEMENT')), 'link ' . $this->name);
+			ToolbarHelper::title(
+				Text::_(strtoupper($languagePrefix . '_' . $this->name . '_MANAGEMENT')),
+				'link ' . $this->name
+			);
 		}
 
 		if ($canDo->get('core.create') && !in_array('add', $this->hideButtons))
@@ -147,12 +162,18 @@ class MPFViewList extends MPFViewHtml
 			ToolbarHelper::addNew('add', 'JTOOLBAR_NEW');
 		}
 
-		if (($canDo->get('core.edit') || $canDo->get('core.edit.own')) && isset($this->items[0]) && !in_array('edit', $this->hideButtons))
+		if (($canDo->get('core.edit') || $canDo->get('core.edit.own')) && isset($this->items[0]) && !in_array(
+				'edit',
+				$this->hideButtons
+			))
 		{
 			ToolbarHelper::editList('edit', 'JTOOLBAR_EDIT');
 		}
 
-		if (($canDo->get('core.delete') || $canDo->get('core.delete.own')) && isset($this->items[0]) && !in_array('delete', $this->hideButtons))
+		if (($canDo->get('core.delete') || $canDo->get('core.delete.own')) && isset($this->items[0]) && !in_array(
+				'delete',
+				$this->hideButtons
+			))
 		{
 			ToolbarHelper::deleteList(Text::_($languagePrefix . '_DELETE_CONFIRM'), 'delete');
 		}
@@ -212,7 +233,13 @@ class MPFViewList extends MPFViewHtml
 				$controller = $this->viewItem;
 
 				$saveOrderingUrl = 'index.php?option=' . $this->viewConfig['option'] . '&task=' . $controller . '.save_order_ajax';
-				HTMLHelper::_('sortablelist.sortable', $tableId, 'adminForm', strtolower($this->state->filter_order_Dir), $saveOrderingUrl);
+				HTMLHelper::_(
+					'sortablelist.sortable',
+					$tableId,
+					'adminForm',
+					strtolower($this->state->filter_order_Dir),
+					$saveOrderingUrl
+				);
 			}
 		}
 	}
@@ -227,7 +254,13 @@ class MPFViewList extends MPFViewHtml
 	 */
 	protected function gridSort(string $title, string $sortBy): string
 	{
-		return HTMLHelper::_('grid.sort', Text::_($title), $sortBy, $this->state->filter_order_Dir, $this->state->filter_order);
+		return HTMLHelper::_(
+			'grid.sort',
+			Text::_($title),
+			$sortBy,
+			$this->state->filter_order_Dir,
+			$this->state->filter_order
+		);
 	}
 
 	/**
@@ -240,7 +273,13 @@ class MPFViewList extends MPFViewHtml
 	 */
 	protected function searchToolsSort(string $title, string $sortBy): string
 	{
-		return HTMLHelper::_('searchtools.sort', $title, $sortBy, $this->state->filter_order_Dir, $this->state->filter_order);
+		return HTMLHelper::_(
+			'searchtools.sort',
+			$title,
+			$sortBy,
+			$this->state->filter_order_Dir,
+			$this->state->filter_order
+		);
 	}
 
 	/**
@@ -295,7 +334,10 @@ class MPFViewList extends MPFViewHtml
 	 */
 	protected function getEditItemLink($row, $append = ''): string
 	{
-		return Route::_('index.php?option=' . $this->option . '&view=' . $this->viewItem . '&id=' . $row->id . $append, false);
+		return Route::_(
+			'index.php?option=' . $this->option . '&view=' . $this->viewItem . '&id=' . $row->id . $append,
+			false
+		);
 	}
 
 	/**
@@ -306,6 +348,30 @@ class MPFViewList extends MPFViewHtml
 	protected function renderFormHiddenVariables()
 	{
 		include __DIR__ . '/tmpl/form_list_hidden_vars.php';
+	}
+
+	/**
+	 * Method to render search bar for management list view
+	 *
+	 * @return void
+	 */
+	protected function renderSearchTools(string $filterSearchLabel = '', string $filterSearchDescription = ''): void
+	{
+		if ($filterSearchLabel === '')
+		{
+			$filterSearchLabel = strtoupper(
+				$this->viewConfig['language_prefix'] . '_FILTER_SEARCH_' . $this->name . '_DESC'
+			);
+		}
+
+		if ($filterSearchDescription === '')
+		{
+			$filterSearchDescription = strtoupper(
+				$this->viewConfig['language_prefix'] . '_SEARCH_' . $this->name . '_DESC'
+			);
+		}
+
+		include __DIR__ . '/tmpl/form_list_search_tools.php';
 	}
 
 	/**

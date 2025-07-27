@@ -405,7 +405,7 @@ abstract class OmnipayPayment extends AbstractPayment implements PaymentInterfac
 		{
 			if (!empty($data[$field]))
 			{
-				$cardData[$omnipayField] = $data[$field];
+				$cardData[$omnipayField] = trim($data[$field]);
 			}
 		}
 

@@ -3,7 +3,7 @@
 # results.html.tpl.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -38,7 +38,8 @@ $show_google_map = $params->get('show_map',1);
 <div id="listings" class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 	<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 		<?php
-		if(count($rows) > 0){
+		if(count($rows) > 0)
+		{
 			jimport('joomla.filesystem.file');
 			$db = Factory::getDbo();
 			$db->setQuery("Select id as value, currency_code as text from #__osrs_currencies where id <> '$row->curr' order by currency_code");
@@ -49,34 +50,36 @@ $show_google_map = $params->get('show_map',1);
 			<input type="hidden" name="currency_item" id="currency_item" value="" />
 			<input type="hidden" name="live_site" id="live_site" value="<?php echo Uri::root()?>" />
 			<div class="clearfix"></div>		
-			<?php
-            if ($show_google_map == 1)
-            {
-                if($configClass['map_type'] == 0)
-                {
-                    if(HelperOspropertyGoogleMap::loadMapInListing($rows))
-                    {
-                        ?>
-                        <div id="map_canvas" class="map2x relative"></div>
-                        <?php
-                    }
-                }
-                else
-                {
-                    HelperOspropertyOpenStreetMap::loadMapInListing($rows);
-                }
-
-            }
-			?>
 			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> toplisting">
-				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+				<div class="<?php echo $bootstrapHelper->getClassMapping('span5'); ?> map hidden-phone">
+					<?php
+					if ($show_google_map == 1)
+					{
+						if($configClass['map_type'] == 0)
+						{
+							if(HelperOspropertyGoogleMap::loadMapInListing($rows))
+							{
+								?>
+								<div id="map_canvas" class="map2x relative"></div>
+								<?php
+							}
+						}
+						else
+						{
+							HelperOspropertyOpenStreetMap::loadMapInListing($rows);
+						}
+
+					}
+					?>
+				</div>
+				<div class="<?php echo $bootstrapHelper->getClassMapping('span7'); ?> properties">
 					<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 						<?php
 						$j = 0;
 						for($i=0;$i<count($rows);$i++) 
 						{
 							$row = $rows[$i];
-							$needs = array();
+							$needs = [];
 							$needs[] = "property_details";
 							$needs[] = $row->id;
 							$itemid = OSPRoute::getItemid($needs);
@@ -87,8 +90,8 @@ $show_google_map = $params->get('show_map',1);
 								$photourl = $row->photo;
 							}
 							?>
-							<div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
-								<div class="property_item">
+							<div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
+								<div class="property_item" data-lat="<?php echo $row->lat_add?>" data-long="<?php echo $row->long_add;?>">
 									<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 										<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 											<figure>
@@ -99,7 +102,7 @@ $show_google_map = $params->get('show_map',1);
 													<img alt="<?php echo $row->pro_name?>" title="<?php echo $row->pro_name?>" src="<?php echo $photourl;?>" data-original="<?php echo $row->photo; ?>" class="ospitem-imgborder oslazy" id="picture_<?php echo $i?>" />
 												</a>
 												<?php
-												if(($configClass['property_save_to_favories'] == 1) and ($user->id > 0)){
+												if(($configClass['property_save_to_favories'] == 1) && ($user->id > 0)){
 												?>
 												<span class="save-this">
 													<span class="wpfp-span">
@@ -136,16 +139,16 @@ $show_google_map = $params->get('show_map',1);
 												}
 												if($row->isFeatured == 1){
 												?>
-												<span class="theme2_featuredproperties">
-													<?php echo Text::_('OS_FEATURED');?>
-												</span>
+													<span class="theme2_featuredproperties">
+														<?php echo Text::_('OS_FEATURED');?>
+													</span>
 												<?php }
-												if(($configClass['active_market_status'] == 1)&&($row->isSold > 0)){
+												if($configClass['active_market_status'] == 1 && $row->isSold > 0){
 												?>
 													<span class="theme2_marketstatusproperties">
 														<?php echo OSPHelper::returnMarketStatus($row->isSold);?>
 													</span>
-												<?php }
+												<?php } 
 												?>
 											</figure>
 											<div class="grid-listing-info">
@@ -153,14 +156,9 @@ $show_google_map = $params->get('show_map',1);
 													<h5 class="marB0">
 														<a href="<?php echo Route::_('index.php?option=com_osproperty&task=property_details&id='.$row->id.'&Itemid='.$itemid);?>" class="property_mark_a"><?php echo $row->pro_name?></a>
 													</h5>
-													<?php
-													if($row->show_address == 1){
-													?>
-													<p class="marB0 locationaddress"><?php echo OSPHelper::generateAddress($row);?></p>
-													<?php } ?>
 												</header>
-												<p class="marB0 propertypricevalue">
-													<span class="listing-price">
+												<div class="property-details">
+													<span class="price">
 														<?php
 														if(OSPHelper::getLanguageFieldValue($row,'price_text') != "")
 														{
@@ -179,49 +177,20 @@ $show_google_map = $params->get('show_map',1);
 														}
 														?>
 													</span>
-												</p>
-												<div class="propinfo">
-													<ul class="marB0">
+													<div class="info">
 														<?php
-														if(($configClass['listing_show_nbedrooms'] == 1) and ($row->bed_room > 0)){
+														if($configClass['listing_show_nbedrooms'] == 1 && $row->bed_room > 0)
+														{
 														?>
-															<li class="row beds">
-																<span class="muted left"><?php echo Text::_('OS_BEDS')?></span>
-																<span class="right"><?php echo $row->bed_room; ?></span>
-															</li>
-														<?php } ?>
-														<?php
-														if(($configClass['listing_show_nbathrooms'] == 1) and ($row->bath_room > 0)){
+															<span><i class="fas fa-bed"></i>&nbsp;<?php echo $row->bed_room; ?></span>
+															
+														<?php } 
+														if($configClass['listing_show_nbathrooms'] == 1 && $row->bath_room > 0){
 														?>
-															<li class="row baths">
-																<span class="muted left"><?php echo Text::_('OS_BATHS')?></span>
-																<span class="right"><?php echo OSPHelper::showBath($row->bath_room); ?></span>
-															</li>
+															<span><i class="fas fa-bath"></i>&nbsp;<?php echo OSPHelper::showBath($row->bath_room); ?></span>
 														<?php } ?>
-														<?php
-														if($configClass['use_squarefeet'] == 1 && $row->square_feet > 0){
-														?>
-														<li class="row sqft">
-															<span class="muted left"><?php echo OSPHelper::showSquareLabels();?></span>
-															<span class="right"><?php echo OSPHelper::showSquare($row->square_feet);?></span>
-														</li>
-														<?php } ?>
-													</ul>
+													</div>
 												</div>
-												<?php
-												if($configClass['listing_show_agent'] == 1){
-												?>
-												<div class="brokerage">
-													<p class="muted marB0">
-														<small><?php echo Text::_('OS_POSTED_BY');?></small>
-													</p>
-													<p class="marB0">
-														<a title="<?php echo $row->agent_name?>" href="<?php echo Route::_('index.php?option=com_osproperty&task=agent_info&id='.$row->agent_id.'&Itemid='.$jinput->getInt('Itemid',0));?>">
-															<?php echo $row->agent_name?>
-														</a>
-													</p>
-												</div>
-												<?php } ?>
 											</div>
 										</div>
 									</div>
@@ -229,7 +198,7 @@ $show_google_map = $params->get('show_map',1);
 							</div>
 							<?php
 							$j++;
-							if($j == 3){
+							if($j == 2){
 								$j = 0;
 								?>
 								</div><div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
@@ -242,7 +211,7 @@ $show_google_map = $params->get('show_map',1);
 			</div>
 			<div>
 				<?php
-				if((count($rows) > 0) and ($pageNav->total > $pageNav->limit)){
+				if((count($rows) > 0) && ($pageNav->total > $pageNav->limit)){
 					?>
 					<div class="pageNavdiv">
 						<?php
@@ -259,3 +228,13 @@ $show_google_map = $params->get('show_map',1);
 	</div>
 </div>
 <input type="hidden" name="process_element" id="process_element" value="" />
+<script type="text/javascript">
+function loadStateInListPage(){
+	var country_id = document.getElementById('country_id');
+	loadStateInListPageAjax(country_id.value,"<?php echo Uri::root()?>");
+}
+function changeCity(state_id,city_id){
+	var live_site = '<?php echo Uri::root()?>';
+	loadLocationInfoCity(state_id,city_id,'state_id',live_site);
+}
+</script>

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -14,6 +14,7 @@ use Joomla\Database\DatabaseQuery;
 class OSMembershipModelGroupmembers extends MPFModelList
 {
 	protected $choicesStates = ['filter_plan_id'];
+
 	/**
 	 * Instantiate the model.
 	 *

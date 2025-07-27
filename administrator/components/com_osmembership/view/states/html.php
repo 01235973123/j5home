@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -26,7 +26,13 @@ class OSMembershipViewStatesHtml extends MPFViewList
 				->order('name')
 		);
 		$options                          = [];
-		$options[]                        = HTMLHelper::_('select.option', 0, ' - ' . Text::_('OSM_SELECT_COUNTRY') . ' - ', 'id', 'name');
+		$options[]                        = HTMLHelper::_(
+			'select.option',
+			0,
+			' - ' . Text::_('OSM_SELECT_COUNTRY') . ' - ',
+			'id',
+			'name'
+		);
 		$options                          = array_merge($options, $db->loadObjectList());
 		$this->lists['filter_country_id'] = HTMLHelper::_(
 			'select.genericlist',
@@ -37,7 +43,9 @@ class OSMembershipViewStatesHtml extends MPFViewList
 			'name',
 			$this->state->filter_country_id
 		);
-		$this->lists['filter_country_id'] = OSMembershipHelperHtml::getChoicesJsSelect($this->lists['filter_country_id']);
+		$this->lists['filter_country_id'] = OSMembershipHelperHtml::getChoicesJsSelect(
+			$this->lists['filter_country_id']
+		);
 
 		return true;
 	}

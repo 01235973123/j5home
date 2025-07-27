@@ -3,15 +3,13 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
@@ -23,11 +21,18 @@ class OSMembershipHelperJquery
 
 		if ($loaded === false)
 		{
-			HTMLHelper::_('jquery.framework');
+			$wa = Factory::getApplication()
+				->getDocument()
+				->getWebAssetManager()
+				->useScript('jquery')
+				->useScript('jquery-noconflict');
 
-			if (File::exists(JPATH_ROOT . '/media/com_osmembership/assets/js/membershipprojq.min.js'))
+			if (is_file(JPATH_ROOT . '/media/com_osmembership/assets/js/membershipprojq.min.js'))
 			{
-				Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/assets/js/membershipprojq.min.js');
+				$wa->registerAndUseScript(
+					'com_osmembership.membershipprojq',
+					'media/com_osmembership/assets/js/membershipprojq.min.js'
+				);
 			}
 
 			$loaded = true;
@@ -50,10 +55,17 @@ class OSMembershipHelperJquery
 
 		self::loadjQuery();
 
-		$rootUri  = Uri::root(true);
-		$document = Factory::getApplication()->getDocument();
-		$document->addStyleSheet($rootUri . '/media/com_osmembership/assets/js/colorbox/colorbox.min.css');
-		$document->addScript($rootUri . '/media/com_osmembership/assets/js/colorbox/jquery.colorbox.min.js');
+		$wa = Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager()
+			->registerAndUseScript(
+				'com_osmembership.jquery.colorbox',
+				'media/com_osmembership/assets/js/colorbox/jquery.colorbox.min.js'
+			)
+			->registerAndUseStyle(
+				'com_osmembership.jquery.colorbox',
+				'media/com_osmembership/assets/js/colorbox/colorbox.min.css'
+			);
 
 		$activeLanguageTag   = Factory::getApplication()->getLanguage()->getTag();
 		$allowedLanguageTags = [
@@ -94,7 +106,10 @@ class OSMembershipHelperJquery
 		/// English is bundled into the source therefore we don't have to load it.
 		if (in_array($activeLanguageTag, $allowedLanguageTags))
 		{
-			$document->addScript($rootUri . '/media/com_osmembership/assets/js/colorbox/i18n/jquery.colorbox-' . $activeLanguageTag . '.js');
+			$wa->registerAndUseScript(
+				'com_osmembership.jquery.colorbox.activeLanguage',
+				'media/com_osmembership/assets/js/colorbox/i18n/jquery.colorbox-' . $activeLanguageTag . '.js'
+			);
 		}
 
 		$loaded = true;
@@ -114,8 +129,7 @@ class OSMembershipHelperJquery
 			return;
 		}
 
-		$document = Factory::getApplication()->getDocument();
-		$config   = OSMembershipHelper::getConfig();
+		$config = OSMembershipHelper::getConfig();
 
 		$dateFormat = $config->date_field_format ?: '%Y-%m-%d';
 		$dateFormat = str_replace('%', '', $dateFormat);
@@ -149,9 +163,16 @@ class OSMembershipHelperJquery
 		$regex = str_replace('m', '(0?[1-9]|1[012])', $regex);
 		$regex = 'var pattern = new RegExp(/^' . $regex . '$/);';
 
-		$rootUri = Uri::root(true);
-		$document->addStyleSheet($rootUri . '/media/com_osmembership/assets/js/validate/css/validationEngine.jquery.min.css');
-		$document->addScriptDeclaration(
+		$wa = Factory::getApplication()->getDocument()
+			->addScriptOptions('humanFormat', $humanFormat)
+			->addScriptOptions('rootUri', Uri::root(true))
+			->getWebAssetManager()
+			->registerAndUseStyle(
+				'com_osmembership.validationEngine',
+				'media/com_osmembership/assets/js/validate/css/validationEngine.jquery.min.css'
+			);
+
+		$wa->addInlineScript(
 			"
 			var yearPartIndex = $yearIndex;
 			var monthPartIndex = $monthIndex;
@@ -160,9 +181,6 @@ class OSMembershipHelperJquery
 			$regex
 		"
 		);
-
-		$document->addScriptOptions('humanFormat', $humanFormat)
-			->addScriptOptions('rootUri', $rootUri);
 
 		$languageItems = [
 			'OSM_FIELD_REQUIRED',
@@ -208,14 +226,22 @@ class OSMembershipHelperJquery
 		}
 
 		// Support custom validation rules
-		if (File::exists(JPATH_ROOT . '/media/com_osmembership/js/custom_validation_rules.js'))
+		if (is_file(JPATH_ROOT . '/media/com_osmembership/js/custom_validation_rules.js'))
 		{
-			$document->addScript($rootUri . '/media/com_osmembership/js/custom_validation_rules.js');
+			$wa->registerAndUseScript(
+				'com_osmembership.custom_validation_rules',
+				'media/com_osmembership/js/custom_validation_rules.js'
+			);
 		}
 
-		OSMembershipHelperHtml::addOverridableScript('media/com_osmembership/assets/js/validate/js/jquery.validationEngine.lang.min.js');
+		OSMembershipHelperHtml::addOverridableScript(
+			'media/com_osmembership/assets/js/validate/js/jquery.validationEngine.lang.min.js'
+		);
 
-		$document->addScript($rootUri . '/media/com_osmembership/assets/js/validate/js/j4.jquery.validationEngine.min.js');
+		$wa->registerAndUseScript(
+			'com_osmembership.jquery.validationEngine',
+			'media/com_osmembership/assets/js/validate/js/j4.jquery.validationEngine.min.js'
+		);
 	}
 
 	/**
@@ -227,7 +253,13 @@ class OSMembershipHelperJquery
 	{
 		self::loadjQuery();
 
-		Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/assets/js/query.equalHeights.min.js');
+		Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager()
+			->registerAndUseScript(
+				'com_osmembership.jquery.equalHeights',
+				'media/com_osmembership/assets/js/query.equalHeights.min.js'
+			);
 	}
 
 	/**
@@ -241,9 +273,16 @@ class OSMembershipHelperJquery
 		static $scriptLoaded = false;
 		static $loaded = [];
 
+		$wa = Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager();
+
 		if (!$scriptLoaded)
 		{
-			Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/assets/js/responsive-auto-height.min.js');
+			$wa->registerAndUseScript(
+				'com_osmembership.responsive-auto-height',
+				'media/com_osmembership/assets/js/responsive-auto-height.min.js'
+			);
 		}
 
 		if (isset($loaded[$selector]))
@@ -251,7 +290,7 @@ class OSMembershipHelperJquery
 			return true;
 		}
 
-		Factory::getApplication()->getDocument()->addScriptDeclaration(
+		$wa->addInlineScript(
 			'
 			document.addEventListener("DOMContentLoaded", function() {
 				new ResponsiveAutoHeight("' . $selector . '");	
@@ -261,7 +300,7 @@ class OSMembershipHelperJquery
 
 		if ($minHeight > 0)
 		{
-			Factory::getApplication()->getDocument()->addStyleDeclaration("$selector {min-height: $minHeight" . 'px}');
+			$wa->addInlineStyle("$selector {min-height: $minHeight" . 'px}');
 		}
 
 		$loaded[$selector] = true;

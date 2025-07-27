@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -64,7 +64,13 @@ class OSMembershipModelDownloadids extends MPFModelList
 
 		for ($i = 0; $i < $numberIds; $i++)
 		{
-			$downloadId = strtoupper(md5($user->username . Factory::getApplication()->get('secret') . UserHelper::genRandomPassword(10) . time()));
+			$downloadId = strtoupper(
+				md5(
+					$user->username . Factory::getApplication()->get('secret') . UserHelper::genRandomPassword(
+						10
+					) . time()
+				)
+			);
 			$values     = [$user->id, $db->quote($downloadId), $db->quote($createdDate), 1];
 			$query->values(implode(',', $values));
 		}

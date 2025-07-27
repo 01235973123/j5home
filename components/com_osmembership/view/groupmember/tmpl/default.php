@@ -17,11 +17,7 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-
 OSMembershipHelperJquery::validateForm();
-
-$selectedState = '';
 
 /* @var OSMembershipHelperBootstrap $bootstrapHelper */
 $bootstrapHelper = $this->bootstrapHelper;
@@ -30,11 +26,15 @@ $controlLabelClass = $bootstrapHelper->getClassMapping('control-label');
 $controlsClass     = $bootstrapHelper->getClassMapping('controls');
 $clearFix          = $bootstrapHelper->getClassMapping('clearfix');
 
-$document = Factory::getApplication()->getDocument();
-$rootUri  = Uri::root(true);
-$document->addScriptDeclaration('var siteUrl = "' . OSMembershipHelper::getSiteUrl() . '";')
-	->addScriptOptions('siteUrl', $rootUri)
-	->addScript($rootUri . '/media/com_osmembership/js/site-groupmember-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('siteUrl', Uri::root(true))
+	->addScriptOptions('selectedState', $this->selectedState)
+	->getWebAssetManager()
+	->useScript('core')
+	->addInlineScript('var siteUrl = "' . OSMembershipHelper::getSiteUrl() . '";')
+	->registerAndUseScript('com_osmembership.site-groupmember-default', 'media/com_osmembership/js/site-groupmember-default.min.js');
+
 $fields = $this->form->getFields();
 ?>
 <div id="osm-add-edit-groupmember" class="osm-container osm-container-j4">
@@ -152,11 +152,6 @@ $fields = $this->form->getFields();
 <?php
 			}
 
-			if (isset($fields['state']))
-			{
-				$selectedState = $fields['state']->value;
-			}
-
 			if (isset($fields['email']))
 			{
 				$emailField = $fields['email'];
@@ -183,8 +178,6 @@ $fields = $this->form->getFields();
 					echo $field->getControlGroup($bootstrapHelper);
 				}
 			}
-
-			$document->addScriptOptions('selectedState', $selectedState);
 		?>
         <div class="<?php echo $clearFix; ?>">
             <img id="ajax-loading-animation" src="<?php echo Uri::root(true); ?>/media/com_osmembership/ajax-loadding-animation.gif" style="display: none;"/>

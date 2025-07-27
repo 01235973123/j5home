@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -88,7 +88,13 @@ class OSMembershipViewGroupmembersHtml extends MPFViewList
 			if (count($groupAdmins))
 			{
 				$options                              = [];
-				$options[]                            = HTMLHelper::_('select.option', 0, Text::_('OSM_SELECT_GROUP'), 'user_id', 'name');
+				$options[]                            = HTMLHelper::_(
+					'select.option',
+					0,
+					Text::_('OSM_SELECT_GROUP'),
+					'user_id',
+					'name'
+				);
 				$options                              = array_merge($options, $groupAdmins);
 				$this->lists['filter_group_admin_id'] = HTMLHelper::_(
 					'select.genericlist',

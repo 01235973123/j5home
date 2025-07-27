@@ -1,22 +1,23 @@
 <?php
-
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
+
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Date\Date;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Image\Image;
 use Joomla\CMS\User\User;
 use Joomla\CMS\User\UserHelper;
+use Joomla\Database\DatabaseDriver;
+use Joomla\Filesystem\File;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use OSSolution\MembershipPro\Admin\Event\Subscription\MembershipExpire;
@@ -99,9 +100,9 @@ trait OSMembershipModelSubscriptiontrait
 	{
 		$config   = OSMembershipHelper::getConfig();
 		$fileName = File::makeSafe($avatar['name']);
-		$fileExt  = StringHelper::strtoupper(File::getExt($fileName));
+		$fileExt  = StringHelper::strtoupper(OSMembershipHelper::getFileExt($fileName));
 
-		if (File::exists(JPATH_ROOT . '/media/com_osmembership/avatars/' . $fileName) && $fileName != $row->avatar)
+		if (is_file(JPATH_ROOT . '/media/com_osmembership/avatars/' . $fileName) && $fileName != $row->avatar)
 		{
 			$fileName = uniqid('avatar_') . $fileName;
 		}
@@ -264,7 +265,13 @@ trait OSMembershipModelSubscriptiontrait
 		if ($maxDate)
 		{
 			$date = Factory::getDate($maxDate);
-			$date->add(new DateInterval('PT1S'));
+
+			// Add one more second to from date of renewal subscription if this is fixed expiration date
+			if (!(int) $rowPlan->expired_date)
+			{
+				$date->add(new DateInterval('PT1S'));
+			}
+
 			$row->from_date = $date->toSql();
 		}
 		elseif ($subscriptionStartDateOption == 1 && $planSubscriptionStartDate)
@@ -371,18 +378,69 @@ trait OSMembershipModelSubscriptiontrait
 	{
 		$timezone    = Factory::getApplication()->get('offset');
 		$expiredDate = Factory::getDate($rowPlan->expired_date, $timezone);
-		$fromDate    = clone $date;
+
+		$fromDate = clone $date;
+
 		$fromDate->setTimezone(new DateTimeZone($timezone));
 
-		// Change year of expired date to current year
-		if ($fromDate->year > $expiredDate->year)
+		$toDate = clone $fromDate;
+		$toDate->setDate($toDate->year, $expiredDate->month, $expiredDate->day);
+
+		$fromDate->setTime(23, 59, 59);
+		$toDate->setTime(23, 59, 59);
+
+		$numberYears = $this->calculateNumberYearsForFixedExpirationDate($row, $rowPlan);
+
+		/**
+		 * Normally, the subscription should be in same year, so no extra year should be added to end date,
+		 * that's the reason we reduce one year here
+		 */
+		$numberYears--;
+
+		// In case users subscribed after expiration date, one extra year should be added
+		if ($fromDate >= $toDate)
 		{
-			$expiredDate->setDate($fromDate->year, $expiredDate->month, $expiredDate->day);
+			$numberYears++;
+		}
+		elseif ($rowPlan->grace_period > 0)
+		{
+			/**
+			 * This is the case users subscribe nearly expiration date,
+			 * within the grace period,
+			 * so one extra year will be added to the subscription
+			 */
+			$dateDifferenceInDays = $fromDate->diff($toDate)->days;
+
+			if ($rowPlan->grace_period >= $dateDifferenceInDays)
+			{
+				$numberYears++;
+			}
 		}
 
-		$expiredDate->setTime(23, 59, 59);
-		$fromDate->setTime(23, 59, 59);
+		if ($numberYears > 0)
+		{
+			$toDate->modify(sprintf('+%d years', $numberYears));
+		}
 
+		// Handle the case where the calculated end date is smaller than expiration date
+		$expiredDate->setTime(23, 59, 59);
+
+		if ($toDate < $expiredDate)
+		{
+			$toDate = $expiredDate;
+		}
+		
+		$row->to_date = $toDate->toSql();
+	}
+
+	/**
+	 * @param   OSMembershipTableSubscriber  $row
+	 * @param   OSMembershipTablePlan        $rowPlan
+	 *
+	 * @return int
+	 */
+	protected function calculateNumberYearsForFixedExpirationDate($row, $rowPlan)
+	{
 		$numberYears = 1;
 
 		if ($row->act == 'renew')
@@ -396,16 +454,16 @@ trait OSMembershipModelSubscriptiontrait
 			}
 			else
 			{
-				/* @var JDatabaseDriver $db */
+				/* @var DatabaseDriver $db */
 				$db    = $this->getDbo();
-				$query = $db->getQuery(true);
-				$query->select('*')
+				$query = $db->getQuery(true)
+					->select('*')
 					->from('#__osmembership_renewrates')
 					->where('id = ' . $row->renew_option_id);
 				$db->setQuery($query);
 				$renewOption = $db->loadObject();
 
-				if ($renewOption->renew_option_length_unit == 'Y' && $renewOption->renew_option_length > 1)
+				if ($renewOption && $renewOption->renew_option_length_unit == 'Y' && $renewOption->renew_option_length > 1)
 				{
 					$numberYears = $renewOption->renew_option_length;
 				}
@@ -416,24 +474,7 @@ trait OSMembershipModelSubscriptiontrait
 			$numberYears = $rowPlan->subscription_length;
 		}
 
-		if ($fromDate >= $expiredDate)
-		{
-			$numberYears++;
-		}
-
-		$expiredDate->setDate((int) $expiredDate->year + $numberYears - 1, $expiredDate->month, $expiredDate->day);
-
-		if ($rowPlan->grace_period > 0)
-		{
-			$dateDifferenceInDays = $fromDate->diff($expiredDate)->days;
-
-			if ($rowPlan->grace_period >= $dateDifferenceInDays)
-			{
-				$expiredDate->setDate((int) $expiredDate->year + 1, $expiredDate->month, $expiredDate->day);
-			}
-		}
-
-		$row->to_date = $expiredDate->toSql();
+		return $numberYears;
 	}
 
 	/**
@@ -561,7 +602,10 @@ trait OSMembershipModelSubscriptiontrait
 
 				if (!$date->modify($modifyDurationString))
 				{
-					Factory::getApplication()->enqueueMessage(sprintf('Modify duration string %s is invalid', $modifyDurationString), 'warning');
+					Factory::getApplication()->enqueueMessage(
+						sprintf('Modify duration string %s is invalid', $modifyDurationString),
+						'warning'
+					);
 				}
 			}
 		}
@@ -623,7 +667,10 @@ trait OSMembershipModelSubscriptiontrait
 
 			$fieldValue = $subscriptionData[$field->name];
 
-			$groups = array_merge($groups, OSMembershipHelperSubscription::getUserGroupsFromFieldValue($field, $fieldValue));
+			$groups = array_merge(
+				$groups,
+				OSMembershipHelperSubscription::getUserGroupsFromFieldValue($field, $fieldValue)
+			);
 		}
 
 		return $groups;

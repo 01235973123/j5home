@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <extension version="2.5.0" type="plugin" group="osmembership" method="upgrade">
-    <name>Membership Pro - HTTP</name>
+    <name>Membership Pro - Webhook</name>
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>http://www.joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 3, or later</license>
     <creationDate>Jan 2024</creationDate>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin will make a HTTP POST REQUEST to configured URL when subscription becomes active.</description>
     <files>
         <filename plugin="http">http.php</filename>
@@ -19,6 +19,11 @@
                 <field name="content_type" type="list" label="Content Type" default="application/json">
                     <option value="application/json">application/json</option>
                     <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+                </field>
+                <field name="send_webhook_on" multiple="true" type="list" label="Send Webhook On" default="1">
+                    <option value="0">Subscription Store Offline Payment</option>
+                    <option value="1">Subscription Active</option>
+                    <option value="2">Subscription Expired</option>
                 </field>
             </fieldset>
             <fieldset name="headers" label="HTTP Headers" description="HTTP headers (beside Content-Type header which is sent by default) you want to send in the request">

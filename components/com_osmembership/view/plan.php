@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -118,10 +118,25 @@ trait OSMembershipViewPlan
 			'class="form-select"',
 			false
 		);
-		$lists['enable_renewal']         = OSMembershipHelperHtml::getBooleanInput('enable_renewal', $item->enable_renewal);
-		$lists['lifetime_membership']    = OSMembershipHelperHtml::getBooleanInput('lifetime_membership', $item->lifetime_membership);
-		$lists['recurring_subscription'] = OSMembershipHelperHtml::getBooleanInput('recurring_subscription', $item->recurring_subscription);
-		$lists['thumb']                  = HTMLHelper::_('list.images', 'thumb', $item->thumb, ' ', '/media/com_osmembership/');
+		$lists['enable_renewal']         = OSMembershipHelperHtml::getBooleanInput(
+			'enable_renewal',
+			$item->enable_renewal
+		);
+		$lists['lifetime_membership']    = OSMembershipHelperHtml::getBooleanInput(
+			'lifetime_membership',
+			$item->lifetime_membership
+		);
+		$lists['recurring_subscription'] = OSMembershipHelperHtml::getBooleanInput(
+			'recurring_subscription',
+			$item->recurring_subscription
+		);
+		$lists['thumb']                  = HTMLHelper::_(
+			'list.images',
+			'thumb',
+			$item->thumb,
+			' ',
+			'/media/com_osmembership/'
+		);
 
 		$lists['category_id'] = OSMembershipHelperHtml::buildCategoryDropdown($item->category_id, 'category_id');
 
@@ -332,7 +347,15 @@ trait OSMembershipViewPlan
 			$options[] = HTMLHelper::_('select.option', $code, $title);
 		}
 
-		$lists['currency'] = HTMLHelper::_('select.genericlist', $options, 'currency', ' class="form-select" ', 'value', 'text', $item->currency);
+		$lists['currency'] = HTMLHelper::_(
+			'select.genericlist',
+			$options,
+			'currency',
+			' class="form-select" ',
+			'value',
+			'text',
+			$item->currency
+		);
 
 		$options   = [];
 		$options[] = HTMLHelper::_('select.option', '0', Text::_('JNO'));
@@ -397,6 +420,51 @@ trait OSMembershipViewPlan
 		$item->send_second_reminder = abs($item->send_second_reminder);
 		$item->send_third_reminder  = abs($item->send_third_reminder);
 
+		if (property_exists($item, 'send_fourth_reminder'))
+		{
+			$lists['send_fourth_reminder_time'] = HTMLHelper::_(
+				'select.genericlist',
+				$options,
+				'send_fourth_reminder_time',
+				'class="form-select input-medium d-inline-block"',
+				'value',
+				'text',
+				$item->send_fourth_reminder >= 0 ? 1 : -1
+			);
+
+			$item->send_fourth_reminder  = abs($item->send_fourth_reminder);
+		}
+
+		if (property_exists($item, 'send_fifth_reminder'))
+		{
+			$lists['send_fifth_reminder_time'] = HTMLHelper::_(
+				'select.genericlist',
+				$options,
+				'send_fifth_reminder_time',
+				'class="form-select input-medium d-inline-block"',
+				'value',
+				'text',
+				$item->send_fifth_reminder >= 0 ? 1 : -1
+			);
+
+			$item->send_fifth_reminder  = abs($item->send_fifth_reminder);
+		}
+
+		if (property_exists($item, 'send_sixth_reminder'))
+		{
+			$lists['send_sixth_reminder_time'] = HTMLHelper::_(
+				'select.genericlist',
+				$options,
+				'send_sixth_reminder_time',
+				'class="form-select input-medium d-inline-block"',
+				'value',
+				'text',
+				$item->send_sixth_reminder >= 0 ? 1 : -1
+			);
+
+			$item->send_sixth_reminder  = abs($item->send_sixth_reminder);
+		}
+
 		$this->datePickerFormat = $config->get('date_field_format', '%Y-%m-%d');
 		$this->prices           = $prices;
 		$this->upgradeRules     = $upgradeRules;
@@ -422,7 +490,10 @@ trait OSMembershipViewPlan
 
 		if ($app->isClient('administrator'))
 		{
-			$lists['category_id'] = OSMembershipHelperHtml::getChoicesJsSelect($lists['category_id'], Text::_('OSM_TYPE_OR_SELECT_ONE_CATEGORY'));
+			$lists['category_id'] = OSMembershipHelperHtml::getChoicesJsSelect(
+				$lists['category_id'],
+				Text::_('OSM_TYPE_OR_SELECT_ONE_CATEGORY')
+			);
 
 			$keys = [
 				//'login_redirect_menu_id',
@@ -502,7 +573,13 @@ trait OSMembershipViewPlan
 
 			try
 			{
-				$form = Form::getInstance('plan_fields', JPATH_ROOT . '/components/com_osmembership/fields.xml', [], false, '//config');
+				$form = Form::getInstance(
+					'plan_fields',
+					JPATH_ROOT . '/components/com_osmembership/fields.xml',
+					[],
+					false,
+					'//config'
+				);
 				$form->bind($data);
 				$this->planFieldsForm = $form;
 			}
@@ -512,7 +589,9 @@ trait OSMembershipViewPlan
 			}
 		}
 
-		$lists['subscription_start_date_field'] = OSMembershipHelperHtml::getChoicesJsSelect($lists['subscription_start_date_field']);
+		$lists['subscription_start_date_field'] = OSMembershipHelperHtml::getChoicesJsSelect(
+			$lists['subscription_start_date_field']
+		);
 
 
 		$options   = [];

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -77,7 +77,11 @@ class OSMembershipControllerCheckinlog extends OSMembershipController
 			}
 		}
 
-		$filePath = OSMembershipHelper::callOverridableHelperMethod('Data', 'excelExport', [$fields, $rows, 'checkinlogs', $headers]);
+		$filePath = OSMembershipHelper::callOverridableHelperMethod(
+			'Data',
+			'excelExport',
+			[$fields, $rows, 'checkinlogs', $headers]
+		);
 
 		if ($filePath)
 		{

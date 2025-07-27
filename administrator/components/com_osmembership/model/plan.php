@@ -3,15 +3,16 @@
  * @package         Joomla
  * @subpackage      Membership Pro
  * @author          Tuan Pham Ngoc
- * @copyright       Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright       Copyright (C) 2012 - 2025 Ossolution Team
  * @license         GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Path;
 use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 use OSSolution\MembershipPro\Admin\Event\Plans\PlansAfterDelete;
@@ -79,7 +80,7 @@ class OSMembershipModelPlan extends MPFModelAdmin
 
 		if (!$isNew && $input->has('del_thumb') && $row->thumb)
 		{
-			if (File::exists($thumbPath . $row->thumb))
+			if (is_file(Path::clean($thumbPath . $row->thumb)))
 			{
 				File::delete($thumbPath . $row->thumb);
 			}
@@ -92,12 +93,12 @@ class OSMembershipModelPlan extends MPFModelAdmin
 
 		if ($thumbImage['name'])
 		{
-			$fileExt        = StringHelper::strtoupper(File::getExt($thumbImage['name']));
+			$fileExt        = StringHelper::strtoupper(OSMembershipHelper::getFileExt($thumbImage['name']));
 			$supportedTypes = ['JPG', 'JPEG', 'PNG', 'GIF', 'WEBP', 'BMP'];
 
 			if (in_array($fileExt, $supportedTypes))
 			{
-				if (File::exists($thumbPath . StringHelper::strtolower($thumbImage['name'])))
+				if (is_file(Path::clean($thumbPath . StringHelper::strtolower($thumbImage['name']))))
 				{
 					$fileName = time() . '_' . StringHelper::strtolower($thumbImage['name']);
 				}
@@ -107,7 +108,9 @@ class OSMembershipModelPlan extends MPFModelAdmin
 				}
 
 				$fileName = File::makeSafe($fileName);
+
 				File::upload($_FILES['thumb_image']['tmp_name'], $thumbPath . $fileName);
+
 				$input->set('thumb', $fileName);
 			}
 		}
@@ -123,9 +126,42 @@ class OSMembershipModelPlan extends MPFModelAdmin
 			$input->set('payment_methods', implode(',', $paymentMethods));
 		}
 
-		$input->set('send_first_reminder', $input->getInt('send_first_reminder') * $input->getInt('send_first_reminder_time', 1));
-		$input->set('send_second_reminder', $input->getInt('send_second_reminder') * $input->getInt('send_second_reminder_time', 1));
-		$input->set('send_third_reminder', $input->getInt('send_third_reminder') * $input->getInt('send_third_reminder_time', 1));
+		$input->set(
+			'send_first_reminder',
+			$input->getInt('send_first_reminder') * $input->getInt('send_first_reminder_time', 1)
+		);
+		$input->set(
+			'send_second_reminder',
+			$input->getInt('send_second_reminder') * $input->getInt('send_second_reminder_time', 1)
+		);
+		$input->set(
+			'send_third_reminder',
+			$input->getInt('send_third_reminder') * $input->getInt('send_third_reminder_time', 1)
+		);
+
+		if ($input->exists('send_fourth_reminder'))
+		{
+			$input->set(
+				'send_fourth_reminder',
+				$input->getInt('send_fourth_reminder') * $input->getInt('send_fourth_reminder_time', 1)
+			);
+		}
+
+		if ($input->exists('send_fifth_reminder'))
+		{
+			$input->set(
+				'send_fifth_reminder',
+				$input->getInt('send_fifth_reminder') * $input->getInt('send_fifth_reminder_time', 1)
+			);
+		}
+
+		if ($input->exists('send_sixth_reminder'))
+		{
+			$input->set(
+				'send_sixth_reminder',
+				$input->getInt('send_sixth_reminder') * $input->getInt('send_sixth_reminder_time', 1)
+			);
+		}
 
 		// Convert expired date from custom format to Y-m-d format
 		$config     = OSMembershipHelper::getConfig();
@@ -236,7 +272,9 @@ class OSMembershipModelPlan extends MPFModelAdmin
 	protected function storeRenewOptions($row, $data, $isNew)
 	{
 		$db             = $this->getDbo();
-		$renewOptions   = isset($data['renew_options']) && is_array($data['renew_options']) ? $data['renew_options'] : [];
+		$renewOptions   = isset($data['renew_options']) && is_array(
+			$data['renew_options']
+		) ? $data['renew_options'] : [];
 		$renewOptionIds = [];
 		$ordering       = 0;
 
@@ -307,7 +345,9 @@ class OSMembershipModelPlan extends MPFModelAdmin
 	 */
 	protected function storeEarlyRenewalDiscounts($row, $data, $isNew)
 	{
-		$renewalDiscounts   = isset($data['renewal_discounts']) && is_array($data['renewal_discounts']) ? $data['renewal_discounts'] : [];
+		$renewalDiscounts   = isset($data['renewal_discounts']) && is_array(
+			$data['renewal_discounts']
+		) ? $data['renewal_discounts'] : [];
 		$renewalDiscountIds = [];
 		$db                 = $this->getDbo();
 
@@ -357,7 +397,9 @@ class OSMembershipModelPlan extends MPFModelAdmin
 	protected function storeUpgradeOptions($row, $data, $isNew)
 	{
 		$db               = $this->getDbo();
-		$upgradeOptions   = isset($data['upgrade_options']) && is_array($data['upgrade_options']) ? $data['upgrade_options'] : [];
+		$upgradeOptions   = isset($data['upgrade_options']) && is_array(
+			$data['upgrade_options']
+		) ? $data['upgrade_options'] : [];
 		$upgradeOptionIds = [];
 		$ordering         = 0;
 

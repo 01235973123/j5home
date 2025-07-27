@@ -3,11 +3,12 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -22,7 +23,11 @@ $config       = OSMembershipHelper::getConfig();
 $editor       = OSMembershipHelper::getEditor();
 $translatable = Multilanguage::isEnabled() && count($this->languages);
 
-HTMLHelper::_('behavior.core');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core');
+
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 ?>
 <form action="index.php?option=com_osmembership&view=message" method="post" name="adminForm" id="adminForm" class="form form-horizontal  osm-messages-form">

@@ -3,7 +3,7 @@
 # ajax.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -99,7 +99,7 @@ class OspropertyAjax
                 $state_name = OSPHelper::getStringRequest('state_name','','get');
                 $state_id = $jinput->getInt('state_id', '0');
                 $city_id = $jinput->getInt('city_id');
-                OspropertyAjax::loadStateCityBackend($option, $country_name, $country_id, $state_id, $city_id, $state_name,'input-large form-select');
+                OspropertyAjax::loadStateCityBackend($option, $country_name, $country_id, $state_id, $city_id, $state_name,'input-large form-control form-select');
                 break;
             case "ajax_loadstatecityArr":
                 $country_name = OSPHelper::getStringRequest('country_name','','get');
@@ -142,7 +142,7 @@ class OspropertyAjax
                 $state_id			= $jinput->getInt('state_id', '0');
                 $city_id			= $jinput->getInt('city_id');
                 $useConfig			= $jinput->getInt('useConfig', 1);
-                $class				= OSPHelper::getStringRequest('class', 'input-medium form-select form-control ilarge','get');
+                $class				= OSPHelper::getStringRequest('class', 'input-medium form-select ilarge','get');
 				
                 $city_name			= OSPHelper::getStringRequest('city_name', 'city','get');
                 OspropertyAjax::loadCity($option, $state_id, $city_id, $state_name, $useConfig, $class, $city_name,$lang);
@@ -153,7 +153,7 @@ class OspropertyAjax
                 $city_id			= $jinput->getInt('city_id');
 				
 				$city_name			= OSPHelper::getStringRequest('city_name', 'city','get');
-                OspropertyAjax::loadCity($option, $state_id, $city_id, $state_name, 0, 'input-large form-select form-control ilarge', $city_name, $lang);
+                OspropertyAjax::loadCity($option, $state_id, $city_id, $state_name, 0, 'input-large form-select ilarge', $city_name, $lang);
                 break;
 			case "ajax_loadAgentDropDown":
 				$company_id = $jinput->getInt('company_id',0);
@@ -247,31 +247,11 @@ class OspropertyAjax
         $comparelist = implode(",",$comparelistArr);
         $session->set('comparelist', $comparelist);
         ?>
-        <table jos_ class="nTable">
-            <tbody>
-            <tr>
-                <td class="n_corner_top_left"></td>
-                <td class="n_corner_top_center"></td>
-                <td class="n_corner_top_right"></td>
-            </tr>
-            <tr>
-                <td class="n_middle_left"></td>
-                <td class="n_middle_center">
-                    <div
-                        id="notice_message"><?php echo Text::_('OS_LISTING_HAS_BEEN_REMOVED_FROM_COMPARE_LIST')?>
-                        <b><a href="<?php echo Route::_('index.php?option=com_osproperty&task=compare_list')?>"
-                              class="static"><?php echo Text::_('OS_HERE')?></a></b> <?php echo Text::_('OS_TO_VIEW_THE_COMPARISON')?>
-                    </div>
-                </td>
-                <td class="n_middle_right"></td>
-            </tr>
-            <tr>
-                <td class="n_corner_bottom_left"></td>
-                <td class="n_corner_bottom_center"></td>
-                <td class="n_corner_bottom_right"></td>
-            </tr>
-            </tbody>
-        </table>
+		<div
+			id="notice_message" class="alert alert-primary"><?php echo Text::_('OS_LISTING_HAS_BEEN_REMOVED_FROM_COMPARE_LIST')?>
+			<b><a href="<?php echo Route::_('index.php?option=com_osproperty&task=compare_list')?>"
+				  class="static"><?php echo Text::_('OS_HERE')?></a></b> <?php echo Text::_('OS_TO_VIEW_THE_COMPARISON')?>
+		</div>
         <?php
         echo "@@@";
         $theme = $jinput->getString('theme','');
@@ -355,15 +335,37 @@ class OspropertyAjax
                             break;
                     }
                     break;
+				case "house":
+                    switch($layout) {
+                        case "details":
+                            ?>
+                            <a title="<?php echo Text::_('OS_ADD_TO_COMPARE_LIST');?>" onclick="javascript:osConfirmExtend('<?php echo $msg; ?>','ajax_addCompare','<?php echo $id ?>','<?php echo Uri::root() ?>','compare<?php echo $id;?>','house','details')" href="javascript:void(0)" class="compareLink">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-diagram-2" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 5 7h2.5V6A1.5 1.5 0 0 1 6 4.5zM8.5 5a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5zM3 11.5A1.5 1.5 0 0 1 4.5 10h1A1.5 1.5 0 0 1 7 11.5v1A1.5 1.5 0 0 1 5.5 14h-1A1.5 1.5 0 0 1 3 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5zm4.5.5a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1A1.5 1.5 0 0 1 9 12.5zm1.5-.5a.5.5 0 0 0-.5.5v1a.5.5 0 0 0 .5.5h1a.5.5 0 0 0 .5-.5v-1a.5.5 0 0 0-.5-.5z"/>
+</svg>
+									</a>
+                            <?php
+                            break;
+						case "listing":
+                            ?>
+                            <a onclick="javascript:osConfirmExtend('<?php echo $msg; ?>','ajax_addCompare','<?php echo $id ?>','<?php echo Uri::root() ?>','compare<?php echo $id;?>','house','listing')"
+                               href="javascript:void(0)"
+                               class="btn btn-warning btn-small">
+                                <i class="fa fa-plus"></i>
+                            </a>
+                            <?php
+                            break;
+                    }
+                    break;
 				case "theme3":
                     switch($layout) {
 						case "details":
 							$msg = Text::_('OS_DO_YOU_WANT_TO_ADD_PROPERTY_TO_YOUR_COMPARE_LIST');
 							$msg = str_replace("'","\'",$msg);
 							?>
-							<i class='edicon edicon-copy'></i>
-							<a onclick="javascript:osConfirmExtend('<?php echo $msg; ?>','ajax_addCompare','<?php echo $id ?>','<?php echo Uri::root() ?>','compare<?php echo $row->id;?>','theme3','details')" href="javascript:void(0)" class="reportlisting" title="<?php echo Text::_('OS_ADD_TO_COMPARE_LIST')?>">
-								<?php echo Text::_('OS_ADD_TO_COMPARE_LIST')?>
+							
+							<a onclick="javascript:osConfirmExtend('<?php echo $msg; ?>','ajax_addCompare','<?php echo $id ?>','<?php echo Uri::root() ?>','compare<?php echo $row->id;?>','theme3','details')" href="javascript:void(0)" class="link-icon" title="<?php echo Text::_('OS_ADD_TO_COMPARE_LIST')?>">
+								<i class='edicon edicon-copy'></i>
 							</a>
 							<?php
 						break;
@@ -389,31 +391,10 @@ class OspropertyAjax
         if (in_array($id, $comparelistArr)) 
 		{
             ?>
-            <table jos_ class="nTable">
-                <tbody>
-                <tr>
-                    <td class="n_corner_top_left"></td>
-                    <td class="n_corner_top_center"></td>
-                    <td class="n_corner_top_right"></td>
-                </tr>
-                <tr>
-                    <td class="n_middle_left"></td>
-                    <td class="n_middle_center">
-                        <div
-                            id="notice_message"><?php echo Text::_('OS_THE_PROPERTY_HAS_BEEN_ADDED_TO_COMPARE')?>
-                            <b><a href="<?php echo Route::_('index.php?option=com_osproperty&task=compare_list')?>"
-                                  class="static"><?php echo Text::_('OS_HERE')?></a></b> <?php echo Text::_('OS_TO_VIEW_THE_COMPARISON')?>
-                        </div>
-                    </td>
-                    <td class="n_middle_right"></td>
-                </tr>
-                <tr>
-                    <td class="n_corner_bottom_left"></td>
-                    <td class="n_corner_bottom_center"></td>
-                    <td class="n_corner_bottom_right"></td>
-                </tr>
-                </tbody>
-            </table>
+             <div id="notice_message" class="alert alert-primary"><?php echo Text::_('OS_THE_PROPERTY_HAS_BEEN_ADDED_TO_COMPARE')?>
+				<strong><a href="<?php echo Route::_('index.php?option=com_osproperty&task=compare_list')?>" class="static"><?php echo Text::_('OS_HERE')?></a></strong> <?php echo Text::_('OS_TO_VIEW_THE_COMPARISON')?>
+             </div>
+                    
         <?php
         } 
 		else 
@@ -428,31 +409,10 @@ class OspropertyAjax
             }
             $session->set('comparelist', $comparelist);
             ?>
-            <table jos_ class="nTable">
-                <tbody>
-                <tr>
-                    <td class="n_corner_top_left"></td>
-                    <td class="n_corner_top_center"></td>
-                    <td class="n_corner_top_right"></td>
-                </tr>
-                <tr>
-                    <td class="n_middle_left"></td>
-                    <td class="n_middle_center">
-                        <div
-                            id="notice_message"><?php echo Text::_('OS_LISTING_HAS_BEEN_ADDED_TO_COMPARE_LIST') ?>
-                            <b><a href="<?php echo Route::_('index.php?option=com_osproperty&task=compare_list') ?>"
-                                  class="static"><?php echo Text::_('OS_HERE') ?></a></b> <?php echo Text::_('OS_TO_VIEW_THE_COMPARISON') ?>
-                        </div>
-                    </td>
-                    <td class="n_middle_right"></td>
-                </tr>
-                <tr>
-                    <td class="n_corner_bottom_left"></td>
-                    <td class="n_corner_bottom_center"></td>
-                    <td class="n_corner_bottom_right"></td>
-                </tr>
-                </tbody>
-            </table>
+			<div id="notice_message" class="alert alert-primary"><?php echo Text::_('OS_LISTING_HAS_BEEN_ADDED_TO_COMPARE_LIST') ?>
+				<strong><a href="<?php echo Route::_('index.php?option=com_osproperty&task=compare_list') ?>"
+					  class="static"><?php echo Text::_('OS_HERE') ?></a></strong> <?php echo Text::_('OS_TO_VIEW_THE_COMPARISON') ?>
+			</div>
         <?php
         }
 
@@ -540,6 +500,25 @@ class OspropertyAjax
                             break;
                     }
                     break;
+				case "house":
+                    switch($layout) {
+                        case "details":
+                            ?>
+                            <a title="<?php echo Text::_('OS_REMOVE_FROM_COMPARE_LIST');?>" onclick="javascript:osConfirmExtend('<?php echo $msg; ?>','ajax_removeCompare','<?php echo $id ?>','<?php echo Uri::root() ?>','compare<?php echo $id;?>','house','details')" href="javascript:void(0)" class="compareLinkActive">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-diagram-2-fill" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M6 3.5A1.5 1.5 0 0 1 7.5 2h1A1.5 1.5 0 0 1 10 3.5v1A1.5 1.5 0 0 1 8.5 6v1H11a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-1 0V8h-5v.5a.5.5 0 0 1-1 0v-1A.5.5 0 0 1 5 7h2.5V6A1.5 1.5 0 0 1 6 4.5zm-3 8A1.5 1.5 0 0 1 4.5 10h1A1.5 1.5 0 0 1 7 11.5v1A1.5 1.5 0 0 1 5.5 14h-1A1.5 1.5 0 0 1 3 12.5zm6 0a1.5 1.5 0 0 1 1.5-1.5h1a1.5 1.5 0 0 1 1.5 1.5v1a1.5 1.5 0 0 1-1.5 1.5h-1A1.5 1.5 0 0 1 9 12.5z"/>
+</svg>
+                            <?php
+                            break;
+						case "listing":
+                            ?>
+                            <a onclick="javascript:osConfirmExtend('<?php echo $msg; ?>','ajax_removeCompare','<?php echo $id ?>','<?php echo Uri::root() ?>','compare<?php echo $id;?>','house','listing')"
+                               href="javascript:void(0)" class="compareLink">
+                                <i class="fa fa-plus" style="color:#000;"></i>
+                            </a>
+                            <?php
+                        break;
+                    }
                     break;
 				case "theme3":
                     switch($layout) {
@@ -547,9 +526,9 @@ class OspropertyAjax
 							$msg = Text::_('OS_DO_YOU_WANT_TO_REMOVE_PROPERTY_OUT_OF_COMPARE_LIST');
 							$msg = str_replace("'","\'",$msg);
 							?>
-							<i class='edicon edicon-copy'></i>
-							<a onclick="javascript:osConfirmExtend('<?php echo $msg; ?>','ajax_removeCompare','<?php echo $id ?>','<?php echo Uri::root() ?>','compare<?php echo $row->id;?>','theme3','details')" href="javascript:void(0)" class="reportlisting" title="<?php echo Text::_('OS_REMOVE_FROM_COMPARE_LIST')?>">
-								<?php echo Text::_('OS_REMOVE_FROM_COMPARE_LIST')?>
+							
+							<a onclick="javascript:osConfirmExtend('<?php echo $msg; ?>','ajax_removeCompare','<?php echo $id ?>','<?php echo Uri::root() ?>','compare<?php echo $row->id;?>','theme3','details')" href="javascript:void(0)" class="link-icon" title="<?php echo Text::_('OS_REMOVE_FROM_COMPARE_LIST')?>">
+								<i class='edicon edicon-copy'></i>
 							</a>
 							<?php
 						break;
@@ -576,63 +555,25 @@ class OspropertyAjax
         $user = Factory::getUser();
         $db->setQuery("Select count(id) from #__osrs_favorites where user_id = '$user->id' and pro_id = '$id'");
         $count = $db->loadResult();
-        if ($count > 0) {
+        if ($count > 0) 
+		{
             ?>
-            <table jos_ class="nTable">
-                <tbody>
-                <tr>
-                    <td class="n_corner_top_left"></td>
-                    <td class="n_corner_top_center"></td>
-                    <td class="n_corner_top_right"></td>
-                </tr>
-                <tr>
-                    <td class="n_middle_left"></td>
-                    <td class="n_middle_center">
-                        <div id="notice_message"><?php echo Text::_('OS_ALREADY_ADD_FAVORITES_CLICK')?> <b><a
-                                    href="<?php echo Route::_('index.php?option=com_osproperty&task=property_favorites')?>"
-                                    class="static"><?php echo Text::_('OS_HERE')?></a></b> <?php echo Text::_('OS_TO_VIEW_FAVORITES_RESULTS')?>
-                        </div>
-                    </td>
-                    <td class="n_middle_right"></td>
-                </tr>
-                <tr>
-                    <td class="n_corner_bottom_left"></td>
-                    <td class="n_corner_bottom_center"></td>
-                    <td class="n_corner_bottom_right"></td>
-                </tr>
-                </tbody>
-            </table>
-        <?php
+           
+			<div id="notice_message" class="alert alert-primary"><?php echo Text::_('OS_ALREADY_ADD_FAVORITES_CLICK')?> <b><a
+						href="<?php echo Route::_('index.php?option=com_osproperty&task=property_favorites')?>"
+						class="static"><?php echo Text::_('OS_HERE')?></a></b> <?php echo Text::_('OS_TO_VIEW_FAVORITES_RESULTS')?>
+			</div>
+			<?php
         } 
 		else 
 		{
             $db->setQuery("INSERT INTO #__osrs_favorites (id,user_id,pro_id) VALUES (NULL,'$user->id','$id')");
             $db->execute();
             ?>
-            <table jos_ class="nTable">
-                <tbody>
-                <tr>
-                    <td class="n_corner_top_left"></td>
-                    <td class="n_corner_top_center"></td>
-                    <td class="n_corner_top_right"></td>
-                </tr>
-                <tr>
-                    <td class="n_middle_left"></td>
-                    <td class="n_middle_center">
-                        <div id="notice_message"><?php echo Text::_('OS_ALREADY_ADD_FAVORITES_CLICK')?> <strong><a
-                                    href="<?php echo Route::_('index.php?option=com_osproperty&task=property_favorites')?>"
-                                    class="static"><?php echo Text::_('OS_HERE')?></a></strong> <?php echo Text::_('OS_TO_VIEW_FAVORITES_RESULTS')?>
-                        </div>
-                    </td>
-                    <td class="n_middle_right"></td>
-                </tr>
-                <tr>
-                    <td class="n_corner_bottom_left"></td>
-                    <td class="n_corner_bottom_center"></td>
-                    <td class="n_corner_bottom_right"></td>
-                </tr>
-                </tbody>
-            </table>
+			<div id="notice_message" class="alert alert-primary"><?php echo Text::_('OS_ALREADY_ADD_FAVORITES_CLICK')?> <strong><a
+						href="<?php echo Route::_('index.php?option=com_osproperty&task=property_favorites')?>"
+						class="static"><?php echo Text::_('OS_HERE')?></a></strong> <?php echo Text::_('OS_TO_VIEW_FAVORITES_RESULTS')?>
+			</div>
         <?php
         }
 
@@ -650,7 +591,7 @@ class OspropertyAjax
                             <a onclick="javascript:osConfirmExtend('<?php echo $msg;
                             ?>','ajax_removeFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id?>','default','details')"
                                href="javascript:void(0)" title="<?php echo Text::_('OS_REMOVE_FAVORITES')?>">
-                                <I class="edicon edicon-heart"></I>
+                                <i class="edicon edicon-heart"></I>
                                 <?php
                                 echo Text::_('OS_FAVORITE');
                                 ?>
@@ -659,8 +600,8 @@ class OspropertyAjax
                             break;
                         case "listing_list":
                             ?>
-                            <a onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_removeFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','default','listing_list')" href="javascript:void(0)" title="<?php echo Text::_('OS_REMOVE_FAVORITES');?>" class="favLink activated">
-								<span class="edicon edicon-heart"></span>
+                            <a onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_removeFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','default','listing_list')" href="javascript:void(0)" title="<?php echo $msg;?>">
+								<i class="icon-heart favred"></i>
 							</a>
                             <?php
                             break;
@@ -712,15 +653,37 @@ class OspropertyAjax
                         break;
                     }
                     break;
+				case "house":
+                    switch($layout) {
+                        case "details":
+							$msg = Text::_('OS_DO_YOU_WANT_TO_REMOVE_PROPERTY_OUT_OF_YOUR_FAVORITE_LISTS');
+							$msg = str_replace("'","\'",$msg);
+							?>
+							<a title="<?php echo Text::_('OS_REMOVE_FAVORITES');?>" onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_removeFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','house','details')" href="javascript:void(0)" class="favLinkActive">
+								<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
+<path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314"/>
+</svg>
+							</a>
+						<?php
+                        break;
+                        case "listing":
+                            ?>
+                            <a title="<?php echo Text::_('OS_REMOVE_FAVORITES');?>" onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_removeFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','theme2','listing')" href="javascript:void(0)" class="favLinkActive">
+                                <span class="edicon edicon-heart"></span>
+                            </a>
+                            <?php
+                        break;
+                    }
+                    break;
 				case "theme3":
                     switch($layout) {
 						case "details":
 							$msg = Text::_('OS_DO_YOU_WANT_TO_REMOVE_PROPERTY_OUT_OF_YOUR_FAVORITE_LISTS');
 							$msg = str_replace("'","\'",$msg);
 							?>
-							<i class='edicon edicon-floppy-disk'></i>
-							<a onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_removeFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','theme3','details')" href="javascript:void(0)" class="reportlisting" title="<?php echo Text::_('OS_REMOVE_FAVORITES');?>">
-								<?php echo Text::_('OS_REMOVE_FAVORITES');?>
+							
+							<a onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_removeFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','theme3','details')" href="javascript:void(0)" class="link-icon" title="<?php echo Text::_('OS_REMOVE_FAVORITES');?>">
+								<i class='edicon edicon-floppy-disk'></i>
 							</a>
 							<?php
 						break;
@@ -741,41 +704,22 @@ class OspropertyAjax
      * Remove Favorites
      * @param $id
      */
-    public static function removeFavorites($id){
+    public static function removeFavorites($id)
+	{
         global $jinput;
         $db = Factory::getDbo();
         $user = Factory::getUser();
         $db->setQuery("Delete from #__osrs_favorites where user_id = '$user->id' and pro_id = '$id'");
         $db->execute();
         ?>
-        <table jos_ class="nTable">
-            <tbody>
-            <tr>
-                <td class="n_corner_top_left"></td>
-                <td class="n_corner_top_center"></td>
-                <td class="n_corner_top_right"></td>
-            </tr>
-            <tr>
-                <td class="n_middle_left"></td>
-                <td class="n_middle_center">
-                    <div id="notice_message"><?php echo Text::_('OS_ADDED_TO_FAVORITES')?></div>
-                </td>
-                <td class="n_middle_right"></td>
-            </tr>
-            <tr>
-                <td class="n_corner_bottom_left"></td>
-                <td class="n_corner_bottom_center"></td>
-                <td class="n_corner_bottom_right"></td>
-            </tr>
-            </tbody>
-        </table>
+        <div id="notice_message" class="alert alert-primary"><?php echo Text::_('OS_ADDED_TO_FAVORITES')?></div>
         <?php
 
         echo "@@@";
         $theme = $jinput->getString('theme','');
         $layout = $jinput->getString('layout','');
         if($theme != ""){
-            $msg = Text::_('OS_DO_YOU_WANT_TO_REMOVE_PROPERTY_OUT_OF_YOUR_FAVORITE_LISTS');
+            $msg = Text::_('OS_DO_YOU_WANT_TO_ADD_PROPERTY_TO_YOUR_FAVORITE_LISTS');
             $msg = str_replace("'", "\'", $msg);
             switch($theme){
                 case "default":
@@ -794,8 +738,8 @@ class OspropertyAjax
                             break;
                         case "listing_list":
                             ?>
-                            <a onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_addFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','default','listing_list')" href="javascript:void(0)" title="<?php echo Text::_('OS_ADD_TO_FAVORITES');?>" class="favLink">
-								<span class="edicon edicon-heart"></span>
+                            <a onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_addFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','default','listing_list')" href="javascript:void(0)" title="<?php echo $msg;?>">
+								<i class="icon-heart white"></i>
 							</a>
                             <?php
                             break;
@@ -847,17 +791,34 @@ class OspropertyAjax
                         break;
                     }
                     break;
+				case "house":
+                    switch($layout) {
+                        case "details":
+                            ?>
+                            <a title="<?php echo Text::_('OS_ADD_TO_FAVORITES');?>" onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_addFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','house','details')" class="favLink">
+										<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+<path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15"/>
+</svg>
+									</a>
+                            <?php
+                        break;
+                        case "listing":
+                            ?>
+                            <a title="<?php echo Text::_('OS_ADD_TO_FAVORITES');?>" onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_addFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','theme2','listing')" class="favLink">
+                                <span class="edicon edicon-heart"></span>
+                            </a>
+                            <?php
+                        break;
+                    }
+                    break;
 				case "theme3":
                     switch($layout) {
 						case "details":
-							?>
-							<i class='edicon edicon-floppy-disk'></i>
-							<?php
 							$msg = Text::_('OS_DO_YOU_WANT_TO_ADD_PROPERTY_TO_YOUR_FAVORITE_LISTS');
 							$msg = str_replace("'","\'",$msg);
 							?>
-							<a onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_addFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','theme3','details');" class="reportlisting" title="<?php echo Text::_('OS_ADD_TO_FAVORITES');?>">
-								<?php echo Text::_('OS_ADD_TO_FAVORITES');?>
+							<a onclick="javascript:osConfirmExtend('<?php echo $msg;?>','ajax_addFavorites','<?php echo $id?>','<?php echo Uri::root()?>','fav<?php echo $id; ?>','theme3','details');" class="link-icon" title="<?php echo Text::_('OS_ADD_TO_FAVORITES');?>">
+								<i class='edicon edicon-floppy-disk'></i>
 							</a>
 							<?php
 						break;
@@ -876,16 +837,9 @@ class OspropertyAjax
 
     static function loadLocationInformation()
     {
-        $langArr = [];
         $db = Factory::getDbo();
-		$countryIDArray = array(12,28,35,169,66,193,86,92,130,147,187,152,162,175,71,9,13,18,20,15,51,65,73,90,120,136,167,87,39,47,55,114,138,144,176,181,195,91,149,151,110,41,145,3,5,77,45,82,93,25,135,146,50,206,163,170,192,125,132,198,84,54,185,97,56,191,207,208,209,116,4,30,49,133,158,178,123);
-		$countryFileArray = array('au_australia','br_brazil','ca_canada','es_spain','fr_france','gb_united','in_india','it_italy','nl_netherlands','pt_portugal','tr_turkey','ru_russia','sg_singapore','se_sweden','de_germany','ar_argentina','at_austria','bb_barbados','be_belgium','bs_bahamas','dk_denmark','fi_finland','gr_greece','ie_ireland','mx_mexico','no_norway','za_southafrica','id_indonesia','cl_chile','hr_croatia','ec_ecuador','my_malaysia','pk_pakistan','pe_peru','ch_switzerland','th_thailand','uy_uruguay','il_israel','qa_qatar','ro_romania','lu_luxembourg','co_colombia','ph_philippines','al_albania','ad_andorra','gt_guatemala','cr_costarica','hn_honduras','jm_jamaica','bo_bolivia','ng_nigeria','pl_poland','cz_czech','mv_maldives','sk_slovakia','sk_srilanka','ae_uae','mo_morocco','nz_newzealand','ve_venezuela','hu_hungary','do_dominican','tt_trinidad','ke_kenya','eg_egypt','uk_ukraine','sl_scotland','nr_northern_ireland','wa_wales','mt_malta','dz_algeria','bg_bulgaria','cy_cyprus','ni_nicaragua','sa_saudiarabia','tw_taiwan','mo_montenegro');
 
-		for($i=0;$i<count($countryIDArray);$i++){
-			$langArr[$i] = new stdClass();
-			$langArr[$i]->country_id = $countryIDArray[$i];
-			$langArr[$i]->file_name = $countryFileArray[$i].".txt";
-		}
+		$langArr = OSPHelper::returnSupportedCountries();
 
         $countryArr = [];
         for ($i = 0; $i < count($langArr); $i++) {
@@ -1025,17 +979,15 @@ class OspropertyAjax
                     <td align="center" class="padding5">
                         <a href="index.php?option=com_osproperty&task=properties_changeLocation&s=1&country_id=<?php echo $country->id?>"
                            title="Enable location for <?php echo $country->country_name;?>">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="green" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/></svg>
+                            <img src="<?php echo Uri::root()?>media/com_osproperty/assets/images/tick.png"
+                                 border="0">
                         </a>
                     </td>
                     <td align="center" class="padding5">
                         <a href="index.php?option=com_osproperty&task=properties_changeLocation&s=0&country_id=<?php echo $country->id?>"
                            title="Disable location for <?php echo $country->country_name;?>">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="red" class="bi bi-x-circle-fill" viewBox="0 0 16 16">
-  <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293z"/>
-</svg>
-</svg>
+                            <img src="<?php echo Uri::root()?>media/com_osproperty/assets/images/publish_x.png"
+                                 border="0">
                         </a>
                     </td>
                 </tr>
@@ -1249,7 +1201,7 @@ class OspropertyAjax
             $disable = 'disabled="disabled"';
         }
 
-        echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist', $option_state, $state_name, 'onChange="javascript:loadCityBackend(this.value,\'' . $city_id . '\')" class="'.$class.'" ' . $disable, 'value', 'text', $state_id));
+        echo HTMLHelper::_('select.genericlist', $option_state, $state_name, 'onChange="javascript:loadCityBackend(this.value,\'' . $city_id . '\')" class="chosen '.$class.'" ' . $disable, 'value', 'text', $state_id);
         echo "@@@";
 
         //check to see if the state is belong to this country
@@ -1261,11 +1213,11 @@ class OspropertyAjax
             $db->setQuery("Select id as value, city" . $suffix . " as text from #__osrs_cities where published = '1' and state_id = '$state_id' order by city");
             $cities = $db->loadObjectList();
             $cityArr = array_merge($cityArr, $cities);
-            echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist', $cityArr, 'city' , 'class="'.$class.' " ', 'value', 'text', $city_id));
+            echo HTMLHelper::_('select.genericlist', $cityArr, 'city' , 'class="'.$class.' chosen" ', 'value', 'text', $city_id);
         } else {
             $option_state = [];
             $option_state[] = HTMLHelper::_('select.option', '', Text::_('OS_ALL_CITIES'));
-            echo HTMLHelper::_('select.genericlist', $option_state, 'city' , 'class="'.$class.' " disabled', 'value', 'text');
+            echo HTMLHelper::_('select.genericlist', $option_state, 'city' , 'class="'.$class.' chosen" disabled', 'value', 'text');
         }
         exit;
     }
@@ -1340,7 +1292,7 @@ class OspropertyAjax
      * @param unknown_type $city_id
      * @param unknown_type $state_name
      */
-    public static function loadCity($option, $state_id = 0, $city_id = '', $state_name = '' , $useConfig = 0, $class = "input-medium form-select form-control ilarge", $city_name = "city", $lang = "")
+    public static function loadCity($option, $state_id = 0, $city_id = '', $state_name = '' , $useConfig = 0, $class = "input-medium form-select ilarge", $city_name = "city", $lang = "")
     {
         global $jinput, $mainframe, $configClass, $bootstrapHelper;
         $db = Factory::getDBO();
@@ -1357,14 +1309,15 @@ class OspropertyAjax
             $suffix = OSPHelper::getFieldSuffix();
         }
 
-		$class = $bootstrapHelper->getClassMapping($class);
+		//$class = $bootstrapHelper->getClassMapping($class);
 
         @header('Content-Type: text/html; charset=utf-8');
         $availSql = "";
         $show_available_states_cities = $configClass['show_available_states_cities'];
+		//echo $class;
         if ($state_id > 0) {
             $availSql = "";
-            if (($show_available_states_cities == 1) and ($useConfig == 1)) {
+            if (($show_available_states_cities == 1) && ($useConfig == 1)) {
                 $availSql = " and id in (Select city from #__osrs_properties where approved = '1' and published = '1')";
             }
             $cityArr = [];
@@ -1379,7 +1332,7 @@ class OspropertyAjax
 				}
 			}
             $cityArr = array_merge($cityArr, $cities);
-            echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist', $cityArr, $city_name, 'class="' . $class . '" ' . $disabled, 'value', 'text', $city_id));
+            echo HTMLHelper::_('select.genericlist', $cityArr, $city_name, 'class="' . $class . '" ' . $disabled, 'value', 'text', $city_id);
         } 
 		else 
 		{
@@ -1621,7 +1574,7 @@ class OspropertyAjax
         $stateArr = [];
         $stateArr[] = HTMLHelper::_('select.option', '', Text::_('OS_SELECT_STATE'));
         $stateArr = array_merge($stateArr, $states);
-        echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist', $stateArr, 'state' . $pid, 'onChange="javascript:changeStateValue(' . $pid . ');" class="input-medium form-select ilarge"', 'value', 'text'));
+        echo HTMLHelper::_('select.genericlist', $stateArr, 'state' . $pid, 'onChange="javascript:changeStateValue(' . $pid . ');" class="input-medium form-select form-control ilarge"', 'value', 'text');
         exit;
     }
 
@@ -1637,7 +1590,7 @@ class OspropertyAjax
         $cityArr = [];
         $cityArr[] = HTMLHelper::_('select.option', '', Text::_('OS_SELECT_CITY'));
         $cityArr = array_merge($cityArr, $cities);
-        echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist', $cityArr, 'city' . $pid, ' class="input-medium form-select ilarge"', 'value', 'text'));
+        echo HTMLHelper::_('select.genericlist', $cityArr, 'city' . $pid, ' class="input-medium form-select form-control ilarge"', 'value', 'text');
         exit;
     }
 

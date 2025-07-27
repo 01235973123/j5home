@@ -7,10 +7,8 @@
  */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\CMS\Uri\Uri;
 use Joomla\Registry\Registry;
 
 /**
@@ -95,7 +93,7 @@ abstract class MPFPayment
 	 * Instantiate the payment object
 	 *
 	 * @param   Registry  $params
-	 * @param   array                      $config
+	 * @param   array     $config
 	 */
 	public function __construct($params, $config = [])
 	{
@@ -237,19 +235,26 @@ abstract class MPFPayment
 	protected function renderRedirectForm($url = null, $data = [], $newWindow = false)
 	{
 		// Load component css here
-		$document = Factory::getApplication()->getDocument();
-		$config   = OSMembershipHelper::getConfig();
+		$app = Factory::getApplication();
+		$wa  = $app->getDocument()
+			->getWebAssetManager();
+
+		$config = OSMembershipHelper::getConfig();
 
 		if ($config->load_twitter_bootstrap_in_frontend !== '0')
 		{
-			HTMLHelper::_('bootstrap.loadCss');
+			$wa->useStyle('bootstrap.css');
 		}
 
 		$customCssFile = JPATH_ROOT . '/media/com_osmembership/assets/css/custom.css';
 
 		if (file_exists($customCssFile) && filesize($customCssFile) > 0)
 		{
-			$document->addStylesheet(Uri::root(true) . '/media/com_osmembership/assets/css/custom.css');
+			$wa->registerAndUseStyle(
+				'com_osmembership.custom',
+				'media/com_osmembership/assets/css/custom.css',
+				['version' => filemtime($customCssFile)]
+			);
 		}
 
 		if (empty($url))
@@ -263,7 +268,7 @@ abstract class MPFPayment
 		}
 
 		//Get redirect heading
-		$language    = Factory::getApplication()->getLanguage();
+		$language    = $app->getLanguage();
 		$languageKey = 'OSM_WAIT_' . strtoupper(substr($this->name, 3));
 
 		if ($language->hasKey($languageKey))

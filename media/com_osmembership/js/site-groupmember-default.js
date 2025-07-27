@@ -32,7 +32,7 @@
         var siteUrl = Joomla.getOptions('siteUrl');
         $.ajax({
             type: 'POST',
-            url: siteUrl + '/index.php?option=com_osmembership&task=groupmember.get_existing_user_data&username=' + username + '&plan_id=' + planId,
+            url: siteUrl + '/index.php?option=com_osmembership&task=groupmember.get_existing_user_data&username=' + encodeURIComponent(username) + '&plan_id=' + planId,
             dataType: 'json',
             success: function (json) {
                 var selecteds = [];

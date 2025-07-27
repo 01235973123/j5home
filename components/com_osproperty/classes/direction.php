@@ -3,7 +3,7 @@
 # direction.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -19,6 +19,7 @@ use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
+use Joomla\CMS\Http\HttpFactory;
 class OspropertyDirection{
 	/**
 	 * Payment process
@@ -41,10 +42,34 @@ class OspropertyDirection{
 			case "direction_getmap":
 				OspropertyDirection::doGetDirections($option,$id);
 			break;
+			case "direction_getresponse":
+				OspropertyDirection::getresponse();
+			break;
 			default:
 				OspropertyDirection::showTestMap($option);
 			break;
+
 		}
+	}
+
+	public static function getresponse()
+	{
+		global $mainframe,$configClass,$jinput;
+
+
+		$start_lat = $jinput->getFloat('start_lat');
+		$start_lon = $jinput->getFloat('start_lon');
+		$dest_lat  = $jinput->getFloat('dest_lat');
+		$dest_lon  = $jinput->getFloat('dest_lon');	
+
+		$osrm_url = "https://router.project-osrm.org/route/v1/driving/".$start_lon.",".$start_lat.";".$dest_lon.",".$dest_lat."?overview=full&geometries=geojson";
+
+		$http    = HttpFactory::getHttp();
+		$response = $http->get($osrm_url)->body;
+
+		echo $response;
+
+		die();
 	}
 	
 	/**
@@ -53,15 +78,19 @@ class OspropertyDirection{
 	 * @param unknown_type $option
 	 * @param unknown_type $id
 	 */
-	static function getDirections($option,$id){
+	static function getDirections($option,$id)
+	{
 		global $mainframe,$configClass,$jinput;
 		OSPHelper::loadGoogleJS();
 		$document = Factory::getDocument();
 		$db = Factory::getDbo();
 		$routeStyle = $jinput->getString('routeStyle','');
-		if($routeStyle != ""){
+		if($routeStyle != "")
+		{
 			$mode = "mode=".$routeStyle;
-		}else{
+		}
+		else
+		{
 			$mode = "";
 		}
 		$address = OSPHelper::getStringRequest('address','','post');
@@ -74,13 +103,15 @@ class OspropertyDirection{
 		$pro_address = $property->address;
 		$pro_address .= ", ".$property->city;
 		$pro_address .= ", ".$property->zipcode;
-		if($property->state > 0){
+		if($property->state > 0)
+		{
 			$db->setQuery("Select state_name from #__osrs_states where id = '$property->state'");
 			$state = $db->loadResult();
 			$pro_address .= ", ".$state;
 		}
 		
-		if($property->country > 0){
+		if($property->country > 0)
+		{
 			$db->setQuery("Select country_name from #__osrs_countries where id = '$property->country'");
 			$country = $db->loadResult();
 			$pro_address .= ", ".$country;
@@ -88,7 +119,7 @@ class OspropertyDirection{
 		$pro_address = str_replace("'","",$pro_address);
 		$optionArr[] = HTMLHelper::_('select.option','',Text::_('OS_BY_CAR'));
 		$optionArr[] = HTMLHelper::_('select.option','walking',Text::_('OS_BY_FOOT'));
-		$lists['routeStyle'] = HTMLHelper::_('select.genericlist',$optionArr,'routeStyle','class="input-large form-select" style="width:180px;"','value','text',$routeStyle);
+		$lists['routeStyle'] = HTMLHelper::_('select.genericlist',$optionArr,'routeStyle','class="input-large form-select" style="width:180px;display:inline;"','value','text',$routeStyle);
 		HTML_OspropertyDirection::getDirectionForm($option,$property,$lists,$address,$pro_address);
 	}
 	

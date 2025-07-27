@@ -16,9 +16,13 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\Toolbar;
 
-HTMLHelper::_('behavior.core');
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
-Factory::getApplication()->getDocument()->addStyleDeclaration('.hasTip{display:block !important}');
+
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->addInlineStyle('.hasTip{display:block !important}');
 
 /* @var OSMembershipHelperBootstrap $bootstrapHelper */
 $bootstrapHelper = $this->bootstrapHelper;

@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -31,18 +31,22 @@ class OSMembershipViewPluginHtml extends MPFViewItem
 	protected function prepareView()
 	{
 		parent::prepareView();
+
 		$registry = new Registry();
-		$registry->loadString($this->item->params);
-		$data         = new stdClass();
+		$registry->loadString($this->item->params ?? '{}');
+		$data = new stdClass();
 		$data->params = $registry->toArray();
-		$form         = Form::getInstance(
+
+		$form = Form::getInstance(
 			'osmembership',
 			JPATH_ROOT . '/components/com_osmembership/plugins/' . $this->item->name . '.xml',
 			[],
 			false,
 			'//config'
 		);
+
 		$form->bind($data);
+
 		$this->form = $form;
 	}
 
@@ -61,7 +65,10 @@ class OSMembershipViewPluginHtml extends MPFViewItem
 		}
 		else
 		{
-			$canDo = call_user_func(['MPFHelper', 'getActions'], $this->viewConfig['option'], $this->name, $this->state);
+			$canDo = call_user_func(['MPFHelper', 'getActions'],
+				$this->viewConfig['option'],
+				$this->name,
+				$this->state);
 		}
 
 		$languagePrefix = $this->viewConfig['language_prefix'];

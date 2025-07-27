@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -27,7 +27,7 @@ class OSMembershipViewMitemsHtml extends MPFViewList
 		// Insert messages for additional offline payment plugins
 		$this->model->insertAdditionalOfflinePaymentMessages();
 
-		$options   = [];
+		$options = [];
 		$options[] = HTMLHelper::_('select.option', 0, Text::_('OSM_MESSAGE_GROUP'));
 		$options[] = HTMLHelper::_('select.option', 1, Text::_('OSM_GENERAL_MESSAGES'));
 		$options[] = HTMLHelper::_('select.option', 2, Text::_('OSM_RENEWAL_MESSAGES'));
@@ -57,6 +57,9 @@ class OSMembershipViewMitemsHtml extends MPFViewList
 	 */
 	protected function addToolbar()
 	{
-		ToolbarHelper::title(Text::_(strtoupper('OSM_' . MPFInflector::singularize($this->name) . '_MANAGEMENT')), 'link ' . $this->name);
+		ToolbarHelper::title(
+			Text::_(strtoupper('OSM_' . MPFInflector::singularize($this->name) . '_MANAGEMENT')),
+			'link ' . $this->name
+		);
 	}
 }

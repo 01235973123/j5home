@@ -3,16 +3,13 @@
  * @package            Joomla
  * @subpackage         Membership Pro
  * @author             Tuan Pham Ngoc
- * @copyright          Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright          Copyright (C) 2012 - 2025 Ossolution Team
  * @license            GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
 trait OSMembershipControllerDisplay
 {
@@ -77,11 +74,18 @@ trait OSMembershipControllerDisplay
 
 		$config = OSMembershipHelper::getConfig();
 
-		/* @var JDocumentHtml $document */
-		$document = $this->app->getDocument();
-		$rootUri  = Uri::root(true);
-		$document->addStylesheet(
-			$rootUri . '/media/com_osmembership/assets/css/style.min.css',
+		$wa = $this->app->getDocument()
+			->getWebAssetManager();
+
+		if ($config->load_twitter_bootstrap_in_frontend !== '0'
+			&& in_array($config->get('twitter_bootstrap_version', 2), [2, 5]))
+		{
+			$wa->useStyle('bootstrap.css');
+		}
+
+		$wa->registerAndUseStyle(
+			'com_osmembership.style',
+			'media/com_osmembership/assets/css/style.min.css',
 			['version' => OSMembershipHelper::getInstalledVersion()]
 		);
 
@@ -89,7 +93,11 @@ trait OSMembershipControllerDisplay
 
 		if (file_exists($customCssFile) && filesize($customCssFile) > 0)
 		{
-			$document->addStylesheet($rootUri . '/media/com_osmembership/assets/css/custom.css', ['version' => filemtime($customCssFile)]);
+			$wa->registerAndUseStyle(
+				'com_osmembership.custom',
+				'media/com_osmembership/assets/css/custom.css',
+				['version' => filemtime($customCssFile)]
+			);
 		}
 
 		$requireJQueryViews = [
@@ -107,12 +115,6 @@ trait OSMembershipControllerDisplay
 		if (in_array($viewName, $requireJQueryViews))
 		{
 			OSMembershipHelperJquery::loadjQuery();
-		}
-
-		if ($config->load_twitter_bootstrap_in_frontend !== '0'
-			&& in_array($config->get('twitter_bootstrap_version', 2), [2, 5]))
-		{
-			HTMLHelper::_('bootstrap.loadCss');
 		}
 
 		return parent::display($cachable, $urlparams);

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -235,7 +235,9 @@ class OSMembershipModelProfile extends MPFModel
 			$filterInput = InputFilter::getInstance();
 			$username    = $filterInput->clean($username, 'USERNAME');
 
-			$isUsernameCompliant = !(preg_match('#[<>"\'%;()&\\\\]|\\.\\./#', $username) || strlen(utf8_decode($username)) < 2
+			$isUsernameCompliant = !(preg_match('#[<>"\'%;()&\\\\]|\\.\\./#', $username) || strlen(
+					utf8_decode($username)
+				) < 2
 				|| trim($username) != $username);
 
 			if ($isUsernameCompliant)
@@ -378,7 +380,9 @@ class OSMembershipModelProfile extends MPFModel
 		}
 		else
 		{
-			throw new Exception(Text::sprintf('Payment method %s does not support update credit card', $subscription->payment_method));
+			throw new Exception(
+				Text::sprintf('Payment method %s does not support update credit card', $subscription->payment_method)
+			);
 		}
 	}
 

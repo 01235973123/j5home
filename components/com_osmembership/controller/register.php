@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -14,6 +14,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\UserHelper;
+use Joomla\Database\DatabaseDriver;
 
 class OSMembershipControllerRegister extends OSMembershipController
 {
@@ -56,9 +57,9 @@ class OSMembershipControllerRegister extends OSMembershipController
 	{
 		$upgradeOptionId = $this->input->getInt('upgrade_option_id', 0);
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
-		$db              = Factory::getContainer()->get('db');
-		$query           = $db->getQuery(true);
+		/* @var DatabaseDriver $db */
+		$db    = Factory::getContainer()->get('db');
+		$query = $db->getQuery(true);
 		$query->select('to_plan_id')
 			->from('#__osmembership_upgraderules')
 			->where('id=' . $upgradeOptionId);
@@ -106,7 +107,7 @@ class OSMembershipControllerRegister extends OSMembershipController
 
 			if ($user->id)
 			{
-				/* @var \Joomla\Database\DatabaseDriver $db */
+				/* @var DatabaseDriver $db */
 				$db    = Factory::getContainer()->get('db');
 				$query = $db->getQuery(true)
 					->select('*')
@@ -237,7 +238,7 @@ class OSMembershipControllerRegister extends OSMembershipController
 		$subscriptionId = $this->input->post->get('subscription_id', '', 'none');
 		$Itemid         = $this->input->getInt('Itemid', 0);
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true);
 		$query->select('*')
@@ -278,7 +279,7 @@ class OSMembershipControllerRegister extends OSMembershipController
 	 */
 	public function calculate_subscription_fee()
 	{
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db     = Factory::getContainer()->get('db');
 		$query  = $db->getQuery(true);
 		$config = OSMembershipHelper::getConfig();
@@ -351,7 +352,7 @@ class OSMembershipControllerRegister extends OSMembershipController
 			$countryName = $config->default_country;
 		}
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('*')
@@ -432,9 +433,9 @@ class OSMembershipControllerRegister extends OSMembershipController
 	 */
 	public function get_depend_fields_status()
 	{
-		$input   = $this->input;
+		$input = $this->input;
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db      = Factory::getContainer()->get('db');
 		$fieldId = $this->input->get('field_id', 'int');
 
@@ -501,7 +502,9 @@ class OSMembershipControllerRegister extends OSMembershipController
 							$selectedOptions = [$masterFieldValues];
 						}
 
-						if (is_string($rowField->depend_on_options) && is_array(json_decode($rowField->depend_on_options)))
+						if (is_string($rowField->depend_on_options) && is_array(
+								json_decode($rowField->depend_on_options)
+							))
 						{
 							$dependOnOptions = json_decode($rowField->depend_on_options);
 						}

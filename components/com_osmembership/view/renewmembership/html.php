@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -111,13 +111,19 @@ class OSMembershipViewRenewmembershipHtml extends MPFViewHtml
 			return;
 		}
 
-		[$planIds, $renewOptions] = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getRenewOptions', [$user->id]);
+		[$planIds, $renewOptions] = OSMembershipHelper::callOverridableHelperMethod(
+			'Subscription',
+			'getRenewOptions',
+			[$user->id]
+		);
 
 		if (empty($planIds))
 		{
 			if (!$this->input->getInt('hmvc_call'))
 			{
-				$app->enqueueMessage(Text::_('OSM_NO_RENEW_OPTIONS_AVAILABLE'));
+				$this->setLayout('empty');
+
+				parent::display();
 			}
 
 			return;

@@ -4,10 +4,10 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 3, or later</license>
     <creationDate>July 2018</creationDate>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin is used to perform various tasks in Membership Pro (Generate Invoice Number, Generate
         Membership ID....), so please don't unpublish it. It is needed for Membership Pro to work properly
     </description>

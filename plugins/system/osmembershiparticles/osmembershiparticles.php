@@ -1,10 +1,9 @@
 <?php
-
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -25,7 +24,8 @@ use Joomla\Event\Event;
 use Joomla\Event\SubscriberInterface;
 use Joomla\Registry\Registry;
 
-if (!file_exists(JPATH_ADMINISTRATOR . '/components/com_osmembership/loader.php')) {
+if (!file_exists(JPATH_ADMINISTRATOR . '/components/com_osmembership/loader.php'))
+{
 	return;
 }
 
@@ -75,7 +75,8 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 	 */
 	public function registerListeners()
 	{
-		if (!ComponentHelper::isEnabled('com_osmembership')) {
+		if (!ComponentHelper::isEnabled('com_osmembership'))
+		{
 			return;
 		}
 
@@ -94,7 +95,8 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		/* @var OSMembershipTablePlan $row */
 		[$row] = array_values($event->getArguments());
 
-		if (!$this->isExecutable()) {
+		if (!$this->isExecutable())
+		{
 			return;
 		}
 
@@ -128,7 +130,8 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		 */
 		[$context, $row, $data, $isNew] = array_values($event->getArguments());
 
-		if (!$this->isExecutable()) {
+		if (!$this->isExecutable())
+		{
 			return;
 		}
 
@@ -137,32 +140,41 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		$planId = $row->id;
 
 		// The advanced setup metthod
-		if ($this->params->get('setup_method', 1)) {
+		if ($this->params->get('setup_method', 1))
+		{
 			$articleIds         = [];
 			$restrictArticleIds = $data['restrict_article_ids'] ?? [];
 
-			foreach ($restrictArticleIds as $restrictArticle) {
-				if (!empty($restrictArticle['article_id'])) {
+			foreach ($restrictArticleIds as $restrictArticle)
+			{
+				if (!empty($restrictArticle['article_id']))
+				{
 					$articleIds[] = $restrictArticle['article_id'];
 				}
 			}
-		} else {
+		}
+		else
+		{
 			$articleIds = $data['article_ids'] ?? '';
 
-			if ($articleIds) {
+			if ($articleIds)
+			{
 				$articleIds = explode(',', $articleIds);
 			}
 		}
 
-		if (!$isNew) {
+		if (!$isNew)
+		{
 			$query->delete('#__osmembership_articles')
 				->where('plan_id = ' . (int) $planId);
 			$db->setQuery($query);
 			$db->execute();
 		}
 
-		if (!empty($articleIds)) {
-			foreach ($articleIds as $articleId) {
+		if (!empty($articleIds))
+		{
+			foreach ($articleIds as $articleId)
+			{
 				$query->clear()
 					->insert('#__osmembership_articles')
 					->columns('plan_id,article_id')
@@ -191,18 +203,22 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		$query = $db->getQuery(true);
 
 		//Get plans articles
-		if ($row->id > 0) {
+		if ($row->id > 0)
+		{
 			$query->select('article_id')
 				->from('#__osmembership_articles')
 				->where('plan_id = ' . (int) $row->id);
 			$db->setQuery($query);
 			$planArticles = $db->loadColumn();
-		} else {
+		}
+		else
+		{
 			$planArticles = [];
 		}
 
 		// Use default setup method
-		if (!$this->params->get('setup_method', 1)) {
+		if (!$this->params->get('setup_method', 1))
+		{
 			//Get categories
 			$categoryIds = $this->params->get('category_ids', []);
 			$query->clear()
@@ -211,14 +227,16 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 				->where('extension = "com_content"')
 				->where('published = 1');
 
-			if (count($categoryIds) && !in_array(0, $categoryIds)) {
+			if (count($categoryIds) && !in_array(0, $categoryIds))
+			{
 				$query->whereIn('id', $categoryIds);
 			}
 
 			$db->setQuery($query);
 			$categories = $db->loadObjectList('id');
 
-			if (!count($categories)) {
+			if (!count($categories))
+			{
 				return;
 			}
 
@@ -231,16 +249,20 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 			$db->setQuery($query);
 			$rowArticles = $db->loadObjectList();
 
-			if (!count($rowArticles)) {
+			if (!count($rowArticles))
+			{
 				return;
 			}
 
 			$articles = [];
 
-			foreach ($rowArticles as $rowArticle) {
+			foreach ($rowArticles as $rowArticle)
+			{
 				$articles[$rowArticle->catid][] = $rowArticle;
 			}
-		} else {
+		}
+		else
+		{
 			// Use advanced setup method, we need to build the form here
 			$numberArticlesEachTime = $this->params->get('number_new_articles_each_time', 10);
 			$form                   = Form::getInstance(
@@ -251,13 +273,15 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 			$formData['restrict_article_ids'] = [];
 
 			// Load existing schedule articles for this plan
-			foreach ($planArticles as $articleId) {
+			foreach ($planArticles as $articleId)
+			{
 				$formData['restrict_article_ids'][] = [
 					'article_id' => $articleId,
 				];
 			}
 
-			for ($i = 0; $i < $numberArticlesEachTime; $i++) {
+			for ($i = 0; $i < $numberArticlesEachTime; $i++)
+			{
 				$formData['restrict_article_ids'][] = [
 					'article_id' => 0,
 				];
@@ -269,9 +293,12 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		$params             = new Registry($row->params);
 		$selectedCategories = explode(',', $params->get('article_categories', ''));
 
-		if ($this->params->get('setup_method', 1)) {
+		if ($this->params->get('setup_method', 1))
+		{
 			$layout = 'advanced';
-		} else {
+		}
+		else
+		{
 			$layout = 'form';
 		}
 
@@ -286,44 +313,52 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 	 */
 	public function onAfterRoute(Event $event): void
 	{
-		if (!$this->app->isClient('site')) {
+		if (!$this->app->isClient('site'))
+		{
 			return;
 		}
 
 		$user = $this->app->getIdentity();
 
-		if ($user->authorise('core.admin')) {
+		if ($user->authorise('core.admin'))
+		{
 			return;
 		}
 
-		if ($this->params->get('protection_method', 0) == 1) {
+		if ($this->params->get('protection_method', 0) == 1)
+		{
 			return;
 		}
 
-		if ($this->params->get('allow_search_engine', 1) == 0 && $this->app->client->robot) {
+		if ($this->params->get('allow_search_engine', 1) == 0 && $this->app->client->robot)
+		{
 			return;
 		}
 
 		$option = $this->app->input->getCmd('option');
 		$view   = $this->app->input->getCmd('view');
 
-		if ($option != 'com_content' || $view != 'article') {
+		if ($option != 'com_content' || $view != 'article')
+		{
 			return;
 		}
 
 		$articleId = $this->app->input->getInt('id');
 
-		if ($this->isArticleReleased($articleId)) {
+		if ($this->isArticleReleased($articleId))
+		{
 			return;
 		}
 
 		$planIds = $this->getRequiredPlanIds($articleId);
 
-		if (count($planIds)) {
+		if (count($planIds))
+		{
 			//Check to see the current user has an active subscription plans
 			$activePlans = OSMembershipHelperSubscription::getActiveMembershipPlans();
 
-			if (!count(array_intersect($planIds, $activePlans))) {
+			if (!count(array_intersect($planIds, $activePlans)))
+			{
 				OSMembershipHelper::loadLanguage();
 
 				$msg = Text::_('OS_MEMBERSHIP_ARTICLE_ACCESS_RESITRICTED');
@@ -359,17 +394,20 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 	{
 		[$context, $row, $params, $page] = array_values($event->getArguments());
 
-		if ($this->app->isClient('administrator')) {
+		if ($this->app->isClient('administrator'))
+		{
 			return;
 		}
 
-		if ($this->params->get('protection_method', 0) == 0) {
+		if ($this->params->get('protection_method', 0) == 0)
+		{
 			return;
 		}
 
 		$option = $this->app->input->getCmd('option');
 
-		if ($option != 'com_content') {
+		if ($option != 'com_content')
+		{
 			return;
 		}
 
@@ -379,31 +417,38 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 			'catid',
 		];
 
-		foreach ($articleFields as $articleField) {
-			if (!property_exists($row, $articleField)) {
+		foreach ($articleFields as $articleField)
+		{
+			if (!property_exists($row, $articleField))
+			{
 				return;
 			}
 		}
 
-		if ($this->params->get('allow_search_engine', 0) == 1 && $this->app->client->robot) {
+		if ($this->params->get('allow_search_engine', 0) == 1 && $this->app->client->robot)
+		{
 			return;
 		}
 
-		if (!is_object($row)) {
+		if (!is_object($row))
+		{
 			return;
 		}
 
-		if ($this->isArticleReleased($row->id)) {
+		if ($this->isArticleReleased($row->id))
+		{
 			return;
 		}
 
 		$planIds = $this->getRequiredPlanIds($row->id);
 
-		if (count($planIds)) {
+		if (count($planIds))
+		{
 			//Check to see the current user has an active subscription plans
 			$activePlans = OSMembershipHelperSubscription::getActiveMembershipPlans();
 
-			if (!count(array_intersect($planIds, $activePlans))) {
+			if (!count(array_intersect($planIds, $activePlans)))
+			{
 				OSMembershipHelper::loadLanguage();
 
 				$msg = OSMembershipHelper::callOverridableHelperMethod('Helper', 'getContentRestrictedMessages', [$planIds]);
@@ -429,14 +474,15 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 
 				$layoutData = [
 					'row'       => $row,
-					'introText' => HTMLHelper::_('string.truncate', substr($row->introtext, 0, 300)),
-					'msg'       => $msg . '{membershipplans ids="' . implode($planIds) . '"}',
+					'introText' => $row->introtext,
+					'msg'       => $msg,
 					'context'   => 'plgSystemOSMembershipArticles.onContentPrepare',
 				];
 
 				$row->text = OSMembershipHelperHtml::loadCommonLayout('common/tmpl/restrictionmsg.php', $layoutData);
 
-				if ($row->params instanceof Registry) {
+				if ($row->params instanceof Registry)
+				{
 					$row->params->set('show_readmore', 0);
 				}
 			}
@@ -455,7 +501,8 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		/* @var OSMembershipTableSubscriber $row */
 		[$row] = array_values($event->getArguments());
 
-		if (!$this->params->get('display_articles_in_profile')) {
+		if (!$this->params->get('display_articles_in_profile'))
+		{
 			return;
 		}
 
@@ -481,7 +528,8 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 	 */
 	private function isArticleReleased($articleId)
 	{
-		if (!$this->params->get('release_article_older_than_x_days', 0)) {
+		if (!$this->params->get('release_article_older_than_x_days', 0))
+		{
 			return false;
 		}
 
@@ -493,9 +541,12 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		$db->setQuery($query);
 		$article = $db->loadObject();
 
-		if ($article->publish_up && $article->publish_up != $db->getNullDate()) {
+		if ($article->publish_up && $article->publish_up != $db->getNullDate())
+		{
 			$publishedDate = $article->publish_up;
-		} else {
+		}
+		else
+		{
 			$publishedDate = $article->created;
 		}
 
@@ -504,7 +555,8 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		$numberDays    = $publishedDate->diff($today)->days;
 
 		// This article is older than configured number of days, it can be accessed for free
-		if ($today >= $publishedDate && $numberDays >= $this->params->get('release_article_older_than_x_days')) {
+		if ($today >= $publishedDate && $numberDays >= $this->params->get('release_article_older_than_x_days'))
+		{
 			return true;
 		}
 
@@ -527,9 +579,12 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 			->where('article_id = ' . (int) $articleId);
 		$db->setQuery($query);
 
-		try {
+		try
+		{
 			$planIds = $db->loadColumn();
-		} catch (Exception $e) {
+		}
+		catch (Exception $e)
+		{
 			$planIds = [];
 		}
 
@@ -548,13 +603,16 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		$db->setQuery($query);
 		$plans = $db->loadObjectList();
 
-		foreach ($plans as $plan) {
+		foreach ($plans as $plan)
+		{
 			$params = new Registry($plan->params);
 
-			if ($articleCategories = $params->get('article_categories')) {
+			if ($articleCategories = $params->get('article_categories'))
+			{
 				$articleCategories = explode(',', $articleCategories);
 
-				if (in_array($catId, $articleCategories)) {
+				if (in_array($catId, $articleCategories))
+				{
 					$planIds[] = $plan->id;
 				}
 			}
@@ -612,17 +670,20 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 		$plans  = $db->loadObjectList();
 		$catIds = [];
 
-		foreach ($plans as $plan) {
+		foreach ($plans as $plan)
+		{
 			$params = new Registry($plan->params);
 
-			if ($articleCategories = $params->get('article_categories')) {
+			if ($articleCategories = $params->get('article_categories'))
+			{
 				$catIds = array_merge($catIds, explode(',', $articleCategories));
 			}
 		}
 
 		$items = [];
 
-		if (count($activePlanIds) > 1) {
+		if (count($activePlanIds) > 1)
+		{
 			$query->clear()
 				->select('a.id, a.catid, a.title, a.alias, a.hits, c.title AS category_title')
 				->from('#__content AS a')
@@ -633,7 +694,8 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 				->order('plan_id')
 				->order('a.ordering');
 
-			if (Multilanguage::isEnabled()) {
+			if (Multilanguage::isEnabled())
+			{
 				$query->whereIn('a.language', [Factory::getApplication()->getLanguage()->getTag(), '*'], ParameterType::STRING);
 			}
 
@@ -642,7 +704,8 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 			$items = array_merge($items, $db->loadObjectList());
 		}
 
-		if (count($catIds) > 0) {
+		if (count($catIds) > 0)
+		{
 			$query->clear()
 				->select('a.id, a.catid, a.title, a.alias, a.hits, c.title AS category_title')
 				->from('#__content AS a')
@@ -650,11 +713,13 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 				->whereIn('a.catid', $catIds)
 				->where('a.state = 1')
 				->order('a.ordering');
+            $db->setQuery($query);
 
 			$items = array_merge($items, $db->loadObjectList());
 		}
 
-		if (empty($items)) {
+		if (empty($items))
+		{
 			return;
 		}
 
@@ -668,7 +733,8 @@ class plgSystemOSMembershipArticles extends CMSPlugin implements SubscriberInter
 	 */
 	private function isExecutable()
 	{
-		if ($this->app->isClient('site') && !$this->params->get('show_on_frontend')) {
+		if ($this->app->isClient('site') && !$this->params->get('show_on_frontend'))
+		{
 			return false;
 		}
 

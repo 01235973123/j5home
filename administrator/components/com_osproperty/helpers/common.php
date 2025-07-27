@@ -4,7 +4,7 @@
 # common.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -27,10 +27,10 @@ class HelperOspropertyCommon{
 	static function loadFooter($option)
 	{
 		global $mainframe,$configClass;
-		if(file_exists(JPATH_ROOT.DS."components/com_osproperty/version.txt"))
+		if(file_exists(JPATH_ROOT."/components/com_osproperty/version.txt"))
 		{												
-			$fh = fopen(JPATH_ROOT.DS."components/com_osproperty/version.txt","r");
-			$version = fread($fh,filesize(JPATH_ROOT.DS."components/com_osproperty/version.txt"));
+			$fh = fopen(JPATH_ROOT."/components/com_osproperty/version.txt","r");
+			$version = fread($fh,filesize(JPATH_ROOT."/components/com_osproperty/version.txt"));
 			@fclose($fh);
 		}
 		?>
@@ -50,7 +50,7 @@ class HelperOspropertyCommon{
         while (@ob_end_clean());
         define('ALLOWED_REFERRER', '');
         // MUST end with slash (i.e. "/" )
-        define('BASE_DIR',JPATH_ROOT.DS."tmp");
+        define('BASE_DIR',JPATH_ROOT."/tmp");
 
         // log downloads? true/false
         define('LOG_DOWNLOADS',false);
@@ -183,7 +183,7 @@ class HelperOspropertyCommon{
     	while (@ob_end_clean());
     	define('ALLOWED_REFERRER', '');
 		// MUST end with slash (i.e. "/" )
-		define('BASE_DIR',JPATH_ROOT.DS."components/com_osproperty/images/csvform");
+		define('BASE_DIR',JPATH_ROOT."/components/com_osproperty/images/csvform");
 		
 		// log downloads? true/false
 		define('LOG_DOWNLOADS',false);
@@ -548,15 +548,24 @@ class HelperOspropertyCommon{
 	 *
 	 * @param unknown_type $curr
 	 */
-	static function showCurrencySelectList($curr){
+	static function showCurrencySelectList($curr)
+	{
 		global $mainframe,$configClass;
 		$db = Factory::getDbo();
-		$db->setQuery("Select id as value, concat(currency_name,' - ',currency_code,' - ',currency_symbol) as text from #__osrs_currencies order by currency_name");
+		$db->setQuery("Select id as value, concat(currency_name,' - ',currency_code,' - ',currency_symbol) as text from #__osrs_currencies where published = '1' order by currency_name");
 		$currencies = $db->loadObjectList();
-		if(intval($curr) == 0){
+		if(intval($curr) == 0)
+		{
 			$curr = $configClass['general_currency_default'];
 		}
-		echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist',$currencies,'curr','class="input-large form-select" style="width:220px;"','value','text',$curr));
+		if(count($currencies) == 1)
+		{
+			echo "<input type='hidden' name='curr' value='".$curr."' />";
+		}
+		else
+		{
+			echo OSPHelper::getChoicesJsSelect(HTMLHelper::_('select.genericlist',$currencies,'curr','class="input-large form-select" style="width:220px;"','value','text',$curr));
+		}
 	}
 	
 	/**
@@ -837,7 +846,7 @@ class HelperOspropertyCommon{
 		jimport('joomla.filesystem.file');
 		$configClass = OSPHelper::loadConfig();
 		$ext = $ext[count($ext)-1];
-		$path = JPATH_ROOT.DS."images/osproperty/properties".DS.$pid;
+		$path = JPATH_ROOT."/images/osproperty/properties/".$pid;
 		$SourceFileArr = explode(".",$photo_name);
 		$source_ext = strtolower($SourceFileArr[count($SourceFileArr) - 1]);
 
@@ -860,63 +869,63 @@ class HelperOspropertyCommon{
 			switch ($source_ext) {
 				case "jpg":
 					//$srcImg  = imagecreatefromjpeg($path.DS.$photo_name);
-					imagejpeg($newImg,$path.DS."thumb".DS.$photo_name);
+					imagejpeg($newImg,$path."/thumb/".$photo_name);
 					break;
 				case "png":
 					//$srcImg  = imagecreatefrompng($path.DS.$photo_name);
-					imagepng($newImg,$path.DS."thumb".DS.$photo_name);
+					imagepng($newImg,$path."/thumb/".$photo_name);
 					break;
 				case "gif":
 					//$srcImg  = imagecreatefromgif($path.DS.$photo_name);
-					imagegif($newImg,$path.DS."thumb".DS.$photo_name);
+					imagegif($newImg,$path."/thumb/".$photo_name);
 					break;
 			}
 			//copy file to resize
-			//File::copy($path.DS.$photo_name,$path.DS."thumb".DS.$photo_name);
+			//File::copy($path.DS.$photo_name,$path."/thumb/".$photo_name);
 			
 			//resize if the photo has big size
 			$images_thumbnail_width = $configClass['images_thumbnail_width'];
 			$images_thumbnail_height = $configClass['images_thumbnail_height'];
-			$info = getimagesize($path.DS."thumb".DS.$photo_name);
+			$info = getimagesize($path."/thumb/".$photo_name);
 			$width = $info[0];
 			$height = $info[1];
 			if($width > $images_thumbnail_width){
 				//resize image to the original thumb width
 				$image = new SimpleImage();
-			    $image->load($path.DS."thumb".DS.$photo_name);
+			    $image->load($path."/thumb/".$photo_name);
 			    $image->resize($images_thumbnail_width,$images_thumbnail_height);
-			    $image->save($path.DS."thumb".DS.$photo_name,$configClass['images_quality']);
+			    $image->save($path."/thumb/".$photo_name,$configClass['images_quality']);
 			}
 		}else{
 			switch ($source_ext) {
 				case "jpg":
 					//$srcImg  = imagecreatefromjpeg($path.DS.$photo_name);
-					imagejpeg($newImg,$path.DS."medium".DS.$photo_name);
+					imagejpeg($newImg,$path."/medium/".$photo_name);
 					break;
 				case "png":
 					//$srcImg  = imagecreatefrompng($path.DS.$photo_name);
-					imagepng($newImg,$path.DS."medium".DS.$photo_name);
+					imagepng($newImg,$path."/medium/".$photo_name);
 					break;
 				case "gif":
 					//$srcImg  = imagecreatefromgif($path.DS.$photo_name);
-					imagegif($newImg,$path.DS."medium".DS.$photo_name);
+					imagegif($newImg,$path."/medium/".$photo_name);
 					break;
 			}
 			//copy file to resize
-			//File::copy($path.DS.$photo_name,$path.DS."medium".DS.$photo_name);
+			//File::copy($path.DS.$photo_name,$path."/medium/".$photo_name);
 
 			//resize if the photo has big size
 			$images_large_width = $configClass['images_large_width'];
 			$images_large_height = $configClass['images_large_height'];
-			$info = getimagesize($path.DS."medium".DS.$photo_name);
+			$info = getimagesize($path."/medium/".$photo_name);
 			$width = $info[0];
 			$height = $info[1];
 			if($width > $images_large_width){
 				//resize image to the original thumb width
 				$image = new SimpleImage();
-			    $image->load($path.DS."medium".DS.$photo_name);
+			    $image->load($path."/medium/".$photo_name);
 			    $image->resize($images_large_width,$images_large_height);
-			    $image->save($path.DS."medium".DS.$photo_name,$configClass['images_quality']);
+			    $image->save($path."/medium/".$photo_name,$configClass['images_quality']);
 			}
 		}
 	}
@@ -926,15 +935,19 @@ class HelperOspropertyCommon{
 	 *
 	 * @param unknown_type $image_path
 	 */
-	static function returnMaxsize($image_path){
-		global $mainframe,$configClass;
-		$info = getimagesize($image_path);
-		$width = $info[0];
-		$height = $info[1];
+	static function returnMaxsize($image_path)
+	{
+		global $bootstrapHelper, $jinput, $mainframe,$configClass;
+
+		$info			= getimagesize($image_path);
+		
+		$width			= $info[0];
+		$height			= $info[1];
 		$max_width_allowed = $configClass['max_width_size'];
 		$max_height_allowed = $configClass['max_height_size'];
 		
-		if(($height > $max_height_allowed) and ($width > $max_width_allowed)){
+		if($height > $max_height_allowed && $width > $max_width_allowed)
+		{
 			$resize = 1;
 			//resize to both
 			/*
@@ -946,7 +959,7 @@ class HelperOspropertyCommon{
 		    $image->save($image_path,100);
 		    */
 			OSPHelper::resizePhoto($image_path,$max_width_allowed,$max_height_allowed);
-		}elseif(($height > $max_height_allowed) and ($width <= $max_width_allowed)){
+		}elseif(($height > $max_height_allowed) && ($width <= $max_width_allowed)){
 			$resize = 2;
 			//resize to height
 			/*
@@ -958,7 +971,7 @@ class HelperOspropertyCommon{
 		    $image->save($image_path,100);
 		    */
 			OSPHelper::resizePhoto($image_path,$width,$max_height_allowed);
-		}elseif(($height <= $max_height_allowed) and ($width > $max_width_allowed)){
+		}elseif(($height <= $max_height_allowed) && ($width > $max_width_allowed)){
 			$resize = 3;
 			//resize to width
 			/*

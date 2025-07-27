@@ -157,3 +157,8 @@
     text-align: left;
 	background-color:#000;
 }
+
+.ospsearch .price-range{display:flex;gap:10px;align-items:center}
+.ospsearch .price-range input[type="range"]{width:120px;margin:0}
+.ospsearch .price-values{margin-top:10px;display:flex;justify-content:space-between}
+.ospsearch .price-values span{font-size:14px; width:120px;}

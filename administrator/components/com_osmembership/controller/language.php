@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -15,7 +15,7 @@ class OSMembershipControllerLanguage extends OSMembershipController
 {
 	public function save()
 	{
-		$data  = $this->input->getData();
+		$data = $this->input->getData();
 		$model = $this->getModel();
 		$model->save($data);
 
@@ -26,7 +26,9 @@ class OSMembershipControllerLanguage extends OSMembershipController
 		{
 			$lang = $data['filter_language'];
 			$item = $data['filter_item'];
-			$this->setRedirect('index.php?option=com_osmembership&view=language&filter_language=' . $lang . '&filter_item=' . $item);
+			$this->setRedirect(
+				'index.php?option=com_osmembership&view=language&filter_language=' . $lang . '&filter_item=' . $item
+			);
 		}
 		else
 		{

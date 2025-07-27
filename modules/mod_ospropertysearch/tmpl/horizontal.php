@@ -370,11 +370,11 @@ $field = "";
         }
     }
     function change_country_companyModule<?php echo $random_id?>(country_id,state_id,city_id,random_id){
-        var live_site = '<?php echo JURI::root()?>';
+        var live_site = '<?php echo Uri::root()?>';
         loadLocationInfoStateCityLocatorModule(country_id,state_id,city_id,'mcountry_id' + random_id,'mstate_id' + random_id,live_site,random_id);
     }
     function change_stateModule<?php echo $random_id?>(state_id,city_id,random_id){
-        var live_site = '<?php echo JURI::root()?>';
+        var live_site = '<?php echo Uri::root()?>';
         loadLocationInfoCityModule(state_id,city_id,'mstate_id' + random_id,live_site,random_id);
     }
     <?php if($show_customfields == 1){?>

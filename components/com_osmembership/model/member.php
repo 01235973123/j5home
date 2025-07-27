@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -30,11 +30,15 @@ class OSMembershipModelMember extends MPFModel
 	 */
 	public function getData()
 	{
+		$fieldSuffix = OSMembershipHelper::getFieldSuffix();
+
 		$db    = $this->getDbo();
 		$query = $db->getQuery(true);
-		$query->select('*')
-			->from('#__osmembership_subscribers')
-			->where('id = ' . (int) $this->state->get('id'));
+		$query->select('tbl.*')
+			->select('b.title' . $fieldSuffix . ' AS plan_title')
+			->from('#__osmembership_subscribers AS tbl')
+			->innerJoin('#__osmembership_plans AS b ON tbl.plan_id = b.id')
+			->where('tbl.id = ' . (int) $this->state->get('id'));
 		$db->setQuery($query);
 
 		$row = $db->loadObject();

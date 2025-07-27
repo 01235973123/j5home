@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -47,8 +47,16 @@ class OSMembershipHelperSubscription
 		$recurringFeeFromFeeFields = $replaces['recurring_fee'] ?? 0;
 
 		$fees    = [];
-		$coupon  = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getSubscriptionCoupon', [$rowPlan, $data, &$fees]);
-		$taxRate = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'calculateSubscriptionTaxRate', [$rowPlan, $data, &$fees]);
+		$coupon  = OSMembershipHelper::callOverridableHelperMethod(
+			'Subscription',
+			'getSubscriptionCoupon',
+			[$rowPlan, $data, &$fees]
+		);
+		$taxRate = OSMembershipHelper::callOverridableHelperMethod(
+			'Subscription',
+			'calculateSubscriptionTaxRate',
+			[$rowPlan, $data, &$fees]
+		);
 
 		$action = $data['act'];
 
@@ -74,7 +82,6 @@ class OSMembershipHelperSubscription
 			$db->setQuery($query);
 			$upgradeOption = $db->loadObject();
 			$regularAmount = $upgradeOption->price;
-
 
 			if ($upgradeOption->upgrade_prorated == 2)
 			{
@@ -199,18 +206,28 @@ class OSMembershipHelperSubscription
 		{
 			if ($rowPlan->trial_duration)
 			{
-				$trialTaxAmount = round(($trialAmount - $trialDiscountAmount - $noneTaxableFee) * $taxRate / 100, $numberDecimals);
+				$trialTaxableAmount = $trialAmount - $trialDiscountAmount - $noneTaxableFee;
 			}
 			else
 			{
-				$trialTaxAmount = round(($trialAmount - $trialDiscountAmount) * $taxRate / 100, 2);
+				$trialTaxableAmount = $trialAmount - $trialDiscountAmount;
 			}
 
-			$regularTaxAmount = round(($regularAmount - $regularDiscountAmount - $noneTaxableFee) * $taxRate / 100, $numberDecimals);
+			$trialTaxAmount = static::calculateTaxAmount($trialTaxableAmount, $taxRate);
+
+			$regularTaxableAmount = $regularAmount - $regularDiscountAmount - $noneTaxableFee;
+
+			$regularTaxAmount = static::calculateTaxAmount($regularTaxableAmount, $taxRate);
 		}
 
-		$trialGrossAmount   = $trialAmount - $trialDiscountAmount + $trialTaxAmount;
-		$regularGrossAmount = $regularAmount - $regularDiscountAmount + $regularTaxAmount;
+		$trialGrossAmount   = $trialAmount - $trialDiscountAmount;
+		$regularGrossAmount = $regularAmount - $regularDiscountAmount;
+
+		if (!$config->setup_price_including_tax)
+		{
+			$trialGrossAmount   += $trialTaxAmount;
+			$regularGrossAmount += $regularTaxAmount;
+		}
 
 		$fees['trial_payment_processing_fee']   = 0;
 		$fees['regular_payment_processing_fee'] = 0;
@@ -259,8 +276,16 @@ class OSMembershipHelperSubscription
 
 		$replaces = [];
 
-		$replaces['REGULAR_AMOUNT']   = OSMembershipHelper::formatCurrency($fees['regular_gross_amount'], $config, $rowPlan->currency_symbol);
-		$replaces['SETUP_FEE']        = OSMembershipHelper::formatCurrency($rowPlan->setup_fee, $config, $rowPlan->currency_symbol);
+		$replaces['REGULAR_AMOUNT']   = OSMembershipHelper::formatCurrency(
+			$fees['regular_gross_amount'],
+			$config,
+			$rowPlan->currency_symbol
+		);
+		$replaces['SETUP_FEE']        = OSMembershipHelper::formatCurrency(
+			$rowPlan->setup_fee,
+			$config,
+			$rowPlan->currency_symbol
+		);
 		$replaces['REGULAR_DURATION'] = OSMembershipHelper::callOverridableHelperMethod(
 			'Subscription',
 			'getDurationText',
@@ -285,7 +310,11 @@ class OSMembershipHelperSubscription
 
 			if ($fees['trial_gross_amount'] > 0)
 			{
-				$replaces['TRIAL_AMOUNT'] = OSMembershipHelper::formatCurrency($fees['trial_gross_amount'], $config, $rowPlan->currency_symbol);
+				$replaces['TRIAL_AMOUNT'] = OSMembershipHelper::formatCurrency(
+					$fees['trial_gross_amount'],
+					$config,
+					$rowPlan->currency_symbol
+				);
 
 				if ($rowPlan->number_payments > 0)
 				{
@@ -321,11 +350,7 @@ class OSMembershipHelperSubscription
 
 		$paymentTerms = Text::_($paymentTermsLanguageKey);
 
-		foreach ($replaces as $key => $value)
-		{
-			$value        = (string) $value;
-			$paymentTerms = str_replace('[' . $key . ']', $value, $paymentTerms);
-		}
+		$paymentTerms = OSMembershipHelper::replaceCaseInsensitiveTags($paymentTerms, $replaces);
 
 		$fees['payment_terms'] = $paymentTerms;
 
@@ -358,8 +383,16 @@ class OSMembershipHelperSubscription
 		$noneTaxableFee = max($replaces['none_taxable_fee'], 0);
 
 		$fees    = [];
-		$coupon  = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getSubscriptionCoupon', [$rowPlan, $data, &$fees]);
-		$taxRate = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'calculateSubscriptionTaxRate', [$rowPlan, $data, &$fees]);
+		$coupon  = OSMembershipHelper::callOverridableHelperMethod(
+			'Subscription',
+			'getSubscriptionCoupon',
+			[$rowPlan, $data, &$fees]
+		);
+		$taxRate = OSMembershipHelper::callOverridableHelperMethod(
+			'Subscription',
+			'calculateSubscriptionTaxRate',
+			[$rowPlan, $data, &$fees]
+		);
 
 		$action = $data['act'] ?? '';
 
@@ -505,10 +538,18 @@ class OSMembershipHelperSubscription
 
 		if ($taxRate > 0)
 		{
-			$taxAmount = round(($amount + $setupFee - $discountAmount - $noneTaxableFee) * $taxRate / 100, $numberDecimals);
+			$taxableAmount = $amount + $setupFee - $discountAmount - $noneTaxableFee;
+
+			$taxAmount = static::calculateTaxAmount($taxableAmount, $taxRate);
 		}
 
-		$grossAmount = $setupFee + $amount - $discountAmount + $taxAmount;
+		$grossAmount = $setupFee + $amount - $discountAmount;
+
+		// In case setup price without tax, we must add tax amount to gross amount
+		if (!$config->setup_price_including_tax)
+		{
+			$grossAmount += $taxAmount;
+		}
 
 		if ($grossAmount > 0)
 		{
@@ -583,7 +624,9 @@ class OSMembershipHelperSubscription
 				->where(
 					'(plan_id = 0 OR id IN (SELECT coupon_id FROM #__osmembership_coupon_plans WHERE plan_id = ' . $rowPlan->id . ' OR plan_id < 0))'
 				)
-				->where('id NOT IN (SELECT coupon_id FROM #__osmembership_coupon_plans WHERE plan_id = ' . $negPlanId . ')');
+				->where(
+					'id NOT IN (SELECT coupon_id FROM #__osmembership_coupon_plans WHERE plan_id = ' . $negPlanId . ')'
+				);
 
 			if ($action)
 			{
@@ -675,18 +718,30 @@ class OSMembershipHelperSubscription
 
 			if ($valid)
 			{
-				$taxRate        = OSMembershipHelper::callOverridableHelperMethod('Helper', 'calculateTaxRate', [$rowPlan->id, $country, $state, 1]);
+				$taxRate        = OSMembershipHelper::callOverridableHelperMethod(
+					'Helper',
+					'calculateTaxRate',
+					[$rowPlan->id, $country, $state, 1]
+				);
 				$viesRegistered = 1;
 			}
 			else
 			{
 				$vatNumberValid = 0;
-				$taxRate        = OSMembershipHelper::callOverridableHelperMethod('Helper', 'calculateTaxRate', [$rowPlan->id, $country, $state, 0]);
+				$taxRate        = OSMembershipHelper::callOverridableHelperMethod(
+					'Helper',
+					'calculateTaxRate',
+					[$rowPlan->id, $country, $state, 0]
+				);
 			}
 		}
 		else
 		{
-			$taxRate = OSMembershipHelper::callOverridableHelperMethod('Helper', 'calculateTaxRate', [$rowPlan->id, $country, $state, 0]);
+			$taxRate = OSMembershipHelper::callOverridableHelperMethod(
+				'Helper',
+				'calculateTaxRate',
+				[$rowPlan->id, $country, $state, 0]
+			);
 		}
 
 		$fees['tax_rate']        = $taxRate;
@@ -902,7 +957,9 @@ class OSMembershipHelperSubscription
 			->where(
 				'(plan_id = 0 OR id IN (SELECT coupon_id FROM #__osmembership_coupon_plans WHERE plan_id = ' . (int) $planId . ' OR plan_id < 0))'
 			)
-			->where('id NOT IN (SELECT coupon_id FROM #__osmembership_coupon_plans WHERE plan_id = ' . $negPlanId . ')');
+			->where(
+				'id NOT IN (SELECT coupon_id FROM #__osmembership_coupon_plans WHERE plan_id = ' . $negPlanId . ')'
+			);
 
 		if ($action)
 		{
@@ -1055,7 +1112,9 @@ class OSMembershipHelperSubscription
 		}
 		else
 		{
-			$query->where('(a.lifetime_membership = 1 OR (from_date <= UTC_TIMESTAMP() AND to_date >= UTC_TIMESTAMP()))');
+			$query->where(
+				'(a.lifetime_membership = 1 OR (from_date <= UTC_TIMESTAMP() AND to_date >= UTC_TIMESTAMP()))'
+			);
 		}
 
 		if (count($excludes))
@@ -1116,7 +1175,9 @@ class OSMembershipHelperSubscription
 		}
 		else
 		{
-			$query->where('(a.lifetime_membership = 1 OR (b.from_date <= UTC_TIMESTAMP() AND b.to_date >= UTC_TIMESTAMP()))');
+			$query->where(
+				'(a.lifetime_membership = 1 OR (b.from_date <= UTC_TIMESTAMP() AND b.to_date >= UTC_TIMESTAMP()))'
+			);
 		}
 
 		$db->setQuery($query);
@@ -1223,7 +1284,10 @@ class OSMembershipHelperSubscription
 				{
 					$method = OSMembershipHelperPayments::getPaymentMethod($subscription->payment_method);
 
-					if ($method && method_exists($method, 'supportCancelRecurringSubscription') && $method->supportCancelRecurringSubscription())
+					if ($method && method_exists(
+							$method,
+							'supportCancelRecurringSubscription'
+						) && $method->supportCancelRecurringSubscription())
 					{
 						$subscriptionId = $subscription->subscription_id;
 					}
@@ -1364,7 +1428,10 @@ class OSMembershipHelperSubscription
 				{
 					$method = OSMembershipHelperPayments::getPaymentMethod($subscription->payment_method);
 
-					if ($method && method_exists($method, 'supportCancelRecurringSubscription') && $method->supportCancelRecurringSubscription())
+					if ($method && method_exists(
+							$method,
+							'supportCancelRecurringSubscription'
+						) && $method->supportCancelRecurringSubscription())
 					{
 						$subscriptionId = $subscription->subscription_id;
 					}
@@ -1637,7 +1704,11 @@ class OSMembershipHelperSubscription
 			{
 				if ($row->upgrade_prorated == 2)
 				{
-					$row->price -= OSmembershipHelper::callOverridableHelperMethod('Subscription', 'calculateProratedUpgradePrice', [$row, $userId]);
+					$row->price -= OSmembershipHelper::callOverridableHelperMethod(
+						'Subscription',
+						'calculateProratedUpgradePrice',
+						[$row, $userId]
+					);
 
 					if ($row->price < 0)
 					{
@@ -1646,7 +1717,11 @@ class OSMembershipHelperSubscription
 				}
 				else
 				{
-					$row->price = OSmembershipHelper::callOverridableHelperMethod('Subscription', 'calculateProratedUpgradePrice', [$row, $userId]);
+					$row->price = OSmembershipHelper::callOverridableHelperMethod(
+						'Subscription',
+						'calculateProratedUpgradePrice',
+						[$row, $userId]
+					);
 				}
 			}
 		}
@@ -1746,7 +1821,10 @@ class OSMembershipHelperSubscription
 				$db->setQuery($query);
 				$rowSubscription = $db->loadObject();
 
-				if ($rowSubscription && $rowSubscription->subscription_id && !str_contains($rowSubscription->payment_method, 'os_offline'))
+				if ($rowSubscription && $rowSubscription->subscription_id && !str_contains(
+						$rowSubscription->payment_method,
+						'os_offline'
+					))
 				{
 					unset($planIds[$i]);
 
@@ -1920,7 +1998,9 @@ class OSMembershipHelperSubscription
 			$now    = Factory::getDate();
 			$nowSql = $db->quote($now->toSql());
 
-			$query->select('plan_id, MIN(from_date) AS active_from_date, MAX(DATEDIFF(' . $nowSql . ', from_date)) AS active_in_number_days')
+			$query->select(
+				'plan_id, MIN(from_date) AS active_from_date, MAX(DATEDIFF(' . $nowSql . ', from_date)) AS active_in_number_days'
+			)
 				->from('#__osmembership_subscribers AS a')
 				->where('user_id = ' . (int) $user->id)
 				->where('DATEDIFF(' . $nowSql . ', from_date) >= 0')
@@ -2029,6 +2109,13 @@ class OSMembershipHelperSubscription
 
 		$mainSubscription = null;
 
+		// Extra reminders
+		$extraReminderSentFields = [
+			'fourth_reminder_sent',
+			'fifth_reminder_sent',
+			'sixth_reminder_sent',
+		];
+
 		foreach ($subscriberIds as $subscriberId)
 		{
 			$rowSubscription->load($subscriberId);
@@ -2039,6 +2126,14 @@ class OSMembershipHelperSubscription
 			$rowSubscription->first_reminder_sent  = 1;
 			$rowSubscription->second_reminder_sent = 1;
 			$rowSubscription->third_reminder_sent  = 1;
+
+			foreach ($extraReminderSentFields as $field)
+			{
+				if (property_exists($rowSubscription, $field))
+				{
+					$rowSubscription->{$field} = 1;
+				}
+			}
 
 			// Mark SMS reminders as sent
 			$rowSubscription->first_sms_reminder_sent  = 1;
@@ -2082,7 +2177,10 @@ class OSMembershipHelperSubscription
 		{
 			try
 			{
-				JLoader::register('OSMembershipModelRegister', JPATH_ROOT . '/components/com_osmembership/model/register.php');
+				JLoader::register(
+					'OSMembershipModelRegister',
+					JPATH_ROOT . '/components/com_osmembership/model/register.php'
+				);
 
 				/**@var OSMembershipModelRegister $model * */
 				$model = new OSMembershipModelRegister();
@@ -2122,7 +2220,10 @@ class OSMembershipHelperSubscription
 
 					if (!$date->modify($modifyDurationString))
 					{
-						Factory::getApplication()->enqueueMessage(sprintf('Modify duration string %s is invalid', $modifyDurationString), 'warning');
+						Factory::getApplication()->enqueueMessage(
+							sprintf('Modify duration string %s is invalid', $modifyDurationString),
+							'warning'
+						);
 					}
 				}
 			}
@@ -2363,6 +2464,23 @@ class OSMembershipHelperSubscription
 					->set('offline_recurring_email_sent = 1')
 					->where('plan_id = ' . (int) $row->plan_id)
 					->where('user_id = ' . (int) $row->user_id);
+
+				$extraReminderSentFields = [
+					'fourth_reminder_sent',
+					'fifth_reminder_sent',
+					'sixth_reminder_sent',
+				];
+
+				$subscribeTableFields = array_keys($db->getTableColumns('#__osmembership_subscribers'));
+
+				foreach ($extraReminderSentFields as $extraField)
+				{
+					if (in_array($extraField, $subscribeTableFields))
+					{
+						$query->set($extraField . ' = 1');
+					}
+				}
+				
 				$db->setQuery($query);
 				$db->execute();
 			}
@@ -2579,17 +2697,16 @@ class OSMembershipHelperSubscription
 		}
 		else
 		{
-			$latestReplaces = OSMembershipHelper::callOverridableHelperMethod('Helper', 'buildTags', [$latestSubscription, $config]);
+			$latestReplaces = OSMembershipHelper::callOverridableHelperMethod(
+				'Helper',
+				'buildTags',
+				[$latestSubscription, $config]
+			);
 		}
 
 		$output = $config->card_layout;
 
-		foreach ($replaces as $key => $value)
-		{
-			$key    = strtoupper($key);
-			$value  = (string) $value;
-			$output = str_ireplace("[$key]", $value, $output);
-		}
+		$output = OSMembershipHelper::replaceCaseInsensitiveTags($output, $replaces);
 
 		foreach ($latestReplaces as $key => $value)
 		{
@@ -2631,9 +2748,14 @@ class OSMembershipHelperSubscription
 			'title'                => 'Member Card',
 		];
 
-		if ($config->get('custom_page_format_width') > 0 && $config->get('custom_page_format_width') > 0)
+		if ($config->get('card_page_format') === 'custom'
+			&& $config->get('custom_page_format_width') > 0
+			&& $config->get('custom_page_format_width') > 0)
 		{
-			$options['PDF_PAGE_FORMAT_CUSTOM'] = [$config->get('custom_page_format_width'), $config->get('custom_page_format_width')];
+			$options['PDF_PAGE_FORMAT_CUSTOM'] = [
+				$config->get('custom_page_format_width'),
+				$config->get('custom_page_format_width')
+			];
 		}
 
 		$replaces = OSMembershipHelper::callOverridableHelperMethod('Helper', 'buildTags', [$item, $config]);
@@ -2654,8 +2776,16 @@ class OSMembershipHelperSubscription
 			$output = $config->card_layout;
 		}
 
-		$replaces['plan_subscription_from_date'] = HTMLHelper::_('date', $item->plan_subscription_from_date, $config->date_format);
-		$replaces['plan_subscription_to_date']   = HTMLHelper::_('date', $item->plan_subscription_to_date, $config->date_format);
+		$replaces['plan_subscription_from_date'] = HTMLHelper::_(
+			'date',
+			$item->plan_subscription_from_date,
+			$config->date_format
+		);
+		$replaces['plan_subscription_to_date']   = HTMLHelper::_(
+			'date',
+			$item->plan_subscription_to_date,
+			$config->date_format
+		);
 
 		$subscriptions             = static::getSubscriptions($item->profile_id);
 		$replaces['subscriptions'] = OSMembershipHelperHtml::loadCommonLayout(
@@ -2663,11 +2793,27 @@ class OSMembershipHelperSubscription
 			['subscriptions' => $subscriptions, 'config' => $config]
 		);
 
-		foreach ($replaces as $key => $value)
+		$output = OSMembershipHelper::replaceCaseInsensitiveTags($output, $replaces);
+
+		$attributes = [];
+
+		if ($config->qrcode_image_width > 0)
 		{
-			$key    = strtoupper($key);
-			$value  = (string) $value;
-			$output = str_ireplace("[$key]", $value, $output);
+			$attributes['width'] = $config->qrcode_image_width;
+		}
+
+		if ($config->qrcode_image_height > 0)
+		{
+			$attributes['height'] = $config->qrcode_image_height;
+		}
+
+		if (count($attributes) > 0)
+		{
+			$attributes = ' ' . http_build_query($attributes, '', '=');
+		}
+		else
+		{
+			$attributes = '';
 		}
 
 		// Generate QRCODE and have it displayed
@@ -2687,7 +2833,7 @@ class OSMembershipHelperSubscription
 				(new QRCode($qrOptions))->render($item->subscription_code, $filePath);
 			}
 
-			$imgTag = '<img src="media/com_osmembership/qrcodes/' . $item->subscription_code . '.jpg" border="0" alt="QRCODE" />';
+			$imgTag = '<img src="media/com_osmembership/qrcodes/' . $item->subscription_code . '.jpg"' . $attributes . ' border="0" alt="QRCODE" />';
 			$output = str_ireplace('[QRCODE]', $imgTag, $output);
 		}
 
@@ -2698,12 +2844,7 @@ class OSMembershipHelperSubscription
 
 			$memberData = Text::_('OSM_MEMBER_DATA_QRCODE');
 
-			foreach ($replaces as $key => $value)
-			{
-				$key        = strtoupper($key);
-				$value      = (string) $value;
-				$memberData = str_ireplace("[$key]", $value, $memberData);
-			}
+			$memberData = OSMembershipHelper::replaceCaseInsensitiveTags($memberData, $replaces);
 
 			$version = (int) $config->get('qrcode_size', 4) ?: QRCODE::VERSION_AUTO;
 
@@ -2714,7 +2855,7 @@ class OSMembershipHelperSubscription
 
 			(new QRCode($qrOptions))->render($memberData, $filePath);
 
-			$imgTag = '<img src="media/com_osmembership/qrcodes/subscription_' . $item->id . '.jpg" border="0" alt="QRCODE Member Data" />';
+			$imgTag = '<img src="media/com_osmembership/qrcodes/subscription_' . $item->id . '.jpg"' . $attributes . ' border="0" alt="QRCODE Member Data" />';
 			$output = str_ireplace('[MEMBER_DATA_QRCODE]', $imgTag, $output);
 		}
 
@@ -2766,7 +2907,10 @@ class OSMembershipHelperSubscription
 		$user = Factory::getApplication()->getIdentity();
 
 		// If user does not have subscribe access, he is not allowed to subscribe or upgrade to the plan
-		if (property_exists($item, 'subscribe_access') && !in_array($item->subscribe_access, $user->getAuthorisedViewLevels()))
+		if (property_exists($item, 'subscribe_access') && !in_array(
+				$item->subscribe_access,
+				$user->getAuthorisedViewLevels()
+			))
 		{
 			return [];
 		}
@@ -2908,7 +3052,11 @@ class OSMembershipHelperSubscription
 			return;
 		}
 
-		Factory::getApplication()->getLanguage()->load('plg_system_privacyconsent', JPATH_ADMINISTRATOR, $row->language);
+		Factory::getApplication()->getLanguage()->load(
+			'plg_system_privacyconsent',
+			JPATH_ADMINISTRATOR,
+			$row->language
+		);
 
 		$params = new Registry($row->params);
 
@@ -2916,7 +3064,11 @@ class OSMembershipHelperSubscription
 		$privacyConsent = (object) [
 			'user_id' => $row->user_id,
 			'subject' => 'PLG_SYSTEM_PRIVACYCONSENT_SUBJECT',
-			'body'    => Text::sprintf('PLG_SYSTEM_PRIVACYCONSENT_BODY', $params->get('user_ip'), $params->get('user_agent')),
+			'body'    => Text::sprintf(
+				'PLG_SYSTEM_PRIVACYCONSENT_BODY',
+				$params->get('user_ip'),
+				$params->get('user_agent')
+			),
 			'created' => Factory::getDate()->toSql(),
 		];
 
@@ -3198,7 +3350,14 @@ class OSMembershipHelperSubscription
 			return $data;
 		}
 
-		$rowFields = OSMembershipHelper::getProfileFields($row->plan_id, true, $row->language, $row->act, null, $row->user_id);
+		$rowFields = OSMembershipHelper::getProfileFields(
+			$row->plan_id,
+			true,
+			$row->language,
+			$row->act,
+			null,
+			$row->user_id
+		);
 
 		$query->clear()
 			->select('a.name, b.field_value')
@@ -3243,5 +3402,26 @@ class OSMembershipHelperSubscription
 		$db->setQuery($query);
 
 		return $db->loadResult();
+	}
+
+	/**
+	 * Calculate tax amount
+	 *
+	 * @param   float  $taxableAmount
+	 * @param   float  $taxRate
+	 *
+	 * @return float
+	 */
+	protected static function calculateTaxAmount($taxableAmount, $taxRate)
+	{
+		$config         = OSMembershipHelper::getConfig();
+		$numberDecimals = (int) $config->get('decimals') ?: 2;
+
+		if ($config->setup_price_including_tax)
+		{
+			return round($taxableAmount - ($taxableAmount / (1 + ($taxRate / 100))), $numberDecimals);
+		}
+
+		return round($taxableAmount * $taxRate / 100, $numberDecimals);
 	}
 }

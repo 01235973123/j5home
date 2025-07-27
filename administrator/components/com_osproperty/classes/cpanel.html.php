@@ -4,7 +4,7 @@
 # cpanel.html.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -24,7 +24,7 @@ class HTML_OspropertyCpanel
 {
 	static function cpanelHTML($option,$lists,$countries)
 	{
-		global $mainframe,$configClass,$langArr,$languages,$bootstrapHelper;
+		global $mainframe,$configClass,$languages,$bootstrapHelper;
 		$db = Factory::getDbo();
 		$user = Factory::getUser();
 		
@@ -120,11 +120,7 @@ class HTML_OspropertyCpanel
 														</thead>
 														<tbody>
 															<?php
-															if(file_exists(JPATH_ROOT."/components/com_osproperty/version.txt")){
-																
-															$fh = fopen(JPATH_ROOT."/components/com_osproperty/version.txt","r");
-															$version = fread($fh,filesize(JPATH_ROOT."/components/com_osproperty/version.txt"));
-															@fclose($fh);
+															$version = OSPHelper::getInstalledVersion();
 															?>
 															<tr>
 																<td align="left" class="padding5" style="vertical-align:middle;">
@@ -148,15 +144,16 @@ class HTML_OspropertyCpanel
 																					?>
 																				</div>
 																			<?php
-																			}		
+																			}
+																			else
+																			{
+																				echo $versionObj['message'];
+																			}
 																			?>
 																		</div>
 																	</div>
 																</TD>
 															</tr>
-															<?php
-															}
-															?>
 															<!--
 															<tr>
 																<td align="left" class="padding5">

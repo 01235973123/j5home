@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -37,7 +37,7 @@ class OSMembershipViewSubscribersHtml extends MPFViewList
 	{
 		parent::prepareView();
 
-		$db    = $this->model->getDbo();
+		$db = $this->model->getDbo();
 		$query = $db->getQuery(true)
 			->select('name')
 			->from('#__osmembership_fields')
@@ -61,12 +61,18 @@ class OSMembershipViewSubscribersHtml extends MPFViewList
 		}
 		else
 		{
-			$canDo = call_user_func(['MPFHelper', 'getActions'], $this->viewConfig['option'], $this->name, $this->state);
+			$canDo = call_user_func(['MPFHelper', 'getActions'],
+				$this->viewConfig['option'],
+				$this->name,
+				$this->state);
 		}
 
 		$languagePrefix = $this->viewConfig['language_prefix'];
 
-		ToolbarHelper::title(Text::_(strtoupper($languagePrefix . '_' . $this->name . '_MANAGEMENT')), 'link ' . $this->name);
+		ToolbarHelper::title(
+			Text::_(strtoupper($languagePrefix . '_' . $this->name . '_MANAGEMENT')),
+			'link ' . $this->name
+		);
 
 		if ($canDo->get('core.edit') && isset($this->items[0]))
 		{

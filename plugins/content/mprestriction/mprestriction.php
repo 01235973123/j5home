@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -39,7 +39,7 @@ class plgContentMPRestriction extends CMSPlugin implements SubscriberInterface
 			'onContentPrepare' => 'onContentPrepare',
 		];
 	}
-	
+
 	/**
 	 * @param   Event  $event
 	 *
@@ -64,16 +64,16 @@ class plgContentMPRestriction extends CMSPlugin implements SubscriberInterface
 		// Require library + register autoloader
 		require_once JPATH_ADMINISTRATOR . '/components/com_osmembership/loader.php';
 
-		$document = Factory::getApplication()->getDocument();
-		$rootUri  = Uri::base(true);
-
-		$document->addStylesheet($rootUri . '/media/com_osmembership/assets/css/style.css');
+		$wa = Factory::getApplication()
+			->getDocument()
+			->getWebAssetManager()
+			->registerAndUseStyle('com_osmembership.style', 'media/com_osmembership/assets/css/style.css');
 
 		$customCssFile = JPATH_ROOT . '/media/com_osmembership/assets/css/custom.css';
 
 		if (file_exists($customCssFile) && filesize($customCssFile) > 0)
 		{
-			$document->addStylesheet($rootUri . '/media/com_osmembership/assets/css/custom.css');
+			$wa->registerAndUseStyle('com_osmembership.custom', 'media/com_osmembership/assets/css/custom.css');
 		}
 
 		$message     = OSMembershipHelper::getMessages();

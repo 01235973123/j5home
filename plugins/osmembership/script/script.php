@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -51,6 +51,7 @@ class plgOSMembershipScript extends CMSPlugin implements SubscriberInterface
 			'onAfterStoreSubscription'    => 'onAfterStoreSubscription',
 			'onMembershipActive'          => 'onMembershipActive',
 			'onMembershipExpire'          => 'onMembershipExpire',
+			'onSubscriptionAfterSave'     => 'onSubscriptionAfterSave',
 		];
 	}
 
@@ -110,6 +111,7 @@ class plgOSMembershipScript extends CMSPlugin implements SubscriberInterface
 		$params->set('subscription_store_script', $data['subscription_store_script']);
 		$params->set('subscription_active_script', $data['subscription_active_script']);
 		$params->set('subscription_expired_script', $data['subscription_expired_script']);
+		$params->set('subscription_update_script', $data['subscription_update_script']);
 		$row->params = $params->toString();
 
 		$row->store();
@@ -185,6 +187,34 @@ class plgOSMembershipScript extends CMSPlugin implements SubscriberInterface
 
 		$params = $this->getPlanParams($row->plan_id);
 		$script = trim($params->get('subscription_expired_script', ''));
+
+		if ($script)
+		{
+			try
+			{
+				eval($script);
+			}
+			catch (Exception $e)
+			{
+				$this->app->enqueueMessage(Text::_('The PHP script is wrong. Please contact Administrator'), 'error');
+			}
+		}
+	}
+
+	/**
+	 * Run the PHP script when membership expired
+	 *
+	 * @param   Event  $event
+	 *
+	 * @return void
+	 */
+	public function onSubscriptionAfterSave(Event $event): void
+	{
+		/* @var OSMembershipTableSubscriber $row */
+		[$context, $row, $data, $isNew] = array_values($event->getArguments());
+
+		$params = $this->getPlanParams($row->plan_id);
+		$script = trim($params->get('subscription_update_script', ''));
 
 		if ($script)
 		{

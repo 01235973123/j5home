@@ -10,33 +10,71 @@
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Image\Image;
-use Joomla\Registry\Registry;
+use Joomla\CMS\Application\ApplicationHelper;
+use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Folder;
+use Joomla\CMS\Form\Form;
+use Joomla\CMS\HTML\HTMLHelper;
+use Joomla\CMS\Language\Multilanguage;
+use Joomla\CMS\Language\Text;
+use Joomla\CMS\Mail\MailHelper;
+use Joomla\CMS\User\User;
+use Joomla\Registry\Registry;
+use Joomla\String\StringHelper;
+use Joomla\Utilities\ArrayHelper;
+use OSSolution\EventBooking\Admin\Event\Event\AfterSaveEvent;
+use OSSolution\EventBooking\Admin\Event\Events\AfterDeleteEvents;
 
 class EventbookingModelOverrideEvent extends EventbookingModelEvent
 {
-    protected function afterStore($row, $input, $isNew)
+    protected function beforePublish($cid, $state)
     {
-        parent::afterStore($row, $input, $isNew);
+        parent::beforePublish($cid, $state);
 
-        $app  = Factory::getApplication();
-        $user = Factory::getApplication()->getIdentity();
+        if ($state == 1) {
+            $config = EventbookingHelper::getConfig();
 
-        if ($app->isClient('administrator') || $user->authorise('core.admin')) {
-            $data = $input->getData(RAD_INPUT_ALLOWRAW);
-        } else {
-            $data = $input->getData();
+            foreach ($cid as $id) {
+                /* @var EventbookingTableEvent $row */
+                $row = $this->getTable();
+
+                if (!$row->load($id)) {
+                    continue;
+                }
+
+                if (!$row->created_by) {
+                    continue;
+                }
+
+                if ($row->published) {
+                    continue;
+                }
+
+                EventbookingHelper::callOverridableHelperMethod('Mail', 'sendEventApprovedEmail', [$row, $config]);
+            }
+        }
+    }
+
+    public function store($input, $ignore = [])
+    {
+        parent::store($input, $ignore);
+        $config = EventbookingHelper::getConfig();
+
+        /* @var EventbookingTableEvent $row */
+        $row       = $this->getTable();
+        $published = true;
+        $isNew     = true;
+
+        if ($this->state->id) {
+            $isNew = false;
+            $row->load($this->state->id);
+            $published = $row->published;
         }
 
-        if (isset($data['ids_event_published'])) {
-            $idsEventPublished = implode(',', $data['ids_event_published']);
-            $row->ids_event_published = $idsEventPublished;
-        } else {
-            $row->ids_event_published = '';
+        if (!$isNew && !$published && $row->published && $row->created_by) {
+            EventbookingHelper::callOverridableHelperMethod('Mail', 'sendEventApprovedEmail', [$row, $config]);
         }
-
-        $row->store();
     }
 }

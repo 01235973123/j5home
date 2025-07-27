@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -11,10 +11,11 @@ defined('_JEXEC') or die;
 
 use Joomla\Archive\Archive;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
-use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Language\Text;
+use Joomla\Filesystem\Exception\FilesystemException;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
+use Joomla\Filesystem\Path;
 
 class OSMembershipModelPlugin extends MPFModelAdmin
 {
@@ -72,9 +73,11 @@ class OSMembershipModelPlugin extends MPFModelAdmin
 
 		$dest = Factory::getApplication()->get('tmp_path') . '/' . $plugin['name'];
 
-		$uploaded = File::upload($plugin['tmp_name'], $dest, false, true);
-
-		if (!$uploaded)
+		try
+		{
+			File::upload($plugin['tmp_name'], $dest);
+		}
+		catch (FileSystemException $e)
 		{
 			throw new Exception(Text::_('OSM_PLUGIN_UPLOAD_FAILED'));
 		}
@@ -93,7 +96,7 @@ class OSMembershipModelPlugin extends MPFModelAdmin
 
 		$dirList = array_merge(Folder::files($extractDir, ''), Folder::folders($extractDir, ''));
 
-		if (count($dirList) == 1 && Folder::exists($extractDir . '/' . $dirList[0]))
+		if (count($dirList) == 1 && is_dir(Path::clean($extractDir . '/' . $dirList[0])))
 		{
 			$extractDir = Path::clean($extractDir . '/' . $dirList[0]);
 		}
@@ -211,9 +214,9 @@ class OSMembershipModelPlugin extends MPFModelAdmin
 			{
 				$folderName = $file;
 
-				if (Folder::exists($extractDir . '/' . $folderName))
+				if (is_dir(Path::clean($extractDir . '/' . $folderName)))
 				{
-					if (Folder::exists($pluginDir . '/' . $folderName))
+					if (is_dir(Path::clean($pluginDir . '/' . $folderName)))
 					{
 						Folder::delete($pluginDir . '/' . $folderName);
 					}
@@ -242,20 +245,19 @@ class OSMembershipModelPlugin extends MPFModelAdmin
 	{
 		$row = $this->getTable();
 		$row->load($id);
-		$name         = $row->name;
-		$pluginFolder = JPATH_ROOT . '/components/com_osmembership/plugins';
-		$file         = $pluginFolder . '/' . $name . '.xml';
+		$name      = $row->name;
+		$pluginDir = JPATH_ROOT . '/components/com_osmembership/plugins';
+		$file      = $pluginDir . '/' . $name . '.xml';
 
-		if (!File::exists($file))
+		if (!is_file($file))
 		{
 			$row->delete();
 
 			return true;
 		}
 
-		$root      = simplexml_load_file($file);
-		$files     = $root->files->children() ?: [];
-		$pluginDir = JPATH_ROOT . '/components/com_pmform/payments';
+		$root  = simplexml_load_file($file);
+		$files = $root->files->children() ?: [];
 
 		foreach ($files as $file)
 		{
@@ -263,7 +265,7 @@ class OSMembershipModelPlugin extends MPFModelAdmin
 			{
 				$fileName = $file;
 
-				if (File::exists($pluginDir . '/' . $fileName))
+				if (is_file($pluginDir . '/' . $fileName))
 				{
 					File::delete($pluginDir . '/' . $fileName);
 				}
@@ -272,14 +274,14 @@ class OSMembershipModelPlugin extends MPFModelAdmin
 			{
 				$folderName = $file;
 
-				if ($folderName && Folder::exists($pluginDir . '/' . $folderName))
+				if (is_dir($pluginDir . '/' . $folderName))
 				{
 					Folder::delete($pluginDir . '/' . $folderName);
 				}
 			}
 		}
 
-		File::delete($pluginFolder . '/' . $name . '.xml');
+		File::delete($pluginDir . '/' . $name . '.xml');
 		$row->delete();
 
 		return true;

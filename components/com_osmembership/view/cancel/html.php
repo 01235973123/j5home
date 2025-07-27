@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -58,7 +58,10 @@ class OSMembershipViewCancelHtml extends MPFViewHtml
 		if ($published === 1)
 		{
 			Factory::getApplication()->redirect(
-				Route::_('index.php?option=com_osmembership&view=complete&Itemid=' . $this->input->getInt('Itemid'), false)
+				Route::_(
+					'index.php?option=com_osmembership&view=complete&Itemid=' . $this->input->getInt('Itemid'),
+					false
+				)
 			);
 		}
 

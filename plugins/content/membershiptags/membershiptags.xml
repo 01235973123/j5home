@@ -4,10 +4,10 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 3, or later</license>
     <creationDate>April 2018</creationDate>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin allows you to display user membership information by using tags such as [FIRST_NAME],
         [LAST_NAME], [MEMBERSHIP_ID]...in a Joomla article or custom HTML Module.
     </description>

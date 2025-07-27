@@ -7,7 +7,6 @@
  */
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Table;
@@ -46,7 +45,16 @@ trait MPFPaymentCommon
 		$config              = OSMembershipHelper::getConfig();
 		$row->transaction_id = $transactionId;
 		$row->payment_date   = gmdate('Y-m-d H:i:s');
-		$row->published      = 1;
+
+		if ($row->act !== 'renew')
+		{
+			$row->published = $this->params->get('paid_payment_subscription_status', 1);
+		}
+		else
+		{
+			$row->published = 1;
+		}
+		
 		$row->store();
 
 		if ($row->act == 'upgrade')
@@ -71,6 +79,15 @@ trait MPFPaymentCommon
 		if ($row->process_payment_for_subscription)
 		{
 			$row->payment_method = $this->name;
+
+			$rowPlan = OSMembershipHelperDatabase::getPlan($row->plan_id);
+
+			if (str_starts_with($row->payment_method ?? '', 'os_offline')
+				&& !(int) $rowPlan->expired_date)
+			{
+				$this->reCalculateSubscriptionDuration($row);
+			}
+
 			$row->store();
 			OSMembershipHelperMail::sendSubscriptionPaymentEmail($row, $config);
 		}
@@ -78,6 +95,27 @@ trait MPFPaymentCommon
 		{
 			OSMembershipHelperMail::sendEmails($row, $config);
 		}
+	}
+
+	/**
+	 * Recalculate subscription from_date and to_date for offline payment subscription when the subscription is approved
+	 *
+	 * @param   OSMembershipTableSubscriber  $row
+	 *
+	 * @return void
+	 */
+	protected function reCalculateSubscriptionDuration($row)
+	{
+		$createdDate = Factory::getDate($row->created_date);
+		$fromDate    = Factory::getDate($row->from_date);
+		$toDate      = Factory::getDate($row->to_date);
+		$todayDate   = Factory::getDate('now');
+		$diff        = $createdDate->diff($todayDate);
+		$fromDate->add($diff);
+		$toDate->add($diff);
+		$row->from_date = $fromDate->toSql();
+		$row->to_date   = $toDate->toSql();
+		$row->store();
 	}
 
 	/**
@@ -183,7 +221,8 @@ trait MPFPaymentCommon
 	 */
 	protected function getPaymentNotifyUrl($row, $Itemid = 0, $queryString = ''): string
 	{
-		$url = Uri::root() . 'index.php?option=com_osmembership&task=payment_confirm&payment_method=' . $this->getName();
+		$url = Uri::root() . 'index.php?option=com_osmembership&task=payment_confirm&payment_method=' . $this->getName(
+			);
 
 		if ($queryString)
 		{
@@ -208,7 +247,8 @@ trait MPFPaymentCommon
 	 */
 	protected function getRecurringPaymentNotifyUrl($row, $Itemid = 0): string
 	{
-		$url = Uri::root() . 'index.php?option=com_osmembership&task=recurring_payment_confirm&payment_method=' . $this->getName();
+		$url = Uri::root(
+			) . 'index.php?option=com_osmembership&task=recurring_payment_confirm&payment_method=' . $this->getName();
 
 		if ($Itemid > 0)
 		{
@@ -241,7 +281,10 @@ trait MPFPaymentCommon
 		}
 		else
 		{
-			$url = OSMembershipHelperRoute::getViewRoute('complete', $Itemid) . '&subscription_code=' . $row->subscription_code . $langLink;
+			$url = OSMembershipHelperRoute::getViewRoute(
+					'complete',
+					$Itemid
+				) . '&subscription_code=' . $row->subscription_code . $langLink;
 		}
 
 		return Route::_($url, false, 0, $absolute);
@@ -378,7 +421,9 @@ trait MPFPaymentCommon
 			substr($this->getName(), 3)
 		);
 
-		if (File::exists(JPATH_THEMES . '/' . $template . '/html/com_osmembership/plugins/' . $name . '/' . $layout . '.php'))
+		if (is_file(
+			JPATH_THEMES . '/' . $template . '/html/com_osmembership/plugins/' . $name . '/' . $layout . '.php'
+		))
 		{
 			return JPATH_THEMES . '/' . $template . '/html/com_osmembership/plugins/' . $name . '/' . $layout . '.php';
 		}

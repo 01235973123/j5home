@@ -3,17 +3,22 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\CMS\Factory;
 use Joomla\CMS\Router\Route;
 
-JLoader::register('OSMembershipController', JPATH_ADMINISTRATOR . '/components/com_osmembership/controller/controller.php');
-JLoader::register('OSMembershipControllerPlan', JPATH_ADMINISTRATOR . '/components/com_osmembership/controller/plan.php');
+JLoader::register(
+	'OSMembershipController',
+	JPATH_ADMINISTRATOR . '/components/com_osmembership/controller/controller.php'
+);
+JLoader::register(
+	'OSMembershipControllerPlan',
+	JPATH_ADMINISTRATOR . '/components/com_osmembership/controller/plan.php'
+);
 
 class OSMembershipControllerMplan extends OSMembershipControllerPlan
 {
@@ -27,7 +32,10 @@ class OSMembershipControllerMplan extends OSMembershipControllerPlan
 	protected function getViewListUrl()
 	{
 		return Route::_(
-			'index.php?option=com_osmembership&view=mplans&Itemid=' . OSMembershipHelperRoute::findView('mplans', $this->input->getInt('Itemid')),
+			'index.php?option=com_osmembership&view=mplans&Itemid=' . OSMembershipHelperRoute::findView(
+				'mplans',
+				$this->input->getInt('Itemid')
+			),
 			false
 		);
 	}
@@ -77,8 +85,8 @@ class OSMembershipControllerMplan extends OSMembershipControllerPlan
 	 *
 	 * Extended classes can override this if necessary.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key; default is id.
+	 * @param   array  $data  An array of input data.
+	 * @param   string  $key  The name of the key for the primary key; default is id.
 	 *
 	 * @return  bool
 	 */

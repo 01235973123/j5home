@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -102,7 +102,11 @@ class OSMembershipViewUpgradeMembershipHtml extends MPFViewHtml
 
 		// Need to get subscriptions information of the user
 		$toPlanId     = $this->input->getInt('to_plan_id');
-		$upgradeRules = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getUpgradeRules', [$item->user_id]);
+		$upgradeRules = OSMembershipHelper::callOverridableHelperMethod(
+			'Subscription',
+			'getUpgradeRules',
+			[$item->user_id]
+		);
 		$n            = count($upgradeRules);
 
 		if ($toPlanId > 0)

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -90,7 +90,7 @@ class OSMembershipViewPlansHtml extends MPFViewHtml
 			$item    = $items[$i];
 			$taxRate = OSMembershipHelper::callOverridableHelperMethod('Helper', 'calculateTaxRate', [$item->id]);
 
-			if ($config->show_price_including_tax && $taxRate > 0)
+			if ($config->show_price_including_tax && !$config->setup_price_including_tax && $taxRate > 0)
 			{
 				$item->price        = $item->price * (1 + $taxRate / 100);
 				$item->trial_amount = $item->trial_amount * (1 + $taxRate / 100);

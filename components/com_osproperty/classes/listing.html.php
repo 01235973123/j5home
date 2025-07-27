@@ -3,7 +3,7 @@
 # listing.html.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -260,7 +260,7 @@ class HTML_OspropertyListing{
 				<?php
 				}
 				//echo $configClass['adv_type_ids'];
-				if(($configClass['adv_type_ids'] == "0") or ($configClass['adv_type_ids'] == ""))
+				if(($configClass['adv_type_ids'] == "0") || ($configClass['adv_type_ids'] == ""))
 				{
 					//HelperOspropertyCommon::advsearchForm($groups,$lists,0);
 					HelperOspropertyCommon::advsearchForm($groups,$lists,0);
@@ -355,7 +355,7 @@ class HTML_OspropertyListing{
 								 $otherInforArr[count($otherInforArr)] = Text::_('OS_TOTAL_VIEWING').": <strong>".$row->hits."</strong>";
 							}
 						}
-						if(($configClass['listing_show_rating'] == 1) and ($configClass['show_rating'] == 1))
+						if(($configClass['listing_show_rating'] == 1) && ($configClass['show_rating'] == 1))
 						{
 							$otherInforArr[count($otherInforArr)] = Text::_('OS_RATE').": <strong>".$row->rating."</strong>";
 						}
@@ -411,7 +411,7 @@ class HTML_OspropertyListing{
 					$params = $themeobj->params;
 					$params = new Registry($params) ;
 					$listview = 1;
-					if(($themename == "default") or ($theme->default_duplicate == 1))
+					if(($themename == "default") || ($theme->default_duplicate == 1))
 					{
 						$default_list_view = $params->get('default_layout',1);
 						switch ($default_list_view)
@@ -685,7 +685,8 @@ class HTML_OspropertyListing{
 			$active = $menus->getActive();
 			$url = $active->link;
 			$type_id_menu = $active->query['type_id'];
-			if(($property_type > 0) and (intval($type_id_menu) > 0) and ($property_type == $type_id_menu)){
+			if($property_type > 0 && intval($type_id_menu) > 0 && $property_type == $type_id_menu)
+			{
 				$type_url = "&type_id=".$property_type;
 			}
 			$catIds_menu = (array)$active->query['catIds'];
@@ -700,12 +701,14 @@ class HTML_OspropertyListing{
 			}
 			
 			$country_id_menu = $active->query['country_id'];
-			if(($country_id > 0) and (intval($country_id_menu) > 0) and ($country_id == $country_id_menu)){
+			if($country_id > 0 && intval($country_id_menu) > 0 && $country_id == $country_id_menu)
+			{
 				$country_url = "&country_id=".$country_id_menu;
 			}
 			
 			$company_id_menu = $active->query['company_id'];
-			if(($company_id > 0) and (intval($company_id_menu) > 0) and ($company_id == $company_id_menu)){
+			if($company_id > 0 && intval($company_id_menu) > 0 && $company_id == $company_id_menu)
+			{
 				$company_url = "&company_id=".$company_id;
 			}
 			
@@ -756,7 +759,8 @@ class HTML_OspropertyListing{
 	 * @param unknown_type $rows
 	 * @param unknown_type $pageNav
 	 */
-	static function listProperties($option,$rows,$pageNav,$lists,$filterParams){
+	static function listProperties($option,$rows,$pageNav,$lists,$filterParams)
+	{
 		global $bootstrapHelper, $mainframe,$jinput,$configClass,$symbol;
 		$db = Factory::getDbo();
 		$document = Factory::getDocument();
@@ -771,7 +775,8 @@ class HTML_OspropertyListing{
                  $otherInforArr[count($otherInforArr)] = Text::_('OS_TOTAL_VIEWING').": <strong>".$row->hits."</strong>";
             }
 
-			if(($configClass['listing_show_rating'] == 1) and ($configClass['show_rating'] == 1)){
+			if($configClass['listing_show_rating'] == 1 && $configClass['show_rating'] == 1)
+			{
 				$otherInforArr[count($otherInforArr)] = Text::_('OS_RATE').": <strong>".$row->rating."</strong>";
 			}
 			
@@ -855,7 +860,7 @@ class HTML_OspropertyListing{
 		$params = new Registry($params) ;
 		$listview = 1;
 
-		if(($themename == "default") or ($themeobj->default_duplicate == 1)){
+		if(($themename == "default") || ($themeobj->default_duplicate == 1)){
 			$default_list_view = $params->get('default_layout',1);
 			switch ($default_list_view){
 				case "1":
@@ -1039,7 +1044,7 @@ class HTML_OspropertyListing{
 						<?php
 						if($configClass['request_term_condition'] == 1){
 							?>
-							if(form.termcondition.checked == false){
+							if(form.querySelector('input[name="termcondition"]') && form.termcondition.checked == false){
 								alert(" <?php echo Text::_('OS_PLEASE_AGREE_WITH_OUT_TERM_AND_CONDITION')?>");
 								document.getElementById('termcondition').focus();
 								cansubmit = 0;
@@ -1059,7 +1064,7 @@ class HTML_OspropertyListing{
 						}
 					}else if(temp1 == "agree_privacy_policy"){
 						var agree_privacy_policy = form.agree_privacy_policy;
-						if(agree_privacy_policy.checked == false){
+						if(form.querySelector('input[name="agree_privacy_policy"]') && agree_privacy_policy.checked == false){
 							alert("<?php echo Text::_('OS_AGREE_PRIVACY_POLICY_ERROR');?>");
 							temp2.focus();
 							cansubmit = 0;
@@ -1116,7 +1121,8 @@ class HTML_OspropertyListing{
 		?>
 		<table  width="100%">
 			<?php
-			if(($row->ref != "") and ($configClass['show_ref'] == 1)){
+			if($row->ref != "" && $configClass['show_ref'] == 1)
+			{
 				?>
 				<tr>
 					<td class="left_details_col" >
@@ -1213,7 +1219,7 @@ class HTML_OspropertyListing{
 			</tr>
 			<?php
 			if($configClass['energy'] == 1){
-				if(($row->energy > 0) or ($row->climate > 0)){
+				if(($row->energy > 0) || ($row->climate > 0)){
 					if($row->energy == "0.00"){
 						$row->energy = "null";
 					}
@@ -1234,9 +1240,9 @@ class HTML_OspropertyListing{
 					<?php
 				}
 			}
-			?>
-			<?php
-			if(($row->note != "") and (HelperOspropertyCommon::isOwner($row->id))){
+			
+			if($row->note != "" && HelperOspropertyCommon::isOwner($row->id))
+			{
 			?>
 			<tr>
 				<td class="left_details_col">
@@ -1248,7 +1254,8 @@ class HTML_OspropertyListing{
 			</tr>
 			<?php
 			}
-			if(($row->pro_pdf != "") or ($row->pro_pdf_file != "")){
+			if($row->pro_pdf != "" || $row->pro_pdf_file != "")
+			{
 			?>
 			<tr>
 				<td class="left_details_col" >
@@ -1377,8 +1384,8 @@ class HTML_OspropertyListing{
 		}
 		if(count($currencies) > 0)
 		{
-			$lists['curr'] = HTMLHelper::_('select.genericlist',$currenyArr,'curr','onChange="javascript:convertCurrency('.$row->id.',this.value,'.$show_price_text.')" class="input-small"','value','text',$row->curr);
-			$lists['curr_default'] = HTMLHelper::_('select.genericlist',$currenyArr,'curr','onChange="javascript:convertCurrencyDefaultDetails('.$row->id.',this.value,'.$show_price_text.')" class="input-small"','value','text',$row->curr);
+			$lists['curr'] = HTMLHelper::_('select.genericlist',$currenyArr,'curr','onChange="javascript:convertCurrency('.$row->id.',this.value,'.$show_price_text.')" class="input-small form-select"','value','text',$row->curr);
+			$lists['curr_default'] = HTMLHelper::_('select.genericlist',$currenyArr,'curr','onChange="javascript:convertCurrencyDefaultDetails('.$row->id.',this.value,'.$show_price_text.')" class="input-small form-select"','value','text',$row->curr);
 		}
 		else
 		{
@@ -1489,7 +1496,8 @@ class HTML_OspropertyListing{
 			$agent_photo = $row->agent->photo;
 			$agent_photo_array = explode(".",$agent_photo);
 			$ext = $agent_photo_array[count($agent_photo_array)-1];
-			if(($agent_photo != "") and (in_array(strtolower($ext),$allowedExt))){
+			if($agent_photo != "" && in_array(strtolower($ext),$allowedExt))
+			{
 				?>
 				<img src="<?php echo Uri::root()?>images/osproperty/agent/<?php echo $row->agent->photo?>" class="border1 width60" />
 				<?php
@@ -1606,7 +1614,8 @@ class HTML_OspropertyListing{
             <div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
                 <table  width="100%" class="border0">
                     <?php
-                    if(($row->agent->phone != "") and ($configClass['show_agent_phone'] == 1)){
+                    if($row->agent->phone != "" && $configClass['show_agent_phone'] == 1)
+					{
                     ?>
                     <tr>
                         <td class="left_details_col" >
@@ -1620,7 +1629,8 @@ class HTML_OspropertyListing{
                     </tr>
                     <?php
                     }
-                    if(($row->agent->mobile != "") and ($configClass['show_agent_mobile'] == 1)){
+                    if($row->agent->mobile != "" && $configClass['show_agent_mobile'] == 1)
+					{
                     ?>
                     <tr>
                         <td class="left_details_col">
@@ -1820,7 +1830,8 @@ class HTML_OspropertyListing{
 											?>
                                             <strong><?php echo $comment->title?></strong>
                                             <?php
-                                            if((Factory::getUser()->id == $comment->user_id) and ($configClass['allow_edit_comment'] == 1)){
+                                            if(Factory::getUser()->id == $comment->user_id && $configClass['allow_edit_comment'] == 1)
+											{
                                                 ?>
                                                 <a href="<?php echo Uri::root()?>index.php?option=com_osproperty&task=property_editcomment&id=<?php echo $comment->id; ?>&tmpl=component" class="osmodal" rel="{handler: 'iframe', size: {x: 500, y: 500}}" title="<?php echo Text::_('OS_EDIT_YOUR_COMMENT');?>"><i class="osicon-edit"></i></a>
                                                 <?php
@@ -1936,7 +1947,8 @@ class HTML_OspropertyListing{
 				<div id="eb_share_button">
 					<?php
 					$title = "";
-					if(($row->ref != "") and ($configClass['show_ref'] == 1)){
+					if($row->ref != "" && $configClass['show_ref'] == 1)
+					{
 						$title = $row->ref.", ";
 					}
 					
@@ -2014,7 +2026,7 @@ class HTML_OspropertyListing{
 		$row->relate = "";
 		jimport('joomla.filesystem.file');
 		
-		if($configClass['relate_properties'] == 1 && count((array)$row->relate_properties) > 0)
+		if($configClass['relate_city'] == 1 && count((array)$row->relate_properties) > 0)
 		{
 			ob_start();
 			$relates = $row->relate_properties;
@@ -2026,14 +2038,15 @@ class HTML_OspropertyListing{
 			$tpl->set('mainframe',$mainframe);
 			$tpl->set('relates',$relates);
 			$tpl->set('configClass',$configClass);
-			$tpl->set('title',Text::_('OS_RELATE_PROPERTIES'));
+			$tpl->set('title',Text::_('OS_NEARBY_PROPERTIES'));
 			$tpl->set('bootstrapHelper',$bootstrapHelper);
 			echo $tpl->fetch("relateproperties.php");
 			$relate = ob_get_contents();
 			ob_end_clean();
 			$row->relate = $relate;
 		}
-		if(($configClass['relate_property_type'] == 1) and (count((array)$row->relate_type_properties) > 0)){
+		if($configClass['relate_property_type'] == 1 && count((array)$row->relate_type_properties) > 0)
+		{
 			ob_start();
 			$relates = $row->relate_type_properties;
 			if(File::exists(JPATH_ROOT.'/templates/'.$mainframe->getTemplate().'/html/com_osproperty/layouts/relateproperties.php')){
@@ -2083,7 +2096,7 @@ class HTML_OspropertyListing{
 				<?php
 				}else{
 				?>
-				var ws_width   = '<?php echo $configClass['ws_width'] ; ?>';
+				var ws_width   = '100%';
 				var ws_layout  = 'horizontal';
 				<?php
 				}
@@ -2177,11 +2190,11 @@ class HTML_OspropertyListing{
 		if($google_map_resolution == 0){
 			$google_map_resolution = 15;
 			$population = 150;
-		}elseif(($google_map_resolution > 0) and ($google_map_resolution <= 5)){
+		}elseif(($google_map_resolution > 0) && ($google_map_resolution <= 5)){
 			$population = 400000;
-		}elseif(($google_map_resolution > 5) and ($google_map_resolution <= 10)){
+		}elseif(($google_map_resolution > 5) && ($google_map_resolution <= 10)){
 			$population = 2000;
-		}elseif(($google_map_resolution > 10) and ($google_map_resolution <= 15)){
+		}elseif(($google_map_resolution > 10) && ($google_map_resolution <= 15)){
 			$population = 150;
 		}else{
 			$population = 100;
@@ -2260,7 +2273,8 @@ class HTML_OspropertyListing{
             if ($configClass['show_streetview'] == 1 && $row->show_address == 1 && $configClass['map_type'] == 0) {
                 $gscript .= '
                         var panoramaElement = document.getElementById("pano");
-							const streetviewtab = document.querySelector("a[aria-controls=tabstreet]");
+							const streetviewtab = document.querySelector("button[aria-controls=tabstreet]");
+							let tablist = document.querySelector("div[role=\"tablist\"]");
                             streetview.getPanoramaByLocation(coord, 25, function(data, status){
                                 switch(status){
                                     case google.maps.StreetViewStatus.OK:
@@ -2279,9 +2293,30 @@ class HTML_OspropertyListing{
                                         break;
                                     case google.maps.StreetViewStatus.ZERO_RESULTS:
 										
+    
+										if (tablist) {
+											let buttons = tablist.querySelectorAll("button");
+
+											buttons.forEach(button => {
+												if (button.getAttribute("aria-controls") === "tabstreet") {
+												button.style.display = "none";
+												}
+											});
+										}
                                         streetviewtab.style.display = "none !important";
                                         break;
                                     default:
+										
+    
+										if (tablist) {
+											let buttons = tablist.querySelectorAll("button");
+
+											buttons.forEach(button => {
+												if (button.getAttribute("aria-controls") === "tabstreet") {
+												button.style.display = "none";
+												}
+											});
+										}
                                         streetviewtab.style.display = "none !important";
                                 }
                             }); ';
@@ -2330,6 +2365,12 @@ class HTML_OspropertyListing{
 					setTimeout(function() {
                         mymap.invalidateSize();
                     }, (10));
+				});
+
+				document.querySelector("button[aria-controls=\'tabgoogle\']").addEventListener("click", function() {
+					setTimeout(function() {
+						mymap.invalidateSize();
+					}, 10);
 				});
 
                 jQuery("#agooglemap").click( function(e){
@@ -2396,7 +2437,7 @@ class HTML_OspropertyListing{
                 });';
         }
 
-		if(($themename == "default" || $themeobj->default_duplicate == 1) && ($row->lat_add != "" && $row->long_add != "") && $configClass['goole_use_map'] == 1)
+		if(($themename == "default" || $themeobj->default_duplicate == 1) && $row->lat_add != "" && $row->long_add != "" &&  $row->lat_add != "0" && $row->long_add != "0" &&$configClass['goole_use_map'] == 1)
 		{
 			$document->addScriptDeclaration( $gscript );
 		}
@@ -2430,16 +2471,16 @@ class HTML_OspropertyListing{
 			{
 				$addInfo1[] = OSPHelper::generatePrice($row->curr,$row->price);
 			}
-			if(($row->bed_room > 0) and ($configClass['use_bedrooms'] == 1)){
+			if(($row->bed_room > 0) && ($configClass['use_bedrooms'] == 1)){
 				$addInfo[] = $row->bed_room." ".Text::_('OS_BEDROOMS');
 			}
-			if(($row->bath_room > 0) and ($configClass['use_bathrooms'] == 1)){
+			if(($row->bath_room > 0) && ($configClass['use_bathrooms'] == 1)){
 				$addInfo[] = OSPHelper::showBath($row->bath_room)." ".Text::_('OS_BATHROOMS');
 			}
-			if(($row->rooms > 0) and ($configClass['use_rooms'] == 1)){
+			if(($row->rooms > 0) && ($configClass['use_rooms'] == 1)){
 				$addInfo[] = $row->rooms." ".Text::_('OS_ROOMS');
 			}
-			if(($row->square_feet > 0) and ($configClass['use_squarefeet'] == 1)){
+			if(($row->square_feet > 0) && ($configClass['use_squarefeet'] == 1)){
 				$addInfo[] = $row->square_feet." ".OSPHelper::showSquareSymbol();
 			}
 			$addInfo1[] = implode(", ",$addInfo);
@@ -2640,8 +2681,8 @@ class HTML_OspropertyListing{
 		        }
 			}
 		}
-		$db->setQuery("Select * from #__osrs_themes where name like '$themename'");
-		$themeobj = $db->loadObject();
+		//$db->setQuery("Select * from #__osrs_themes where name like '$themename'");
+		//$themeobj = $db->loadObject();
 		
 		$params = $themeobj->params;
 		$params = new Registry($params) ;
@@ -2769,7 +2810,7 @@ class HTML_OspropertyListing{
 		$countPlugin = $db->loadResult();
 		
 		jimport('joomla.filesystem.folder');
-		if((Folder::exists(JPATH_ROOT.'/components/com_jcomments')) and ($countPlugin > 0)){
+		if((Folder::exists(JPATH_ROOT.'/components/com_jcomments')) && ($countPlugin > 0)){
 			$integrateJComments = 1;
 		}else{
 			$integrateJComments = 0; 
@@ -2945,37 +2986,37 @@ class HTML_OspropertyListing{
 			$query->select("*")->from("#__osrs_property_open")->where("pid = '$row->id' and start_from >= '$current_date' ")->order("start_from desc");
 			$db->setQuery($query);
 			$opens = $db->loadObjectList();
-			ob_start();
-			?>
-	   		<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> <?php echo $bootstrapHelper->getClassMapping('img-polaroid'); ?> inspectiontimes">
-		   		<strong><?php echo Text::_('OS_OPEN_FOR_INSPECTION_TIMES')?></strong>
-		   		<div class="clearfix"></div>
-		   		<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> noleftmargin fontsmall">
-		    		<?php 
-		    		if(count($opens) > 0){
-		    			foreach ($opens as $info){
-		     			?>
-		     			<?php echo Text::_('OS_FROM')?>: <?php //echo date($configClass['general_date_format'],strtotime($info->start_from));
-						echo date($configClass['general_date_format'],strtotime($info->start_from));
+			if(count($opens) > 0){
+				ob_start();
+				?>
+				<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> <?php echo $bootstrapHelper->getClassMapping('img-polaroid'); ?> inspectiontimes">
+					<strong><?php echo Text::_('OS_OPEN_FOR_INSPECTION_TIMES')?></strong>
+					<div class="clearfix"></div>
+					<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> noleftmargin fontsmall">
+						<?php 
+						
+							foreach ($opens as $info)
+							{
+							?>
+								<?php echo Text::_('OS_FROM')?>: <?php //echo date($configClass['general_date_format'],strtotime($info->start_from));
+								echo date($configClass['general_date_format'],strtotime($info->start_from));
+								?>
+								-
+								<?php echo Text::_('OS_TO')?>: <?php //echo date($configClass['general_date_format'],strtotime($info->end_to));
+								//echo HTMLHelper::_('date', strtotime($info->end_to) , $configClass['general_date_format']);
+								echo date($configClass['general_date_format'],strtotime($info->end_to));
+								?>
+								<div class="clearfix"></div>
+								<?php
+							}
 						?>
-		     			-
-		     			<?php echo Text::_('OS_TO')?>: <?php //echo date($configClass['general_date_format'],strtotime($info->end_to));
-						//echo HTMLHelper::_('date', strtotime($info->end_to) , $configClass['general_date_format']);
-						echo date($configClass['general_date_format'],strtotime($info->end_to));
-						?>
-		     			<div class="clearfix"></div>
-		     			<?php
-		    			} 
-		    		}else{
-		    			echo Text::_('OS_NO_INSPECTIONS_ARE_CURRENTLY_SCHEDULED');
-		    		}
-		    		?>
-		   		</div>
-	   		</div>
-			<?php
-			$open_hours = ob_get_contents();
-			ob_end_clean();
-			
+					</div>
+				</div>
+				<?php
+				
+				$open_hours = ob_get_contents();
+				ob_end_clean();
+			}
 		}
 		$row->open_hours = $open_hours;
 		
@@ -2993,8 +3034,8 @@ class HTML_OspropertyListing{
 			$row->social_sharing = OSPHelper::socialsharing($row->id);
 		}
         //echo $themename;
-        $db->setQuery("Select * from #__osrs_themes where name like '$themename'");
-        $themeobj = $db->loadObject();
+        //$db->setQuery("Select * from #__osrs_themes where name like '$themename'");
+        //$themeobj = $db->loadObject();
         $params = $themeobj->params;
         $params = new Registry($params);
 		$tpl = new OspropertyTemplate();
@@ -3106,7 +3147,7 @@ class HTML_OspropertyListing{
 	        	clientWidth = document.getElementById(id).clientWidth;
 	        	clientHeight = document.getElementById(id).clientHeight;
 	        	<?php
-	        	if((intval($max_width) > 0) and (intval($max_height) > 0)){
+	        	if((intval($max_width) > 0) && (intval($max_height) > 0)){
 	        		?>
 	        		var max_width = <?php echo $max_width?>;
 	        		max_width = parseInt(max_width);
@@ -4235,7 +4276,7 @@ class HTML_OspropertyListing{
 													<ul class="nav nav-tabs">
 														<li class="active"><a href="#tab1<?php echo $i;?>" data-toggle="tab"><?php echo Text::_('OS_THUMBNAIL_PHOTO');?></a></li>
 														<?php
-														if(($medium_height < $origin_height) or ($medium_width < $origin_width)){
+														if(($medium_height < $origin_height) || ($medium_width < $origin_width)){
 														?>
 														<li><a href="#tab2<?php echo $i?>" data-toggle="tab"><?php echo Text::_('OS_MEDIUM_PHOTO');?></a></li>
 														<?php
@@ -4311,12 +4352,12 @@ class HTML_OspropertyListing{
 											</div>
 											<?php
 											 //echo $pane->endPanel();
-											 if(($medium_height < $origin_height) or ($medium_width < $origin_width)){
+											 if(($medium_height < $origin_height) || ($medium_width < $origin_width)){
 											 
-											 	if(($medium_height > $origin_height) and ($medium_width < $origin_width)){
+											 	if(($medium_height > $origin_height) && (medium_width < $origin_width)){
 											 		$height = $origin_height;
 											 		$width = round($medium_width*$height/$medium_height);
-											 	}elseif(($medium_height < $origin_height) and ($medium_width > $origin_width)){
+											 	}elseif(($medium_height < $origin_height) && (medium_width > $origin_width)){
 											 		$width = $origin_width;
 											 		$height = round($medium_height*$width/$medium_width);
 											 	}else{

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -24,7 +24,15 @@ class OSMembershipModelMembers extends MPFModelList
 	{
 		if (!isset($config['search_fields']))
 		{
-			$config['search_fields'] = ['tbl.first_name', 'tbl.last_name', 'tbl.membership_id', 'tbl.email', 'b.title', 'c.username', 'c.name'];
+			$config['search_fields'] = [
+				'tbl.first_name',
+				'tbl.last_name',
+				'tbl.membership_id',
+				'tbl.email',
+				'b.title',
+				'c.username',
+				'c.name'
+			];
 		}
 
 		$config['table']      = '#__osmembership_subscribers';
@@ -234,7 +242,11 @@ class OSMembershipModelMembers extends MPFModelList
 	{
 		$fieldsData = [];
 		$rows       = $this->data;
-		$fields     = OSMembershipHelper::getProfileFields($this->state->id, false);
+		$fields     = OSMembershipHelper::getCustomFieldsForPlans(
+			$this->state->id,
+			false,
+			['show_on_members_list = 1']
+		);
 
 		if (count($rows) && count($fields))
 		{

@@ -3,7 +3,7 @@
 # default.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -51,7 +51,8 @@ class OspropertyDefault{
 		}
 	}
 
-	static function suggestion(){
+	static function suggestion()
+	{
 		global $mainframe,$jinput,$configClass;
 		$keyword = $jinput->getString('term','');
 		$return = array();

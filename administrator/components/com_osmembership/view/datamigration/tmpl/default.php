@@ -12,13 +12,16 @@ defined('_JEXEC') or die ;
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Toolbar\ToolbarHelper;
-use Joomla\CMS\Uri\Uri;
 
 ToolbarHelper::title('Data Migration');
 
-$start = Factory::getApplication()->getInput()->getInt('start', 0);
+$app = Factory::getApplication();
 
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/js/admin-datamigration-default.min.js');
+$start = $app->getInput()->getInt('start', 0);
+
+$app->getDocument()
+	->getWebAssetManager()
+	->registerAndUseScript('com_osmembership.admin-datamigration-default', 'media/com_osmembership/js/admin-datamigration-default.min.js');
 ?>
 <form action="index.php?option=com_osmembership&task=datamigration.process&start=<?php echo $start; ?>" method="post" name="adminForm" id="adminForm">
 	<div class="row-fluid">

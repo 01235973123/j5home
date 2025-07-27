@@ -4,13 +4,12 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 
 class OSMembershipHelperLegacy
 {
@@ -62,7 +61,7 @@ class OSMembershipHelperLegacy
 			$filename = OSMembershipHelper::getOriginalFilename($filename);
 		}
 
-		$ext  = File::getExt($filename);
+		$ext  = OSMembershipHelper::getFileExt($filename);
 		$mime = self::getMimeType($ext);
 
 		// required for IE, otherwise Content-disposition is ignored

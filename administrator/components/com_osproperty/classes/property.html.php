@@ -3,7 +3,7 @@
 # property.html.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -867,7 +867,11 @@ class HTML_OspropertyProperties
 		$span12Class   = $bootstrapHelper->getClassMapping('span12');
 		$span3Class    = $bootstrapHelper->getClassMapping('span3');
 		$span9Class    = $bootstrapHelper->getClassMapping('span9');
+		$span6Class    = $bootstrapHelper->getClassMapping('span6');
 		$inputLargeClass = $bootstrapHelper->getClassMapping('input-large');
+		$controlGroupClass = $bootstrapHelper->getClassMapping('control-group');
+		$controlLabelClass = $bootstrapHelper->getClassMapping('control-label');
+		$controlsClass	   = $bootstrapHelper->getClassMapping('controls');
 		$db				= Factory::getDBO();
 		$document		=& Factory::getDocument();
 		$editor			= Editor::getInstance(Factory::getConfig()->get('editor'));
@@ -1203,7 +1207,7 @@ class HTML_OspropertyProperties
 			<script src="<?php echo Uri::root()?>media/jui/js/fielduser.min.js" type="text/javascript"></script>
 			<script src="<?php echo Uri::root()?>media/system/js/modal.js" type="text/javascript"></script>
 		<?php } ?>
-		<form method="POST" action="index.php?option=com_osproperty" name="adminForm" id="adminForm" enctype="multipart/form-data">
+		<form method="POST" action="index.php?option=com_osproperty" name="adminForm" id="adminForm" enctype="multipart/form-data" class="backgroundwhite">
 		<input type="hidden" name="live_site" id="live_site" value="<?php echo Uri::root()?>" />
 		
 		<?php 
@@ -1215,526 +1219,487 @@ class HTML_OspropertyProperties
 		?>
 		<?php echo HTMLHelper::_('bootstrap.startTabSet', 'property', array('active' => 'basic-information-page')); ?>
 		<?php echo HTMLHelper::_('bootstrap.addTab', 'property', 'basic-information-page', Text::_('OS_BASIC_INFORMATION', true)); ?>
-			<table width="100%">
-				<tr>
-					<td width="50%" valign="top">
-						<table  width="100%">
+			<div class="<?php echo $rowFluidClass; ?>">
+				<div class="<?php echo $span6Class; ?>">
+					<fieldset class="general form-horizontal options-form">
+						<legend><?php echo Text::_( 'OS_GENERAL' ); ?></legend>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_('Ref #')?>
+								</div>	
+								<div class="<?php echo $controlsClass;?>">
+									<input type="text" name="ref" id="ref" value="<?php echo $row->ref?>" class="input-small form-control imedium" />
+								</div>
+						</div>
+						<?php
+						$require_field = "";
+						$require_field .= "pro_name,";
+						$require_label = "";
+						$require_label .= Text::_('OS_PROPERTY_NAME').",";
+						?>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+									<?php echo Text::_('OS_PROPERTY_TITLE')?><span class="required">(*)</span>
+								</div>	
+								<div class="<?php echo $controlsClass;?>">
+									<input type="text" name="pro_name" id="pro_name" value="<?php echo htmlspecialchars($row->pro_name);?>" size="50" class="ilarge input-large form-control required" /> 
+								</div>
+						</div>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_('OS_ALIAS')?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<input type="text" name="pro_alias" id="pro_alias" value="<?php echo $row->pro_alias?>" size="50" class="input-large ilarge form-control" />
+							</div>
+						</div>
+							<?php
+							$require_field .= "category_id,";
+							$require_label .= Text::_('OS_CATEGORY').",";
+							?>
+							<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+									<?php echo Text::_('OS_CATEGORY')?><span class="required">(*)</span>
+								</div>	
+							<div class="<?php echo $controlsClass;?>">
+									<?php echo $lists['category']; ?> 
+								</div>
+						</div>
+							<?php
+							$require_field .= "pro_type,";
+							$require_label .= Text::_('OS_PROPERTY_TYPE').",";
+							?>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_('OS_PROPERTY_TYPE')?><span class="required">(*)</span>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<?php echo $lists['type']; ?>
+								
+							</div>
+						</div>
+						<?php if($configClass['active_market_status'] == 1){ ?>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_('OS_MARKET_STATUS')?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<?php echo OSPHelper::buildDropdownMarketStatus($row->isSold); ?>
+							</div>
+						</div>
+						<?php } ?>
+						<div class="<?php echo $controlGroupClass;?>">
+						<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_("OS_PRICE_INFO")?>
+							</div>	
+						<div class="<?php echo $controlsClass;?>">
+							<div>
+								<table width="100%">
+									<tr>
+										<td class="key" width="20%">
+											<?php echo Text::_("OS_CALL_FOR_PRICE")?>
+										</td>
+										<td width="80%">
+											<?php
+											echo $lists['price_call'];
+											?>
+										</td>
+									</tr>
+								</table>
+							</div>
+							<div class="clearfix"></div>
+							<?php
+							if((int)$row->price_call == 0){
+								$display = "block";
+							}else{
+								$display = "none";
+							}
+							if($row->id == 0){
+								//$display = "none";
+							}
+							?>
+							<div id="pricediv" style="display:<?php echo $display;?>;">
+								<table width="100%">
+									<tr>
+										<td class="key" width="20%">
+											<?php echo Text::_("OS_PRICE")?>
+										</td>
+										<td width="80%">
+											<div class="currency-input">
+												<input type="number" name="price" id="price" value="<?php echo $row->price?>" size="20" class="input-medium form-control" />
+											</div>
+											<?php HelperOspropertyCommon::showCurrencySelectList($row->curr);?>
+										</td>
+									</tr>
+									<tr>
+										<td class="key">
+											<?php echo Text::_("OS_PRICE_FOR")?>
+										</td>
+										<td>
+											<?php echo $lists['time'];?>
+										</td>
+									</tr>
+									<tr>
+										<td class="key">
+											<?php
+											echo HelperOspropertyCommon::showLabel('price_text',Text::_("OS_PRICE_TEXT"),Text::_("OS_PRICE_TEXT_EXPLAIN"));
+											?>
+										</td>
+										<td>
+											<input type="text" class="input-large form-control" name="price_text" value="<?php echo $row->price_text;?>" />
+										</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+					</fieldset>
+					
+					<fieldset class="general form-horizontal options-form">
+						<legend><?php echo Text::_( 'OS_TAGS' ); ?></legend>
+						<table  width="100%" class="admintable">
 							<tr>
-								<!-- General tab-->
-								<td width="100%" valign="top" align="left">
-									<div class="col width-100">
-										<fieldset class="general form-horizontal options-form">
-											<legend><?php echo Text::_( 'OS_GENERAL' ); ?></legend>
-											<table  width="100%" class="admintable">
-												<tr>
-													<td class="key" width="20%">
-														<?php echo Text::_('Ref #')?>
-													</td>
-													<td width="80%">
-														<input type="text" name="ref" id="ref" value="<?php echo $row->ref?>" class="input-small form-control imedium" />
-													</td>
-												</tr>
-												<?php
-												$require_field = "";
-												$require_field .= "pro_name,";
-												$require_label = "";
-												$require_label .= Text::_('OS_PROPERTY_NAME').",";
-												?>
-												<tr>
-													<td class="key">
-														<?php echo Text::_('OS_PROPERTY_TITLE')?><span class="required">(*)</span>
-													</td>
-													<td>
-														<input type="text" name="pro_name" id="pro_name" value="<?php echo htmlspecialchars($row->pro_name);?>" size="50" class="ilarge input-large form-control required" /> 
-													</td>
-												</tr>
-												<tr>
-													<td class="key">
-														<?php echo Text::_('OS_ALIAS')?>
-													</td>
-													<td>
-														<input type="text" name="pro_alias" id="pro_alias" value="<?php echo $row->pro_alias?>" size="50" class="input-large ilarge form-control" />
-													</td>
-												</tr>
-												<?php
-												$require_field .= "category_id,";
-												$require_label .= Text::_('OS_CATEGORY').",";
-												?>
-												<tr>
-													<td class="key">
-														<?php echo Text::_('OS_CATEGORY')?><span class="required">(*)</span>
-													</td>
-													<td>
-														<?php echo $lists['category']; ?> 
-													</td>
-												</tr>
-												<?php
-												$require_field .= "pro_type,";
-												$require_label .= Text::_('OS_PROPERTY_TYPE').",";
-												?>
-												<tr>
-													<td class="key">
-														<?php echo Text::_('OS_PROPERTY_TYPE')?><span class="required">(*)</span>
-													</td>
-													<td>
-														<?php echo $lists['type']; ?>
-														
-													</td>
-												</tr>
-												<?php if($configClass['active_market_status'] == 1){ ?>
-												<tr>
-													<td class="key">
-														<?php echo Text::_('OS_MARKET_STATUS')?>
-													</td>
-													<td>
-														<?php echo OSPHelper::buildDropdownMarketStatus($row->isSold); ?>
-													</td>
-												</tr>
-												<?php } ?>
-												<tr>
-													<td class="key" valign="top">
-														<?php echo Text::_("OS_PRICE_INFO")?>
-													</td>
-													<td>
-														<div>
-															<table width="100%">
-																<tr>
-																	<td class="key" width="20%">
-																		<?php echo Text::_("OS_CALL_FOR_PRICE")?>
-																	</td>
-																	<td width="80%">
-																		<?php
-																		echo $lists['price_call'];
-																		?>
-																	</td>
-																</tr>
-															</table>
-														</div>
-														<div class="clearfix"></div>
-														<?php
-														if((int)$row->price_call == 0){
-															$display = "block";
-														}else{
-															$display = "none";
-														}
-														if($row->id == 0){
-															//$display = "none";
-														}
-														?>
-														<div id="pricediv" style="display:<?php echo $display;?>;">
-															<table width="100%">
-																<tr>
-																	<td class="key" width="20%">
-																		<?php echo Text::_("OS_PRICE")?>
-																	</td>
-																	<td width="80%">
-																		<input type="text" name="price" id="price" value="<?php echo $row->price?>" size="10" class="input-small form-control" />
-																		<?php HelperOspropertyCommon::showCurrencySelectList($row->curr);?>
-																	</td>
-																</tr>
-																<tr>
-																	<td class="key">
-																		<?php echo Text::_("OS_PRICE_FOR")?>
-																	</td>
-																	<td>
-																		<?php echo $lists['time'];?>
-																	</td>
-																</tr>
-																<tr>
-																	<td class="key">
-																		<?php
-																		echo HelperOspropertyCommon::showLabel('price_text',Text::_("OS_PRICE_TEXT"),Text::_("OS_PRICE_TEXT_EXPLAIN"));
-																		?>
-																	</td>
-																	<td>
-																		<input type="text" class="input-large form-control" name="price_text" value="<?php echo $row->price_text;?>" />
-																	</td>
-																</tr>
-															</table>
-														</div>
-													</td>
-												</tr>
-											</table>
-										</fieldset>
-									</div>
-									<!-- End General tab-->
-								</td>
-							</tr>
-							<tr>
-							<!-- Other information -->
-								<td width="100%">
-									<div class="col width-100">
-									<fieldset class="general form-horizontal options-form">
-										<legend><?php echo Text::_( 'OS_TAGS' ); ?></legend>
-										<table  width="100%" class="admintable">
-											<tr>
-												<td>
-													<table width="100%" id="property_tag_table">
-														<tr>
-															<th>
-																<?php echo Text::_('OS_KEYWORD')?>
-															</th>
-															<?php 
-															if($translatable){
-																foreach ($languages as $language)
-																{												
-																	$sef = $language->sef;
-																	?>
-																	<th>
-																		<?php echo Text::_('OS_KEYWORD')?>
-																		<img src="<?php echo Uri::root(); ?>media/com_osproperty/flags/<?php echo $sef.'.png'; ?>" />
-																	</th>
-																	<?php 
-																}
-															}
-															?>
-															<th>
-																&nbsp;
-															</th>
-														</tr>
-														<?php 
-														if(count((array)$lists['tags']) > 0)
-														{
-															foreach ($lists['tags'] as $tag)
-															{
-															?>
-															<tr id="tag_table_tr">
-																<td>
-																	<input type="text" name="keyword[]" value="<?php echo $tag->keyword?>" class="input-small form-control ishort" />
-																</td>
-																<?php 
-																if($translatable){
-																	foreach ($languages as $language)
-																	{												
-																		$sef = $language->sef;
-																		?>
-																		<td>
-																			<input type="text" name="keyword_<?php echo $sef;?>[]" value="<?php echo stripslashes($tag->{'keyword_'.$sef});?>" class="input-small form-control ishort" />
-																		</td>
-																		<?php 
-																	}
-																}
-																?>
-																<td>
-																	<input type="button" class="btn removetag btn-secondary" value="<?php echo Text::_('OS_DELETE');?>" />
-																</td>
-															</tr>
-															<?php 
-															}
-														}
-														?>
-														<tr id="tag_table_tr">
-															<td>
-																<input type="text" name="keyword[]" value="" class="ishort input-small form-control" />
-															</td>
-															<?php 
-															if($translatable)
-															{
-																foreach ($languages as $language)
-																{												
-																	$sef = $language->sef;
-																	?>
-																	<td>
-																		<input type="text" name="keyword_<?php echo $sef;?>[]" value="" class="input-small form-control ishort" />
-																	</td>
-																	<?php 
-																}
-															}
-															?>
-															<td>
-																<input type="button" class="btn addtag btn-secondary" value="<?php echo Text::_('OS_ADD');?>" />
-															</td>
-														</tr>
-													</table>
-												</td>
-											</tr>
-										</table>
-									</fieldset>
-									<script type="text/javascript">
-									jQuery(document).ready( function(){		
-										jQuery('#property_tag_table').on('click', '.removetag', function(){
-											jQuery(this).parent().parent().remove();
-										});
-										
-										jQuery('#property_tag_table').on('click', '.addtag', function(){
-											jQuery(this).val('<?php echo Text::_('OS_DELETE');?>');
-											jQuery(this).attr('class','btn removetag btn-secondary');
+								<td>
+									<table width="100%" id="property_tag_table">
+										<tr>
+											<th>
+												<?php echo Text::_('OS_KEYWORD')?>
+											</th>
 											<?php 
-											$value  = '<tr id="tag_table_tr"><td><input type="text" name="keyword[]" value="" class="input-small form-control" /></td>';
-											//$value .= '<td><input type="text" name="history_event[]" value="" class="input-medium form-control" /></td>';
 											if($translatable){
 												foreach ($languages as $language)
 												{												
 													$sef = $language->sef;
-													$value .= '<td><input type="text" name="keyword_'.$sef.'[]" value="" class="input-small form-control" /></td>';
+													?>
+													<th>
+														<?php echo Text::_('OS_KEYWORD')?>
+														<img src="<?php echo Uri::root(); ?>media/com_osproperty/flags/<?php echo $sef.'.png'; ?>" />
+													</th>
+													<?php 
 												}
 											}
-											$value .= '<td><input type="button" class="btn addtag btn-secondary" value="'.Text::_('OS_ADD').'" /></td></tr>';
 											?>
-											var appendTxt = '<?php echo $value;?>';
-											jQuery("#property_tag_table > tbody> tr:last").after(appendTxt);
-										}); 
-									});
-									</script>
-									</div>	
-								</td>
-								<!-- End Other information -->
-							</tr>
-						</table>
-					</td>
-					<td width="50%" valign="top">
-						<table>
-							<tr>
-								<!-- Address -->
-								<td width="100%">
-									<div class="col width-100">
-										<fieldset class="general form-horizontal options-form">
-											<legend><?php echo Text::_( 'OS_ADDRESS' ); ?></legend>
-											<table  width="100%" class="admintable">
-												<tr>
-													<td class="key" width="20%">
-														<?php echo HelperOspropertyCommon::showLabel('show_address',Text::_('OS_SHOW_ADDRESS'),Text::_('OS_SHOW_ADDRESS_EXPLAIN'));?>
-													</td>
-													<td width="80%">
-														<div id="div_states">
-															<?php
-															echo $lists['show_address'];
-															?>
-														</div>
-													</td>
-												</tr>
-												<tr>
-													<td class="key">
-														<?php echo Text::_("OS_ADDRESS")?>
-														<?php
-														if($configClass['address_required'])
-														{
-															$require_field .= "address,";
-															$require_label .= Text::_('OS_ADDRESS').",";
-															?>
-															<span class="required">(*)</span>
-															<?php
-														}
+											<th>
+												&nbsp;
+											</th>
+										</tr>
+										<?php 
+										if(count((array)$lists['tags']) > 0)
+										{
+											foreach ($lists['tags'] as $tag)
+											{
+											?>
+											<tr id="tag_table_tr">
+												<td>
+													<input type="text" name="keyword[]" value="<?php echo $tag->keyword?>" class="input-small form-control ishort" />
+												</td>
+												<?php 
+												if($translatable){
+													foreach ($languages as $language)
+													{												
+														$sef = $language->sef;
 														?>
-													</td>
-													<td width="80%">
-														<input type="text" name="address" id="address" value="<?php echo htmlspecialchars($row->address);?>" class="input-large ilarge form-control" size="30" />
-													</td>
-												</tr>
-												<tr>
-													<td class="key">
-														<?php echo Text::_("OS_POSTCODE")?>
-														<?php
-														if($configClass['require_postcode']==1){
-															?>
-															<span class="required">(*)</span>
-															<?php
-															$require_field .= "postcode,";
-															$require_label .= Text::_('OS_POSTCODE').",";
-														}
-														?>
-													</td>
-													<td>
-														<input type="text" name="postcode" id="postcode" value="<?php echo $row->postcode?>" size="10" class="input-large form-control ilarge" />
-													</td>
-												</tr>
-
-												<?php
-												if(HelperOspropertyCommon::checkCountry()){
-													?>
-													<tr>
-														<td class="key">
-															<?php echo Text::_("OS_COUNTRY")?>
-															<span class="required">(*)</span>
-															<?php
-															$require_field .= "country,";
-															$require_label .= Text::_('OS_COUNTRY').",";
-															?>
-														</td>
 														<td>
-															<?php
-															echo $lists['country'];
-															?>
+															<input type="text" name="keyword_<?php echo $sef;?>[]" value="<?php echo stripslashes($tag->{'keyword_'.$sef});?>" class="input-small form-control ishort" />
 														</td>
-													</tr>
-													<?php
-												}else{
-													echo $lists['country'];
+														<?php 
+													}
 												}
 												?>
-												<tr>
-													<td class="key">
-														<?php echo Text::_("OS_STATE")?>
-														<?php
-														if($configClass['require_state']==1){
-															?>
-															<span class="required">(*)</span>
-															<?php
-															$require_field .= "state,";
-															$require_label .= Text::_('OS_STATE').",";
-														}
-														?>
-													</td>
+												<td>
+													<input type="button" class="btn removetag btn-secondary" value="<?php echo Text::_('OS_DELETE');?>" />
+												</td>
+											</tr>
+											<?php 
+											}
+										}
+										?>
+										<tr id="tag_table_tr">
+											<td>
+												<input type="text" name="keyword[]" value="" class="ishort input-small form-control" />
+											</td>
+											<?php 
+											if($translatable)
+											{
+												foreach ($languages as $language)
+												{												
+													$sef = $language->sef;
+													?>
 													<td>
-														<div id="country_state">
-															<?php
-															echo $lists['states'];
-															?>
-														</div>
+														<input type="text" name="keyword_<?php echo $sef;?>[]" value="" class="input-small form-control ishort" />
 													</td>
-												</tr>
-												<tr>
-													<td class="key">
-														<?php echo Text::_("OS_CITY")?>
-													</td>
-													<td>
-														<!--<input type="text" name="city" id="city" value="<?php echo $row->city?>" size="20">-->
-														<div id="city_div">
-															<?php
-															echo $lists['city'];
-															?>
-														</div>
-														<?php
-														if($configClass['require_city']==1){
-															?>
-															<!--<span class="required">(*)</span>-->
-															<?php
-															//$require_field .= "city,";
-															//$require_label .= Text::_('OS_CITY').",";
-														}
-														?>
-													</td>
-												</tr>
-												<tr>
-													<td class="key">
-														<?php echo Text::_("OS_REGION")?>
-													</td>
-													<td>
-														<input type="text" name="region" id="region" value="<?php echo $row->region?>" size="30" class="input-large form-control ilarge" />
-
-													</td>
-												</tr>
-												<tr>
-													<td class="key">
-
-														<?php echo Text::_("OS_LATITUDE")?>
-													</td>
-													<td>
-														<input type="text" class="input-small form-control imedium" name="lat_add" id="lat_add" value="<?php echo $row->lat_add?>" size="30"><!--<span class="required">(*)</span> -->
-
-													</td>
-												</tr>
-												<tr>
-													<td class="key">
-														<?php echo Text::_("OS_LONGTITUDE")?>
-													</td>
-													<td>
-														<input type="text" class="input-small form-control imedium" name="long_add" id="long_add" value="<?php echo $row->long_add?>" size="30">
-														<!--<span class="required">(*)</span>-->
-
-													</td>
-												</tr>
-												<tr>
-													<td class="key" valign="top" colspan="2">
-														<?php echo Text::_('Drag and drop the map for coordinates')?>:
-														<BR />
-														<?php
-                                                        if($row->lat_add == ""){
-                                                            $row->lat_add = $configClass['goole_default_lat'];
-                                                        }
-                                                        if($row->long_add == ""){
-                                                            $row->long_add = $configClass['goole_default_long'];
-                                                        }
-                                                        $geocode = array();
-														$tmp	= new \stdClass();
-														$tmp->lat = $row->lat_add;
-														$tmp->long = $row->long_add;
-														$geocode[0]	= $tmp;
-                                                        if($configClass['map_type'] == 0)
-                                                        {
-                                                            require_once (JPATH_ROOT.DS."components/com_osproperty/helpers/googlemap.lib.php");
-                                                            HelperOspropertyGoogleMap::loadGMapinEditProperty($geocode,"map","lat_add","long_add");
-                                                            ?>
-                                                            
-                                                            <div id="map" style="width: 500px; height: 300px;border:1px solid #CCC;"></div>
-                                                            
-                                                            <div class="clearfix"></div>
-                                                            <div>
-                                                                <b><?php echo Text::_('Enter address to check lattitude and longtitude: ')?></b>
-                                                                <BR>
-                                                                <input type="text" name="add" id="add" value="" size="20" class="inputbox form-control"><input type="button" class="btn btn-primary" value="<?php echo Text::_("Search")?>" onclick="javascript:showAddress(document.adminForm.add.value);">
-                                                            </div>
-                                                            <?php
-                                                        }
-                                                        else
-                                                        {
-                                                            include(JPATH_ROOT.DS."components/com_osproperty/helpers/openstreetmap.lib.php");
-                                                            HelperOspropertyOpenStreetMap::loadGMapinEditProperty($geocode,"map","lat_add","long_add");
-                                                            ?>
-                                                            <div id="map" style="width: 500px; height: 300px;border:1px solid #CCC;"></div>
-                                                            <?php
-                                                        }
-														?>
-													</td>
-												</tr>
-											</table>
-										</fieldset>
-									</div>
+													<?php 
+												}
+											}
+											?>
+											<td>
+												<input type="button" class="btn addtag btn-secondary" value="<?php echo Text::_('OS_ADD');?>" />
+											</td>
+										</tr>
+									</table>
 								</td>
 							</tr>
 						</table>
-					</td>
-				</tr>
-				<tr>
-					<!-- Other information -->
-					<td width="100%" colspan="2">
-						<div class="col width-100">
-						<fieldset class="general form-horizontal options-form">
-							<legend><?php echo Text::_( 'OS_DESCRIPTION' ); ?></legend>
-							<table  width="100%" class="admintable">
-								<tr>
-									<td class="key" valign="top">
-										<?php echo Text::_('OS_SHORT_DESCRIPTION')?>
-										<?php
-										if($configClass['short_desc_required']){
-										?>
-											<span class="required">(*)</span>
-											<?php
-											$require_field .= "pro_small_desc,";
-											$require_label .= Text::_('OS_SMALL_DESCRIPTION').",";
-										}
-										?>
-									</td>
-									<td width="80%">
-										<textarea name="pro_small_desc" id="pro_small_desc" style="width:450px !important;" rows="5" class="input-large form-control"><?php echo stripslashes($row->pro_small_desc)?></textarea>
-									</td>
-								</tr>
+					</fieldset>
+					<script type="text/javascript">
+					jQuery(document).ready( function(){		
+						jQuery('#property_tag_table').on('click', '.removetag', function(){
+							jQuery(this).parent().parent().remove();
+						});
+						
+						jQuery('#property_tag_table').on('click', '.addtag', function(){
+							jQuery(this).val('<?php echo Text::_('OS_DELETE');?>');
+							jQuery(this).attr('class','btn removetag btn-secondary');
+							<?php 
+							$value  = '<tr id="tag_table_tr"><td><input type="text" name="keyword[]" value="" class="input-small form-control" /></td>';
+							//$value .= '<td><input type="text" name="history_event[]" value="" class="input-medium form-control" /></td>';
+							if($translatable){
+								foreach ($languages as $language)
+								{												
+									$sef = $language->sef;
+									$value .= '<td><input type="text" name="keyword_'.$sef.'[]" value="" class="input-small form-control" /></td>';
+								}
+							}
+							$value .= '<td><input type="button" class="btn addtag btn-secondary" value="'.Text::_('OS_ADD').'" /></td></tr>';
+							?>
+							var appendTxt = '<?php echo $value;?>';
+							jQuery("#property_tag_table > tbody> tr:last").after(appendTxt);
+						}); 
+					});
+					</script>
+				</div>
+				<div class="<?php echo $span6Class; ?>">
+					<fieldset class="general form-horizontal options-form">
+						<legend><?php echo Text::_( 'OS_ADDRESS' ); ?></legend>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo HelperOspropertyCommon::showLabel('show_address',Text::_('OS_SHOW_ADDRESS'),Text::_('OS_SHOW_ADDRESS_EXPLAIN'));?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<div id="div_states">
+									<?php
+									echo $lists['show_address'];
+									?>
+								</div>
+							</div>
+						</div>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_("OS_ADDRESS")?>
 								<?php
-                                $editor = Editor::getInstance(Factory::getConfig()->get('editor'));
+								if($configClass['address_required'])
+								{
+									$require_field .= "address,";
+									$require_label .= Text::_('OS_ADDRESS').",";
+									?>
+									<span class="required">(*)</span>
+									<?php
+								}
 								?>
-								<tr>
-									<td class="key" valign="top">
-										<?php echo Text::_('OS_FULL_DESCRIPTION')?>
-									</td>
-									<td width="80%">
-										<?php
-										echo $editor->display( 'pro_full_desc',  stripslashes($row->pro_full_desc) , '95%', '250', '75', '20' ,false) ;
-										?>
-									</td>
-								</tr>							
-							</table>
-						</fieldset>
-						</div>	
-					</td>
-					<!-- End Other information -->
-				</tr>
-			</table>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<input type="text" name="address" id="address" value="<?php echo htmlspecialchars($row->address);?>" class="input-large ilarge form-control" size="30" />
+							</div>
+						</div>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_("OS_POSTCODE")?>
+								<?php
+								if($configClass['require_postcode']==1){
+									?>
+									<span class="required">(*)</span>
+									<?php
+									$require_field .= "postcode,";
+									$require_label .= Text::_('OS_POSTCODE').",";
+								}
+								?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<input type="text" name="postcode" id="postcode" value="<?php echo $row->postcode?>" size="10" class="input-large form-control ilarge" />
+							</div>
+						</div>
+
+						<?php
+						if(HelperOspropertyCommon::checkCountry()){
+							?>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_("OS_COUNTRY")?>
+								<span class="required">(*)</span>
+								<?php
+								$require_field .= "country,";
+								$require_label .= Text::_('OS_COUNTRY').",";
+								?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<?php
+								echo $lists['country'];
+								?>
+							</div>
+						</div>
+							<?php
+						}else{
+							echo $lists['country'];
+						}
+						?>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_("OS_STATE")?>
+								<?php
+								if($configClass['require_state']==1){
+									?>
+									<span class="required">(*)</span>
+									<?php
+									$require_field .= "state,";
+									$require_label .= Text::_('OS_STATE').",";
+								}
+								?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<div id="country_state">
+									<?php
+									echo $lists['states'];
+									?>
+								</div>
+							</div>
+						</div>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_("OS_CITY")?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<!--<input type="text" name="city" id="city" value="<?php echo $row->city?>" size="20">-->
+								<div id="city_div">
+									<?php
+									echo $lists['city'];
+									?>
+								</div>
+								<?php
+								if($configClass['require_city']==1){
+									?>
+									<!--<span class="required">(*)</span>-->
+									<?php
+									//$require_field .= "city,";
+									//$require_label .= Text::_('OS_CITY').",";
+								}
+								?>
+							</div>
+						</div>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_("OS_REGION")?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<input type="text" name="region" id="region" value="<?php echo $row->region?>" size="30" class="input-large form-control ilarge" />
+
+							</div>
+						</div>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+
+								<?php echo Text::_("OS_LATITUDE")?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<input type="text" class="input-small form-control imedium" name="lat_add" id="lat_add" value="<?php echo $row->lat_add?>" size="30"><!--<span class="required">(*)</span> -->
+
+							</div>
+						</div>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_("OS_LONGTITUDE")?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<input type="text" class="input-small form-control imedium" name="long_add" id="long_add" value="<?php echo $row->long_add?>" size="30">
+								<!--<span class="required">(*)</span>-->
+
+							</div>
+						</div>
+						<div class="<?php echo $rowFluidClass;?>">
+							<div class="<?php echo $span12Class;?>">
+								<?php echo Text::_('OS_DRAG_AND_DROP_THE_MAP')?>:
+								<BR />
+								<?php
+								if($row->lat_add == ""){
+									$row->lat_add = $configClass['goole_default_lat'];
+								}
+								if($row->long_add == ""){
+									$row->long_add = $configClass['goole_default_long'];
+								}
+								$geocode = [];
+								$tmp	= new \stdClass();
+								$tmp->lat = $row->lat_add;
+								$tmp->long = $row->long_add;
+								$geocode[0]	= $tmp;
+								if($configClass['map_type'] == 0)
+								{
+									require_once (JPATH_ROOT.DS."components/com_osproperty/helpers/googlemap.lib.php");
+									HelperOspropertyGoogleMap::loadGMapinEditProperty($geocode,"map","lat_add","long_add");
+									?>
+									
+									<div id="map" style="width: 100%; height: 300px;border:1px solid #CCC;"></div>
+									
+									<div class="clearfix"></div>
+									<div>
+										<b><?php echo Text::_('OS_ENTER_ADDRESS_TO_CHECK_LATITUDE_AND_LONGITUDE')?></b>
+										<BR>
+										<input type="text" name="add" id="add" value="" size="20" class="inputbox form-control"><input type="button" class="btn btn-primary" value="<?php echo Text::_("Search")?>" onclick="javascript:showAddress(document.adminForm.add.value);">
+									</div>
+									<?php
+								}
+								else
+								{
+									include(JPATH_ROOT.DS."components/com_osproperty/helpers/openstreetmap.lib.php");
+									HelperOspropertyOpenStreetMap::loadGMapinEditProperty($geocode,"map","lat_add","long_add");
+									?>
+									<div id="map" style="width: 100%; height: 300px;border:1px solid #CCC;"></div>
+									<?php
+								}
+								?>
+							</div>
+						</div>
+					</fieldset>
+				</div>
+			</div>
+			<div class="<?php echo $rowFluidClass?>">
+				<div class="<?php echo $span12Class;?>">
+					<fieldset class="general form-horizontal options-form">
+						<legend><?php echo Text::_( 'OS_DESCRIPTION' ); ?></legend>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_('OS_SHORT_DESCRIPTION')?>
+								<?php
+								if($configClass['short_desc_required']){
+								?>
+									<span class="required">(*)</span>
+									<?php
+									$require_field .= "pro_small_desc,";
+									$require_label .= Text::_('OS_SMALL_DESCRIPTION').",";
+								}
+								?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<textarea name="pro_small_desc" id="pro_small_desc" style="" rows="5" class="input-large form-control"><?php echo stripslashes($row->pro_small_desc)?></textarea>
+							</div>
+						</div>
+						<?php
+						$editor = Editor::getInstance(Factory::getConfig()->get('editor'));
+						?>
+						<div class="<?php echo $controlGroupClass;?>">
+							<div class="<?php echo $controlLabelClass;?>">
+								<?php echo Text::_('OS_FULL_DESCRIPTION')?>
+							</div>	
+							<div class="<?php echo $controlsClass;?>">
+								<?php
+								echo $editor->display( 'pro_full_desc',  stripslashes($row->pro_full_desc) , '95%', '250', '75', '20' ,false) ;
+								?>
+							</div>
+						</div>							
+					</fieldset>
+				</div>
+			</div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 		<?php echo HTMLHelper::_('bootstrap.addTab', 'property', 'details-page', Text::_('OS_DETAILS', true)); ?>
-			<table width="100%">
-			<tr>
-                <td width="100%">
-                    <div class="col width-100">
+			<div class="<?php echo $rowFluidClass; ?>">
+				<div class="<?php echo $span12Class;?>">
                     <fieldset class="general form-horizontal options-form">
                         <legend><?php echo Text::_( 'OS_PROPERTY_INFORMATION' ); ?></legend>
                         <table  width="100%" class="admintable">
@@ -1743,7 +1708,15 @@ class HTML_OspropertyProperties
                                     <?php echo Text::_('OS_VIDEO_EMBED_CODE')?>
                                 </td>
                                 <td width="80%">
-                                    <textarea name="pro_video" id="pro_video" cols="50" rows="3" class="inputbox form-control" style="width:300px !important;"><?php echo stripslashes($row->pro_video);?></textarea>
+                                    <textarea name="pro_video" id="pro_video" cols="50" rows="3" class="inputbox form-control" style=""><?php echo stripslashes($row->pro_video);?></textarea>
+                                </td>
+                            </tr>
+							<tr>
+                                <td class="key" valign="top">
+                                    <?php echo Text::_('OS_VIRTUAL_TOUR_LINK')?>
+                                </td>
+                                <td width="80%">
+                                    <textarea name="tour_link" id="tour_link" cols="50" rows="3" class="inputbox form-control" style=""><?php echo stripslashes($row->tour_link);?></textarea>
                                 </td>
                             </tr>
                             <tr>
@@ -2068,7 +2041,7 @@ class HTML_OspropertyProperties
                             </table>
                         <?php
 							
-								echo HTMLHelper::_('bootstrap.endSlide');
+						echo HTMLHelper::_('bootstrap.endSlide');
 							
                         }
                         ?>
@@ -2077,7 +2050,7 @@ class HTML_OspropertyProperties
 
 								echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_BASEMENT_FOUNDATION'), 'basement_foundation');
 
-                        ?>
+							?>
                             <table  width="100%" class="admintable">
                                 <tr>
                                     <td class="key">
@@ -2104,7 +2077,7 @@ class HTML_OspropertyProperties
                                     </td>
                                 </tr>
                             </table>
-                        <?php
+							<?php
 							
 								echo HTMLHelper::_('bootstrap.endSlide');
 							
@@ -2114,7 +2087,7 @@ class HTML_OspropertyProperties
 
                         if($configClass['use_squarefeet']== 1){
 							
-								echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_LAND_INFORMATION'), 'land_info');
+							echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_LAND_INFORMATION'), 'land_info');
 							
                         ?>
                             <table  width="100%" class="admintable">
@@ -2185,13 +2158,13 @@ class HTML_OspropertyProperties
                             </table>
                             <?php
 							
-								echo HTMLHelper::_('bootstrap.endSlide');
+							echo HTMLHelper::_('bootstrap.endSlide');
 							
                         }
 
                         if($configClass['use_business'] == 1){
 							
-								echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_BUSINESS_INFORMATION'), 'business_info');
+							echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_BUSINESS_INFORMATION'), 'business_info');
 							
                             ?>
                             <table  width="100%" class="admintable">
@@ -2211,13 +2184,13 @@ class HTML_OspropertyProperties
                             </table>
                         <?php
 							
-								echo HTMLHelper::_('bootstrap.endSlide');
+							echo HTMLHelper::_('bootstrap.endSlide');
 							
                         }
 
                         if($configClass['use_rural'] == 1){
 							
-								echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_RURAL_INFORMATION'), 'rural_info');
+							echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_RURAL_INFORMATION'), 'rural_info');
 							
                             ?>
                             <table  width="100%" class="admintable">
@@ -2237,14 +2210,14 @@ class HTML_OspropertyProperties
                             </table>
                         <?php
 							
-								echo HTMLHelper::_('bootstrap.endSlide');
+							echo HTMLHelper::_('bootstrap.endSlide');
 							
                         }
                         ?>
                         <?php
                         if($configClass['energy'] == 1){
 							
-								echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_ENERGY_AND_CLIMATE'), 'energy_and_climate');
+							echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_ENERGY_AND_CLIMATE'), 'energy_and_climate');
 							
                             ?>
                             <table  width="100%" class="admintable">
@@ -2276,13 +2249,13 @@ class HTML_OspropertyProperties
                             </table>
                         <?php
 							
-								echo HTMLHelper::_('bootstrap.endSlide');
+							echo HTMLHelper::_('bootstrap.endSlide');
 							
                         }
                         if($configClass['use_property_history'] == 1)
                         {
 							
-								echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_PROPERTY_HISTORY_TAX'), 'history_and_tax');
+							echo HTMLHelper::_('bootstrap.addSlide', 'menu-pane3', Text::_('OS_PROPERTY_HISTORY_TAX'), 'history_and_tax');
 							
                             ?>
                             <table  width="100%" class="admintable">
@@ -2459,26 +2432,21 @@ class HTML_OspropertyProperties
                             </script>
                         <?php
 
-								echo HTMLHelper::_('bootstrap.endSlide');
+							echo HTMLHelper::_('bootstrap.endSlide');
 							
                         }
                         
 							echo HTMLHelper::_('bootstrap.endAccordion');
                         ?>
                     </fieldset>
-                    </div>
-                </td>
-					<!-- End Other information -->
-			</tr>
+				
+               
 				
 				<?php if(count((array)$groups) > 0){ ?>
-				<tr>
-					<td width="100%">
+				
 					<?php
 					//echo $pane->endPanel();
-						$fieldLists = array();
-						
-
+						$fieldLists = [];
 						
 						echo HTMLHelper::_('bootstrap.startAccordion', 'extrafield-groups');	
 						
@@ -2527,24 +2495,23 @@ class HTML_OspropertyProperties
 								}
 							}
 							
-							
-								echo HTMLHelper::_('bootstrap.endSlide');
+							echo HTMLHelper::_('bootstrap.endSlide');
 							
 						}
 						//echo $pane->endPane();
 
-							echo HTMLHelper::_('bootstrap.endAccordion');
+						echo HTMLHelper::_('bootstrap.endAccordion');
 
 						?>
-					</td>
-				</tr>
+					
 				<?php } ?>
-			</table>
+				</div>
+			</div>
 		<?php echo HTMLHelper::_('bootstrap.endTab'); ?>
 		<?php 
 		if(count($amenities) > 0){
 			echo HTMLHelper::_('bootstrap.addTab', 'property', 'amenities-page', Text::_('OS_AMENITIES', true)); 
-				$optionArr = array();
+				$optionArr = [];
 				$optionArr[] = Text::_('OS_GENERAL_AMENITIES');
 				$optionArr[] = Text::_('OS_ACCESSIBILITY_AMENITIES');
 				$optionArr[] = Text::_('OS_APPLIANCE_AMENITIES');
@@ -2801,7 +2768,7 @@ class HTML_OspropertyProperties
 								<BR />
 								<?php
 								$i = 0;
-								$temp = array();
+								$temp = [];
 								if(count((array)$row->photo) > 0)
 								{
 									?>
@@ -5228,10 +5195,11 @@ class HTML_OspropertyProperties
 	 * @param unknown_type $option
 	 */
 	static function updateLocationForm($option,$country,$lists){
-		global $jinput, $mainframe,$langArr;
+		global $jinput, $mainframe;
 		ToolBarHelper::title(Text::_('OS_UPDATE_LOCATION_DATABASES')." [".$country->country_name."]");
 		ToolBarHelper::save('properties_doimportlanguage',Text::_('OS_UPLOAD'));
 		ToolBarHelper::cancel('');
+		$langArr = OSPHelper::returnSupportedCountries();
 		for($i=0;$i<count($langArr);$i++){
 			if($country->id == $langArr[$i]->country_id){
 				$file_name = $langArr[$i]->file_name;

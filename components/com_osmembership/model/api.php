@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -296,7 +296,10 @@ class OSMembershipModelApi extends MPFModel
 
 		if (!array_key_exists('subscription_code', $data))
 		{
-			$data['subscription_code'] = OSMembershipHelper::getUniqueCodeForField('subscription_code', '#__osmembership_subscribers');
+			$data['subscription_code'] = OSMembershipHelper::getUniqueCodeForField(
+				'subscription_code',
+				'#__osmembership_subscribers'
+			);
 		}
 
 		// Store the subscription record
@@ -377,7 +380,10 @@ class OSMembershipModelApi extends MPFModel
 		$data['subscription_id']   = $subscriptionId;
 		$data['transaction_id']    = $transactionId;
 		$data['payment_made']      = $row->payment_made;
-		$data['subscription_code'] = OSMembershipHelper::getUniqueCodeForField('subscription_code', '#__osmembership_subscribers');
+		$data['subscription_code'] = OSMembershipHelper::getUniqueCodeForField(
+			'subscription_code',
+			'#__osmembership_subscribers'
+		);
 
 		return $this->renew($id, $data);
 	}
@@ -437,7 +443,14 @@ class OSMembershipModelApi extends MPFModel
 			return false;
 		}
 
-		$rowFields = OSMembershipHelper::getProfileFields($row->plan_id, true, $row->language, $row->act, null, $row->user_id);
+		$rowFields = OSMembershipHelper::getProfileFields(
+			$row->plan_id,
+			true,
+			$row->language,
+			$row->act,
+			null,
+			$row->user_id
+		);
 
 		$query->select('a.name, b.field_value')
 			->from('#__osmembership_fields AS a')

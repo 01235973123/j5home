@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright	Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright	Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -13,17 +13,24 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-$document = Factory::getApplication()->getDocument();
-$rootUri = Uri::root(true);
-$document->addScriptDeclaration('
-	var siteUrl = "' . Uri::root() . '";			
-');
 OSMembershipHelperJquery::loadjQuery();
-$document->addScript($rootUri . '/media/com_osmembership/assets/js/membershippro.min.js');
 OSMembershipHelper::addLangLinkForAjax($this->item->language);
 
-$selectedState = '';
-$stateType = 0;
+$wa = Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('selectedState', $this->selectedState)
+	->getWebAssetManager()
+	->addInlineScript(
+		'
+	var siteUrl = "' . Uri::root() . '";			
+'
+	)
+	->registerAndUseScript('com_osmembership.membershippro', 'media/com_osmembership/assets/js/membershippro.min.js');
+
+if ($this->stateType)
+{
+	$wa->registerAndUseScript('com_osmembership.admin-subscriber-default', 'media/com_osmembership/js/admin-subscriber-default.min.js');
+}
 
 if ($this->item->user_id)
 {
@@ -64,16 +71,6 @@ if ($this->item->membership_id)
 
 $fields = $this->form->getFields();
 
-if (isset($fields['state']))
-{
-	$selectedState = $fields['state']->value;
-
-	if ($fields['state']->type == 'State')
-	{
-		$stateType = 1;
-	}
-}
-
 if (isset($fields['email']))
 {
 	$fields['email']->setAttribute('class', 'validate[required,custom[email]]');
@@ -90,10 +87,4 @@ foreach ($fields as $field)
 {
 	/* @var MPFFormField $field */
 	echo $field->getControlGroup($bootstrapHelper);
-}
-
-if ($stateType)
-{
-	$document->addScriptOptions('selectedState', $selectedState)
-		->addScript($rootUri . '/media/com_osmembership/js/admin-subscriber-default.min.js');
 }

@@ -3,7 +3,7 @@
  * @package           Joomla
  * @subpackage        Membership Pro
  * @author            Tuan Pham Ngoc
- * @copyright         Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright         Copyright (C) 2012 - 2025 Ossolution Team
  * @license           GNU/GPL, see LICENSE.php
  */
 
@@ -19,7 +19,9 @@ $message = OSMembershipHelper::getMessages();
 
 $bootstrapHelper = OSMembershipHelperHtml::getAdminBootstrapHelper();
 
-Factory::getApplication()->getDocument()->addScriptOptions('siteUrl', Uri::base(true));
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('siteUrl', Uri::base(true));
 ?>
 <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> form form-horizontal">
     <div class="control-group">

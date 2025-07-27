@@ -4,10 +4,10 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>GNU General Public License version 3, or later</license>
     <creationDate>Nov 2012</creationDate>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>This plugin check and update status of subscribers to Expired when their membership is expired
     </description>
     <files>
@@ -18,7 +18,7 @@
             <fieldset name="basic">
                 <field name="cache_time" label="Cache Time (Hours)" type="number" min="0" max="100" step="1"
                        default="1"/>
-                <field name="last_run" label="Last Run Time" type="text" readonly="true" size="30"
+                <field name="last_run" label="Last Run Time" type="hidden" readonly="true" size="30"
                        description="Store Last Run Time of the plugin"/>
                 <field name="secret_code" label="Secret Code (Empty Unless Using Cronjob)" type="text" size="30" default="" description="Enter a secret string here if you want to use cron job to trigger update membership status." />
             </fieldset>

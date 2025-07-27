@@ -3,7 +3,7 @@
 # listing.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -598,7 +598,7 @@ class OspropertyListing
 		$property = $db->loadObject();
 		$pro_name = OSPHelper::getLanguageFieldValue($property,'pro_name');
 		$ref 	  = $property->ref;
-		if(($ref != "") and ($configClass['show_ref'] == 1)){
+		if(($ref != "") && ($configClass['show_ref'] == 1)){
 			$pro_name = "#".$ref." - ".$pro_name;
 		}
 		
@@ -1216,7 +1216,8 @@ class OspropertyListing
 	 * @param unknown_type $option
 	 */
 	
-	static function advSearch($option){
+	static function advSearch($option)
+	{
 		global $bootstrapHelper, $mainframe,$configClass,$lang_suffix,$jinput,$bootstrapHelper;
 		$session = Factory::getSession();
 		$db = Factory::getDbo();
@@ -1414,7 +1415,7 @@ class OspropertyListing
 
 
         $category_id 	= $jinput->getInt('category_id',0);
-        $category_ids	=  $jinput->get('category_ids',array(),'ARRAY');
+        $category_ids	= $jinput->get('category_ids',array(),'ARRAY');
 		$category_ids	= ArrayHelper::toInteger($category_ids);
         if(!in_array($category_id,$category_ids)){
             $category_ids[count($category_ids)] = $category_id;
@@ -1519,7 +1520,7 @@ class OspropertyListing
 				}
 			}
 		}
-		if(($country_id > 0) and (HelperOspropertyCommon::checkCountry())){
+		if(($country_id > 0) && (HelperOspropertyCommon::checkCountry())){
 			$dosearch = 1;
 			$param[] = "country:".$country_id;
 		}else{
@@ -1605,14 +1606,17 @@ class OspropertyListing
 		}else{
 			$radius_unit_v = 6371;
 		}
-		if($se_geoloc == 1){
+		if($se_geoloc == 1)
+		{
 			$param[] = "mylocation:".$se_geoloc;
 			$dosearch = 1;
 			$user_latlog = explode('_', $_COOKIE["djcf_latlon"]);
 			$search_radius_v = ', ( '.$radius_unit_v.' * acos( cos( radians('.$user_latlog[0].') ) * cos( radians( a.lat_add ) ) * cos( radians( a.long_add ) - radians('.$user_latlog[1].') ) + sin( radians('.$user_latlog[0].') ) * sin( radians( a.lat_add ) ) ) ) AS distance ';
 			$search_radius_h = ' HAVING distance < '.$radius.' ';
 			$lists['se_geoloc'] = $se_geoloc;
-		} elseif($postcode != ""){
+		} 
+		elseif($postcode != "")
+		{
 			$lists['postcode'] = $postcode;
 			$param[] = "postcode:".$agent_type;
 			$dosearch = 1;
@@ -1632,7 +1636,7 @@ class OspropertyListing
 		$rangeDateQuery = "";
 		if($configClass['integrate_oscalendar'] == 1){
 			if(file_exists(JPATH_ROOT."/components/com_oscalendar/oscalendar.php")){
-				if(($start_time != "") and ($end_time != "")){
+				if(($start_time != "") && ($end_time != "")){
 					$dosearch = 1;
 					$rangeDateQuery = OSCHelper::buildDateRangeQuery($start_time, $end_time);
 				}
@@ -1679,10 +1683,18 @@ class OspropertyListing
 			}
 		}
 		//build query for searching
+		$translatable = Multilanguage::isEnabled() && count(OSPHelper::getLanguages());
 		if($dosearch == 1)
 		{
+			$additionalSql		= "";
+			if ($translatable)
+			{
+				$suffix			= OSPHelper::getFieldSuffix();
+
+					$additionalSql	= ",g.state_name" . $suffix .",h.city".$suffix ." as city_name".$suffix;
+			}
 			// Query database
-			$select = "SELECT distinct a.id ".$search_radius_v.", a.*, c.name as agent_name, c.mobile as agent_mobile, c.phone as agent_phone,c.photo as agent_photo, c.optin, d.id as type_id,d.type_name$lang_suffix as type_name, e.country_name";
+			$select = "SELECT distinct a.id ".$search_radius_v.", a.*, c.name as agent_name, c.mobile as agent_mobile, c.phone as agent_phone,c.photo as agent_photo, c.optin, d.id as type_id,d.type_name$lang_suffix as type_name, e.country_name,g.state_name,h.city as city_name ".$additionalSql ;
 			//$count  = "SELECT count(a.id) ".$search_radius_v;
 			$from =	 " FROM #__osrs_properties as a"
 					." INNER JOIN #__osrs_agents as c on c.id = a.agent_id"
@@ -1859,7 +1871,7 @@ class OspropertyListing
 				$where .= " AND a.lot_size <= '$lotsize_max'";
 				$lists['lotsize_max'] = $lotsize_max;
 			}
-			if((isset($extrafieldSql)) AND (count($extrafieldSql)) > 0){
+			if((isset($extrafieldSql)) && (count($extrafieldSql)) > 0){
 				$extrafieldSql = implode(" AND ",$extrafieldSql);
 				if(trim($extrafieldSql) != ""){
 					$where .= " AND ".$extrafieldSql;
@@ -1937,10 +1949,14 @@ class OspropertyListing
 					$row->pro_small_desc = $pro_small_desc;
 					
 					$alias = $row->pro_alias;
-					$new_alias = OSPHelper::generateAlias('property',$row->id,$row->pro_alias);
-					if($alias != $new_alias){
-						$db->setQuery("Update #__osrs_properties set pro_alias = '$new_alias' where id = '$row->id'");
-						$db->execute();
+					if($alias == '')
+					{
+						$new_alias = OSPHelper::generateAlias('property',$row->id,$row->pro_alias);
+						if($alias != $new_alias)
+						{
+							$db->setQuery("Update #__osrs_properties set pro_alias = '$new_alias' where id = '$row->id'");
+							$db->execute();
+						}
 					}
 					
 					$category_name = OSPHelper::getCategoryNamesOfPropertyWithLinks($row->id);
@@ -2040,7 +2056,7 @@ class OspropertyListing
 					
 					$count = 0;
 					if($row->count_photo > 0){
-						$db->setQuery("Select * from #__osrs_photos where pro_id = '$row->id'");
+						$db->setQuery("Select * from #__osrs_photos where pro_id = '$row->id' order by ordering");
 						$photos = $db->loadObjectList();
 						$photoArr = [];
 						for($j=0;$j<count($photos);$j++){
@@ -2055,10 +2071,19 @@ class OspropertyListing
 					
 					//get state
 					//$db->setQuery("Select state_name$lang_suffix as state_name from #__osrs_states where id = '$row->state'");
-					$row->state_name = OSPHelper::loadSateName($row->state);//$db->loadResult();
+					//$row->state_name = OSPHelper::loadSateName($row->state);//$db->loadResult();
 					
+					if($translatable && $row->{'state_name'.$suffix} != '')
+					{
+						$row->state_name = $row->{'state_name'.$suffix};
+					}
+
+					if($translatable && $row->{'city_name'.$suffix} != '')
+					{
+						$row->city_name = $row->{'city'.$suffix};
+					}
 					//get country
-					$row->country_name = OSPHelper::getCountryName($row->country);
+					//$row->country_name = OSPHelper::getCountryName($row->country);
 					//$db->setQuery("Select country_name from #__osrs_countries where id = '$row->country'");
 					//$row->country_name = $db->loadResult();
 					
@@ -2150,25 +2175,33 @@ class OspropertyListing
         ob_end_clean();
 
 		$lists['category'] = OSPHelper::listCategoriesInMultiple($category_ids,'');
+		$lists['category_ids'] = $category_ids;
 		
 		$document = Factory::getDocument();
 		
-		//$document->addStyleSheet(Uri::root()."media/com_osproperty/assets/js/chosen/chosen.css");
-		//property types
-		//$typeArr[] = HTMLHelper::_('select.option','',Text::_('OS_ALL_PROPERTY_TYPES'));
 		$db->setQuery("SELECT id as value,type_name$lang_suffix as text FROM #__osrs_types where published = '1' ORDER BY ordering");
 		$protypes = $db->loadObjectList();
-		//$typeArr   = array_merge($typeArr,$protypes);
+		
+		$lists['protypes']			= $protypes;
+		$lists['property_types']	= $property_types;
 		$lists['type'] = HTMLHelper::_('select.genericlist',$protypes,'property_types[]','class="'.$bootstrapHelper->getClassMapping('input-large').' chosen" multiple','value','text',$property_types);
 
-		$lists['marketstatus'] = OSPHelper::buildDropdownMarketStatus($isSold);
+		$lists['marketstatus']		= OSPHelper::buildDropdownMarketStatus($isSold);
 		
 		//price
 		//$lists['price'] = HelperOspropertyCommon::generatePriceList($adv_type,$price);
-		$lists['price_value'] = $price;
-		$lists['adv_type'] = $adv_type;
-		$lists['min_price'] = $min_price;
-		$lists['max_price'] = $max_price;
+		$lists['price_value']		= $price;
+		$lists['adv_type']			= $adv_type;
+		if($min_price == 0)
+		{
+			$min_price				= $configClass['min_price_slider'];
+		}
+		if($max_price == 0)
+		{
+			$max_price				= $configClass['max_price_slider'];
+		}
+		$lists['min_price']			= $min_price;
+		$lists['max_price']			= $max_price;
 		//$lists['price'] = $price;
 		// number bath room
 		$bathArr[] = HTMLHelper::_('select.option','',Text::_('OS_ANY'));
@@ -2759,17 +2792,39 @@ class OspropertyListing
 		{
 			$limit					= $configClass['general_number_properties_per_page'];
 		}
-        $orderbyArray = array('a.pro_name','a.ref','a.created','a.modified','a.price','a.isFeatured','rand()','a.isFeatured desc, a.id','a.id','a.ordering');
+        $orderbyArray = array('a.pro_name','a.created','a.modified','a.price','a.ordering');
         if(!in_array($orderby, $orderbyArray))
 		{
-            $orderby = "a.id";
+            $orderby = "a.created";
             $ordertype = "desc";
         }
+		$lists['orderby_selected']		= $orderby;
+		$lists['ordertype_selected']	= $ordertype;
+		if( $ordertype == "desc")
+		{
+			$lists['ordertype_selected_text'] = Text::_('OS_DESC');
+		}
+		else
+		{
+			$lists['ordertype_selected_text'] = Text::_('OS_ASC');
+		}
+
+		$orderbyTextArray = array(Text::_('OS_TITLE'),Text::_('OS_CREATED'),Text::_('OS_MODIFIED'),Text::_('OS_PRICE'),Text::_('OS_ORDERING'));
+
+		for($i = 0;$i<count($orderbyArray); $i++)
+		{
+			if($lists['orderby_selected'] == $orderbyArray[$i])
+			{
+				$lists['orderby_selected_text'] = $orderbyTextArray[$i];
+			}
+		}
 
 		if($orderby == "a.price" && $ordertype == "asc")
 		{
-			$orderby = " a.price_call desc, a.price";
+			$orderby					= " a.price_call desc, a.price";
 		}
+
+		
 
 		$viewtype = $jinput->getInt('listviewtype',0);
 		$url = $jinput->getString('url','');
@@ -2807,7 +2862,8 @@ class OspropertyListing
 
         $query .= $companyQuery;
 		
-		if($keyword != ""){
+		if($keyword != "")
+		{
 			$keyword = $db->escape($keyword);
 			$query .= " AND (";
 			$query .= " a.ref like '%$keyword%' OR";
@@ -2837,11 +2893,15 @@ class OspropertyListing
 		{
 			$query .= " AND a.city = '$city_id'";
 		}
-		if(is_array($category_ids) and (count($category_ids) > 0) and ($category_ids[0] != "0")){
+		if(is_array($category_ids) && (count($category_ids) > 0) && ($category_ids[0] != "0"))
+		{
 			$temp = [];
-			if(count($category_ids) > 0){
-				foreach($category_ids as $cat_id){
-					if((int)$cat_id > 0){
+			if(count($category_ids) > 0)
+			{
+				foreach($category_ids as $cat_id)
+				{
+					if((int)$cat_id > 0)
+					{
 						$temp[] = " g.category_id = '$cat_id'";
 					}
 				}
@@ -2877,7 +2937,8 @@ class OspropertyListing
 			$query .= " AND a.isSold = '$isSold'";
 		}
 
-		if($price > 0){
+		if($price > 0)
+		{
 			$db->setQuery("Select * from #__osrs_pricegroups where id = '$price'");
 			$pricegroup = $db->loadObject();
 			$price_from = $pricegroup->price_from;
@@ -2929,30 +2990,53 @@ class OspropertyListing
 		$db->setQuery($query);
 		$total = $db->loadResult();
 		//echo $total;
-		if($max_properties > 0){
-			if($total > $max_properties){
+		if($max_properties > 0)
+		{
+			if($total > $max_properties)
+			{
 				$total = $max_properties;	
 			}
 			
-			if($limitstart + $limit > $max_properties){
+			if($limitstart + $limit > $max_properties)
+			{
 				$limit_number = $max_properties - $limitstart;
-			}else{
+			}
+			else
+			{
 				$limit_number = $limit;
 			}
-		}else{
+		}
+		else
+		{
 			$limit_number = $limit;
 		}
 
-		if($configClass['overrides_pagination'] == 1){
+		if($configClass['overrides_pagination'] == 1)
+		{
 			$pageNav = new OSPJPagination($total,$limitstart,$limit);
-		}else{
+		}
+		else
+		{
 			$pageNav = new Pagination($total,$limitstart,$limit);
 		}
+
+		$translatable = Multilanguage::isEnabled() && count(OSPHelper::getLanguages());
+		$additionalSql = "";
+		if ($translatable)
+		{
+			$suffix			= OSPHelper::getFieldSuffix();
+			if($suffix != "")
+			{
+				$additionalSql	= ",s.state_name" . $suffix .",ci.city".$suffix ." as city_name".$suffix;
+			}
+		}
 		
-		$query = "Select a.*,c.name as agent_name,c.photo as agent_photo, c.mobile as agent_mobile, c.phone as agent_phone,c.email as agent_email, c.optin,d.id as typeid,d.type_name$lang_suffix as type_name,e.country_name from #__osrs_properties as a"
+		$query = "Select a.*,c.name as agent_name,c.photo as agent_photo, c.mobile as agent_mobile, c.phone as agent_phone,c.email as agent_email, c.optin,d.id as typeid,d.type_name$lang_suffix as type_name,e.country_name,s.state_name,ci.city as city_name ".$additionalSql." from #__osrs_properties as a"
 				." INNER JOIN #__osrs_agents as c on c.id = a.agent_id"
 				." LEFT JOIN #__osrs_types as d on d.id = a.pro_type"
-				." LEFT JOIN #__osrs_countries as e on e.id = a.country"
+				." LEFT JOIN #__osrs_states as s on s.id = a.state"
+				." LEFT JOIN #__osrs_cities as ci on ci.id = a.city"
+				." INNER JOIN #__osrs_countries as e on e.id = a.country"
 				." LEFT JOIN #__osrs_property_categories as g on g.pid = a.id"
 				." WHERE 1=1";
         if($agent_id_permission > 0){
@@ -2960,7 +3044,8 @@ class OspropertyListing
         }else{
             $query .= ' and a.access IN (' . implode(',', Factory::getUser()->getAuthorisedViewLevels()) . ')';
         }
-		if($keyword != ""){
+		if($keyword != "")
+		{
 			$keyword = $db->escape($keyword);
 			$query .= " AND (";
 			$query .= " a.ref like '%$keyword%' OR";
@@ -2990,7 +3075,7 @@ class OspropertyListing
 			$query .= " AND a.city = '$city_id'";
 		}
 
-		if(is_array($category_ids) and (count($category_ids) > 0) and ($category_ids[0] != "0")){
+		if(is_array($category_ids) && (count($category_ids) > 0) && ($category_ids[0] != "0")){
 			$temp = [];
 			if(count($category_ids) > 0){
 				foreach($category_ids as $cat_id){
@@ -3027,7 +3112,8 @@ class OspropertyListing
 		{
 			$query .= " AND a.isSold = '$isSold'";
 		}
-		if($price > 0){
+		if($price > 0)
+		{
 			$db->setQuery("Select * from #__osrs_pricegroups where id = '$price'");
 			$pricegroup = $db->loadObject();
 			$price_from = $pricegroup->price_from;
@@ -3072,7 +3158,7 @@ class OspropertyListing
             $ordertype = "";
         }
 
-		$query .= " GROUP BY a.id ORDER BY $orderby $ordertype";
+		$query .= " GROUP BY a.id ORDER BY $orderby $ordertype, a.id asc";
 		
 		$view_type_cookie = $jinput->getString('listviewtype','');
 		if($view_type_cookie == ""){
@@ -3096,28 +3182,35 @@ class OspropertyListing
 				HelperOspropertyCommon::generateGoogleEarthKML($rows);
 			}
 			exit();
-		}else{
+		}
+		else
+		{
 			$db->setQuery($query,$pageNav->limitstart,$limit_number);
 		}
 		$rows = $db->loadObjectList();
 
-		if(count($rows) > 0){
+		if(count($rows) > 0)
+		{
 			$fields = HelperOspropertyCommon::getExtrafieldInList();
 			//get the list of extra fields that show at the list
-			for($i=0;$i<count($rows);$i++){//for
+			for($i=0;$i<count($rows);$i++)
+			{//for
 				$row = $rows[$i];
 				
 				$pro_name = OSPHelper::getLanguageFieldValue($row,'pro_name');
 				$row->pro_name = $pro_name;
 				$pro_small_desc = OSPHelper::getLanguageFieldValue($row,'pro_small_desc');
 				$row->pro_small_desc = $pro_small_desc;
-					
-				OSPHelper::generateAlias('property',$row->id,$row->pro_alias);
-				$alias = $row->pro_alias;
-				$new_alias = OSPHelper::generateAlias('property',$row->id,$row->pro_alias);
-				if($alias != $new_alias){
-					$db->setQuery("Update #__osrs_properties set pro_alias = '$new_alias' where id = '$row->id'");
-					$db->execute();
+				
+				if($row->pro_alias == '')
+				{
+					OSPHelper::generateAlias('property',$row->id,$row->pro_alias);
+					$alias = $row->pro_alias;
+					$new_alias = OSPHelper::generateAlias('property',$row->id,$row->pro_alias);
+					if($alias != $new_alias){
+						$db->setQuery("Update #__osrs_properties set pro_alias = '$new_alias' where id = '$row->id'");
+						$db->execute();
+					}
 				}
 				
 				$category_name = OSPHelper::getCategoryNamesOfPropertyWithLinks($row->id);
@@ -3218,11 +3311,13 @@ class OspropertyListing
 				}//end photo
 				
 				$count = 0;
-				if($row->count_photo > 0){
-					$db->setQuery("Select * from #__osrs_photos where pro_id = '$row->id'");
+				if($row->count_photo > 0)
+				{
+					$db->setQuery("Select * from #__osrs_photos where `image` <> '' and pro_id = '$row->id' order by ordering");
 					$photos = $db->loadObjectList();
 					$photoArr = [];
-					for($j=0;$j<count($photos);$j++){
+					for($j=0;$j<count($photos);$j++)
+					{
 						$photoArr[$j] = $photos[$j]->image;
 						if(file_exists(JPATH_ROOT.'/images/osproperty/properties/'.$row->id.'/medium/'.$photos[$j]->image)){
 							$count++;
@@ -3233,12 +3328,22 @@ class OspropertyListing
 				}
 				//get state
 				//$db->setQuery("Select state_name$lang_suffix as state_name from #__osrs_states where id = '$row->state'");
-				$row->state_name = OSPHelper::loadSateName($row->state);//$db->loadResult();
+				//$row->state_name = OSPHelper::loadSateName($row->state);//$db->loadResult();
+
+				if($translatable && $row->{'state_name'.$suffix} != '')
+				{
+					$row->state_name = $row->{'state_name'.$suffix};
+				}
+
+				if($translatable && $row->{'city_name'.$suffix} != '')
+				{
+					$row->city_name = $row->{'city'.$suffix};
+				}
 				
 				//get country
 				//$db->setQuery("Select country_name from #__osrs_countries where id = '$row->country'");
 				//$row->country_name = $db->loadResult();
-				$row->country_name = OSPHelper::getCountryName($row->country);
+				//$row->country_name = OSPHelper::getCountryName($row->country);
 				
 				//rating
 				if($configClass['show_rating'] == 1){
@@ -3796,56 +3901,121 @@ class OspropertyListing
 		$l = 0;
         if($configClass['show_unselected_amenities'] == 1) {
             ob_start();
-            foreach ($optionArr as $amen_cat) {
-                $query = "Select * from #__osrs_amenities where published = '1' and category_id = '$l' order by ordering";
-                $db->setQuery($query);
-                $amenities = $db->loadObjectList();
+            //foreach ($optionArr as $amen_cat) {
+			$query = "Select * from #__osrs_amenities where published = '1' and category_id = '$l' order by ordering";
+			$db->setQuery($query);
+			$amenities = $db->loadObjectList();
 
-                $query = "Select a.id from #__osrs_amenities as a"
-                    . " inner join #__osrs_property_amenities as b on b.amen_id = a.id"
-                    . " where a.published = '1' and b.pro_id = '$property->id' and a.category_id = '$l' order by a.ordering";
-                $db->setQuery($query);
-                $property_amenities = $db->loadColumn(0);
-                $amens_str1 = "";
-                if (count($amenities) > 0) 
+			$query = "Select a.id from #__osrs_amenities as a"
+				. " inner join #__osrs_property_amenities as b on b.amen_id = a.id"
+				. " where a.published = '1' and b.pro_id = '$property->id' order by a.ordering";
+			$db->setQuery($query);
+			$property_amenities = $db->loadColumn(0);
+			$amens_str1 = "";
+			if (count($amenities) > 0) 
+			{
+				$amens_str = "";
+				$j = 0;
+				$k = 0;
+				if ($configClass['amenities_layout'] == 1) 
 				{
-                    $amens_str = "";
-                    $j = 0;
-                    $k = 0;
-                    if ($configClass['amenities_layout'] == 1) 
+					$span = $bootstrapHelper->getClassMapping('span6');
+					$jump = 2;
+				} 
+				else 
+				{
+					$span = $bootstrapHelper->getClassMapping('span4');
+					$jump = 3;
+				}
+				?>
+				<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+					<?php
+					for ($i = 0; $i < count($amenities); $i++) 
 					{
-                        $span = $bootstrapHelper->getClassMapping('span6');
-                        $jump = 2;
-                    } 
-					else 
-					{
-                        $span = $bootstrapHelper->getClassMapping('span4');
-                        $jump = 3;
-                    }
-                    ?>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-						<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
-	                        <h4><?php echo $amen_cat?></h4>
-						</div>
-                    </div>
-                    <div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
-                        <?php
-                        for ($i = 0; $i < count($amenities); $i++) 
+						$k++;
+						$amen = $amenities[$i];
+						if (in_array($amen->id, $property_amenities)) 
 						{
-                            $k++;
-                            $amen = $amenities[$i];
-                            if (in_array($amen->id, $property_amenities)) 
+							$style = "color:#99103A;";
+							$style1 = "";
+						} 
+						else 
+						{
+							$style = "color:#CCC;";
+							$style1 = $style;
+						}
+						?>
+						<div class="<?php echo $span;?>" style="<?php echo $style1;?>">
+							<?php
+							if($amen->icon != "")
 							{
-                                $style = "color:#99103A;";
-                                $style1 = "";
-                            } 
-							else 
+								?>
+								<i class="<?php echo $amen->icon;?>"></i>&nbsp;
+								<?php
+							}
+							else
 							{
-                                $style = "color:#CCC;";
-                                $style1 = $style;
-                            }
-                            ?>
-                            <div class="<?php echo $span;?>" style="<?php echo $style1;?>">
+								?>
+								<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+<path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
+</svg>
+								<?php
+							}
+							?>
+							<?php echo OSPHelper::getLanguageFieldValue($amen, 'amenities');?>
+						</div>
+						<?php
+						if ($k % $jump == 0) 
+						{
+							$k = 0;
+							echo "</div><div class='".$bootstrapHelper->getClassMapping('row-fluid')."'>";
+						}
+					}
+					?>
+				</div>
+			<?php
+			}
+			$l++;
+            //}
+            $amens_str = ob_get_contents();
+            ob_end_clean();
+        }
+		else
+		{
+			$amenityCategoryIcons = array('edicon-cog','edicon-lifebuoy','edicon-power-cord','edicon-bullhorn','edicon-fire','edicon-paint-format','edicon-podcast','edicon-image','edicon-lock');
+			$icon = 0;
+            ob_start();
+            
+			$query = "Select a.* from #__osrs_amenities as a"
+				." inner join #__osrs_property_amenities as b on b.amen_id = a.id"
+				." where a.published = '1' and b.pro_id = '$property->id' order by a.ordering";
+			$db->setQuery($query);
+			$amens = $db->loadObjectList();
+			$amens_str1 = "";
+			if(count($amens) > 0){
+				$amens_str = "";
+				$j = 0;
+				$k = 0;
+				if($configClass['amenities_layout'] == 1)
+				{
+					$span = $bootstrapHelper->getClassMapping('span6'); //"span6";
+					$jump = 2;
+				}
+				else
+				{
+					$span = $bootstrapHelper->getClassMapping('span4');
+					$jump = 3;
+				}
+				?>
+				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> noleftmargin nopadding amenitygroup">
+					<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+						<?php
+						for($i=0;$i<count($amens);$i++)
+						{
+							$k++;
+							$amen = $amens[$i];
+							?>
+							<div class="<?php echo $span;?>">
 								<?php
 								if($amen->icon != "")
 								{
@@ -3862,95 +4032,23 @@ class OspropertyListing
 									<?php
 								}
 								?>
-                                <?php echo OSPHelper::getLanguageFieldValue($amen, 'amenities');?>
-                            </div>
-                            <?php
-                            if ($k % $jump == 0) 
-							{
-                                $k = 0;
-                                echo "</div><div class='".$bootstrapHelper->getClassMapping('row-fluid')."'>";
-                            }
-                        }
-                        ?>
-                    </div>
-                <?php
-                }
-                $l++;
-            }
-            $amens_str = ob_get_contents();
-            ob_end_clean();
-        }
-		else
-		{
-			$amenityCategoryIcons = array('edicon-cog','edicon-lifebuoy','edicon-power-cord','edicon-bullhorn','edicon-fire','edicon-paint-format','edicon-podcast','edicon-image','edicon-lock');
-			$icon = 0;
-            ob_start();
-            foreach ($optionArr as $amen_cat)
-			{
-                $query = "Select a.* from #__osrs_amenities as a"
-                    ." inner join #__osrs_property_amenities as b on b.amen_id = a.id"
-                    ." where a.published = '1' and b.pro_id = '$property->id' and a.category_id = '$l' order by a.ordering";
-                $db->setQuery($query);
-                $amens = $db->loadObjectList();
-                $amens_str1 = "";
-                if(count($amens) > 0){
-                    $amens_str = "";
-                    $j = 0;
-                    $k = 0;
-                    if($configClass['amenities_layout'] == 1)
-					{
-                        $span = $bootstrapHelper->getClassMapping('span6'); //"span6";
-                        $jump = 2;
-                    }
-					else
-					{
-                        $span = $bootstrapHelper->getClassMapping('span4');
-                        $jump = 3;
-                    }
-                    ?>
-					<h4><?php echo $amen_cat?></h4>
-					<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?> noleftmargin nopadding amenitygroup">
-						<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
+								<?php echo OSPHelper::getLanguageFieldValue($amen,'amenities');?>
+							</div>
 							<?php
-							for($i=0;$i<count($amens);$i++)
+							if($k % $jump == 0)
 							{
-								$k++;
-								$amen = $amens[$i];
-								?>
-								<div class="<?php echo $span;?>">
-									<?php
-									if($amen->icon != "")
-									{
-										?>
-										<i class="<?php echo $amen->icon;?>"></i>&nbsp;
-										<?php
-									}
-									else
-									{
-										?>
-										<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
-	  <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0z"/>
-	</svg>
-										<?php
-									}
-									?>
-									<?php echo OSPHelper::getLanguageFieldValue($amen,'amenities');?>
-								</div>
-								<?php
-								if($k % $jump == 0)
-								{
-									$k = 0;
-									echo "</div><div class='".$bootstrapHelper->getClassMapping('row-fluid')."'>";
-								}
+								$k = 0;
+								echo "</div><div class='".$bootstrapHelper->getClassMapping('row-fluid')."'>";
 							}
-							?>
-						</div>
+						}
+						?>
 					</div>
-                <?php
-                }
-                $l++;
-				$icon++;
-            }
+				</div>
+			<?php
+			}
+			$l++;
+			$icon++;
+            
             $amens_str = ob_get_contents();
             ob_end_clean();
         }
@@ -3964,18 +4062,23 @@ class OspropertyListing
 		$db->setQuery("Select * from #__osrs_fieldgroups where published = '1' $access_sql order by ordering");
 		$fieldgroups = $db->loadObjectList();
 		$j = 0;
-		if(count($fieldgroups) > 0){
-			for($i=0;$i<count($fieldgroups);$i++){
+		if(count($fieldgroups) > 0)
+		{
+			for($i=0;$i<count($fieldgroups);$i++)
+			{
 				$fieldgroup = $fieldgroups[$i];
 
                 $access_sql = ' and b.access IN (' . implode(',', Factory::getUser()->getAuthorisedViewLevels()) . ')';
-				$checkgroup = HelperOspropertyFields::checkFieldData($property->id, $fieldgroup->id);
+				//$checkgroup = HelperOspropertyFields::checkFieldData($property->id, $fieldgroup->id, $property->pro_type);
 				
-				if($checkgroup == 1)
+				//if($checkgroup == 1)
+				//{
+				$fieldData							= HelperOspropertyFields::getFieldsData($property->id, $fieldgroup->id, $property->pro_type);
+				if(count($fieldData) > 0)
 				{
-					$extra_field_groups[$j]	= new stdClass();
+					$extra_field_groups[$j]				= new stdClass();
 					$extra_field_groups[$j]->group_name = OSPHelper::getLanguageFieldValue($fieldgroup,'group_name');
-					$extra_field_groups[$j]->fields = HelperOspropertyFields::getFieldsData($property->id, $fieldgroup->id);
+					$extra_field_groups[$j]->fields		= $fieldData;
 					$j++;
 				}
 			}
@@ -4056,14 +4159,18 @@ class OspropertyListing
 		}
 		
 		//allow to show the relate properties
-		if($configClass['relate_properties'] == 1){
+		if($configClass['relate_properties'] == 1)
+		{
 			$radius_search = $configClass['relate_distance'];
 			if(intval($radius_search) == 0){
 				$radius_search = 5;
 			}
-			if($configClass['locator_radius_type'] == 0){
+			if($configClass['locator_radius_type'] == 0)
+			{
 				$multiFactor = 3959;
-			}else{
+			}
+			else
+			{
 				$multiFactor = 6371;
 			}
 			// Search the rows in the table
@@ -4108,19 +4215,26 @@ class OspropertyListing
 			$db->setQuery($sql);
 			//echo $db->getQuery();
 			$relates = $db->loadObjectList();
-			if (count($relates)){
+			if (count($relates))
+			{
 				for($i=0;$i<count($relates);$i++){//for
 					$relate = $relates[$i];
 					$type_name = OSPHelper::getLanguageFieldValue($relate,'type_name');
 					$relate->type_name = $type_name;
 					$db->setQuery("select image from #__osrs_photos where pro_id = '$relate->id' order by ordering");
 					$relate->photo = $db->loadResult();
-					if ($relate->photo == ''){
+					if ($relate->photo == '')
+					{
 						$relate->photo = Uri::root()."media/com_osproperty/assets/images/nopropertyphoto.png";
-					}else {
-						if(file_exists(JPATH_ROOT.'/images/osproperty/properties/'.$relate->id.'/thumb/'.$relate->photo)){
+					}
+					else 
+					{
+						if(file_exists(JPATH_ROOT.'/images/osproperty/properties/'.$relate->id.'/thumb/'.$relate->photo))
+						{
 							$relate->photo = Uri::root()."images/osproperty/properties/".$relate->id."/thumb/".$relate->photo;	
-						}else{
+						}
+						else
+						{
 							$relate->photo = Uri::root()."media/com_osproperty/assets/images/nopropertyphoto.png";	
 						}
 					}
@@ -4292,8 +4406,8 @@ class OspropertyListing
 
 		$document = Factory::getDocument();
 		//include css of theme2
-		$document->addStyleSheet(Uri::root()."components/com_osproperty/templates/theme2/style/style.css");
-		$document->addStyleSheet(Uri::root()."components/com_osproperty/templates/theme2/style/font.css");
+		//$document->addStyleSheet(Uri::root()."components/com_osproperty/templates/theme2/style/style.css");
+		//$document->addStyleSheet(Uri::root()."components/com_osproperty/templates/theme2/style/font.css");
 		if($id > 0)
 		{
 			$document->setTitle($configClass['general_bussiness_name']." - ".Text::_('OS_EDIT_PROPERTY'));
@@ -4946,7 +5060,7 @@ class OspropertyListing
 		//check to lat long
 		$lat_add = OSPHelper::getStringRequest('lat_add','','post');
 		$long_add = OSPHelper::getStringRequest('long_add','','post');
-		if(($lat_add == "") || ($long_add == ""))
+		if($lat_add == "" || $long_add == "")
 		{
 			include_once(JPATH_SITE."/components/com_osproperty/helpers/googlemap.lib.php");
 			$city = $jinput->getInt('city',0);
@@ -5565,7 +5679,7 @@ class OspropertyListing
             $history_source = $jinput->get('history_source',array(),'ARRAY');
 			if(count($history_date) > 0){
 				for($i=0;$i<count($history_date);$i++){
-					if(($history_date[$i] != "") and ($history_event[$i] != "") and ($history_price [$i] != "") and ($history_source[$i] != "")){
+					if(($history_date[$i] != "") && ($history_event[$i] != "") && ($history_price [$i] != "") && ($history_source[$i] != "")){
 						$query = $db->getQuery(true);
 						$columns = array('id','pid','date','event','price','source');
 						$query->insert("#__osrs_property_price_history")->columns($columns)->values('NULL,'.$id.','.$db->quote($history_date[$i]).','.$db->quote($history_event[$i]).','.$db->quote($history_price [$i]).','.$db->quote($history_source[$i]).'');
@@ -5587,7 +5701,7 @@ class OspropertyListing
             $tax_assessment_change 	= $jinput->get('tax_assessment_change',array(),'ARRAY');
 			if(count($tax_year) > 0){
 				for($i=0;$i<count($tax_year);$i++){
-					if(($tax_year[$i] != "") and ($tax_value[$i] != "")  ){
+					if(($tax_year[$i] != "") && ($tax_value[$i] != "")  ){
 						if($tax_assessment [$i] == ""){
 							$tax_assessment [$i] = 0;
 						}
@@ -5604,7 +5718,8 @@ class OspropertyListing
 			}
 		}
 		
-		if($configClass['use_open_house'] == 1){
+		if($configClass['use_open_house'] == 1)
+		{
 			$query = $db->getQuery(true);
 			$query->delete("#__osrs_property_open")->where("pid = '$id'");
 			$db->setQuery($query);
@@ -5613,9 +5728,10 @@ class OspropertyListing
             $start_from = $jinput->get('start_from',array(),'ARRAY');
             $end_to     = $jinput->get('end_to',array(),'ARRAY');
 			
-			if(count($start_from) > 0){
+			if(count($start_from) > 0)
+			{
 				for($i=0;$i<count($start_from);$i++){
-					if(($start_from[$i] != "") and ($end_to[$i]!= "")){
+					if(($start_from[$i] != "") && ($end_to[$i]!= "")){
 						$query = $db->getQuery(true);
 						$columns = array('id','pid','start_from','end_to');
 						$query->insert('#__osrs_property_open')->columns($columns)->values('NULL,'.$id.','.$db->quote($start_from[$i]).','.$db->quote($end_to[$i]).'');
@@ -6247,7 +6363,7 @@ class OspropertyListing
 				setcookie('coupon_id',$coupon_id,time() + 3600);
 			}
 		}
-		if(($configClass['general_featured_upgrade_amount'] == 0) and ((int)$configClass['active_payment'] == 0)){
+		if(($configClass['general_featured_upgrade_amount'] == 0) && ((int)$configClass['active_payment'] == 0)){
 			//process upgrade
 			OspropertyListing::upgradeProperties($cid);
 			OSPHelper::redirect(Route::_("index.php?option=com_osproperty&task=agent_editprofile"),Text::_('OS_PROPERTIES_HAVE_BEEN_UPGRADED'));
@@ -7110,7 +7226,7 @@ class OspropertyListing
 			$user = Factory::getUser();
 			$db->setQuery("Select count(id) from #__osrs_comments where pro_id = '$id' and user_id = '$user->id'");
             $count = $db->loadResult();
-			if(($count > 0) and ($configClass['only_one_review'] == 1)){
+			if(($count > 0) && ($configClass['only_one_review'] == 1)){
 				OSPHelper::redirect(Route::_("index.php?opton=com_osproperty&task=property_details&id=$id&Itemid=".$itemid),Text::_('OS_YOU_HAVE_COMMENTED_FOR_THIS_PROPERTY_ALREADY'));
 			}
 		}
@@ -7899,7 +8015,7 @@ class OspropertyListing
 				  	  	  	   			$results[$category_name][$j]->pimage = "<img src='".Uri::root()."media/com_osproperty/assets/images/noimage64.png' height='60' width='60' border='0'>"; 
 				  	  	  	   		}
 				  	  	  	   		$title = "";
-				  	  	  	   		if(($rows[$j]->ref  != "") and ($configClass['show_ref'] == 1)){
+				  	  	  	   		if(($rows[$j]->ref  != "") && ($configClass['show_ref'] == 1)){
 				  	  	  	   			$title .= $rows[$j]->ref.", ";
 				  	  	  	   		}
 				  	  	  	   		$title .= $rows[$j]->pro_name;
@@ -8131,7 +8247,7 @@ class OspropertyListing
 				  	  	  	   			$results[$category->country_name][$j]->pimage = "<img src='".Uri::root()."media/com_osproperty/assets/images/noimage64.png' height='60' width='60' border='0'>"; 
 				  	  	  	   		}
 				  	  	  	   		$title = "";
-				  	  	  	   		if(($rows[$j]->ref  != "") and ($configClass['show_ref'] == 1)){
+				  	  	  	   		if(($rows[$j]->ref  != "") && ($configClass['show_ref'] == 1)){
 				  	  	  	   			$title .= $rows[$j]->ref.", ";
 				  	  	  	   		}
 				  	  	  	   		$title .= $rows[$j]->pro_name;
@@ -8283,7 +8399,7 @@ class OspropertyListing
 			
 			$title = $row->pro_name;
 			$title = html_entity_decode($title, ENT_COMPAT, 'UTF-8');
-			if(($row->ref != "") and ($configClass['show_ref'] == 1))	
+			if(($row->ref != "") && ($configClass['show_ref'] == 1))	
 			{
 				$title = $row->ref.", ".$title;
 			}
@@ -9054,7 +9170,7 @@ class OspropertyListing
         }
         $company=[];
         if($id > 0){
-            if((!HelperOspropertyCommon::isOwner($id)) and (!HelperOspropertyCommon::isCompanyOwner($id)) and (!Factory::getUser()->authorise('frontendmanage', 'com_osproperty'))){
+            if((!HelperOspropertyCommon::isOwner($id)) && (!HelperOspropertyCommon::isCompanyOwner($id)) && (!Factory::getUser()->authorise('frontendmanage', 'com_osproperty'))){
                 OSPHelper::redirect(Uri::root(),Text::_('OS_YOU_DO_NOT_HAVE_PERMISION_TO_GO_TO_THIS_AREA'));
             }
         }

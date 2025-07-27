@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die ;
@@ -15,7 +15,6 @@ use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Toolbar\Toolbar;
-use Joomla\CMS\Uri\Uri;
 
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
@@ -29,10 +28,12 @@ $span4           = $bootstrapHelper->getClassMapping('span5');
 
 HTMLHelper::_('formbehavior.chosen', '.advSelect');
 
-$app = Factory::getApplication();
-
-$app->getWebAssetManager()->useScript('showon');
-$app->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/js/site-mplan-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->useScript('showon')
+	->registerAndUseScript('com_osmembership.site-mplan-default', 'media/com_osmembership/js/site-mplan-default.min.js');
 
 $keys = ['OSM_ENTER_PLAN_TITLE', 'OSM_ENTER_SUBSCRIPTION_LENGTH', 'OSM_PRICE_REQUIRED', 'OSM_INVALID_SUBSCRIPTION_LENGTH'];
 OSMembershipHelperHtml::addJSStrings($keys);

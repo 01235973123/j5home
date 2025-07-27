@@ -52,11 +52,24 @@ else
 								<?php echo Text::_('OS_CATEGORY')?>
 							</strong>
 							<div class="clearfix"></div>
-							<?php echo $lists['category']; ?>
+							<?php $parentArr = OSPHelper::loadCategoryBoxes($lists['category_ids'],'category_ids'); ?>
+							<div class="custom-multi-select" id="category-select">
+								<span class="selected-items"><?php echo Text::_('OS_SELECT_CATEGORIES')?></span>
+								<div class="dropdown-content">
+									<?php
+									foreach($parentArr as $cat)
+									{
+										?>
+										<label><?php echo $cat; ?></label>
+										<?php
+									}
+									?>
+								</div>
+							</div>
 							<?php $increase_div++;?>
 						</div>
 						<?php
-						if(($configClass['adv_type_ids'] == "0") or ($configClass['adv_type_ids'] == ""))
+						if($configClass['adv_type_ids'] == "0" || $configClass['adv_type_ids'] == "")
 						{
 						$increase_div++;
 						?>
@@ -65,7 +78,19 @@ else
                                     <?php echo Text::_('OS_PROPERTY_TYPE')?>
                                 </strong>
                                 <div class="clearfix"></div>
-                                <?php echo $lists['type'];?>
+                                <div class="custom-multi-select" id="category-select">
+									<span class="selected-items"><?php echo Text::_('OS_SELECT_PROPERTY_TYPES')?></span>
+									<div class="dropdown-content">
+										<?php
+										foreach($lists['protypes'] as $type)
+										{
+											?>
+											<label><input type="checkbox" name="property_types[]" value="<?php echo $type->value;?>" data-value="<?php echo $type->text; ?>"><?php echo $type->text; ?></label>
+											<?php
+										}
+										?>
+									</div>
+								</div>
                             </div>
 						<?php
 						}
@@ -100,13 +125,15 @@ else
 						}
 						?>
 						<div class="<?php echo $span4Class; ?> ">
-							<strong>
-								<?php echo Text::_('OS_PRICE_RANGE')?>
-							</strong>
-							<BR />
-							<?php //echo $lists['price']; 
-							OSPHelper::showPriceFilter($lists['price_value'],$lists['min_price'],$lists['max_price'],$lists['adv_type'],'','adv');
-							?>
+							<strong><?php echo Text::_('OS_PRICE_RANGE')?></strong><BR />
+							<div class="price-range">
+								<input type="range" id="minPriceRange" name="min_price" min="0" max="<?php echo $configClass['max_price_slider']?>" step="<?php echo $configClass['price_step_amount']?>" value="<?php echo $lists['min_price'];?>" />
+								<input type="range" id="maxPriceRange" name="max_price" min="0" max="<?php echo $configClass['max_price_slider']?>" step="<?php echo $configClass['price_step_amount']?>" value="<?php echo $lists['max_price'];?>" />
+							</div>
+							<div class="price-values">
+								<span><?php echo Text::_('OS_MIN') ?>: <?php echo HelperOspropertyCommon::loadCurrency(0); ?><span id="minPriceValue"><?php echo $lists['min_price'];?></span></span>
+								<span><?php echo Text::_('OS_MAX') ?>: <?php echo HelperOspropertyCommon::loadCurrency(0); ?><span id="maxPriceValue"><?php echo $lists['max_price'];?></span></span>
+							</div>
 						</div>
 						<?php $increase_div++;?>
 						<?php
@@ -300,7 +327,7 @@ else
                         <div class="<?php echo $rowFluidClass; ?>">
                             <div class="<?php echo $span12Class; ?>">
                                 <?php
-                                $optionArr = array();
+                                $optionArr = [];
                                 $optionArr[] = Text::_('OS_GENERAL_AMENITIES');
                                 $optionArr[] = Text::_('OS_ACCESSIBILITY_AMENITIES');
                                 $optionArr[] = Text::_('OS_APPLIANCE_AMENITIES');
@@ -527,9 +554,12 @@ else
                         <div class="<?php echo $span4Class; ?> searchfields squaresearch">
                             <strong>
                                 <?php
-                                if($configClass['use_square'] == 0){
+                                if($configClass['use_square'] == 0)
+								{
                                     echo Text::_('OS_SQUARE_FEET');
-                                }else{
+                                }
+								else
+								{
                                     echo Text::_('OS_SQUARE_METER');
                                 }
                                 ?>
@@ -545,7 +575,8 @@ else
                             <input type="text" class="input-mini form-control ishort" name="sqft_max" id="sqft_max" placeholder="<?php echo Text::_('OS_MAX')?>" value="<?php echo isset($lists['sqft_max']) ? $lists['sqft_max']:"";?>"/>
                         </div>
                         <?php
-                        if($increase_div == 3){
+                        if($increase_div == 3)
+						{
                             $increase_div = 0;
                             ?>
                             </div>
@@ -574,6 +605,7 @@ else
                             <?php
                         }
                         ?>
+						<!--
 						<div class="<?php echo $span4Class; ?> searchfields posteddatesearch">
                             <strong>
                                 <?php
@@ -584,6 +616,7 @@ else
                             <?php echo HTMLHelper::calendar($lists['created_from'],'created_from','created_from',"%Y-%m-%d", array('placeholder' => Text::_('OS_FROM'), 'class' => $bootstrapHelper->getClassMapping('input-medium')));?>
                             <?php echo HTMLHelper::calendar($lists['created_to'],'created_to','created_to',"%Y-%m-%d", array('placeholder' => Text::_('OS_TO') , 'class' => $bootstrapHelper->getClassMapping('input-medium') ));?>
                         </div>
+						-->
                     <?php
                     }
 					?>
@@ -605,10 +638,12 @@ else
 		<span class="more_option" id="more_option_span"><?php echo Text::_('OS_MORE_OPTION')?>&nbsp; <i class="osicon-chevron-down"></i></span>
 		<div id="more_option_div" class="nodisplay">
 			<?php
-			$fieldLists = array();
-			for($i=0;$i<count($groups);$i++){
+			$fieldLists = [];
+			for($i=0;$i<count($groups);$i++)
+			{
 				$group = $groups[$i];
-				if(count($group->fields) > 0){
+				if(count($group->fields) > 0)
+				{
 					?>
 					<div class="<?php echo $span12Class; ?> noleftmargin">
 						<div class="block_caption">
@@ -644,7 +679,7 @@ else
 	<div class="<?php echo $span12Class; ?> alignright noleftmargin">
 		<input type="submit" class="btn btn-info" value="<?php echo Text::_('OS_SEARCH')?>" id="btnSubmit"/>
 		<?php
-		$needs = array();
+		$needs = [];
 		$needs[] = "ladvsearch";
 		$needs[] = "property_advsearch";
 		$itemid = OSPRoute::getItemid($needs);	
@@ -721,5 +756,51 @@ jQuery("#property_types").change(function(){
 			}
 		}
 	}
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Multiple Select Handler
+    document.querySelectorAll('.custom-multi-select').forEach(select => {
+        select.addEventListener('click', function(event) {
+            this.classList.toggle('open');
+            event.stopPropagation();
+        });
+
+        this.querySelectorAll('.dropdown-content input').forEach(input => {
+            input.addEventListener('change', function() {
+                updateSelectedOptions(select);
+            });
+        });
+    });
+
+    function updateSelectedOptions(select) {
+        const selectedItems = select.querySelector('.selected-items');
+        const selectedOptions = Array.from(select.querySelectorAll('.dropdown-content input:checked'))
+            .map(input => input.dataset.value)
+            .join(', ') || '<?php echo Text::_("OS_SELECT")?>';
+        selectedItems.textContent = selectedOptions;
+    }
+
+    document.addEventListener('click', function(event) {
+        document.querySelectorAll('.custom-multi-select').forEach(select => {
+            if (!select.contains(event.target)) {
+                select.classList.remove('open');
+            }
+        });
+    });
+
+});
+
+const minPriceRange = document.getElementById('minPriceRange');
+const maxPriceRange = document.getElementById('maxPriceRange');
+const minPriceValue = document.getElementById('minPriceValue');
+const maxPriceValue = document.getElementById('maxPriceValue');
+
+minPriceRange.addEventListener('input', function() {
+    minPriceValue.textContent = minPriceRange.value;
+});
+
+maxPriceRange.addEventListener('input', function() {
+    maxPriceValue.textContent = maxPriceRange.value;
 });
 </script>

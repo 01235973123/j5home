@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -38,17 +38,19 @@ class OSMembershipViewDocumentsHtml extends MPFViewHtml
 	protected $documentsPath;
 
 	/**
-	 * Display the view
+	 * Prepare view data
 	 *
-	 * @throws Exception
+	 * @return void
 	 */
-	public function display()
+	protected function prepareView()
 	{
-		$app = Factory::getApplication();
+		parent::prepareView();
 
 		if (!PluginHelper::isEnabled('osmembership', 'documents'))
 		{
-			$app->enqueueMessage(Text::_('Memebership Pro Documents plugin is not enabled. Please contact super administrator'));
+			Factory::getApplication()->enqueueMessage(
+				Text::_('Memebership Pro Documents plugin is not enabled. Please contact super administrator')
+			);
 
 			return;
 		}
@@ -61,7 +63,5 @@ class OSMembershipViewDocumentsHtml extends MPFViewHtml
 		$this->items         = $model->getData();
 		$this->pagination    = $model->getPagination();
 		$this->documentsPath = OSMembershipHelper::getDocumentsPath();
-
-		parent::display();
 	}
 }

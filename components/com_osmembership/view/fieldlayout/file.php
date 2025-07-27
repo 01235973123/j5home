@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -25,7 +25,8 @@ use Joomla\CMS\Uri\Uri;
 
 Factory::getApplication()
 	->getDocument()
-	->addScript(Uri::root(true) . '/media/com_osmembership/assets/js/ajaxupload.min.js');
+	->getWebAssetManager()
+	->registerAndUseScript('com_osmembership.ajaxupload', 'media/com_osmembership/assets/js/ajaxupload.min.js');
 ?>
 <input type="button" value="<?php echo Text::_('OSM_SELECT_FILE'); ?>" id="button-file-<?php echo $name; ?>" class="btn btn-primary" />
 <span class="osm-uploaded-file" id="uploaded-file-<?php echo $name; ?>">

@@ -206,12 +206,22 @@ $field = "";
 				</td>
 				<?php echo $separator; ?>
 				<td class="mod_ossearch_right_col">
+					<!--
 					<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 						<div class="<?php echo $bootstrapHelper->getClassMapping('span11'); ?>" id="mod_ossearch_price">
 						<?php
 						OSPHelper::showPriceFilter($price,$jinput->getInt('min_price',0),$jinput->getInt('max_price',0),$property_type,'input-medium',$module->id);
 						?>
 						</div>
+					</div>
+					-->
+					<div class="price-range">
+						<input type="range" id="minPriceRange<?php echo $module->id?>" name="min_price" min="0" max="<?php echo $configClass['max_price_slider']?>" step="<?php echo $configClass['price_step_amount']?>" value="<?php echo $jinput->getInt('min_price',0);?>" />
+						<input type="range" id="maxPriceRange<?php echo $module->id?>" name="max_price" min="0" max="<?php echo $configClass['max_price_slider']?>" step="<?php echo $configClass['price_step_amount']?>" value="<?php echo $jinput->getInt('max_price',$configClass['max_price_slider']);?>" />
+					</div>
+					<div class="price-values">
+						<span><?php echo Text::_('OS_MIN') ?>: <?php echo HelperOspropertyCommon::loadCurrency(0); ?><span id="minPriceValue<?php echo $module->id?>"><?php echo $jinput->getInt('min_price',0);?></span></span>
+						<span><?php echo Text::_('OS_MAX') ?>: <?php echo HelperOspropertyCommon::loadCurrency(0); ?><span id="maxPriceValue<?php echo $module->id?>"><?php echo $jinput->getInt('max_price',$configClass['max_price_slider']);?></span></span>
 					</div>
 				</td>
 			</tr>
@@ -741,7 +751,7 @@ $field = "";
         $needs[] = "property_advsearch";
         $needs[] = "ladvsearch";
         $itemid = OSPRoute::getItemid($needs);
-        $advlink = Jroute::_('index.php?option=com_osproperty&task=property_advsearch&Itemid='.$itemid);
+        $advlink = Route::_('index.php?option=com_osproperty&task=property_advsearch&Itemid='.$itemid);
         ?>
         &nbsp;
         <a href="<?php echo $advlink?>" class="advlink" title="<?php echo Text::_('OS_ADVSEARCH');?>"><?php echo Text::_('OS_ADVSEARCH');?></a>
@@ -762,10 +772,11 @@ if($params->get('property_type',0) > 0)
 	<?php
 }
 OSPHelper::showPriceTypesConfig();
-?>
-<?php 
-if(count($types) > 0){
-	foreach ($types as $type){
+$types = (array) $types;
+if(count($types) > 0 && $show_customfields == 1)
+{
+	foreach ($types as $type)
+	{
 		?>
 		<input type="hidden" name="searchmoduletype_id_<?php echo $type->id?>" id="searchmoduletype_id_<?php echo $type->id?>" value="<?php echo implode(",",$type->fields);?>"/>
 		<?php 
@@ -797,7 +808,7 @@ function modOspropertyChangeValue(item){
 	}
 }
 function change_country_companyModule<?php echo $random_id?>(country_id,state_id,city_id,random_id){
-	var live_site = '<?php echo JURI::root()?>';
+	var live_site = '<?php echo Uri::root()?>';
 	<?php
 	$lang = "";
 	if(OSPHelper::isJoomlaMultipleLanguages())
@@ -808,7 +819,7 @@ function change_country_companyModule<?php echo $random_id?>(country_id,state_id
 	loadLocationInfoStateCityLocatorModule(country_id,state_id,city_id,'mcountry_id' + random_id,'mstate_id' + random_id,live_site,random_id,'<?php echo $lang;?>');
 }
 function change_stateModule<?php echo $random_id?>(state_id,city_id,random_id){
-	var live_site = '<?php echo JURI::root()?>';
+	var live_site = '<?php echo Uri::root()?>';
 	<?php
 	$lang = "";
 	if(OSPHelper::isJoomlaMultipleLanguages())
@@ -899,4 +910,17 @@ function ajax_updateSearch(){
         }
     }
 }
+
+const minPriceRange = document.getElementById('minPriceRange<?php echo $module->id?>');
+const maxPriceRange = document.getElementById('maxPriceRange<?php echo $module->id?>');
+const minPriceValue = document.getElementById('minPriceValue<?php echo $module->id?>');
+const maxPriceValue = document.getElementById('maxPriceValue<?php echo $module->id?>');
+
+minPriceRange.addEventListener('input', function() {
+    minPriceValue.textContent = minPriceRange.value;
+});
+
+maxPriceRange.addEventListener('input', function() {
+    maxPriceValue.textContent = maxPriceRange.value;
+});
 </script>

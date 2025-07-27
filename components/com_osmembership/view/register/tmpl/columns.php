@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -167,7 +167,7 @@ $this->loadCommonLayout('register/tmpl/columns_js.php', $layoutData);
                 <div class="<?php echo $span6; ?>">
                     <div id="osm-columns-payment-information">
 		                <?php
-						if ((isset($this->fees['amount']) && $this->fees['amount'] > 0) || $this->form->containFeeFields() || $this->plan->recurring_subscription)
+						if ((isset($this->fees['gross_amount']) && $this->fees['gross_amount'] > 0) || $this->form->containFeeFields() || $this->plan->recurring_subscription)
 						{
 						?>
                             <h3 class="osm-heading"><?php echo Text::_('OSM_PAYMENT_INFORMATION');?></h3>

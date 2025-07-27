@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<extension type="module" version="3.21.2" client="site" position="left" method="upgrade">
+<extension type="module" version="4.0.0" client="site" position="left" method="upgrade">
     <name>Random Properties</name>
     <author>Dam Dang Thuc</author>
     <authorEmail>damdt@joomservices.com</authorEmail>
     <authorUrl>http://www.joomdonation.com</authorUrl>
-    <version>3.21.2</version>
+    <version>4.0.0</version>
     <creationDate>Octorber 2011</creationDate>
-    <copyright>2024 http://www.joomdonation.com</copyright>
+    <copyright>2025 http://www.joomdonation.com</copyright>
     <license>http://www.joomservices.com</license>
     <description>This module is used to show Properties in many ways with a lot of Configure Options. You can use this module to show Featured, Sold, Open or Recent Viewed properties</description>
     <files>

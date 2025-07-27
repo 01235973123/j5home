@@ -5,9 +5,9 @@
     <author>Tuan Pham Ngoc</author>
     <authorEmail>tuanpn@joomdonation.com</authorEmail>
     <authorUrl>https://joomdonation.com</authorUrl>
-    <copyright>Copyright (C) 2012 - 2024 Ossolution Team</copyright>
+    <copyright>Copyright (C) 2012 - 2025 Ossolution Team</copyright>
     <license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-    <version>4.1.0</version>
+    <version>4.2.2</version>
     <description>Membership Pro gives you a quick and easy way to sell memberships and give subscribers access to resources on your site
     </description>
     <scriptfile>install.osmembership.php</scriptfile>

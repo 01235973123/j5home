@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -15,6 +15,7 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Updater\Updater;
 use Joomla\Component\Installer\Administrator\Model\UpdateModel;
+use Joomla\Database\DatabaseDriver;
 
 class OSMembershipViewDashboardHtml extends MPFViewHtml
 {
@@ -89,7 +90,7 @@ class OSMembershipViewDashboardHtml extends MPFViewHtml
 			->getDailySalesStatistic();
 
 		// Get list of plans
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('id, title')
@@ -133,7 +134,11 @@ class OSMembershipViewDashboardHtml extends MPFViewHtml
 		if ($this->updateResult['status'] == 2)
 		{
 			Factory::getApplication()->enqueueMessage(
-				Text::sprintf('OSM_UPDATE_AVAILABLE', 'index.php?option=com_installer&view=update', $this->updateResult['version'])
+				Text::sprintf(
+					'OSM_UPDATE_AVAILABLE',
+					'index.php?option=com_installer&view=update',
+					$this->updateResult['version']
+				)
 			);
 		}
 
@@ -144,7 +149,7 @@ class OSMembershipViewDashboardHtml extends MPFViewHtml
 	}
 
 	/**
-	 * Function to create the buttons view.
+	 * Method to create quick icon link.
 	 *
 	 * @param   string  $link   targeturl
 	 * @param   string  $image  path to image
@@ -152,26 +157,7 @@ class OSMembershipViewDashboardHtml extends MPFViewHtml
 	 */
 	protected function quickiconButton($link, $image, $text, $id = null)
 	{
-		$language = Factory::getApplication()->getLanguage();
-		?>
-		<div
-				style="float:<?php
-				echo ($language->isRTL()) ? 'right' : 'left'; ?>;" <?php
-		if ($id)
-		{
-			echo 'id="' . $id . '"';
-		} ?>>
-			<div class="icon">
-				<a href="<?php
-				echo $link; ?>">
-					<?php
-					echo HTMLHelper::_('image', 'administrator/components/com_osmembership/assets/icons/' . $image, $text); ?>
-					<span><?php
-						echo $text; ?></span>
-				</a>
-			</div>
-		</div>
-		<?php
+		echo $this->loadTemplate('quickicon', ['link' => $link, 'image' => $image, 'text' => $text, 'id' => $id]);
 	}
 
 	protected function checkUpdate()
@@ -191,7 +177,7 @@ class OSMembershipViewDashboardHtml extends MPFViewHtml
 
 		$model->purge();
 
-		/* @var \Joomla\Database\DatabaseDriver $db */
+		/* @var DatabaseDriver $db */
 		$db    = Factory::getContainer()->get('db');
 		$query = $db->getQuery(true)
 			->select('extension_id')

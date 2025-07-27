@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -11,6 +11,8 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\Component\Finder\Administrator\Indexer\Adapter;
+use Joomla\Component\Finder\Administrator\Indexer\Indexer;
+use Joomla\Component\Finder\Administrator\Indexer\Helper;
 use Joomla\Component\Finder\Administrator\Indexer\Result;
 use Joomla\Database\DatabaseQuery;
 use Joomla\Registry\Registry;
@@ -221,8 +223,8 @@ class plgFinderMembershipPro extends Adapter
 	/**
 	 * Method to index an item. The item must be a FinderIndexerResult object.
 	 *
-	 * @param   FinderIndexerResult  $item    The item to index as an FinderIndexerResult object.
-	 * @param   string               $format  The item format
+	 * @param   Result  $item    The item to index as an FinderIndexerResult object.
+	 * @param   string  $format  The item format
 	 *
 	 * @return  void
 	 *
@@ -260,11 +262,11 @@ class plgFinderMembershipPro extends Adapter
 		}
 
 		// Handle the contact user name.
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'title');
+		$item->addInstruction(Indexer::META_CONTEXT, 'title');
 
 		// Add the meta-data processing instructions.
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'meta_keywords');
-		$item->addInstruction(FinderIndexer::META_CONTEXT, 'meta_description');
+		$item->addInstruction(Indexer::META_CONTEXT, 'meta_keywords');
+		$item->addInstruction(Indexer::META_CONTEXT, 'meta_description');
 
 		$item->state = $this->translateState($item->state, $item->cat_state);
 
@@ -278,7 +280,7 @@ class plgFinderMembershipPro extends Adapter
 		}
 
 		// Get content extras.
-		FinderIndexerHelper::getContentExtras($item);
+		Helper::getContentExtras($item);
 
 		// Index the item.
 		$this->indexer->index($item);
@@ -313,7 +315,9 @@ class plgFinderMembershipPro extends Adapter
 		$query->select('a.id, a.category_id, a.title, a.short_description AS summary, a.description AS body')
 			->select('a.published AS state, a.access AS access')
 			->select('a.meta_keywords, a.meta_description, a.ordering')
-			->select('c.title AS category_name, IFNULL(c.published, a.published) AS cat_state, IFNULL(c.access, a.access) AS cat_access')
+			->select(
+				'c.title AS category_name, IFNULL(c.published, a.published) AS cat_state, IFNULL(c.access, a.access) AS cat_access'
+			)
 			->from('#__osmembership_plans AS a')
 			->leftJoin('#__osmembership_categories AS c ON c.id = a.category_id');
 

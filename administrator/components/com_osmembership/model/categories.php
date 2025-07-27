@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -68,7 +68,8 @@ class OSMembershipModelCategories extends MPFModelList
 	 */
 	protected function buildQueryColumns(DatabaseQuery $query)
 	{
-		$query->select('tbl.*, vl.title AS access_level');
+		$query->select('tbl.*, vl.title AS access_level')
+			->select('IFNULL(COUNT(p.id), 0) AS number_plans');
 
 		return $this;
 	}
@@ -78,7 +79,22 @@ class OSMembershipModelCategories extends MPFModelList
 	 */
 	protected function buildQueryJoins(DatabaseQuery $query)
 	{
-		$query->leftJoin('#__viewlevels AS vl ON vl.id = tbl.access');
+		$query->leftJoin('#__osmembership_plans AS p ON tbl.id = p.category_id')
+			->leftJoin('#__viewlevels AS vl ON vl.id = tbl.access');
+
+		return $this;
+	}
+
+	/**
+	 * Build query group
+	 *
+	 * @param   DatabaseQuery  $query
+	 *
+	 * @return $this|OSMembershipModelCategories
+	 */
+	protected function buildQueryGroup(DatabaseQuery $query)
+	{
+		$query->group('tbl.id');
 
 		return $this;
 	}

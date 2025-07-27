@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -55,5 +55,39 @@ class OSMembershipTableField extends Table
 	public function __construct($db)
 	{
 		parent::__construct('#__osmembership_fields', 'id', $db);
+	}
+
+	/**
+	 * @param   bool  $updateNulls
+	 *
+	 * @return bool
+	 */
+	public function store($updateNulls = false)
+	{
+		$result = parent::store($updateNulls);
+
+		$db    = $this->getDbo();
+		$query = $db->getQuery(true);
+
+		if ($this->max === '')
+		{
+			$query->update('#__osmembership_fields')
+				->set($db->quoteName('max') . ' = NULL ')
+				->where('id = ' . $this->id);
+			$db->setQuery($query)
+				->execute();
+		}
+
+		if ($this->min === '')
+		{
+			$query->clear()
+				->update('#__osmembership_fields')
+				->set($db->quoteName('min') . ' = NULL ')
+				->where('id = ' . $this->id);
+			$db->setQuery($query)
+				->execute();
+		}
+
+		return $result;
 	}
 }

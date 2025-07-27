@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -148,12 +148,7 @@ class OSMembershipViewGroupHtml extends MPFViewHtml
 		$replaces['plan_title']       = $plan->title;
 		$replaces['group_admin_name'] = $groupAdmin->name;
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$message = str_replace("[$key]", $value, $message);
-		}
+		$message = OSMembershipHelper::replaceUpperCaseTags($message, $replaces);
 
 		$message = HTMLHelper::_('content.prepare', $message);
 
@@ -207,7 +202,9 @@ class OSMembershipViewGroupHtml extends MPFViewHtml
 		$messageObj  = OSMembershipHelper::getMessages();
 		$fieldSuffix = OSMembershipHelper::getFieldSuffix();
 
-		if ($fieldSuffix && OSMembershipHelper::isValidMessage($messageObj->{'join_group_group_admin_email_body' . $fieldSuffix}))
+		if ($fieldSuffix && OSMembershipHelper::isValidMessage(
+				$messageObj->{'join_group_group_admin_email_body' . $fieldSuffix}
+			))
 		{
 			$message = $messageObj->{'join_group_complete_message' . $fieldSuffix};
 		}
@@ -239,12 +236,7 @@ class OSMembershipViewGroupHtml extends MPFViewHtml
 			$replaces['group_admin_email']    = '';
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$message = str_replace("[$key]", $value, $message);
-		}
+		$message = OSMembershipHelper::replaceUpperCaseTags($message, $replaces);
 
 		$this->message = HTMLHelper::_('content.prepare', $message);
 

@@ -3,7 +3,7 @@
 # listing.html.tpl.php - Ossolution Property
 # ------------------------------------------------------------------------
 # author    Dang Thuc Dam
-# copyright Copyright (C) 2023 joomdonation.com. All Rights Reserved.
+# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 # @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 # Websites: http://www.joomdonation.com
 # Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -19,29 +19,28 @@ echo OSPHelper::loadTooltip();
 $user = Factory::getUser();
 $document = Factory::getDocument();
 $document->addStyleSheet(Uri::root()."components/com_osproperty/templates/".$themename."/style/font.css");
+HTMLHelper::_('bootstrap.dropdown');
 ?>
-<script type="text/javascript">
-function loadStateInListPage(){
-	var country_id = document.getElementById('country_id');
-	loadStateInListPageAjax(country_id.value,"<?php echo Uri::root()?>");
-}
-function changeCity(state_id,city_id){
-	var live_site = '<?php echo Uri::root()?>';
-	loadLocationInfoCity(state_id,city_id,'state_id',live_site);
-}
-</script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
 <div id="notice" style="display:none;">
 	
 </div>
-
+<div style="display:none;">
+<?php
+echo $lists['sortby'];
+echo $lists['ordertype'];
+?>
+</div>
 <?php
 $show_google_map = $params->get('show_map',1);
-HelperOspropertyCommon::filterForm($lists);
+//HelperOspropertyCommon::filterForm($lists);
 ?>
 <div id="listings" class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 	<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 		<?php
-		if(count($rows) > 0){
+		if(count($rows) > 0)
+		{
 			jimport('joomla.filesystem.file');
 			$db = Factory::getDbo();
 			$db->setQuery("Select id as value, currency_code as text from #__osrs_currencies where id <> '$row->curr' order by currency_code");
@@ -51,34 +50,73 @@ HelperOspropertyCommon::filterForm($lists);
 			?>
 			<input type="hidden" name="currency_item" id="currency_item" value="" />
 			<input type="hidden" name="live_site" id="live_site" value="<?php echo Uri::root()?>" />
-			<div class="clearfix"></div>		
-			<?php
-            if ($show_google_map == 1)
-            {
-                if($configClass['map_type'] == 0)
-                {
-                    if(HelperOspropertyGoogleMap::loadMapInListing($rows))
-                    {
-                        ?>
-                        <div id="map_canvas" class="map2x relative"></div>
-                        <?php
-                    }
-                }
-                else
-                {
-                    HelperOspropertyOpenStreetMap::loadMapInListing($rows);
-                }
-
-            }
-			?>
-			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> toplisting">
+			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 				<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
+					<div class="dropdown">
+						<button class="btn dropdown-toggle" type="button" id="propertiesSortButton" data-bs-toggle="dropdown" aria-expanded="false">
+						  <?php
+							echo Text::_('OS_SORT_BY'). " ".$lists['orderby_selected_text']." ".$lists['ordertype_selected_text'];
+						  ?>
+						</button>
+						<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						  <li><a class="dropdown-item" id="a.ordering" data-sortby="a.ordering" data-orderby="" href="javascript:updateSort('a.ordering','<?php echo Text::_('OS_SORT_BY')." ".Text::_('OS_ORDERING')?>')"><?php echo Text::_('OS_ORDERING')?></a></li>
+						  <li><a class="dropdown-item" id="a.created_desc" data-sortby="a.created" data-orderby="desc" href="javascript:updateSort('a.created_desc','<?php echo Text::_('OS_SORT_BY')." ".Text::_('OS_CREATED')."  ".Text::_('OS_DESC')?>')"><?php echo Text::_('OS_CREATED')."  ".Text::_('OS_DESC'); ?></a></li>
+						  <li><a class="dropdown-item" id="a.created_asc" data-sortby="a.created" data-orderby="asc" href="javascript:updateSort('a.created_asc','<?php echo Text::_('OS_SORT_BY')." ".Text::_('OS_CREATED')."  ".Text::_('OS_ASC')?>')"><?php echo Text::_('OS_CREATED')."  ".Text::_('OS_ASC'); ?></a></li>
+
+						  <li><a class="dropdown-item" id="a.modified_desc" data-sortby="a.modified" data-orderby="desc" href="javascript:updateSort('a.modified_desc','<?php echo Text::_('OS_SORT_BY')." ".Text::_('OS_MODIFIED')."  ".Text::_('OS_DESC')?>')"><?php echo Text::_('OS_MODIFIED')."  ".Text::_('OS_DESC'); ?></a></li>
+						  <li><a class="dropdown-item" id="a.modified_asc" data-sortby="a.modified" data-orderby="asc" href="javascript:updateSort('a.modified_asc','<?php echo Text::_('OS_SORT_BY')." ".Text::_('OS_MODIFIED')."  ".Text::_('OS_ASC')?>')"><?php echo Text::_('OS_MODIFIED')."  ".Text::_('OS_ASC'); ?></a></li>
+
+						  <li><a class="dropdown-item" id="a.pro_name_desc" data-sortby="a.pro_name" data-orderby="desc" href="javascript:updateSort('a.pro_name_desc','<?php echo Text::_('OS_SORT_BY')." ".Text::_('OS_TITLE')."  ".Text::_('OS_DESC')?>')"><?php echo Text::_('OS_TITLE')."  ".Text::_('OS_DESC'); ?></a></li>
+						  <li><a class="dropdown-item" id="a.pro_name_asc" data-sortby="a.pro_name" data-orderby="asc" href="javascript:updateSort('a.pro_name_asc','<?php echo Text::_('OS_SORT_BY')." ".Text::_('OS_TITLE')."  ".Text::_('OS_ASC')?>')"><?php echo Text::_('OS_TITLE')."  ".Text::_('OS_ASC'); ?></a></li>
+						  <li><a class="dropdown-item" id="a.price_desc" data-sortby="a.price" data-orderby="desc" href="javascript:updateSort('a.price_desc','<?php echo Text::_('OS_SORT_BY')." ".Text::_('OS_PRICE')."  ".Text::_('OS_DESC')?>')"><?php echo Text::_('OS_PRICE')."  ".Text::_('OS_DESC'); ?></a></li>
+						  <li><a class="dropdown-item" id="a.price_asc" data-sortby="a.price" data-orderby="asc" href="javascript:updateSort('a.price_asc','<?php echo Text::_('OS_SORT_BY')." ".Text::_('OS_PRICE')."  ".Text::_('OS_ASC')?>')"><?php echo Text::_('OS_PRICE')."  ".Text::_('OS_ASC'); ?></a></li>
+						</ul>
+					  </div>
+				</div>
+				<script type="text/javascript">
+				function updateSort(type, text)
+				{
+					item = document.getElementById(type);
+					sortby = item.getAttribute('data-sortby');
+					orderby = item.getAttribute('data-orderby');
+					document.getElementById('orderby').value = sortby;
+					document.getElementById('ordertype').value = orderby;
+					var button = document.getElementById('propertiesSortButton');
+					button.textContent = text;
+					document.ftForm.submit();
+				}
+				</script>
+			</div>	
+			<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?> toplisting">
+				<div class="<?php echo $bootstrapHelper->getClassMapping('span5'); ?> map hidden-phone">
+					<?php
+					if ($show_google_map == 1)
+					{
+						if($configClass['map_type'] == 0)
+						{
+							if(HelperOspropertyGoogleMap::loadMapInListing($rows))
+							{
+								?>
+								<div id="map_canvas" class="map2x relative"></div>
+								<?php
+							}
+						}
+						else
+						{
+							HelperOspropertyOpenStreetMap::loadMapInListing($rows);
+						}
+
+					}
+					?>
+				</div>
+				<div class="<?php echo $bootstrapHelper->getClassMapping('span7'); ?> properties">
 					<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 						<?php
 						$j = 0;
-						for($i=0;$i<count($rows);$i++) {
+						for($i=0;$i<count($rows);$i++) 
+						{
 							$row = $rows[$i];
-							$needs = array();
+							$needs = [];
 							$needs[] = "property_details";
 							$needs[] = $row->id;
 							$itemid = OSPRoute::getItemid($needs);
@@ -89,8 +127,8 @@ HelperOspropertyCommon::filterForm($lists);
 								$photourl = $row->photo;
 							}
 							?>
-							<div class="<?php echo $bootstrapHelper->getClassMapping('span4'); ?>">
-								<div class="property_item">
+							<div class="<?php echo $bootstrapHelper->getClassMapping('span6'); ?>">
+								<div class="property_item" data-lat="<?php echo $row->lat_add?>" data-long="<?php echo $row->long_add;?>">
 									<div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
 										<div class="<?php echo $bootstrapHelper->getClassMapping('span12'); ?>">
 											<figure>
@@ -101,7 +139,7 @@ HelperOspropertyCommon::filterForm($lists);
 													<img alt="<?php echo $row->pro_name?>" title="<?php echo $row->pro_name?>" src="<?php echo $photourl;?>" data-original="<?php echo $row->photo; ?>" class="ospitem-imgborder oslazy" id="picture_<?php echo $i?>" />
 												</a>
 												<?php
-												if(($configClass['property_save_to_favories'] == 1) and ($user->id > 0)){
+												if(($configClass['property_save_to_favories'] == 1) && ($user->id > 0)){
 												?>
 												<span class="save-this">
 													<span class="wpfp-span">
@@ -142,7 +180,7 @@ HelperOspropertyCommon::filterForm($lists);
 														<?php echo Text::_('OS_FEATURED');?>
 													</span>
 												<?php }
-												if(($configClass['active_market_status'] == 1)&&($row->isSold > 0)){
+												if($configClass['active_market_status'] == 1 && $row->isSold > 0){
 												?>
 													<span class="theme2_marketstatusproperties">
 														<?php echo OSPHelper::returnMarketStatus($row->isSold);?>
@@ -155,14 +193,9 @@ HelperOspropertyCommon::filterForm($lists);
 													<h5 class="marB0">
 														<a href="<?php echo Route::_('index.php?option=com_osproperty&task=property_details&id='.$row->id.'&Itemid='.$itemid);?>" class="property_mark_a"><?php echo $row->pro_name?></a>
 													</h5>
-													<?php
-													if($row->show_address == 1){
-													?>
-													<p class="marB0 locationaddress"><?php echo OSPHelper::generateAddress($row);?></p>
-													<?php } ?>
 												</header>
-												<p class="marB0 propertypricevalue">
-													<span class="listing-price">
+												<div class="property-details">
+													<span class="price">
 														<?php
 														if(OSPHelper::getLanguageFieldValue($row,'price_text') != "")
 														{
@@ -181,49 +214,20 @@ HelperOspropertyCommon::filterForm($lists);
 														}
 														?>
 													</span>
-												</p>
-												<div class="propinfo">
-													<ul class="marB0">
+													<div class="info">
 														<?php
-														if(($configClass['listing_show_nbedrooms'] == 1) and ($row->bed_room > 0)){
+														if($configClass['listing_show_nbedrooms'] == 1 && $row->bed_room > 0)
+														{
 														?>
-															<li class="rowline beds">
-																<span class="muted left"><?php echo Text::_('OS_BEDS')?></span>
-																<span class="right"><?php echo $row->bed_room; ?></span>
-															</li>
-														<?php } ?>
-														<?php
-														if(($configClass['listing_show_nbathrooms'] == 1) and ($row->bath_room > 0)){
+															<span><i class="fas fa-bed"></i>&nbsp;<?php echo $row->bed_room; ?></span>
+															
+														<?php } 
+														if($configClass['listing_show_nbathrooms'] == 1 && $row->bath_room > 0){
 														?>
-															<li class="rowline baths">
-																<span class="muted left"><?php echo Text::_('OS_BATHS')?></span>
-																<span class="right"><?php echo OSPHelper::showBath($row->bath_room); ?></span>
-															</li>
+															<span><i class="fas fa-bath"></i>&nbsp;<?php echo OSPHelper::showBath($row->bath_room); ?></span>
 														<?php } ?>
-														<?php
-														if($configClass['use_squarefeet'] == 1 && $row->square_feet > 0){
-														?>
-														<li class="rowline sqft">
-															<span class="muted left"><?php echo OSPHelper::showSquareLabels();?></span>
-															<span class="right"><?php echo OSPHelper::showSquare($row->square_feet);?></span>
-														</li>
-														<?php } ?>
-													</ul>
+													</div>
 												</div>
-												<?php
-												if($configClass['listing_show_agent'] == 1){
-												?>
-												<div class="brokerage">
-													<p class="muted marB0">
-														<small><?php echo Text::_('OS_POSTED_BY');?></small>
-													</p>
-													<p class="marB0">
-														<a title="<?php echo $row->agent_name?>" href="<?php echo Route::_('index.php?option=com_osproperty&task=agent_info&id='.$row->agent_id.'&Itemid='.$jinput->getInt('Itemid',0));?>">
-															<?php echo $row->agent_name?>
-														</a>
-													</p>
-												</div>
-												<?php } ?>
 											</div>
 										</div>
 									</div>
@@ -231,7 +235,7 @@ HelperOspropertyCommon::filterForm($lists);
 							</div>
 							<?php
 							$j++;
-							if($j == 3){
+							if($j == 2){
 								$j = 0;
 								?>
 								</div><div class="<?php echo $bootstrapHelper->getClassMapping('row-fluid'); ?>">
@@ -244,7 +248,7 @@ HelperOspropertyCommon::filterForm($lists);
 			</div>
 			<div>
 				<?php
-				if((count($rows) > 0) and ($pageNav->total > $pageNav->limit)){
+				if((count($rows) > 0) && ($pageNav->total > $pageNav->limit)){
 					?>
 					<div class="pageNavdiv">
 						<?php
@@ -261,3 +265,13 @@ HelperOspropertyCommon::filterForm($lists);
 	</div>
 </div>
 <input type="hidden" name="process_element" id="process_element" value="" />
+<script type="text/javascript">
+function loadStateInListPage(){
+	var country_id = document.getElementById('country_id');
+	loadStateInListPageAjax(country_id.value,"<?php echo Uri::root()?>");
+}
+function changeCity(state_id,city_id){
+	var live_site = '<?php echo Uri::root()?>';
+	loadLocationInfoCity(state_id,city_id,'state_id',live_site);
+}
+</script>

@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -77,7 +77,10 @@ class OSMembershipViewCategoriesHtml extends MPFViewHtml
 		{
 			$category = OSMembershipHelperDatabase::getCategory($categoryId);
 
-			if (empty($category) || !in_array($category->access, Factory::getApplication()->getIdentity()->getAuthorisedViewLevels()))
+			if (empty($category) || !in_array(
+					$category->access,
+					Factory::getApplication()->getIdentity()->getAuthorisedViewLevels()
+				))
 			{
 				$app->enqueueMessage(Text::_('OSM_INVALID_CATEGORY_OR_NOT_AUTHORIZED'));
 				$app->redirect(Uri::root(), 404);
@@ -131,7 +134,7 @@ class OSMembershipViewCategoriesHtml extends MPFViewHtml
 			{
 				$taxRate = OSMembershipHelper::callOverridableHelperMethod('Helper', 'calculateTaxRate', [$plan->id]);
 
-				if ($config->show_price_including_tax && $taxRate > 0)
+				if ($config->show_price_including_tax && !$config->setup_price_including_tax && $taxRate > 0)
 				{
 					$plan->price        = $plan->price * (1 + $taxRate / 100);
 					$plan->trial_amount = $plan->trial_amount * (1 + $taxRate / 100);

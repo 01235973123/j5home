@@ -3,17 +3,17 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Database\DatabaseDriver;
 
 class OSMembershipControllerUpdate extends MPFController
 {
@@ -32,7 +32,7 @@ class OSMembershipControllerUpdate extends MPFController
 		com_osmembershipInstallerScript::enableRequiredPlugin('update');
 		com_osmembershipInstallerScript::createIndexes();
 
-		if (File::exists(JPATH_ADMINISTRATOR . '/manifests/packages/pkg_osmembership.xml'))
+		if (is_file(JPATH_ADMINISTRATOR . '/manifests/packages/pkg_osmembership.xml'))
 		{
 			// Insert update site
 			$tmpInstaller = new Installer();
@@ -42,7 +42,7 @@ class OSMembershipControllerUpdate extends MPFController
 
 			if (!is_null($manifest))
 			{
-				/* @var \Joomla\Database\DatabaseDriver $db */
+				/* @var DatabaseDriver $db */
 				$db    = Factory::getContainer()->get('db');
 				$query = $db->getQuery(true)
 					->select($db->quoteName('extension_id'))
@@ -74,6 +74,9 @@ class OSMembershipControllerUpdate extends MPFController
 			OSMembershipHelper::callOverridableHelperMethod('Helper', 'setupMultilingual');
 		}
 
-		$this->setRedirect('index.php?option=com_osmembership&view=dashboard', 'Successfully updating database schema to latest version');
+		$this->setRedirect(
+			'index.php?option=com_osmembership&view=dashboard',
+			'Successfully updating database schema to latest version'
+		);
 	}
 }

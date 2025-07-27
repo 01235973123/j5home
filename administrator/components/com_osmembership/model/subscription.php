@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -11,13 +11,13 @@ defined('_JEXEC') or die;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Mail\MailHelper;
 use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\User\UserHelper;
 use Joomla\Database\DatabaseDriver;
+use Joomla\Filesystem\File;
 use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 use OSSolution\MembershipPro\Admin\Event\SMS\SendingSMSReminder;
@@ -64,10 +64,9 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 	 */
 	public function store($input, $ignore = [])
 	{
-		$app      = Factory::getApplication();
-		$db       = $this->getDbo();
-		$nullDate = $db->getNullDate();
-		$config   = OSMembershipHelper::getConfig();
+		$app    = Factory::getApplication();
+		$db     = $this->getDbo();
+		$config = OSMembershipHelper::getConfig();
 
 		/* @var OSMembershipTableSubscriber $row */
 		$row   = $this->getTable('Subscriber');
@@ -88,6 +87,9 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 		// Create new user account for the subscription
 		if (!$data['id'] && !$data['user_id'] && $data['username'] && $data['password'] && $data['email'])
 		{
+			// Set user language so that Joomla sends new notification email in right language
+			$data['params']['language'] = $app->getLanguage()->getTag();
+
 			$this->createUserAccountForSubscription($row, $data);
 		}
 
@@ -127,8 +129,32 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 		// Reset send reminder information on save2copy
 		if ($isNew && $input->getCmd('task') == 'save2copy')
 		{
+			$nullDate = $db->getNullDate();
+
 			$row->first_reminder_sent    = $row->second_reminder_sent = $row->third_reminder_sent = 0;
 			$row->first_reminder_sent_at = $row->second_reminder_sent_at = $row->third_reminder_sent_at = $nullDate;
+
+			// Extra reminders
+			$extraReminderSentFields = [
+				'fourth_reminder_sent',
+				'fifth_reminder_sent',
+				'sixth_reminder_sent',
+			];
+
+			foreach ($extraReminderSentFields as $extraField)
+			{
+				if (property_exists($row, $extraField))
+				{
+					$row->{$extraField} = 0;
+				}
+
+				$sentAtField = $extraField . '_at';
+
+				if (property_exists($row, $sentAtField))
+				{
+					$row->{$sentAtField} = $nullDate;
+				}
+			}
 		}
 
 		$rowPlan = OSMembershipHelperDatabase::getPlan((int) $data['plan_id']);
@@ -198,7 +224,10 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 
 		if (!$row->subscription_code)
 		{
-			$row->subscription_code = OSMembershipHelper::getUniqueCodeForField('subscription_code', '#__osmembership_subscribers');
+			$row->subscription_code = OSMembershipHelper::getUniqueCodeForField(
+				'subscription_code',
+				'#__osmembership_subscribers'
+			);
 		}
 
 		if (!array_key_exists('gross_amount', $data))
@@ -256,16 +285,15 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 			 * Recalculate subscription from date and subscription to date when offline subscription is approved to
 			 * avoid users loose some days in their subscription
 			 */
-			if ($row->payment_method == 'os_offline'
-				&& $published == 0 &&
-				!$isNew &&
-				!$rowPlan->expired_date
-				&& $rowPlan->expired_date != $nullDate)
+			if (str_starts_with($row->payment_method ?? '', 'os_offline')
+				&& $published == 0
+				&& !$isNew
+				&& !(int) $rowPlan->expired_date)
 			{
 				$this->reCalculateSubscriptionDuration($row);
 			}
 
-			if (!$row->payment_date || $row->payment_date == $nullDate)
+			if (!(int) $row->payment_date)
 			{
 				$row->payment_date = Factory::getDate()->toSql();
 			}
@@ -414,9 +442,8 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 	 */
 	public function publish($pks, $value = 1)
 	{
-		$app      = Factory::getApplication();
-		$pks      = (array) $pks;
-		$nullDate = $this->getDbo()->getNullDate();
+		$app = Factory::getApplication();
+		$pks = (array) $pks;
 
 		$this->beforePublish($pks, $value);
 
@@ -442,11 +469,19 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 				{
 					$row->payment_amount = $row->gross_amount;
 				}
+
+				$rowPlan = OSMembershipHelperDatabase::getPlan($row->plan_id);
+
+				if (str_starts_with($row->payment_method ?? '', 'os_offline')
+					&& !(int) $rowPlan->expired_date)
+				{
+					$this->reCalculateSubscriptionDuration($row);
+				}
 			}
 
 			$row->published = $value;
 
-			if ($value == 1 && (!$row->payment_date || $row->payment_date == $nullDate))
+			if ($value == 1 && !(int) $row->payment_date)
 			{
 				$row->payment_date = Factory::getDate()->toSql();
 			}
@@ -568,7 +603,7 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 		{
 			$allowedExtensions = OSMembershipHelper::getAllowedFileTypes();
 			$fileName          = File::makeSafe($attachment['name']);
-			$fileExt           = File::getExt($fileName);
+			$fileExt           = OSMembershipHelper::getFileExt($fileName);
 
 			if (in_array(strtolower($fileExt), $allowedExtensions))
 			{
@@ -587,12 +622,21 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 			->select('a.*, b.title, u.username')
 			->from('#__osmembership_subscribers AS a')
 			->innerJoin('#__osmembership_plans AS b ON a.plan_id = b.id')
-			->innerJoin('#__users AS u ON a.user_id = u.id')
+			->leftJoin('#__users AS u ON a.user_id = u.id')
 			->whereIn('a.id', $cid);
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		OSMembershipHelperMail::sendMassMails($rows, $emailSubject, $emailMessage, $replyToEmail, $bccEmail, $attachmentFile, $fileName, $input);
+		OSMembershipHelperMail::sendMassMails(
+			$rows,
+			$emailSubject,
+			$emailMessage,
+			$replyToEmail,
+			$bccEmail,
+			$attachmentFile,
+			$fileName,
+			$input
+		);
 	}
 
 	/**
@@ -693,11 +737,7 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 
 			$replaces = OSMembershipHelper::buildSMSTags($row);
 
-			foreach ($replaces as $key => $value)
-			{
-				$value      = (string) $value;
-				$smsMessage = str_ireplace('[' . $key . ']', $value, $smsMessage);
-			}
+			$smsMessage = OSMembershipHelper::replaceCaseInsensitiveTags($smsMessage, $replaces);
 
 			$row->sms_message = $smsMessage;
 		}
@@ -878,7 +918,10 @@ class OSMembershipModelSubscription extends MPFModelAdmin
 		else
 		{
 			// When editing, we should convert the data back to UTC
-			$offset = Factory::getApplication()->getIdentity()->getParam('timezone', Factory::getApplication()->get('offset'));
+			$offset = Factory::getApplication()->getIdentity()->getParam(
+				'timezone',
+				Factory::getApplication()->get('offset')
+			);
 
 			// Return a MySQL formatted datetime string in UTC.
 			$row->created_date = Factory::getDate($row->created_date, $offset)->toSql();

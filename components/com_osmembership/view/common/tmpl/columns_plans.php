@@ -3,14 +3,13 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Uri\Uri;
@@ -27,7 +26,10 @@ use Joomla\CMS\Uri\Uri;
  * @var int                         $Itemid
  */
 
-HTMLHelper::_('behavior.core');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core');
 
 $rootUri = Uri::root(true);
 $minHeight = 130;

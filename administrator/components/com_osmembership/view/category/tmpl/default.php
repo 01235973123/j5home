@@ -3,17 +3,22 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
-defined('_JEXEC') or die ;
+defined('_JEXEC') or die;
+
+// Little command to allow viewing category data easier without having to edit code during support
+if ($this->input->getInt('debug'))
+{
+	print_r($this->item);
+}
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Uri\Uri;
 
 $config            = OSMembershipHelper::getConfig();
 
@@ -30,11 +35,13 @@ foreach ($this->plugins as $plugin)
 	}
 }
 
-HTMLHelper::_('behavior.core');
-
 HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
 
-Factory::getApplication()->getDocument()->addScript(Uri::root(true) . '/media/com_osmembership/js/admin-category-default.min.js');
+Factory::getApplication()
+	->getDocument()
+	->getWebAssetManager()
+	->useScript('core')
+	->registerAndUseScript('com_osmembership.admin-category-default', 'media/com_osmembership/js/admin-category-default.min.js');
 
 $keys = ['OSM_ENTER_CATEGORY_TITLE'];
 OSMembershipHelperHtml::addJSStrings($keys);

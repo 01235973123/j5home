@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -40,7 +40,49 @@ use Joomla\CMS\Plugin\PluginHelper;
         </div>
     </div>
     <?php
-		if ($this->item->number_payments > 0)
+        if (property_exists($this->item, 'send_fourth_reminder'))
+        {
+        ?>
+            <div class="control-group">
+                <div class="control-label">
+			        <?php echo  Text::_('OSM_SEND_FOURTH_REMINDER'); ?>
+                </div>
+                <div class="controls">
+                    <input type="number" class="input-small form-control d-inline-block" name="send_fourth_reminder" value="<?php echo $this->item->send_fourth_reminder; ?>" size="5" /><span><?php echo ' ' . Text::_('OSM_DAYS') . ' ' . $this->lists['send_fourth_reminder_time']; ?></span><?php echo Text::_('OSM_SUBSCRIPTION_EXPIRED'); ?>
+                </div>
+            </div>
+        <?php
+        }
+
+        if (property_exists($this->item, 'send_fifth_reminder'))
+        {
+        ?>
+            <div class="control-group">
+                <div class="control-label">
+                    <?php echo  Text::_('OSM_SEND_FIFTH_REMINDER'); ?>
+                </div>
+                <div class="controls">
+                    <input type="number" class="input-small form-control d-inline-block" name="send_fifth_reminder" value="<?php echo $this->item->send_fifth_reminder; ?>" size="5" /><span><?php echo ' ' . Text::_('OSM_DAYS') . ' ' . $this->lists['send_fifth_reminder_time']; ?></span><?php echo Text::_('OSM_SUBSCRIPTION_EXPIRED'); ?>
+                </div>
+            </div>
+        <?php
+        }
+
+        if (property_exists($this->item, 'send_sixth_reminder'))
+        {
+        ?>
+            <div class="control-group">
+                <div class="control-label">
+                    <?php echo  Text::_('OSM_SEND_SIXTH_REMINDER'); ?>
+                </div>
+                <div class="controls">
+                    <input type="number" class="input-small form-control d-inline-block" name="send_sixth_reminder" value="<?php echo $this->item->send_sixth_reminder; ?>" size="5" /><span><?php echo ' ' . Text::_('OSM_DAYS') . ' ' . $this->lists['send_sixth_reminder_time']; ?></span><?php echo Text::_('OSM_SUBSCRIPTION_EXPIRED'); ?>
+                </div>
+            </div>
+        <?php
+        }
+
+        if ($this->item->number_payments > 0)
 		{
 		?>
             <div class="control-group">
@@ -56,7 +98,7 @@ use Joomla\CMS\Plugin\PluginHelper;
 
 		if (PluginHelper::isEnabled('system', 'membershipprosms'))
 		{
-			?>
+		?>
             <div class="control-group">
                 <div class="control-label">
                     <?php echo Text::_('OSM_ENABLE_SMS'); ?>
@@ -65,7 +107,7 @@ use Joomla\CMS\Plugin\PluginHelper;
                     <?php echo OSMembershipHelperHtml::getBooleanInput('enable_sms_reminder', $this->item->enable_sms_reminder); ?>
                 </div>
             </div>
-            <?php
+        <?php
 		}
 	?>
 </fieldset>

@@ -3,14 +3,13 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
@@ -35,10 +34,13 @@ if (Multilanguage::isEnabled() && !OSMembershipHelper::isSyncronized())
 	OSMembershipHelper::setupMultilingual();
 }
 
-if (PluginHelper::isEnabled('osmembership', 'mpdf') &&
-	!Folder::exists(JPATH_ROOT . '/plugins/osmembership/mpdf/mpdf/ttfonts'))
+if (PluginHelper::isEnabled('osmembership', 'mpdf')
+	&& !is_dir(JPATH_ROOT . '/plugins/osmembership/mpdf/mpdf/ttfonts'))
 {
-	Factory::getApplication()->enqueueMessage('Please access to Tools -> Download MPDF Fonts to have PDF files generated properly', 'warning');
+	Factory::getApplication()->enqueueMessage(
+		'Please access to Tools -> Download MPDF Fonts to have PDF files generated properly',
+		'warning'
+	);
 }
 
 $config = include JPATH_ADMINISTRATOR . '/components/com_osmembership/config.php';

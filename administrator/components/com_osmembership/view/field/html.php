@@ -3,18 +3,18 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\Filesystem\File;
-use Joomla\CMS\Filesystem\Folder;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Plugin\PluginHelper;
+use Joomla\Filesystem\File;
+use Joomla\Filesystem\Folder;
 use OSSolution\MembershipPro\Admin\Event\Field\GetFieldsMapping;
 use OSSolution\MembershipPro\Admin\Event\Field\GetNewsletterFields;
 
@@ -76,7 +76,10 @@ class OSMembershipViewFieldHtml extends MPFViewItem
 		}
 
 		// Allow adding custom field type
-		$files     = Folder::files(JPATH_ADMINISTRATOR . '/components/com_osmembership/libraries/mpf/form/field', 'php$');
+		$files     = Folder::files(
+			JPATH_ADMINISTRATOR . '/components/com_osmembership/libraries/mpf/form/field',
+			'php$'
+		);
 		$coreFiles = [];
 
 		foreach ($fieldTypes as $fieldType)
@@ -118,7 +121,15 @@ class OSMembershipViewFieldHtml extends MPFViewItem
 		$options[] = HTMLHelper::_('select.option', 1, Text::_('OSM_ALL_SELECTED_PLANS'));
 		$options[] = HTMLHelper::_('select.option', -1, Text::_('OSM_ALL_EXCEPT_SELECTED_PLANS'));
 
-		$lists['assignment'] = HTMLHelper::_('select.genericlist', $options, 'assignment', 'class="form-select"', 'value', 'text', $item->assignment);
+		$lists['assignment'] = HTMLHelper::_(
+			'select.genericlist',
+			$options,
+			'assignment',
+			'class="form-select"',
+			'value',
+			'text',
+			$item->assignment
+		);
 
 		$query->select('id, title')
 			->from('#__osmembership_plans')
@@ -147,7 +158,7 @@ class OSMembershipViewFieldHtml extends MPFViewItem
 			$planIds = [0];
 		}
 
-		$lists['plan_id']             = HTMLHelper::_(
+		$lists['plan_id']  = HTMLHelper::_(
 			'select.genericlist',
 			$options,
 			'plan_id[]',
@@ -156,26 +167,35 @@ class OSMembershipViewFieldHtml extends MPFViewItem
 			'title',
 			$planIds
 		);
-		$options                      = [];
-		$options[]                    = HTMLHelper::_('select.option', 1, Text::_('Yes'));
-		$options[]                    = HTMLHelper::_('select.option', 2, Text::_('No'));
-		$lists['required']            = OSMembershipHelperHtml::getBooleanInput('required', $item->required);
-		$lists['multiple']            = OSMembershipHelperHtml::getBooleanInput('multiple', $item->multiple);
-		$options                      = [];
-		$options[]                    = HTMLHelper::_('select.option', 0, Text::_('None'));
-		$options[]                    = HTMLHelper::_('select.option', 1, Text::_('Integer Number'));
-		$options[]                    = HTMLHelper::_('select.option', 2, Text::_('Number'));
-		$options[]                    = HTMLHelper::_('select.option', 3, Text::_('Email'));
-		$options[]                    = HTMLHelper::_('select.option', 4, Text::_('Url'));
-		$options[]                    = HTMLHelper::_('select.option', 5, Text::_('Phone'));
-		$options[]                    = HTMLHelper::_('select.option', 6, Text::_('Past Date'));
-		$options[]                    = HTMLHelper::_('select.option', 7, Text::_('Ip'));
-		$options[]                    = HTMLHelper::_('select.option', 8, Text::_('Min size'));
-		$options[]                    = HTMLHelper::_('select.option', 9, Text::_('Max size'));
-		$options[]                    = HTMLHelper::_('select.option', 10, Text::_('Min integer'));
-		$options[]                    = HTMLHelper::_('select.option', 11, Text::_('Max integer'));
-		$options[]                    = HTMLHelper::_('select.option', 12, Text::_('Date'));
-		$options[]                    = HTMLHelper::_('select.option', 13, Text::_('Future Date'));
+		$options           = [];
+		$options[]         = HTMLHelper::_('select.option', 1, Text::_('Yes'));
+		$options[]         = HTMLHelper::_('select.option', 2, Text::_('No'));
+		$lists['required'] = OSMembershipHelperHtml::getBooleanInput('required', $item->required);
+		$lists['multiple'] = OSMembershipHelperHtml::getBooleanInput('multiple', $item->multiple);
+
+		$options   = [];
+		$options[] = HTMLHelper::_('select.option', 0, Text::_('None'));
+		$options[] = HTMLHelper::_('select.option', 1, Text::_('Integer Number'));
+		$options[] = HTMLHelper::_('select.option', 2, Text::_('Number'));
+		$options[] = HTMLHelper::_('select.option', 3, Text::_('Email'));
+		$options[] = HTMLHelper::_('select.option', 4, Text::_('Url'));
+		$options[] = HTMLHelper::_('select.option', 5, Text::_('Phone'));
+		$options[] = HTMLHelper::_('select.option', 6, Text::_('Date'));
+		$options[] = HTMLHelper::_('select.option', 7, Text::_('Past Date'));
+		$options[] = HTMLHelper::_('select.option', 8, Text::_('Future Date'));
+		$options[] = HTMLHelper::_('select.option', 9, Text::_('Ipv4'));
+		$options[] = HTMLHelper::_('select.option', 10, Text::_('Ipv6'));
+		$options[] = HTMLHelper::_('select.option', 11, Text::_('Min Number Characters'));
+		$options[] = HTMLHelper::_('select.option', 12, Text::_('Max Number Characters'));
+		$options[] = HTMLHelper::_('select.option', 13, Text::_('Min Integer'));
+		$options[] = HTMLHelper::_('select.option', 14, Text::_('Max Integer'));
+		$options[] = HTMLHelper::_('select.option', 15, Text::_('Min Selected Checkboxes'));
+		$options[] = HTMLHelper::_('select.option', 16, Text::_('Max Selected Checkboxes'));
+		$options[] = HTMLHelper::_('select.option', 17, Text::_('Only Number and Space characters'));
+		$options[] = HTMLHelper::_('select.option', 18, Text::_('Only Letter and Space characters'));
+		$options[] = HTMLHelper::_('select.option', 19, Text::_('Only Letter and Number characters, No Space'));
+		$options[] = HTMLHelper::_('select.option', 20, Text::_('Equals'));
+
 		$lists['datatype_validation'] = HTMLHelper::_(
 			'select.genericlist',
 			$options,
@@ -288,15 +308,30 @@ class OSMembershipViewFieldHtml extends MPFViewItem
 		}
 
 		$lists['fee_field']                  = OSMembershipHelperHtml::getBooleanInput('fee_field', $item->fee_field);
-		$lists['show_on_members_list']       = OSMembershipHelperHtml::getBooleanInput('show_on_members_list', $item->show_on_members_list);
-		$lists['show_on_group_member_form']  = OSMembershipHelperHtml::getBooleanInput('show_on_group_member_form', $item->show_on_group_member_form);
+		$lists['show_on_members_list']       = OSMembershipHelperHtml::getBooleanInput(
+			'show_on_members_list',
+			$item->show_on_members_list
+		);
+		$lists['show_on_group_member_form']  = OSMembershipHelperHtml::getBooleanInput(
+			'show_on_group_member_form',
+			$item->show_on_group_member_form
+		);
 		$lists['hide_on_membership_renewal'] = OSMembershipHelperHtml::getBooleanInput(
 			'hide_on_membership_renewal',
 			$item->hide_on_membership_renewal
 		);
-		$lists['hide_on_email']              = OSMembershipHelperHtml::getBooleanInput('hide_on_email', $item->hide_on_email);
-		$lists['hide_on_export']             = OSMembershipHelperHtml::getBooleanInput('hide_on_export', $item->hide_on_export);
-		$lists['can_edit_on_profile']        = OSMembershipHelperHtml::getBooleanInput('can_edit_on_profile', $item->can_edit_on_profile);
+		$lists['hide_on_email']              = OSMembershipHelperHtml::getBooleanInput(
+			'hide_on_email',
+			$item->hide_on_email
+		);
+		$lists['hide_on_export']             = OSMembershipHelperHtml::getBooleanInput(
+			'hide_on_export',
+			$item->hide_on_export
+		);
+		$lists['can_edit_on_profile']        = OSMembershipHelperHtml::getBooleanInput(
+			'can_edit_on_profile',
+			$item->can_edit_on_profile
+		);
 
 		// Custom Fee Fields Behavior
 		$options = [];
@@ -305,7 +340,15 @@ class OSMembershipViewFieldHtml extends MPFViewItem
 		$options[] = HTMLHelper::_('select.option', 1, Text::_('OSM_RECURRING_PAYMENT_ONLY'));
 		$options[] = HTMLHelper::_('select.option', 2, Text::_('OSM_BOTH'));
 
-		$lists['fee_usage'] = HTMLHelper::_('select.genericlist', $options, 'fee_usage', 'class="form-select"', 'value', 'text', $item->fee_usage);
+		$lists['fee_usage'] = HTMLHelper::_(
+			'select.genericlist',
+			$options,
+			'fee_usage',
+			'class="form-select"',
+			'value',
+			'text',
+			$item->fee_usage
+		);
 
 		if (PluginHelper::isEnabled('osmembership', 'userprofile'))
 		{
@@ -317,7 +360,19 @@ class OSMembershipViewFieldHtml extends MPFViewItem
 
 			if (PluginHelper::isEnabled('user', 'profile'))
 			{
-				$fields = ['address1', 'address2', 'city', 'region', 'country', 'postal_code', 'phone', 'website', 'favoritebook', 'aboutme', 'dob'];
+				$fields = [
+					'address1',
+					'address2',
+					'city',
+					'region',
+					'country',
+					'postal_code',
+					'phone',
+					'website',
+					'favoritebook',
+					'aboutme',
+					'dob'
+				];
 
 				foreach ($fields as $field)
 				{
@@ -453,7 +508,10 @@ class OSMembershipViewFieldHtml extends MPFViewItem
 			$item->input_size
 		);
 
-		$lists['plan_id']   = OSMembershipHelperHtml::getChoicesJsSelect($lists['plan_id'], Text::_('OSM_TYPE_OR_SELECT_SOME_PLANS'));
+		$lists['plan_id']   = OSMembershipHelperHtml::getChoicesJsSelect(
+			$lists['plan_id'],
+			Text::_('OSM_TYPE_OR_SELECT_SOME_PLANS')
+		);
 		$lists['fieldtype'] = OSMembershipHelperHtml::getChoicesJsSelect($lists['fieldtype']);
 	}
 }

@@ -4,7 +4,7 @@
 	# install.osproperty.php - Ossolution Property
 	# ------------------------------------------------------------------------
 	# author    Dang Thuc Dam
-	# copyright Copyright (C) 2024 joomdonation.com. All Rights Reserved.
+	# copyright Copyright (C) 2025 joomdonation.com. All Rights Reserved.
 	# @license - http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL
 	# Websites: http://www.joomdonation.com
 	# Technical Support:  Forum - http://www.joomdonation.com/forum.html
@@ -233,7 +233,7 @@ function com_install()
     	}
     }
     
-    $db->setQuery("ALTER TABLE `#__osrs_configuration` CHANGE `fieldvalue` `fieldvalue` TEXT CHARACTER SET utf8 COLLATE utf8_general_ci NULL ");
+    $db->setQuery("ALTER TABLE `#__osrs_configuration` CHANGE `fieldvalue` `fieldvalue` TEXT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL ");
     $db->execute();
     
     
@@ -325,7 +325,7 @@ function com_install()
 		}
     }
     
-    $db->setQuery("ALTER TABLE `#__osrs_currencies` CHANGE `currency_symbol` `currency_symbol` VARCHAR( 50 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ");
+    $db->setQuery("ALTER TABLE `#__osrs_currencies` CHANGE `currency_symbol` `currency_symbol` VARCHAR( 50 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL ");
     $db->execute();
     //update Russian Rubbie
     $db->setQuery("Update #__osrs_currencies set currency_symbol = '&#1088;&#1091;&#1073;' where id = '44'");
@@ -1017,6 +1017,11 @@ function com_install()
     		$db->execute();
     	}
 
+		if(!in_array('tour_link',$fieldArr)){
+    		$db->setQuery("ALTER TABLE `#__osrs_properties` ADD `tour_link` TEXT NULL;");
+    		$db->execute();
+    	}
+
 		for($p=1;$p<=9;$p++)
 		{
 			if(!in_array('pro_pdf_file'.$p,$fieldArr))
@@ -1275,6 +1280,17 @@ function com_install()
     		$db->execute();
     	}
     }
+
+	$db->setQuery("CREATE TABLE IF NOT EXISTS `#__osrs_property_itemid` (
+				  `id` int NOT NULL AUTO_INCREMENT,
+				  `pid` int NOT NULL DEFAULT '0',
+				  `itemid` int NOT NULL DEFAULT '0',
+				  `lang` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+				  `access` int NOT NULL DEFAULT '0',
+				  `created` date NOT NULL,
+				  PRIMARY KEY (`id`)
+				) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;");
+	$db->execute();
     
     //create the image folder for each properties
     $db->setQuery("Select id from #__osrs_properties");
@@ -1646,9 +1662,9 @@ function com_install()
     		$db->execute();
     	}
     }
-    $db->setQuery("ALTER TABLE `#__osrs_states` CHANGE `state_name` `state_name` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ");
+    $db->setQuery("ALTER TABLE `#__osrs_states` CHANGE `state_name` `state_name` VARCHAR( 255 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ");
     $db->execute();
-    $db->setQuery("ALTER TABLE `#__osrs_states` CHANGE `state_code` `state_code` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL ");
+    $db->setQuery("ALTER TABLE `#__osrs_states` CHANGE `state_code` `state_code` VARCHAR( 255 ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL ");
     $db->execute();
     
     $db->setQuery("Select count(id) from #__osrs_states");
@@ -2421,7 +2437,7 @@ left;\"><em>If you do not want to receive this email, please click this link</em
 		$db->execute();
 	}
 
-	$db->setQuery("ALTER TABLE `#__osrs_properties` CHANGE `living_areas` `living_areas` VARCHAR(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '', CHANGE `garage_description` `garage_description` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `built_on` `built_on` INT(4) NULL, CHANGE `remodeled_on` `remodeled_on` INT(4) NULL, CHANGE `house_style` `house_style` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `house_construction` `house_construction` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `exterior_finish` `exterior_finish` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `roof` `roof` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `flooring` `flooring` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `floor_area_lower` `floor_area_lower` DECIMAL(10,2) NULL, CHANGE `floor_area_main_level` `floor_area_main_level` DECIMAL(10,2) NULL, CHANGE `floor_area_upper` `floor_area_upper` DECIMAL(10,2) NULL, CHANGE `floor_area_total` `floor_area_total` DECIMAL(10,2) NULL, CHANGE `basement_foundation` `basement_foundation` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `basement_size` `basement_size` DECIMAL(12,2) NULL, CHANGE `percent_finished` `percent_finished` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `subdivision` `subdivision` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `land_holding_type` `land_holding_type` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `land_area` `land_area` DECIMAL(10,2) NULL, CHANGE `total_acres` `total_acres` DECIMAL(10,2) NULL, CHANGE `lot_dimensions` `lot_dimensions` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `frontpage` `frontpage` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `depth` `depth` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `takings` `takings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `returns` `returns` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `net_profit` `net_profit` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `business_type` `business_type` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `stock` `stock` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `fixtures` `fixtures` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `fittings` `fittings` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `percent_office` `percent_office` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `percent_warehouse` `percent_warehouse` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `loading_facilities` `loading_facilities` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `fencing` `fencing` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `rainfall` `rainfall` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `soil_type` `soil_type` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `grazing` `grazing` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `cropping` `cropping` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `irrigation` `irrigation` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `water_resources` `water_resources` VARCHAR(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `carrying_capacity` `carrying_capacity` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `storage` `storage` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `e_class` `e_class` VARCHAR(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL, CHANGE `c_class` `c_class` VARCHAR(2) CHARACTER SET utf8 COLLATE utf8_general_ci NULL;");
+	$db->setQuery("ALTER TABLE `#__osrs_properties` CHANGE `living_areas` `living_areas` VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '', CHANGE `garage_description` `garage_description` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `built_on` `built_on` INT(4) NULL, CHANGE `remodeled_on` `remodeled_on` INT(4) NULL, CHANGE `house_style` `house_style` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `house_construction` `house_construction` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `exterior_finish` `exterior_finish` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `roof` `roof` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `flooring` `flooring` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `floor_area_lower` `floor_area_lower` DECIMAL(10,2) NULL, CHANGE `floor_area_main_level` `floor_area_main_level` DECIMAL(10,2) NULL, CHANGE `floor_area_upper` `floor_area_upper` DECIMAL(10,2) NULL, CHANGE `floor_area_total` `floor_area_total` DECIMAL(10,2) NULL, CHANGE `basement_foundation` `basement_foundation` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `basement_size` `basement_size` DECIMAL(12,2) NULL, CHANGE `percent_finished` `percent_finished` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `subdivision` `subdivision` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `land_holding_type` `land_holding_type` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `land_area` `land_area` DECIMAL(10,2) NULL, CHANGE `total_acres` `total_acres` DECIMAL(10,2) NULL, CHANGE `lot_dimensions` `lot_dimensions` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `frontpage` `frontpage` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `depth` `depth` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `takings` `takings` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `returns` `returns` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `net_profit` `net_profit` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `business_type` `business_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `stock` `stock` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `fixtures` `fixtures` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `fittings` `fittings` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `percent_office` `percent_office` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `percent_warehouse` `percent_warehouse` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `loading_facilities` `loading_facilities` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `fencing` `fencing` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `rainfall` `rainfall` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `soil_type` `soil_type` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `grazing` `grazing` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `cropping` `cropping` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `irrigation` `irrigation` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `water_resources` `water_resources` VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `carrying_capacity` `carrying_capacity` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `storage` `storage` VARCHAR(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `e_class` `e_class` VARCHAR(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL, CHANGE `c_class` `c_class` VARCHAR(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL;");
 	$db->execute();
 
 	$db->setQuery("ALTER TABLE `#__osrs_property_listing_layout` CHANGE `agenttype` `agenttype` TINYINT(2) NULL DEFAULT NULL;");

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -53,7 +53,9 @@ class OSMembershipViewScheduleK2itemsHtml extends MPFViewHtml
 	{
 		if (!PluginHelper::isEnabled('system', 'schedulek2items'))
 		{
-			Factory::getApplication()->enqueueMessage(Text::_('Schedule K2 Items feature is not enabled. Please contact super administrator'));
+			Factory::getApplication()->enqueueMessage(
+				Text::_('Schedule K2 Items feature is not enabled. Please contact super administrator')
+			);
 
 			return;
 		}
@@ -65,7 +67,10 @@ class OSMembershipViewScheduleK2itemsHtml extends MPFViewHtml
 		$this->items         = $model->getData();
 		$this->pagination    = $model->getPagination();
 		$this->config        = OSMembershipHelper::getConfig();
-		$this->subscriptions = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getUserSubscriptionsInfo');
+		$this->subscriptions = OSMembershipHelper::callOverridableHelperMethod(
+			'Subscription',
+			'getUserSubscriptionsInfo'
+		);
 
 		parent::display();
 	}

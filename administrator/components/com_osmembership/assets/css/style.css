@@ -214,6 +214,11 @@ span.required, span.star {
     margin-left: 10px !important;
 }
 
+.mp-no-margin-left.js-stools-container-filters-visible select, .mp-no-margin-left.js-stools-container-filters-visible joomla-field-fancy-select {
+    margin-left: 0 !important;
+}
+
+
 .osm-filter-second-row select:first-child, .btn-subscriptions-filter-second-row joomla-field-fancy-select:first-child {
     margin-left: 0 !important;
 }
@@ -246,4 +251,9 @@ span.required, span.star {
 {
     width: 100px;
     height: 100px;
+}
+
+.view-subscriptions .js-stools-container-bar
+{
+    margin-inline-start: 0;
 }

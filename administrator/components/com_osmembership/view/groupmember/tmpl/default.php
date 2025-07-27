@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -14,34 +14,21 @@ use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Uri\Uri;
 
-HTMLHelper::_('behavior.core');
-
 OSMembershipHelper::addLangLinkForAjax();
-$document = Factory::getApplication()->getDocument();
-$document->addScriptDeclaration('
-	var siteUrl = "' . Uri::root() . '";			
-');
-$document->addScriptOptions('MPBaseUrl', Uri::base(true));
 OSMembershipHelperJquery::loadjQuery();
-$document->addScript(Uri::root(true) . '/media/com_osmembership/assets/js/membershippro.min.js');
-$document->addScript(Uri::root(true) . '/media/com_osmembership/js/admin-groupmember-default.min.js');
 
-$selectedState = '';
-$fields        = $this->form->getFields();
-
-if (isset($fields['state']))
-{
-	if ($fields['state']->type == 'State')
-	{
-		$stateType = 1;
-	}
-	else
-	{
-		$stateType = 0;
-	}
-
-	$selectedState = $fields['state']->value;
-}
+Factory::getApplication()
+	->getDocument()
+	->addScriptOptions('MPBaseUrl', Uri::base(true))
+	->addScriptOptions('selectedState', $this->selectedState)
+	->getWebAssetManager()
+	->useScript('core')
+	->addInlineScript(
+		'
+	var siteUrl = "' . Uri::root() . '";			
+'
+	)->registerAndUseScript('com_osmembership.membershippro', 'media/com_osmembership/assets/js/membershippro.min.js')
+	->registerAndUseScript('com_osmembership.admin-groupmember-default', 'media/com_osmembership/js/admin-groupmember-default.min.js');
 
 $keys = [
 	'OSM_PLEASE_SELECT_PLAN',
@@ -51,7 +38,6 @@ $keys = [
 ];
 
 OSMembershipHelperHtml::addJSStrings($keys);
-$document->addScriptOptions('selectedState', $selectedState);
 
 $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 ?>
@@ -105,11 +91,12 @@ $bootstrapHelper = OSMembershipHelperBootstrap::getInstance();
 	}
 
 	// Fake class mapping to make the layout works well on J4
-	$bootstrapHelper->getUi()->addClassMapping('control-group', 'control-group')
+	$bootstrapHelper->getUi()
+		->addClassMapping('control-group', 'control-group')
 		->addClassMapping('control-label', 'control-label')
 		->addClassMapping('controls', 'controls');
 
-	foreach ($fields as $field)
+	foreach ($this->form->getFields() as $field)
 	{
 		if (!$field->row->show_on_group_member_form)
 		{

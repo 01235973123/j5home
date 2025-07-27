@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -13,8 +13,6 @@ JLoader::register('OSMembershipControllerData', JPATH_ROOT . '/components/com_os
 
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Table\Table;
-use Joomla\CMS\Uri\Uri;
 
 /**
  * Membership Pro controller
@@ -38,24 +36,38 @@ class OSMembershipController extends MPFControllerAdmin
 			$viewName = $this->input->get('view', $this->config['default_view']);
 			$this->checkAccessPermission($viewName);
 
-			$document = $this->app->getDocument();
-			$rootUri  = Uri::root(true);
-			$document->addStyleSheet($rootUri . '/administrator/components/com_osmembership/assets/css/style.css');
+			$wa = $this->app
+				->getDocument()
+				->getWebAssetManager()
+				->registerAndUseStyle(
+					'com_osmembership.style',
+					'administrator/components/com_osmembership/assets/css/style.css'
+				);
 
 			if (version_compare(JVERSION, '5.1.0', 'ge'))
 			{
-				$document->addStyleSheet($rootUri . '/administrator/components/com_osmembership/assets/css/light51.css');
+				$wa->registerAndUseStyle(
+					'com_osmembership.light',
+					'administrator/components/com_osmembership/assets/css/light51.css'
+				);
 			}
 			else
 			{
-				$document->addStyleSheet($rootUri . '/administrator/components/com_osmembership/assets/css/light.css');
+				$wa->registerAndUseStyle(
+					'com_osmembership.light',
+					'administrator/components/com_osmembership/assets/css/light.css'
+				);
 			}
 
 			$customCssFile = JPATH_ADMINISTRATOR . '/components/com_osmembership/assets/css/custom.css';
 
 			if (file_exists($customCssFile) && filesize($customCssFile) > 0)
 			{
-				$document->addStyleSheet($rootUri . '/administrator/components/com_osmembership/assets/css/custom.css');
+				$wa->registerAndUseStyle(
+					'com_osmembership.custom',
+					'administrator/components/com_osmembership/assets/css/custom.css',
+					['version' => filemtime($customCssFile)]
+				);
 			}
 
 			$requireJQueryViews = [
@@ -65,10 +77,11 @@ class OSMembershipController extends MPFControllerAdmin
 
 			if (in_array($viewName, $requireJQueryViews))
 			{
-				OSMembershipHelperJquery::loadjQuery();
+				$wa->useScript('jquery')
+					->useScript('jquery-noconflict');
 			}
 
-			$document->addScriptDeclaration('var siteUrl="' . OSMembershipHelper::getSiteUrl() . '";');
+			$wa->addInlineScript('var siteUrl="' . OSMembershipHelper::getSiteUrl() . '";');
 		}
 
 		parent::display($cachable, $urlparams);
@@ -86,7 +99,7 @@ class OSMembershipController extends MPFControllerAdmin
 	{
 		$id = $this->input->getInt('id');
 
-		$db  = Factory::getContainer()->get('db');
+		$db = Factory::getContainer()->get('db');
 		$row = new OSMembershipTableSubscriber($db);
 
 		if (!$row->load($id))
@@ -116,7 +129,11 @@ class OSMembershipController extends MPFControllerAdmin
 
 		if (file_exists(JPATH_ROOT . '/' . $filePath . '/' . $fileName))
 		{
-			$this->processDownloadFile(JPATH_ROOT . '/' . $filePath . '/' . $fileName, OSMembershipHelper::getOriginalFilename($fileName), $inline);
+			$this->processDownloadFile(
+				JPATH_ROOT . '/' . $filePath . '/' . $fileName,
+				OSMembershipHelper::getOriginalFilename($fileName),
+				$inline
+			);
 		}
 		else
 		{
@@ -133,7 +150,10 @@ class OSMembershipController extends MPFControllerAdmin
 	{
 		if (!OSMembershipHelper::canAccessThisView($view))
 		{
-			$this->app->enqueueMessage("You don't have permission to access to this section of Membership Pro", 'error');
+			$this->app->enqueueMessage(
+				"You don't have permission to access to this section of Membership Pro",
+				'error'
+			);
 			$this->app->redirect('index.php?option=com_osmembership&view=dashboard', 403);
 		}
 	}

@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -273,11 +273,15 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 					{
 						$message = $messageObj->{'renew_thanks_message_offline' . $offlineSuffix . $fieldSuffix};
 					}
-					elseif ($offlineSuffix && OSMembershipHelper::isValidMessage($messageObj->{'renew_thanks_message_offline' . $offlineSuffix}))
+					elseif ($offlineSuffix && OSMembershipHelper::isValidMessage(
+							$messageObj->{'renew_thanks_message_offline' . $offlineSuffix}
+						))
 					{
 						$message = $messageObj->{'renew_thanks_message_offline' . $offlineSuffix};
 					}
-					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($rowPlan->{'renew_thanks_message_offline' . $fieldSuffix}))
+					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+							$rowPlan->{'renew_thanks_message_offline' . $fieldSuffix} ?? ''
+						))
 					{
 						$message = $rowPlan->{'renew_thanks_message_offline' . $fieldSuffix};
 					}
@@ -285,7 +289,9 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 					{
 						$message = $rowPlan->renew_thanks_message_offline;
 					}
-					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($messageObj->{'renew_thanks_message_offline' . $fieldSuffix}))
+					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+							$messageObj->{'renew_thanks_message_offline' . $fieldSuffix}
+						))
 					{
 						$message = $messageObj->{'renew_thanks_message_offline' . $fieldSuffix};
 					}
@@ -298,7 +304,9 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 						$message = $messageObj->renew_thanks_message;
 					}
 				}
-				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($rowPlan->{'renew_thanks_message' . $fieldSuffix}))
+				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+						$rowPlan->{'renew_thanks_message' . $fieldSuffix} ?? ''
+					))
 				{
 					$message = $rowPlan->{'renew_thanks_message' . $fieldSuffix};
 				}
@@ -306,7 +314,9 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 				{
 					$message = $rowPlan->renew_thanks_message;
 				}
-				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($messageObj->{'renew_thanks_message' . $fieldSuffix}))
+				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+						$messageObj->{'renew_thanks_message' . $fieldSuffix}
+					))
 				{
 					$message = $messageObj->{'renew_thanks_message' . $fieldSuffix};
 				}
@@ -343,7 +353,9 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 					{
 						$message = $messageObj->{'upgrade_thanks_message_offline' . $offlineSuffix};
 					}
-					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($rowPlan->{'upgrade_thanks_message_offline' . $fieldSuffix}))
+					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+							$rowPlan->{'upgrade_thanks_message_offline' . $fieldSuffix} ?? ''
+						))
 					{
 						$message = $rowPlan->{'upgrade_thanks_message_offline' . $fieldSuffix};
 					}
@@ -351,7 +363,9 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 					{
 						$message = $rowPlan->upgrade_thanks_message_offline;
 					}
-					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($messageObj->{'upgrade_thanks_message_offline' . $fieldSuffix}))
+					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+							$messageObj->{'upgrade_thanks_message_offline' . $fieldSuffix}
+						))
 					{
 						$message = $messageObj->{'upgrade_thanks_message_offline' . $fieldSuffix};
 					}
@@ -364,7 +378,9 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 						$message = $messageObj->upgrade_thanks_message;
 					}
 				}
-				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($rowPlan->{'upgrade_thanks_message' . $fieldSuffix}))
+				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+						$rowPlan->{'upgrade_thanks_message' . $fieldSuffix} ?? ''
+					))
 				{
 					$message = $rowPlan->{'upgrade_thanks_message' . $fieldSuffix};
 				}
@@ -372,7 +388,9 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 				{
 					$message = $rowPlan->upgrade_thanks_message;
 				}
-				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($messageObj->{'upgrade_thanks_message' . $fieldSuffix}))
+				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+						$messageObj->{'upgrade_thanks_message' . $fieldSuffix}
+					))
 				{
 					$message = $messageObj->{'upgrade_thanks_message' . $fieldSuffix};
 				}
@@ -401,11 +419,15 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 					{
 						$message = $messageObj->{'thanks_message_offline' . $offlineSuffix . $fieldSuffix};
 					}
-					elseif ($offlineSuffix && OSMembershipHelper::isValidMessage($messageObj->{'thanks_message_offline' . $offlineSuffix}))
+					elseif ($offlineSuffix && OSMembershipHelper::isValidMessage(
+							$messageObj->{'thanks_message_offline' . $offlineSuffix}
+						))
 					{
 						$message = $messageObj->{'thanks_message_offline' . $offlineSuffix};
 					}
-					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($rowPlan->{'thanks_message_offline' . $fieldSuffix}))
+					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+							$rowPlan->{'thanks_message_offline' . $fieldSuffix} ?? ''
+						))
 					{
 						$message = $rowPlan->{'thanks_message_offline' . $fieldSuffix};
 					}
@@ -413,7 +435,9 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 					{
 						$message = $rowPlan->thanks_message_offline;
 					}
-					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($messageObj->{'thanks_message_offline' . $fieldSuffix}))
+					elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+							$messageObj->{'thanks_message_offline' . $fieldSuffix}
+						))
 					{
 						$message = $messageObj->{'thanks_message_offline' . $fieldSuffix};
 					}
@@ -422,7 +446,7 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 						$message = $messageObj->thanks_message_offline;
 					}
 				}
-				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($rowPlan->{'thanks_message' . $fieldSuffix}))
+				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($rowPlan->{'thanks_message' . $fieldSuffix} ?? ''))
 				{
 					$message = $rowPlan->{'thanks_message' . $fieldSuffix};
 				}
@@ -430,7 +454,9 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 				{
 					$message = $rowPlan->thanks_message;
 				}
-				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage($messageObj->{'thanks_message' . $fieldSuffix}))
+				elseif ($fieldSuffix && OSMembershipHelper::isValidMessage(
+						$messageObj->{'thanks_message' . $fieldSuffix}
+					))
 				{
 					$message = $messageObj->{'thanks_message' . $fieldSuffix};
 				}
@@ -453,12 +479,7 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 
 		$replaces['plan_title'] = $rowPlan->title;
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$message = str_replace("[$key]", $value, $message);
-		}
+		$message = OSMembershipHelper::replaceUpperCaseTags($message, $replaces);
 
 		$message = OSMembershipHelperHtml::processConditionalText($message);
 
@@ -477,12 +498,7 @@ class OsMembershipViewCompleteHtml extends MPFViewHtml
 			$replaces['payment_processing_fee'] = $filterInput->clean($replaces['payment_processing_fee'], 'float');
 			$replaces['tax_rate']               = $filterInput->clean($replaces['tax_rate'], 'float');
 
-			foreach ($replaces as $key => $value)
-			{
-				$key          = strtoupper($key);
-				$value        = (string) $value;
-				$trackingCode = str_replace("[$key]", $value, $trackingCode);
-			}
+			$trackingCode = OSMembershipHelper::replaceUpperCaseTags($trackingCode, $replaces);
 		}
 
 		$params = $this->getParams();

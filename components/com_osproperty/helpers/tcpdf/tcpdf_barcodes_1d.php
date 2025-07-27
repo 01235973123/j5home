@@ -53,7 +53,7 @@ class TCPDFBarcode {
 	 * Array representation of barcode.
 	 * @protected
 	 */
-	protected $barcode_array;
+	protected $barcode_array = array();
 
 	/**
 	 * This is the class constructor.
@@ -243,7 +243,7 @@ class TCPDFBarcode {
 	 * Set the barcode.
 	 * @param string $code code to print
  	 * @param string $type type of barcode: <ul><li>C39 : CODE 39 - ANSI MH10.8M-1983 - USD-3 - 3 of 9.</li><li>C39+ : CODE 39 with checksum</li><li>C39E : CODE 39 EXTENDED</li><li>C39E+ : CODE 39 EXTENDED + CHECKSUM</li><li>C93 : CODE 93 - USS-93</li><li>S25 : Standard 2 of 5</li><li>S25+ : Standard 2 of 5 + CHECKSUM</li><li>I25 : Interleaved 2 of 5</li><li>I25+ : Interleaved 2 of 5 + CHECKSUM</li><li>C128 : CODE 128</li><li>C128A : CODE 128 A</li><li>C128B : CODE 128 B</li><li>C128C : CODE 128 C</li><li>EAN2 : 2-Digits UPC-Based Extension</li><li>EAN5 : 5-Digits UPC-Based Extension</li><li>EAN8 : EAN 8</li><li>EAN13 : EAN 13</li><li>UPCA : UPC-A</li><li>UPCE : UPC-E</li><li>MSI : MSI (Variation of Plessey code)</li><li>MSI+ : MSI + CHECKSUM (modulo 11)</li><li>POSTNET : POSTNET</li><li>PLANET : PLANET</li><li>RMS4CC : RMS4CC (Royal Mail 4-state Customer Code) - CBC (Customer Bar Code)</li><li>KIX : KIX (Klant index - Customer index)</li><li>IMB: Intelligent Mail Barcode - Onecode - USPS-B-3200</li><li>IMBPRE: Pre-processed Intelligent Mail Barcode - Onecode - USPS-B-3200, using only F,A,D,T letters</li><li>CODABAR : CODABAR</li><li>CODE11 : CODE 11</li><li>PHARMA : PHARMACODE</li><li>PHARMA2T : PHARMACODE TWO-TRACKS</li></ul>
- 	 * @return array barcode array
+ 	 * @return void
  	 * @public
 	 */
 	public function setBarcode($code, $type) {
@@ -373,7 +373,7 @@ class TCPDFBarcode {
 				break;
 			}
 			default: {
-				$this->barcode_array = false;
+				$this->barcode_array = array();
 				$arrcode = false;
 				break;
 			}
@@ -828,7 +828,7 @@ class TCPDFBarcode {
 		$chr['5'] = '11101011101010';
 		$chr['6'] = '10111011101010';
 		$chr['7'] = '10101011101110';
-		$chr['8'] = '10101110111010';
+		$chr['8'] = '11101010111010';
 		$chr['9'] = '10111010111010';
 		if ($checksum) {
 			// add checksum
@@ -838,7 +838,7 @@ class TCPDFBarcode {
 			// add leading zero if code-length is odd
 			$code = '0'.$code;
 		}
-		$seq = '11011010';
+		$seq = '1110111010';
 		$clen = strlen($code);
 		for ($i = 0; $i < $clen; ++$i) {
 			$digit = $code[$i];
@@ -848,7 +848,7 @@ class TCPDFBarcode {
 			}
 			$seq .= $chr[$digit];
 		}
-		$seq .= '1101011';
+		$seq .= '111010111';
 		$bararray = array('code' => $code, 'maxw' => 0, 'maxh' => 1, 'bcode' => array());
 		return $this->binseq_to_array($seq, $bararray);
 	}

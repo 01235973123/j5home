@@ -309,3 +309,73 @@
 	background-color:#efefef;
 	outline:0;
 }
+
+.container-showcase {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+	gap: 20px;
+	width: 100%;
+}
+.showcase-property-box {
+	position: relative;
+	overflow: hidden;
+	border-radius: 8px;
+	transition: transform 0.3s ease;
+}
+.showcase-property-box:hover {
+	transform: scale(1.03);
+}
+.showcase-property-box a {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+.showcase-property-box img {
+	width: 100%;
+	height: 250px;
+	object-fit: cover;
+	border-radius: 8px;
+}
+.showcase-property-box .showcase-overlay {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 50%;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+	border-radius: 12px;
+}
+.showcase-info {
+	position: absolute;
+	bottom: 5px;
+	left: 15px;
+	color: white;
+}
+.showcase-info h3 {
+	margin-bottom: 5px;
+	font-size: 18px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+.showcase-price {
+	font-size: 15px;
+	font-weight: 600;
+	display:block;
+}
+.showcase-info p {
+	font-size: 14px;
+}
+
+.showcase-randompropertytype
+{
+	position: absolute;
+	left: 15px;
+	color:white;
+	top:5px;
+}
+
+.showcase-randompropertytype strong
+{
+	font-weight:600;
+}

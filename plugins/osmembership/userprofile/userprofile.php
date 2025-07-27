@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -128,9 +128,12 @@ class plgOSMembershipUserprofile extends CMSPlugin implements SubscriberInterfac
 		$userId = $row->user_id;
 
 		// Update Name of users based on first name and last name from profile
-		$user       = Factory::getUser((int) $userId);
-		$user->name = rtrim($row->first_name . ' ' . $row->last_name);
-		$user->save(true);
+		if ($this->params->get('update_name', 1))
+		{
+			$user       = Factory::getUser((int) $userId);
+			$user->name = rtrim($row->first_name . ' ' . $row->last_name);
+			$user->save(true);
+		}
 
 		// Get subscribers data
 		if ($event === 'onMembershipUpdate')
@@ -146,7 +149,10 @@ class plgOSMembershipUserprofile extends CMSPlugin implements SubscriberInterfac
 
 		if (!empty($subscriberData['country']) && !empty($subscriberData['state']))
 		{
-			$subscriberData['state'] = OSMembershipHelper::getStateName($subscriberData['country'], $subscriberData['state']);
+			$subscriberData['state'] = OSMembershipHelper::getStateName(
+				$subscriberData['country'],
+				$subscriberData['state']
+			);
 		}
 
 		$userProfilePluginEnabled = PluginHelper::isEnabled('user', 'profile');

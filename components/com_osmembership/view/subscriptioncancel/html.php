@@ -4,7 +4,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 defined('_JEXEC') or die;
@@ -111,12 +111,7 @@ class OSMembershipViewSubscriptioncancelHtml extends MPFViewHtml
 			}
 		}
 
-		foreach ($replaces as $key => $value)
-		{
-			$key     = strtoupper($key);
-			$value   = (string) $value;
-			$message = str_ireplace("[$key]", $value, $message);
-		}
+		$message = OSMembershipHelper::replaceCaseInsensitiveTags($message, $replaces);
 
 		$this->message       = $message;
 		$this->rowSubscriber = $rowSubscriber;

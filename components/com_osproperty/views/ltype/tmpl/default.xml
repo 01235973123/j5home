@@ -25,16 +25,11 @@
 			</field>
 			<field name="isSold" type="marketstatus" size="3" default="" label="Select Market status" description="Please select Market status of properties you want to show" />
 			<field name="orderby" type="list" default="a.id" label="Sort properties by" description="Please select sort properties by">
-				<option value="a.id">ID</option>
 				<option value="a.created">Created</option>
 				<option value="a.modified">Modified</option>
 				<option value="a.pro_name">Title</option>
-				<option value="a.ref">Ref</option>
 				<option value="a.price">Price</option>
-				<option value="a.isFeatured">Featured status</option>
-				<option value="a.solOn">Sold On</option>
 				<option value="a.ordering">Ordering</option>
-				<option value="rand()">Random</option>
 			</field>
 			<field name="ordertype" type="list" default="desc" label="Order properties by" description="Please select order properties by">
 				<option value="asc">Ascending</option>

@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -28,7 +28,10 @@ $useTooltip = false;
 if ($config->get('display_field_description', 'use_tooltip') == 'use_tooltip' && !empty($description))
 {
 	HTMLHelper::_('bootstrap.tooltip', '.hasTooltip', ['html' => true, 'sanitize' => false]);
-	Factory::getApplication()->getDocument()->addStyleDeclaration('.hasTip{display:block !important}');
+	Factory::getApplication()
+		->getDocument()
+		->getWebAssetManager()
+		->addInlineStyle('.hasTip{display:block !important}');
 	$useTooltip = true;
 	$class = 'hasTooltip hasTip';
 }

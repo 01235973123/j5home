@@ -3,7 +3,7 @@
  * @package        Joomla
  * @subpackage     Membership Pro
  * @author         Tuan Pham Ngoc
- * @copyright      Copyright (C) 2012 - 2024 Ossolution Team
+ * @copyright      Copyright (C) 2012 - 2025 Ossolution Team
  * @license        GNU/GPL, see LICENSE.php
  */
 
@@ -101,7 +101,7 @@ class OSMembershipViewPlanHtml extends MPFViewHtml
 		$taxRate = OSMembershipHelper::callOverridableHelperMethod('Helper', 'calculateTaxRate', [$item->id]);
 		$config  = OSMembershipHelper::getConfig();
 
-		if ($config->show_price_including_tax && $taxRate > 0)
+		if ($config->show_price_including_tax && !$config->setup_price_including_tax && $taxRate > 0)
 		{
 			$item->price        = $item->price * (1 + $taxRate / 100);
 			$item->trial_amount = $item->trial_amount * (1 + $taxRate / 100);
@@ -170,7 +170,11 @@ class OSMembershipViewPlanHtml extends MPFViewHtml
 
 		if ($this->config->show_upgrade_options_on_plan_details)
 		{
-			$this->upgradeRules = OSMembershipHelper::callOverridableHelperMethod('Subscription', 'getUpgradeRules', [$user->id, $this->item->id]);
+			$this->upgradeRules = OSMembershipHelper::callOverridableHelperMethod(
+				'Subscription',
+				'getUpgradeRules',
+				[$user->id, $this->item->id]
+			);
 		}
 
 		$this->plans = OSMembershipHelperDatabase::getAllPlans('id');
@@ -219,7 +223,10 @@ class OSMembershipViewPlanHtml extends MPFViewHtml
 
 			if ($category)
 			{
-				$pathway->addItem($category->title, Route::_(OSMembershipHelperRoute::getCategoryRoute($category->id, $this->Itemid)));
+				$pathway->addItem(
+					$category->title,
+					Route::_(OSMembershipHelperRoute::getCategoryRoute($category->id, $this->Itemid))
+				);
 			}
 		}
 
