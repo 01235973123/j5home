@@ -19,33 +19,18 @@ $query  = $db->getQuery(true);
 
 $fields = array_keys($db->getTableColumns('#__eb_events'));
 
-if (!in_array('ids_event_published', $fields)) {
-    $sql = "ALTER TABLE  `#__eb_events` ADD  `ids_event_published` VARCHAR(32) NULL DEFAULT  NULL;";
+if (!in_array('auto_unpublish_timeslot', $fields)) {
+    $sql = "ALTER TABLE  `#__eb_events` ADD `auto_unpublish_timeslot` TINYINT NOT NULL DEFAULT 1;";
     $db->setQuery($sql);
     $db->execute();
 }
 
-$rows = EventbookingHelperDatabase::getAllEvents($this->config->sort_events_dropdown, $this->config->hide_past_events_from_events_dropdown, []);
-
-$currentId = (int) $this->item->id;
-
-$rows = array_filter($rows, function ($row) use ($currentId) {
-    return (int) $row->id !== $currentId;
-});
-
-
-$lists['ids_event_published'] = EventbookingHelperHtml::getEventsDropdown(
-    $rows,
-    'ids_event_published[]',
-    'class="input-xlarge form-select advancedSelect" multiple="multiple" ',
-    explode(',', $this->item->ids_event_published),
-);
 ?>
 <div class="control-group">
     <div class="control-label">
-        <?php echo Text::_('EB_EVENTS_PUBLISHED'); ?>
+        <?php echo Text::_('EB_AUTO_UNPUBLISH_TIME_SLOT'); ?>
     </div>
     <div class="controls">
-        <?php echo EventbookingHelperHtml::getChoicesJsSelect($lists['ids_event_published']); ?>
+        <?php echo EventbookingHelperHtml::getBooleanInput('auto_unpublish_timeslot', $this->item->auto_unpublish_timeslot); ?>
     </div>
 </div>

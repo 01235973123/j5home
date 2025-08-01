@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension version="4.2.0" type="plugin" group="eventbooking" method="upgrade">
+    <name>Events Booking - Unpublish Same Time Slot</name>
+    <author>Codex</author>
+    <creationDate>2024</creationDate>
+    <authorEmail>codex@example.com</authorEmail>
+    <authorUrl>https://example.com</authorUrl>
+    <copyright>Copyright (C) 2010 - 2024</copyright>
+    <license>https://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+    <version>1.0.0</version>
+    <description>Automatically unpublish events with identical date and time when one is booked.</description>
+    <files>
+        <filename plugin="unpublishtimeslot">unpublishtimeslot.php</filename>
+    </files>
+    <config>
+        <fields name="params" addfieldpath="/administrator/components/com_eventbooking/fields">
+            <fieldset name="basic">
+                <field name="exclude_category_ids" type="ebcategory" multiple="true"
+                       label="Exclude Categories" description="Categories to ignore when processing."/>
+            </fieldset>
+        </fields>
+    </config>
+</extension>

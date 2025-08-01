@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @package        Joomla
  * @subpackage     Membership Pro
@@ -31,12 +32,9 @@ class OSMembershipControllerTool extends MPFController
 {
 	public function display_root_path()
 	{
-		if ($this->app->getIdentity()->authorise('core.admin'))
-		{
+		if ($this->app->getIdentity()->authorise('core.admin')) {
 			echo JPATH_ROOT;
-		}
-		else
-		{
+		} else {
 			echo 'You do not have permission to view JPPATH_ROOT';
 		}
 	}
@@ -55,26 +53,21 @@ class OSMembershipControllerTool extends MPFController
 			->where('(published >= 1 OR payment_method LIKE "os_offline%")')
 			->group('user_id');
 
-		if ($userId > 0)
-		{
+		if ($userId > 0) {
 			$query->where('user_id = ' . $userId);
 		}
 
 		$db->setQuery($query, $start, 2000);
 		$rows = $db->loadObjectList();
 
-		if (count($rows) == 0)
-		{
+		if (count($rows) == 0) {
 			// OK, job done
 			$this->setRedirect(
 				'index.php?option=com_osmembership&view=subscriptions',
 				'Profile Data Successfully Corrected'
 			);
-		}
-		else
-		{
-			foreach ($rows as $row)
-			{
+		} else {
+			foreach ($rows as $row) {
 				// Set the first record as profile record
 				$query->clear()
 					->update('#__osmembership_subscribers')
@@ -111,8 +104,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$query->clear()
 				->update('#__osmembership_subscribers')
 				->set(
@@ -140,10 +132,8 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
-			if (OSMembershipHelper::needToCreateInvoice($row))
-			{
+		foreach ($rows as $row) {
+			if (OSMembershipHelper::needToCreateInvoice($row)) {
 				$row->invoice_number           = OSMembershipHelper::getInvoiceNumber($row);
 				$row->formatted_invoice_number = OSMembershipHelper::formatInvoiceNumber($row, $config);
 
@@ -176,8 +166,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$start = (int) $config->membership_id_start_number ?: 1000;
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$sql = 'UPDATE #__osmembership_subscribers SET membership_id=' . $start . ' WHERE user_id = ' . $row->user_id;
 			$db->setQuery($sql)
 				->execute();
@@ -196,8 +185,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$query->clear()
 				->update('#__osmembership_subscribers')
 				->set('formatted_membership_id = ' . $db->quote(OSMembershipHelper::formatMembershipId($row, $config)))
@@ -217,8 +205,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$fontFile = InstallerHelper::downloadPackage($fontPackageUrl, 'fonts.zip');
 
-		if ($fontFile === false)
-		{
+		if ($fontFile === false) {
 			echo Text::_('The requested font could not be downloaded');
 
 			return;
@@ -226,8 +213,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$tmpPath = $this->app->get('tmp_path');
 
-		if (!is_dir(Path::clean($tmpPath)))
-		{
+		if (!is_dir(Path::clean($tmpPath))) {
 			$tmpPath = JPATH_ROOT . '/tmp';
 		}
 
@@ -238,8 +224,7 @@ class OSMembershipControllerTool extends MPFController
 		$archive = new Archive(['tmp_path' => $tmpPath]);
 		$result  = $archive->extract($fontPackage, $extractDir);
 
-		if (!$result)
-		{
+		if (!$result) {
 			echo 'Error extract font package';
 
 			return;
@@ -248,8 +233,7 @@ class OSMembershipControllerTool extends MPFController
 		// Delete the downloaded zip file
 		File::delete($fontPackage);
 
-		if ($font)
-		{
+		if ($font) {
 			// Now, set font to that font
 			$db    = Factory::getContainer()->get('db');
 			$query = $db->getQuery(true)
@@ -260,9 +244,7 @@ class OSMembershipControllerTool extends MPFController
 				->execute();
 
 			echo 'Font was successfully downloaded and set for PDF Font config option';
-		}
-		else
-		{
+		} else {
 			echo 'Fonts were successfully downloaded and extracted';
 		}
 	}
@@ -273,8 +255,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$fontFile = InstallerHelper::downloadPackage($fontPackageUrl, 'ttfonts.zip');
 
-		if ($fontFile === false)
-		{
+		if ($fontFile === false) {
 			echo Text::_('The requested font could not be downloaded');
 
 			return;
@@ -282,8 +263,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$tmpPath = $this->app->get('tmp_path');
 
-		if (!is_dir(Path::clean($tmpPath)))
-		{
+		if (!is_dir(Path::clean($tmpPath))) {
 			$tmpPath = JPATH_ROOT . '/tmp';
 		}
 
@@ -294,8 +274,7 @@ class OSMembershipControllerTool extends MPFController
 		$archive = new Archive(['tmp_path' => $tmpPath]);
 		$result  = $archive->extract($fontPackage, $extractDir);
 
-		if (!$result)
-		{
+		if (!$result) {
 			echo 'Error extract font package';
 
 			return;
@@ -316,8 +295,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$fontFile = InstallerHelper::downloadPackage($fontPackageUrl, 'ttfonts.zip');
 
-		if ($fontFile === false)
-		{
+		if ($fontFile === false) {
 			echo Text::_('The requested font could not be downloaded');
 
 			return;
@@ -325,8 +303,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$tmpPath = $this->app->get('tmp_path');
 
-		if (!is_dir(Path::clean($tmpPath)))
-		{
+		if (!is_dir(Path::clean($tmpPath))) {
 			$tmpPath = JPATH_ROOT . '/tmp';
 		}
 
@@ -337,8 +314,7 @@ class OSMembershipControllerTool extends MPFController
 		$archive = new Archive(['tmp_path' => $tmpPath]);
 		$result  = $archive->extract($fontPackage, $extractDir);
 
-		if (!$result)
-		{
+		if (!$result) {
 			echo 'Error extract font package';
 
 			return;
@@ -364,15 +340,13 @@ class OSMembershipControllerTool extends MPFController
 		$paymentProcessingFee  = $this->input->getFloat('payment_processing_fee', 0);
 		$regularGrossAmount    = $this->input->getFloat('regular_gross_amount', 0);
 
-		if ($regularAmount > 0 && $regularGrossAmount == 0)
-		{
+		if ($regularAmount > 0 && $regularGrossAmount == 0) {
 			$regularGrossAmount = $regularAmount - $regularDiscountAmount + $regularTaxAmount + $paymentProcessingFee;
 		}
 
 		$plan = OSMembershipHelperDatabase::getPlan($planId);
 
-		if (!$plan || !$plan->recurring_subscription)
-		{
+		if (!$plan || !$plan->recurring_subscription) {
 			echo 'This tool is used for plan with recurring subscription enabled only';
 		}
 
@@ -382,8 +356,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$params = new Registry($row->params);
 			$params->set('regular_amount', $regularAmount);
 			$params->set('regular_discount_amount', $regularDiscountAmount);
@@ -412,8 +385,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$state2Code = OSMembershipHelper::getStateCode($row->country, $row->state);
 			$query->clear()
 				->update('#__osmembership_subscribers')
@@ -468,10 +440,8 @@ class OSMembershipControllerTool extends MPFController
 			'#__osmembership_subscribers'      => '[tax_rate]',
 		];
 
-		foreach ($changes as $table => $fields)
-		{
-			foreach ($fields as $field)
-			{
+		foreach ($changes as $table => $fields) {
+			foreach ($fields as $field) {
 				$sql = "ALTER TABLE  `$table` CHANGE  `$field` `$field`  DECIMAL(15,8) DEFAULT '0';";
 				$db->setQuery($sql)
 					->execute();
@@ -496,14 +466,10 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$languages = $db->loadObjectList();
 
-		if (count($languages))
-		{
-			if (version_compare(JVERSION, '4.4.0', 'ge'))
-			{
+		if (count($languages)) {
+			if (version_compare(JVERSION, '4.4.0', 'ge')) {
 				$mailer = Factory::getContainer()->get(MailerFactoryInterface::class)->createMailer();
-			}
-			else
-			{
+			} else {
 				$mailer = Factory::getMailer();
 			}
 
@@ -514,28 +480,24 @@ class OSMembershipControllerTool extends MPFController
 			$mailer->addRecipient('tuanpn@joomdonation.com');
 			$mailer->setSubject('Language Packages for Membership Pro shared by ' . Uri::root());
 			$mailer->setBody('Dear Tuan \n. I am happy to share my language packages for Membership Pro.\n Enjoy!');
-			foreach ($languages as $language)
-			{
+			foreach ($languages as $language) {
 				$tag = $language->lang_code;
 
-				if (file_exists(JPATH_ROOT . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini'))
-				{
+				if (file_exists(JPATH_ROOT . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini')) {
 					$mailer->addAttachment(
 						JPATH_ROOT . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini',
 						$tag . '.com_osmembership.ini'
 					);
 				}
 
-				if (file_exists(JPATH_ADMINISTRATOR . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini'))
-				{
+				if (file_exists(JPATH_ADMINISTRATOR . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini')) {
 					$mailer->addAttachment(
 						JPATH_ADMINISTRATOR . '/language/' . $tag . '/' . $tag . '.com_osmembership.ini',
 						'admin.' . $tag . '.com_osmembership.ini'
 					);
 				}
 
-				if (file_exists(JPATH_ADMINISTRATOR . '/language/' . $tag . '/' . $tag . '.com_osmembershipcommon.ini'))
-				{
+				if (file_exists(JPATH_ADMINISTRATOR . '/language/' . $tag . '/' . $tag . '.com_osmembershipcommon.ini')) {
 					$mailer->addAttachment(
 						JPATH_ADMINISTRATOR . '/language/' . $tag . '/' . $tag . '.com_osmembershipcommon.ini',
 						$tag . '.com_osmembershipcommon.ini'
@@ -547,8 +509,7 @@ class OSMembershipControllerTool extends MPFController
 
 			$tables = [$db->replacePrefix('#__eb_fields'), $db->replacePrefix('#__eb_messages')];
 
-			try
-			{
+			try {
 				$sqlFile = $tag . '.com_osmembership.sql';
 				$options = [
 					'host'           => $app->get('host'),
@@ -561,18 +522,14 @@ class OSMembershipControllerTool extends MPFController
 				$dumper->dump(JPATH_ROOT . '/tmp/' . $sqlFile);
 
 				$mailer->addAttachment(JPATH_ROOT . '/tmp/' . $sqlFile, $sqlFile);
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				//Do nothing
 			}
 
 			$mailer->Send();
 
 			$msg = 'Thanks so much for sharing your language files to Membership Pro Community';
-		}
-		else
-		{
+		} else {
 			$msg = 'Thanks so willing to share your language files to Membership Pro Community. However, you don"t have any none English language file to share';
 		}
 
@@ -605,16 +562,14 @@ class OSMembershipControllerTool extends MPFController
 			->from('#__osmembership_subscribers')
 			->order('id');
 
-		if ($planId > 0)
-		{
+		if ($planId > 0) {
 			$query->where('plan_id = ' . $planId);
 		}
 
 		$db->setQuery($query);
 		$ids = $db->loadColumn();
 
-		foreach ($ids as $id)
-		{
+		foreach ($ids as $id) {
 			$row = new OSMembershipTableSubscriber($db);
 			$row->load($id);
 
@@ -643,16 +598,14 @@ class OSMembershipControllerTool extends MPFController
 			->where('published = 2')
 			->order('id');
 
-		if ($planId > 0)
-		{
+		if ($planId > 0) {
 			$query->where('plan_id = ' . $planId);
 		}
 
 		$db->setQuery($query);
 		$ids = $db->loadColumn();
 
-		foreach ($ids as $id)
-		{
+		foreach ($ids as $id) {
 			$row = new OSMembershipTableSubscriber($db);
 			$row->load($id);
 
@@ -682,16 +635,14 @@ class OSMembershipControllerTool extends MPFController
 			->where('published = 1')
 			->order('id');
 
-		if ($planId)
-		{
+		if ($planId) {
 			$query->where('plan_id = ' . $planId);
 		}
 
 		$db->setQuery($query, $start, 100);
 		$ids = $db->loadColumn();
 
-		foreach ($ids as $id)
-		{
+		foreach ($ids as $id) {
 			$row = new OSMembershipTableSubscriber($db);
 			$row->load($id);
 
@@ -700,12 +651,9 @@ class OSMembershipControllerTool extends MPFController
 			$this->app->triggerEvent($event->getName(), $event);
 		}
 
-		if (count($ids) === 0)
-		{
+		if (count($ids) === 0) {
 			echo 'Complete active event trigger';
-		}
-		else
-		{
+		} else {
 			$start += count($ids);
 
 			echo 'Please wait until the process finished';
@@ -737,16 +685,14 @@ class OSMembershipControllerTool extends MPFController
 			->where('published = 1')
 			->order('id');
 
-		if ($planId > 0)
-		{
+		if ($planId > 0) {
 			$query->where('plan_id = ' . $planId);
 		}
 
 		$db->setQuery($query, $start, 100);
 		$ids = $db->loadColumn();
 
-		foreach ($ids as $id)
-		{
+		foreach ($ids as $id) {
 			$row = new OSMembershipTableSubscriber($db);
 			$row->load($id);
 
@@ -755,12 +701,9 @@ class OSMembershipControllerTool extends MPFController
 			$this->app->triggerEvent($event->getName(), $event);
 		}
 
-		if (count($ids) === 0)
-		{
+		if (count($ids) === 0) {
 			echo 'Complete process Joomla Groups';
-		}
-		else
-		{
+		} else {
 			$start += count($ids);
 
 			echo 'Please wait until the process finished';
@@ -791,8 +734,7 @@ class OSMembershipControllerTool extends MPFController
 		$oldLanguageCode = 'ar-AA';
 		$newLanguageCode = 'ar';
 
-		foreach ($varcharFields as $varcharField)
-		{
+		foreach ($varcharFields as $varcharField) {
 			$oldFieldName = $varcharField . '_' . $oldLanguageCode;
 			$fieldName    = $varcharField . '_' . $newLanguageCode;
 			$sql          = "ALTER TABLE  `#__osmembership_categories` CHANGE  `$oldFieldName` `$fieldName` VARCHAR( 255 );";
@@ -804,8 +746,7 @@ class OSMembershipControllerTool extends MPFController
 			'description',
 		];
 
-		foreach ($textFields as $textField)
-		{
+		foreach ($textFields as $textField) {
 			$oldFieldName = $textField . '_' . $oldLanguageCode;
 			$fieldName    = $textField . '_' . $newLanguageCode;
 
@@ -823,8 +764,7 @@ class OSMembershipControllerTool extends MPFController
 			'user_renew_email_subject',
 		];
 
-		foreach ($varcharFields as $varcharField)
-		{
+		foreach ($varcharFields as $varcharField) {
 			$oldFieldName = $varcharField . '_' . $oldLanguageCode;
 			$fieldName    = $varcharField . '_' . $newLanguageCode;
 			$sql          = "ALTER TABLE  `#__osmembership_plans` CHANGE  `$oldFieldName` `$fieldName` VARCHAR( 255 );";
@@ -844,8 +784,7 @@ class OSMembershipControllerTool extends MPFController
 			'user_renew_email_body',
 		];
 
-		foreach ($textFields as $textField)
-		{
+		foreach ($textFields as $textField) {
 			$oldFieldName = $textField . '_' . $oldLanguageCode;
 			$fieldName    = $textField . '_' . $newLanguageCode;
 
@@ -859,8 +798,7 @@ class OSMembershipControllerTool extends MPFController
 			'title',
 		];
 
-		foreach ($varcharFields as $varcharField)
-		{
+		foreach ($varcharFields as $varcharField) {
 			$oldFieldName = $varcharField . '_' . $oldLanguageCode;
 			$fieldName    = $varcharField . '_' . $newLanguageCode;
 			$sql          = "ALTER TABLE  `#__osmembership_fields` CHANGE  `$oldFieldName` `$fieldName` VARCHAR( 255 );";
@@ -876,8 +814,7 @@ class OSMembershipControllerTool extends MPFController
 			'depend_on_options',
 		];
 
-		foreach ($textFields as $textField)
-		{
+		foreach ($textFields as $textField) {
 			$oldFieldName = $textField . '_' . $oldLanguageCode;
 			$fieldName    = $textField . '_' . $newLanguageCode;
 
@@ -892,10 +829,8 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
-			if (str_contains($row->message_key, $oldLanguageCode))
-			{
+		foreach ($rows as $row) {
+			if (str_contains($row->message_key, $oldLanguageCode)) {
 				$newKey = str_replace($oldLanguageCode, $newLanguageCode, $row->message_key);
 				$query->clear()
 					->update('#__osmembership_messages')
@@ -918,16 +853,14 @@ class OSMembershipControllerTool extends MPFController
 		$defaultCountry     = $config->default_country;
 		$defaultCountryCode = OSMembershipHelper::getCountryCode($defaultCountry);
 		// Without VAT number, use local tax rate
-		foreach (OSMembershipHelperEuvat::$europeanUnionVATInformation as $countryCode => $vatInfo)
-		{
+		foreach (OSMembershipHelperEuvat::$europeanUnionVATInformation as $countryCode => $vatInfo) {
 			$countryName    = $db->quote($vatInfo[0]);
 			$countryTaxRate = OSMembershipHelperEuvat::getEUCountryTaxRate($countryCode);
 			$sql            = "INSERT INTO #__osmembership_taxes(plan_id, country, rate, vies, published) VALUES(0, $countryName, $countryTaxRate, 0, 1)";
 			$db->setQuery($sql);
 			$db->execute();
 
-			if ($countryCode == $defaultCountryCode)
-			{
+			if ($countryCode == $defaultCountryCode) {
 				$localTaxRate = OSMembershipHelperEuvat::getEUCountryTaxRate($defaultCountryCode);
 				$sql          = "INSERT INTO #__osmembership_taxes(plan_id, country, rate, vies, published) VALUES(0, $countryName, $localTaxRate, 1, 1)";
 				$db->setQuery($sql);
@@ -955,8 +888,7 @@ class OSMembershipControllerTool extends MPFController
 			'#__osmembership_subscribers',
 		];
 
-		foreach ($tables as $table)
-		{
+		foreach ($tables as $table) {
 			$query = "ALTER TABLE `$table` ROW_FORMAT = DYNAMIC";
 			$db->setQuery($query)
 				->execute();
@@ -978,16 +910,14 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$field = $db->loadObject();
 
-		if (!$field)
-		{
+		if (!$field) {
 			throw new Exception('The field does not exist');
 		}
 
 		// Add new field to #__eb_registrants
 		$fields = array_keys($db->getTableColumns('#__osmembership_subscribers'));
 
-		if (!in_array($field->name, $fields))
-		{
+		if (!in_array($field->name, $fields)) {
 			$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$field->name` VARCHAR( 255 ) NULL;";
 			$db->setQuery($sql);
 			$db->execute();
@@ -1001,8 +931,7 @@ class OSMembershipControllerTool extends MPFController
 
 			$fieldName = $db->quoteName($field->name);
 
-			foreach ($rows as $row)
-			{
+			foreach ($rows as $row) {
 				$query->clear()
 					->update('#__osmembership_subscribers')
 					->set($fieldName . ' = ' . $db->quote($row->field_value))
@@ -1031,14 +960,12 @@ class OSMembershipControllerTool extends MPFController
 		$db        = Factory::getContainer()->get('db');
 		$languages = OSMembershipHelper::getLanguages();
 
-		if (count($languages))
-		{
+		if (count($languages)) {
 			$categoryTableFields = array_keys($db->getTableColumns('#__osmembership_categories'));
 			$planTableFields     = array_keys($db->getTableColumns('#__osmembership_plans'));
 			$fieldTableFields    = array_keys($db->getTableColumns('#__osmembership_fields'));
 
-			foreach ($languages as $language)
-			{
+			foreach ($languages as $language) {
 				$prefix = $language->sef;
 
 				$fields = [
@@ -1047,27 +974,20 @@ class OSMembershipControllerTool extends MPFController
 					'description',
 				];
 
-				foreach ($fields as $field)
-				{
+				foreach ($fields as $field) {
 					$fieldName = $field . '_' . $prefix;
 
-					if (!in_array($fieldName, $categoryTableFields))
-					{
+					if (!in_array($fieldName, $categoryTableFields)) {
 						$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` TEXT NULL;";
-					}
-					else
-					{
+					} else {
 						$sql = "ALTER TABLE  `#__osmembership_categories` MODIFY  `$fieldName` TEXT NULL;";
 					}
 
 					$db->setQuery($sql);
 
-					try
-					{
+					try {
 						$db->execute();
-					}
-					catch (Exception $e)
-					{
+					} catch (Exception $e) {
 						$this->app->enqueueMessage(
 							sprintf('Field %s already exist in table %s', $fieldName, '#__osmembership_categories')
 						);
@@ -1095,27 +1015,20 @@ class OSMembershipControllerTool extends MPFController
 					'user_renew_email_body',
 				];
 
-				foreach ($fields as $field)
-				{
+				foreach ($fields as $field) {
 					$fieldName = $field . '_' . $prefix;
 
-					if (!in_array($fieldName, $planTableFields))
-					{
+					if (!in_array($fieldName, $planTableFields)) {
 						$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` TEXT NULL;";
-					}
-					else
-					{
+					} else {
 						$sql = "ALTER TABLE  `#__osmembership_plans` MODIFY  `$fieldName` TEXT NULL;";
 					}
 
 					$db->setQuery($sql);
 
-					try
-					{
+					try {
 						$db->execute();
-					}
-					catch (Exception $e)
-					{
+					} catch (Exception $e) {
 						$this->app->enqueueMessage(
 							sprintf('Field %s already exist in table %s', $fieldName, '#__osmembership_plans')
 						);
@@ -1132,27 +1045,20 @@ class OSMembershipControllerTool extends MPFController
 					'depend_on_options',
 				];
 
-				foreach ($fields as $field)
-				{
+				foreach ($fields as $field) {
 					$fieldName = $field . '_' . $prefix;
 
-					if (!in_array($fieldName, $fieldTableFields))
-					{
+					if (!in_array($fieldName, $fieldTableFields)) {
 						$sql = "ALTER TABLE  `#__osmembership_fields` ADD  `$fieldName` TEXT NULL;";
-					}
-					else
-					{
+					} else {
 						$sql = "ALTER TABLE  `#__osmembership_fields` MODIFY  `$fieldName` TEXT NULL;";
 					}
 
 					$db->setQuery($sql);
 
-					try
-					{
+					try {
 						$db->execute();
-					}
-					catch (Exception $e)
-					{
+					} catch (Exception $e) {
 						$this->app->enqueueMessage(
 							sprintf('Field %s already exist in table %s', $fieldName, '#__eb_fields')
 						);
@@ -1175,8 +1081,7 @@ class OSMembershipControllerTool extends MPFController
 		$notFound = [];
 		$updated  = 0;
 
-		foreach ($subscribers as $subscriber)
-		{
+		foreach ($subscribers as $subscriber) {
 			$subscriptionId = $subscriber['id'];
 
 			// First, check to see whether this subscription exists in the system
@@ -1186,8 +1091,7 @@ class OSMembershipControllerTool extends MPFController
 				->where('subscription_id = ' . $db->quote($subscriptionId));
 			$db->setQuery($query);
 
-			if ($db->loadResult())
-			{
+			if ($db->loadResult()) {
 				// Subscription exists, continue
 				continue;
 			}
@@ -1198,8 +1102,7 @@ class OSMembershipControllerTool extends MPFController
 
 			$found = false;
 
-			if (count($parts) > 1)
-			{
+			if (count($parts) > 1) {
 				$planId = (int) $parts[0];
 				$query->clear()
 					->select('id')
@@ -1210,8 +1113,7 @@ class OSMembershipControllerTool extends MPFController
 				$db->setQuery($query);
 				$id = (int) $db->loadResult();
 
-				if ($id)
-				{
+				if ($id) {
 					$query->clear()
 						->update('#__osmembership_subscribers')
 						->set('subscription_id = ' . $db->quote($subscriptionId))
@@ -1223,8 +1125,7 @@ class OSMembershipControllerTool extends MPFController
 				}
 			}
 
-			if (!$found)
-			{
+			if (!$found) {
 				$notFound[] = $subscriptionId;
 			}
 		}
@@ -1246,13 +1147,11 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$isProfile = 1;
 			$profileId = $row->id;
 
-			if ($row->user_id > 0)
-			{
+			if ($row->user_id > 0) {
 				$query->clear()
 					->select('id')
 					->from('#__osmembership_subscribers')
@@ -1262,8 +1161,7 @@ class OSMembershipControllerTool extends MPFController
 				$db->setQuery($query);
 				$existingProfileId = $db->loadResult();
 
-				if ($existingProfileId && $existingProfileId != $row->id)
-				{
+				if ($existingProfileId && $existingProfileId != $row->id) {
 					$isProfile = 0;
 					$profileId = $existingProfileId;
 				}
@@ -1318,12 +1216,10 @@ class OSMembershipControllerTool extends MPFController
 
 		$count = 0;
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$state = OSMembershipHelper::getStateCode($row->country, $row->state);
 
-			if ($state == $row->state)
-			{
+			if ($state == $row->state) {
 				continue;
 			}
 
@@ -1355,8 +1251,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			// Get random subscription ID
 			$subscriptionId = UserHelper::genRandomPassword(15);
 			$query->clear()
@@ -1383,8 +1278,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$query->clear()
 				->update('#__osmembership_subscribers')
 				->set('profile_id = ' . $row->profile_id)
@@ -1412,8 +1306,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$query->clear()
 				->update('#__osmembership_subscribers')
 				->set('profile_id = ' . $row->id)
@@ -1434,8 +1327,7 @@ class OSMembershipControllerTool extends MPFController
 	{
 		$userId = $this->input->getInt('user_id');
 
-		if ($userId)
-		{
+		if ($userId) {
 			OSMembershipHelper::fixProfileId($userId);
 		}
 	}
@@ -1451,8 +1343,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$row = new OSMembershipTableSubscriber($db);
 
-		if (!$row->load($id))
-		{
+		if (!$row->load($id)) {
 			echo 'Invalid Subscription';
 
 			return;
@@ -1464,8 +1355,7 @@ class OSMembershipControllerTool extends MPFController
 		// Fix profile data
 		$row->is_profile = 1;
 
-		if ($row->user_id > 0)
-		{
+		if ($row->user_id > 0) {
 			$query->clear()
 				->select('id')
 				->from('#__osmembership_subscribers')
@@ -1475,15 +1365,13 @@ class OSMembershipControllerTool extends MPFController
 			$db->setQuery($query);
 			$profileId = $db->loadResult();
 
-			if ($profileId && $profileId != $row->id)
-			{
+			if ($profileId && $profileId != $row->id) {
 				$row->is_profile = 0;
 				$row->profile_id = $profileId;
 			}
 		}
 
-		if ($row->is_profile == 1)
-		{
+		if ($row->is_profile == 1) {
 			$row->profile_id = $row->id;
 		}
 
@@ -1499,8 +1387,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$subscriptions = $db->loadObjectList();
 
-		if (!empty($subscriptions))
-		{
+		if (!empty($subscriptions)) {
 			$isActive         = false;
 			$isPending        = false;
 			$isExpired        = false;
@@ -1509,45 +1396,31 @@ class OSMembershipControllerTool extends MPFController
 			$planMainRecordId = 0;
 			$planFromDate     = $subscriptions[0]->from_date;
 
-			foreach ($subscriptions as $subscription)
-			{
-				if ($subscription->plan_main_record)
-				{
+			foreach ($subscriptions as $subscription) {
+				if ($subscription->plan_main_record) {
 					$planMainRecordId = $subscription->id;
 				}
 
-				if ($subscription->published == 1)
-				{
+				if ($subscription->published == 1) {
 					$isActive       = true;
 					$lastActiveDate = $subscription->to_date;
-				}
-				elseif ($subscription->published == 0)
-				{
+				} elseif ($subscription->published == 0) {
 					$isPending = true;
-				}
-				elseif ($subscription->published == 2)
-				{
+				} elseif ($subscription->published == 2) {
 					$isExpired       = true;
 					$lastExpiredDate = $subscription->to_date;
 				}
 			}
 
-			if ($isActive)
-			{
+			if ($isActive) {
 				$published  = 1;
 				$planToDate = $lastActiveDate;
-			}
-			elseif ($isPending)
-			{
+			} elseif ($isPending) {
 				$published = 0;
-			}
-			elseif ($isExpired)
-			{
+			} elseif ($isExpired) {
 				$published  = 2;
 				$planToDate = $lastExpiredDate;
-			}
-			else
-			{
+			} else {
 				$published  = 3;
 				$planToDate = $subscription->to_date;
 			}
@@ -1562,8 +1435,7 @@ class OSMembershipControllerTool extends MPFController
 			$db->setQuery($query);
 			$db->execute();
 
-			if (empty($planMainRecordId))
-			{
+			if (empty($planMainRecordId)) {
 				$planMainRecordId = $subscriptions[0]->id;
 				$query->clear()
 					->update('#__osmembership_subscribers')
@@ -1580,8 +1452,7 @@ class OSMembershipControllerTool extends MPFController
 	 */
 	public function update_countries_states_database()
 	{
-		if (!$this->app->getIdentity()->authorise('core.admin'))
-		{
+		if (!$this->app->getIdentity()->authorise('core.admin')) {
 			echo 'You do not have permission to execute this task';
 		}
 
@@ -1605,8 +1476,7 @@ class OSMembershipControllerTool extends MPFController
 
 	public function remove_unused_language_fields()
 	{
-		if (!$this->app->getIdentity()->authorise('core.admin'))
-		{
+		if (!$this->app->getIdentity()->authorise('core.admin')) {
 			echo 'You do not have permission to execute this task';
 		}
 
@@ -1624,8 +1494,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$languages = $db->loadObjectList();
 
-		foreach ($languages as $language)
-		{
+		foreach ($languages as $language) {
 			$sef = $language->sef;
 
 			$fields = [
@@ -1634,12 +1503,10 @@ class OSMembershipControllerTool extends MPFController
 				'description',
 			];
 
-			foreach ($fields as $field)
-			{
+			foreach ($fields as $field) {
 				$field .= '_' . $sef;
 
-				if (in_array($field, $categoryTableFields))
-				{
+				if (in_array($field, $categoryTableFields)) {
 					// Drop
 					$sql = "ALTER TABLE  `#__osmembership_categories` DROP COLUMN  `$field`;";
 					$db->setQuery($sql)
@@ -1675,12 +1542,10 @@ class OSMembershipControllerTool extends MPFController
 				'upgrade_thanks_message_offline',
 			];
 
-			foreach ($fields as $field)
-			{
+			foreach ($fields as $field) {
 				$field .= '_' . $sef;
 
-				if (in_array($field, $planTableFields))
-				{
+				if (in_array($field, $planTableFields)) {
 					// Drop
 					$sql = "ALTER TABLE  `#__osmembership_plans` DROP COLUMN  `$field`;";
 					$db->setQuery($sql)
@@ -1699,12 +1564,10 @@ class OSMembershipControllerTool extends MPFController
 				'depend_on_options',
 			];
 
-			foreach ($fields as $field)
-			{
+			foreach ($fields as $field) {
 				$field .= '_' . $sef;
 
-				if (in_array($field, $fieldTableFields))
-				{
+				if (in_array($field, $fieldTableFields)) {
 					// Drop
 					$sql = "ALTER TABLE  `#__osmembership_fields` DROP COLUMN  `$field`;";
 					$db->setQuery($sql)
@@ -1727,8 +1590,7 @@ class OSMembershipControllerTool extends MPFController
 		$db->setQuery($query);
 		$rows = $db->loadObjectList();
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$subscriptionCode = OSMembershipHelper::getUniqueCodeForField(
 				'subscription_code',
 				'#__osmembership_subscribers'
@@ -1777,16 +1639,13 @@ class OSMembershipControllerTool extends MPFController
 			'upgrade_thanks_message_offline',
 		];
 
-		foreach ($languages as $language)
-		{
+		foreach ($languages as $language) {
 			$prefix = $language->sef;
 
-			foreach ($planDropFields as $planDropField)
-			{
+			foreach ($planDropFields as $planDropField) {
 				$field = $planDropField . '_' . $prefix;
 
-				if (in_array($field, $planTableFields))
-				{
+				if (in_array($field, $planTableFields)) {
 					$field = $db->quoteName($field);
 					$sql   = "ALTER TABLE #__osmembership_plans DROP COLUMN $field";
 					$db->setQuery($sql)
@@ -1800,15 +1659,13 @@ class OSMembershipControllerTool extends MPFController
 	{
 		$languages = OSMembershipHelper::getLanguages();
 
-		if (count($languages))
-		{
+		if (count($languages)) {
 			$db                  = Factory::getContainer()->get('db');
 			$categoryTableFields = array_keys($db->getTableColumns('#__osmembership_categories'));
 			$planTableFields     = array_keys($db->getTableColumns('#__osmembership_plans'));
 			$fieldTableFields    = array_keys($db->getTableColumns('#__osmembership_fields'));
 
-			foreach ($languages as $language)
-			{
+			foreach ($languages as $language) {
 				$prefix = $language->sef;
 
 				#Process for #__osmembership_categories table
@@ -1818,12 +1675,10 @@ class OSMembershipControllerTool extends MPFController
 					'description',
 				];
 
-				foreach ($fields as $field)
-				{
+				foreach ($fields as $field) {
 					$fieldName = $field . '_' . $prefix;
 
-					if (in_array($fieldName, $categoryTableFields))
-					{
+					if (in_array($fieldName, $categoryTableFields)) {
 						$sql = "ALTER TABLE #__osmembership_categories DROP COLUMN $fieldName";
 						$db->setQuery($sql);
 						$db->execute();
@@ -1860,12 +1715,10 @@ class OSMembershipControllerTool extends MPFController
 					'card_layout',
 				];
 
-				foreach ($fields as $field)
-				{
+				foreach ($fields as $field) {
 					$fieldName = $field . '_' . $prefix;
 
-					if (in_array($fieldName, $planTableFields))
-					{
+					if (in_array($fieldName, $planTableFields)) {
 						$sql = "ALTER TABLE #__osmembership_plans DROP COLUMN $fieldName";
 						$db->setQuery($sql);
 						$db->execute();
@@ -1885,12 +1738,10 @@ class OSMembershipControllerTool extends MPFController
 					'depend_on_options',
 				];
 
-				foreach ($fields as $field)
-				{
+				foreach ($fields as $field) {
 					$fieldName = $field . '_' . $prefix;
 
-					if (in_array($fieldName, $fieldTableFields))
-					{
+					if (in_array($fieldName, $fieldTableFields)) {
 						$sql = "ALTER TABLE #__osmembership_fields DROP COLUMN $fieldName";
 						$db->setQuery($sql);
 						$db->execute();
@@ -1911,8 +1762,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$files = Folder::files($invoicesPath, '.pdf', false, true);
 
-		foreach ($files as $file)
-		{
+		foreach ($files as $file) {
 			File::delete($file);
 		}
 
@@ -1928,8 +1778,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$files = Folder::files($ticketsPath, '.pdf', false, true);
 
-		foreach ($files as $file)
-		{
+		foreach ($files as $file) {
 			File::delete($file);
 		}
 
@@ -1964,8 +1813,7 @@ class OSMembershipControllerTool extends MPFController
 		$planId   = $this->input->getInt('plan_id');
 		$groupIds = array_filter(ArrayHelper::toInteger(explode(',', $this->input->getString('user_group_ids', ''))));
 
-		if ($planId <= 0 || count($groupIds) == 0)
-		{
+		if ($planId <= 0 || count($groupIds) == 0) {
 			echo 'Invalid Request. You need to provide both Plan ID and group_id. Example index.php?option=com_osmembership&task=tool.add_joomla_users_to_plan&plan_id=1&group_id=2';
 
 			return;
@@ -1982,8 +1830,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$model = new OSMembershipModelApi();
 
-		foreach ($users as $user)
-		{
+		foreach ($users as $user) {
 			$query->clear()
 				->select('COUNT(*)')
 				->from('#__osmembership_subscribers')
@@ -1993,21 +1840,17 @@ class OSMembershipControllerTool extends MPFController
 			$db->setQuery($query);
 			$total = $db->loadResult();
 
-			if ($total)
-			{
+			if ($total) {
 				continue;
 			}
 
 			$name = $user->name;
 			$pos  = strpos($name, ' ');
 
-			if ($pos !== false)
-			{
+			if ($pos !== false) {
 				$firstName = substr($name, 0, $pos);
 				$lastName  = substr($name, $pos + 1);
-			}
-			else
-			{
+			} else {
 				$firstName = $name;
 				$lastName  = '';
 			}
@@ -2020,12 +1863,9 @@ class OSMembershipControllerTool extends MPFController
 				'email'      => $user->email,
 			];
 
-			try
-			{
+			try {
 				$model->store($data);
-			}
-			catch (Exception $e)
-			{
+			} catch (Exception $e) {
 				$this->app->enqueueMessage('Could not add user ' . $user->username . ' to plan');
 			}
 		}
@@ -2048,8 +1888,7 @@ class OSMembershipControllerTool extends MPFController
 
 		$ordering = 1;
 
-		foreach ($rows as $row)
-		{
+		foreach ($rows as $row) {
 			$query->clear()
 				->update('#__osmembership_countries')
 				->set('ordering = ' . $ordering)
@@ -2134,8 +1973,7 @@ class OSMembershipControllerTool extends MPFController
 			'#__osmembership_emails',
 		];
 
-		foreach ($tablesToConvert as $table)
-		{
+		foreach ($tablesToConvert as $table) {
 			// Convert table
 			$sql = "ALTER TABLE $table CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;";
 			$db->setQuery($sql)
@@ -2162,21 +2000,16 @@ class OSMembershipControllerTool extends MPFController
 			'fourth_reminder_email_body' => 'text',
 		];
 
-		foreach ($newFieldsToCategoryTable as $fieldName => $type)
-		{
-			if (in_array($fieldName, $categoryTableFields))
-			{
+		foreach ($newFieldsToCategoryTable as $fieldName => $type) {
+			if (in_array($fieldName, $categoryTableFields)) {
 				continue;
 			}
 
-			if ($type == 'varchar')
-			{
+			if ($type == 'varchar') {
 				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` VARCHAR( 255 );";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type == 'text')
-			{
+			} elseif ($type == 'text') {
 				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` TEXT NULL;";
 				$db->setQuery($sql);
 				$db->execute();
@@ -2189,27 +2022,20 @@ class OSMembershipControllerTool extends MPFController
 			'fourth_reminder_email_body'    => 'text',
 		];
 
-		foreach ($newFieldsToPlanTable as $fieldName => $type)
-		{
-			if (in_array($fieldName, $planTableFields))
-			{
+		foreach ($newFieldsToPlanTable as $fieldName => $type) {
+			if (in_array($fieldName, $planTableFields)) {
 				continue;
 			}
 
-			if ($type == 'varchar')
-			{
+			if ($type == 'varchar') {
 				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` VARCHAR( 255 );";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type == 'int')
-			{
+			} elseif ($type == 'int') {
 				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` INT NOT NULL DEFAULT 0;";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type == 'text')
-			{
+			} elseif ($type == 'text') {
 				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` TEXT NULL;";
 				$db->setQuery($sql);
 				$db->execute();
@@ -2221,21 +2047,16 @@ class OSMembershipControllerTool extends MPFController
 			'fourth_reminder_sent_at' => 'datetime',
 		];
 
-		foreach ($newFieldsToSubscribersTable as $fieldName => $type)
-		{
-			if (in_array($fieldName, $subscribeTableFields))
-			{
+		foreach ($newFieldsToSubscribersTable as $fieldName => $type) {
+			if (in_array($fieldName, $subscribeTableFields)) {
 				continue;
 			}
 
-			if ($type === 'tinyint')
-			{
+			if ($type === 'tinyint') {
 				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` TINYINT NOT NULL DEFAULT 0;";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type === 'datetime')
-			{
+			} elseif ($type === 'datetime') {
 				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` datetime;";
 				$db->setQuery($sql);
 				$db->execute();
@@ -2286,21 +2107,16 @@ class OSMembershipControllerTool extends MPFController
 			'fifth_reminder_email_body'  => 'text',
 		];
 
-		foreach ($newFieldsToCategoryTable as $fieldName => $type)
-		{
-			if (in_array($fieldName, $categoryTableFields))
-			{
+		foreach ($newFieldsToCategoryTable as $fieldName => $type) {
+			if (in_array($fieldName, $categoryTableFields)) {
 				continue;
 			}
 
-			if ($type == 'varchar')
-			{
+			if ($type == 'varchar') {
 				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` VARCHAR( 255 );";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type == 'text')
-			{
+			} elseif ($type == 'text') {
 				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` TEXT NULL;";
 				$db->setQuery($sql);
 				$db->execute();
@@ -2316,27 +2132,20 @@ class OSMembershipControllerTool extends MPFController
 			'fifth_reminder_email_body'     => 'text',
 		];
 
-		foreach ($newFieldsToPlanTable as $fieldName => $type)
-		{
-			if (in_array($fieldName, $planTableFields))
-			{
+		foreach ($newFieldsToPlanTable as $fieldName => $type) {
+			if (in_array($fieldName, $planTableFields)) {
 				continue;
 			}
 
-			if ($type == 'varchar')
-			{
+			if ($type == 'varchar') {
 				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` VARCHAR( 255 );";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type == 'int')
-			{
+			} elseif ($type == 'int') {
 				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` INT NOT NULL DEFAULT 0;";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type == 'text')
-			{
+			} elseif ($type == 'text') {
 				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` TEXT NULL;";
 				$db->setQuery($sql);
 				$db->execute();
@@ -2350,21 +2159,16 @@ class OSMembershipControllerTool extends MPFController
 			'fifth_reminder_sent_at'  => 'datetime',
 		];
 
-		foreach ($newFieldsToSubscribersTable as $fieldName => $type)
-		{
-			if (in_array($fieldName, $subscribeTableFields))
-			{
+		foreach ($newFieldsToSubscribersTable as $fieldName => $type) {
+			if (in_array($fieldName, $subscribeTableFields)) {
 				continue;
 			}
 
-			if ($type === 'tinyint')
-			{
+			if ($type === 'tinyint') {
 				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` TINYINT NOT NULL DEFAULT 0;";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type === 'datetime')
-			{
+			} elseif ($type === 'datetime') {
 				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` datetime;";
 				$db->setQuery($sql);
 				$db->execute();
@@ -2432,21 +2236,16 @@ class OSMembershipControllerTool extends MPFController
 			'sixth_reminder_email_body'  => 'text',
 		];
 
-		foreach ($newFieldsToCategoryTable as $fieldName => $type)
-		{
-			if (in_array($fieldName, $categoryTableFields))
-			{
+		foreach ($newFieldsToCategoryTable as $fieldName => $type) {
+			if (in_array($fieldName, $categoryTableFields)) {
 				continue;
 			}
 
-			if ($type == 'varchar')
-			{
+			if ($type == 'varchar') {
 				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` VARCHAR( 255 );";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type == 'text')
-			{
+			} elseif ($type == 'text') {
 				$sql = "ALTER TABLE  `#__osmembership_categories` ADD  `$fieldName` TEXT NULL;";
 				$db->setQuery($sql);
 				$db->execute();
@@ -2465,27 +2264,20 @@ class OSMembershipControllerTool extends MPFController
 			'sixth_reminder_email_body'     => 'text',
 		];
 
-		foreach ($newFieldsToPlanTable as $fieldName => $type)
-		{
-			if (in_array($fieldName, $planTableFields))
-			{
+		foreach ($newFieldsToPlanTable as $fieldName => $type) {
+			if (in_array($fieldName, $planTableFields)) {
 				continue;
 			}
 
-			if ($type == 'varchar')
-			{
+			if ($type == 'varchar') {
 				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` VARCHAR( 255 );";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type == 'int')
-			{
+			} elseif ($type == 'int') {
 				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` INT NOT NULL DEFAULT 0;";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type == 'text')
-			{
+			} elseif ($type == 'text') {
 				$sql = "ALTER TABLE  `#__osmembership_plans` ADD  `$fieldName` TEXT NULL;";
 				$db->setQuery($sql);
 				$db->execute();
@@ -2501,21 +2293,16 @@ class OSMembershipControllerTool extends MPFController
 			'sixth_reminder_sent_at'  => 'datetime',
 		];
 
-		foreach ($newFieldsToSubscribersTable as $fieldName => $type)
-		{
-			if (in_array($fieldName, $subscribeTableFields))
-			{
+		foreach ($newFieldsToSubscribersTable as $fieldName => $type) {
+			if (in_array($fieldName, $subscribeTableFields)) {
 				continue;
 			}
 
-			if ($type === 'tinyint')
-			{
+			if ($type === 'tinyint') {
 				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` TINYINT NOT NULL DEFAULT 0;";
 				$db->setQuery($sql);
 				$db->execute();
-			}
-			elseif ($type === 'datetime')
-			{
+			} elseif ($type === 'datetime') {
 				$sql = "ALTER TABLE  `#__osmembership_subscribers` ADD  `$fieldName` datetime;";
 				$db->setQuery($sql);
 				$db->execute();
@@ -2577,5 +2364,243 @@ class OSMembershipControllerTool extends MPFController
 		require_once JPATH_ADMINISTRATOR . '/components/com_osmembership/install.osmembership.php';
 
 		com_osmembershipInstallerScript::insertMessageItems($items);
+	}
+
+	/**
+	 * Import subscribers from tables using cv8no_ prefix
+	 *
+	 * @return  void
+	 */
+	public function import_cv8no_subscribers()
+	{
+		$legacyPrefix = 'cv8no_';
+
+		/* @var DatabaseDriver $db */
+		$db    = Factory::getContainer()->get('db');
+		$query = $db->getQuery(true);
+
+		// Get existing subscription codes
+		$query->select('subscription_code')
+			->from('#__osmembership_subscribers');
+		$db->setQuery($query);
+		$existingCodes = array_flip($db->loadColumn() ?: []);
+
+		// Load all subscribers from legacy tables
+		$query->clear()
+			->select('*')
+			->from($legacyPrefix . 'osmembership_subscribers');
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+
+		$inserted = 0;
+
+		foreach ($rows as $row) {
+			if (isset($existingCodes[$row->subscription_code])) {
+				continue;
+			}
+
+			$oldId = $row->id;
+			unset($row->id);
+
+			if ($row->user_id > 0) {
+				$query->clear()
+					->select('*')
+					->from('#__users')
+					->where('id = ' . (int) $row->user_id);
+				$db->setQuery($query);
+				$existingUser = $db->loadObject();
+
+				if (!$existingUser) {
+					$query->clear()
+						->select('*')
+						->from($legacyPrefix . 'users')
+						->where('id = ' . (int) $row->user_id);
+					$db->setQuery($query);
+					$user = $db->loadObject();
+
+					if ($user) {
+						$query->clear()
+							->select('id')
+							->from('#__users')
+							->where('username = ' . $db->quote($user->username));
+						$query->orWhere('email = ' . $db->quote($user->email));
+						$db->setQuery($query);
+						$duplicateId = $db->loadResult();
+
+						if ($duplicateId) {
+							$row->user_id = (int) $duplicateId;
+						} else {
+							unset($user->id);
+							$db->insertObject('#__users', $user);
+							$row->user_id = $db->insertid();
+						}
+					} else {
+						$row->user_id = 0;
+					}
+				}
+			}
+
+			$db->insertObject('#__osmembership_subscribers', $row);
+			$newId = $db->insertid();
+			$inserted++;
+
+			// Import custom field values
+			$query->clear()
+				->select('*')
+				->from($legacyPrefix . 'osmembership_field_value')
+				->where('subscriber_id = ' . (int) $oldId);
+			$db->setQuery($query);
+			$fieldValues = $db->loadObjectList();
+
+			foreach ($fieldValues as $fieldValue) {
+				$fieldValue->subscriber_id = $newId;
+				unset($fieldValue->id);
+				$db->insertObject('#__osmembership_field_value', $fieldValue);
+			}
+		}
+
+		echo Text::sprintf('Imported %d subscriber(s) from cv8no_', $inserted);
+	}
+
+	public function list_duplicate_transaction_ids()
+	{
+		/* @var DatabaseDriver $db */
+		$db    = Factory::getContainer()->get('db');
+		$query = $db->getQuery(true)
+			->select('transaction_id, GROUP_CONCAT(id ORDER BY id) AS ids')
+			->from('#__osmembership_subscribers')
+			->where('transaction_id <> ' . $db->quote(''))
+			->group('transaction_id')
+			->having('COUNT(*) > 1')
+			->order('transaction_id');
+
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+
+		foreach ($rows as $row) {
+			echo $row->transaction_id . ': ' . $row->ids . "\n" . '</br>';
+		}
+	}
+
+	public function remove_duplicate_transactions(): void
+	{
+		/* @var DatabaseDriver $db */
+		$db = Factory::getContainer()->get('db');
+
+		$subQuery = $db->getQuery(true)
+			->select('MIN(id)')
+			->from('#__osmembership_subscribers')
+			->where('transaction_id <> ' . $db->quote(''))
+			->group('transaction_id, created_date');
+
+		$query = $db->getQuery(true)
+			->delete('#__osmembership_subscribers')
+			->where('transaction_id <> ' . $db->quote(''))
+			->where('id NOT IN (' . $subQuery . ')');
+
+		$db->setQuery($query)
+			->execute();
+
+		echo sprintf('%s records deleted', $db->getAffectedRows());
+	}
+
+	public function import_cv8no_subscribers_by_id()
+	{
+		$ids = array_filter(array_map('intval', explode(',', $this->input->getString('ids'))));
+
+		if (!$ids) {
+			echo 'No subscriber IDs specified';
+
+			return;
+		}
+
+		$legacyPrefix = 'cv8no_';
+
+		/* @var DatabaseDriver $db */
+		$db    = Factory::getContainer()->get('db');
+		$query = $db->getQuery(true);
+
+		// Get existing subscription codes
+		$query->select('subscription_code')
+			->from('#__osmembership_subscribers');
+		$db->setQuery($query);
+		$existingCodes = array_flip($db->loadColumn() ?: []);
+
+		// Load subscribers from legacy tables by id
+		$query->clear()
+			->select('*')
+			->from($legacyPrefix . 'osmembership_subscribers')
+			->where('id IN (' . implode(',', $ids) . ')');
+		$db->setQuery($query);
+		$rows = $db->loadObjectList();
+
+		$inserted = 0;
+
+		foreach ($rows as $row) {
+			if (isset($existingCodes[$row->subscription_code])) {
+				continue;
+			}
+
+			$oldId = $row->id;
+			unset($row->id);
+
+			if ($row->user_id > 0) {
+				$query->clear()
+					->select('*')
+					->from('#__users')
+					->where('id = ' . (int) $row->user_id);
+				$db->setQuery($query);
+				$existingUser = $db->loadObject();
+
+				if (!$existingUser) {
+					$query->clear()
+						->select('*')
+						->from($legacyPrefix . 'users')
+						->where('id = ' . (int) $row->user_id);
+					$db->setQuery($query);
+					$user = $db->loadObject();
+
+					if ($user) {
+						$query->clear()
+							->select('id')
+							->from('#__users')
+							->where('username = ' . $db->quote($user->username));
+						$query->orWhere('email = ' . $db->quote($user->email));
+						$db->setQuery($query);
+						$duplicateId = $db->loadResult();
+
+						if ($duplicateId) {
+							$row->user_id = (int) $duplicateId;
+						} else {
+							unset($user->id);
+							$db->insertObject('#__users', $user);
+							$row->user_id = $db->insertid();
+						}
+					} else {
+						$row->user_id = 0;
+					}
+				}
+			}
+
+			$db->insertObject('#__osmembership_subscribers', $row);
+			$newId = $db->insertid();
+			$inserted++;
+
+			// Import custom field values
+			$query->clear()
+				->select('*')
+				->from($legacyPrefix . 'osmembership_field_value')
+				->where('subscriber_id = ' . (int) $oldId);
+			$db->setQuery($query);
+			$fieldValues = $db->loadObjectList();
+
+			foreach ($fieldValues as $fieldValue) {
+				$fieldValue->subscriber_id = $newId;
+				unset($fieldValue->id);
+				$db->insertObject('#__osmembership_field_value', $fieldValue);
+			}
+		}
+
+		echo Text::sprintf('Imported %d subscriber(s) from cv8no_', $inserted);
 	}
 }
